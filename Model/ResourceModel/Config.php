@@ -1,0 +1,106 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+namespace Goomento\PageBuilder\Model\ResourceModel;
+
+
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+
+/**
+ * Class Config
+ * @package Goomento\PageBuilder\Model\ResourceModel
+ */
+class Config extends AbstractDb
+{
+    /**
+     * Initialize resource model
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+        $this->_init('pagebuilder_config_data', 'config_id');
+    }
+
+    /**
+     * Save config value
+     *
+     * @param string $path
+     * @param string|null $value
+     * @param int $storeId
+     * @return Config
+     * @throws LocalizedException
+     */
+    public function saveConfig($path, $value, int $storeId = 0)
+    {
+        $connection = $this->getConnection();
+        $select = $connection->select()->from(
+            $this->getMainTable()
+        )->where(
+            'path = ?',
+            $path
+        )->where(
+            'store_id = ?',
+            $storeId
+        );
+        $row = $connection->fetchRow($select);
+
+        $newData = ['store_id' => $storeId, 'path' => $path, 'value' => $value];
+
+        if ($row) {
+            $whereCondition = [$this->getIdFieldName() . '=?' => $row[$this->getIdFieldName()]];
+            $connection->update($this->getMainTable(), $newData, $whereCondition);
+        } else {
+            $connection->insert($this->getMainTable(), $newData);
+        }
+        return $this;
+    }
+
+    /**
+     * @param null $storeId
+     * @return array
+     * @throws LocalizedException
+     */
+    public function fetchAll($storeId = null)
+    {
+        $connection = $this->getConnection();
+        $select = $connection->select()->from(
+            $this->getMainTable()
+        );
+
+        if (is_int($storeId)) {
+            $select->where(
+                'store_id = ?',
+                $storeId
+            );
+        }
+        return $connection->fetchAll($select);
+    }
+
+    /**
+     * Delete config value
+     *
+     * @param string $path
+     * @param int $storeId
+     * @return $this
+     * @throws LocalizedException
+     */
+    public function deleteConfig($path, $storeId = 0)
+    {
+        $connection = $this->getConnection();
+        $connection->delete(
+            $this->getMainTable(),
+            [
+                $connection->quoteInto('path = ?', $path),
+                $connection->quoteInto('store_id = ?', $storeId)
+            ]
+        );
+        return $this;
+    }
+}

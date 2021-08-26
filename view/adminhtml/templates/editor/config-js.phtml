@@ -1,0 +1,30 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+/**
+ * @var $block Template
+ */
+
+use Magento\Framework\View\Element\Template;
+
+?>
+<script>
+    // Replace the default Magento underscore and jquery-ui
+    (function (require) {
+        require.config({
+            'paths': {
+                "underscore": 'Goomento_PageBuilder/lib/underscore/underscore',
+                "jquery/ui": 'Goomento_PageBuilder/lib/jquery/jquery-ui.min',
+                "jquery/jquery-ui-1.9.2": 'jquery/ui',
+            }
+        });
+        require(['underscore', 'jquery', 'jquery/ui'], function (_, $) {
+        });
+    })(require);
+</script>
+

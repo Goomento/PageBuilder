@@ -1,0 +1,45 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+/**
+ * @var Template $block
+ */
+
+use Magento\Backend\Block\Template;
+
+?>
+<form action=""
+      method="POST"
+      enctype="multipart/form-data"
+      data-mage-init='{"validation": {}}'>
+    <?= $block->getChildHtml('formkey')?>
+    <div class="admin__fieldset-wrapper-content">
+        <fieldset class="admin__fieldset">
+            <div class="admin__field _required" >
+                <div class="admin__field-label">
+                    <label>
+                        <span><?= __('File') ?></span>
+                    </label>
+                </div>
+                <div class="admin__field-control">
+                    <input class="admin__control-text" type="file" name="file" accept=".json" data-validate='{"required":true}' />
+                    <small><?= __('Accepted: JSON files') ?></small>
+                </div>
+            </div>
+            <div class="admin__field" >
+                <div class="admin__field-label">
+                    <label>
+                        <span></span>
+                    </label>
+                </div>
+                <div class="admin__field-control">
+                    <button type="submit"><?= __('Import') ?></button>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</form>

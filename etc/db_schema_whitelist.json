@@ -1,0 +1,81 @@
+{
+    "pagebuilder_content": {
+        "column": {
+            "content_id": true,
+            "title": true,
+            "type": true,
+            "content": true,
+            "elements": true,
+            "settings": true,
+            "author_id": true,
+            "status": true,
+            "last_editor_id": true,
+            "creation_time": true,
+            "update_time": true
+        },
+        "index": {
+            "PAGEBUILDER_CONTENT_TITLE_CONTENT_ELEMENTS": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "pagebuilder_content_store": {
+        "column": {
+            "content_id": true,
+            "store_id": true
+        },
+        "index": {
+            "PAGEBUILDER_CONTENT_STORE_STORE_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_608D1EE296F1597E98ADB66FFD216CC3": true,
+            "PAGEBUILDER_CONTENT_STORE_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "pagebuilder_content_revision": {
+        "column": {
+            "revision_id": true,
+            "content_id": true,
+            "elements": true,
+            "settings": true,
+            "author_id": true,
+            "status": true,
+            "creation_time": true
+        },
+        "index": {
+            "PAGEBUILDER_CONTENT_REVISION_ELEMENTS": true,
+            "PAGEBUILDER_CONTENT_REVISION_CONTENT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_96E4A72797F489CCC8724D28F64FDCEF": true
+        }
+    },
+    "cms_page": {
+        "column": {
+            "pagebuilder_is_active": true,
+            "pagebuilder_content_id": true
+        }
+    },
+    "cms_block": {
+        "column": {
+            "pagebuilder_is_active": true,
+            "pagebuilder_content_id": true
+        }
+    },
+    "pagebuilder_config_data": {
+        "column": {
+            "config_id": true,
+            "store_id": true,
+            "path": true,
+            "value": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "PAGEBUILDER_CONFIG_DATA_STORE_ID_PATH": true
+        }
+    }
+}

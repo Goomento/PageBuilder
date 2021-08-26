@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Goomento_Core::menu">
+                    <resource id="Goomento_PageBuilder::menu" title="Page Builder" sortOrder="1" >
+                        <resource id="Goomento_PageBuilder::page" title="Pages" sortOrder="1" >
+                            <resource id="Goomento_PageBuilder::page_view" title="View" sortOrder="1" />
+                            <resource id="Goomento_PageBuilder::page_grid" title="Grid" sortOrder="2" />
+                            <resource id="Goomento_PageBuilder::page_save" title="Save" sortOrder="3" />
+                            <resource id="Goomento_PageBuilder::page_publish" title="Publish" sortOrder="4" />
+                            <resource id="Goomento_PageBuilder::page_export" title="Export" sortOrder="5" />
+                            <resource id="Goomento_PageBuilder::page_delete" title="Delete" sortOrder="6" />
+                        </resource>
+                        <resource id="Goomento_PageBuilder::template" title="Templates" sortOrder="2" >
+                            <resource id="Goomento_PageBuilder::template_view" title="View" sortOrder="1" />
+                            <resource id="Goomento_PageBuilder::template_grid" title="Grid" sortOrder="2" />
+                            <resource id="Goomento_PageBuilder::template_save" title="Save" sortOrder="3" />
+                            <resource id="Goomento_PageBuilder::template_publish" title="Publish" sortOrder="4" />
+                            <resource id="Goomento_PageBuilder::template_export" title="Export" sortOrder="5" />
+                            <resource id="Goomento_PageBuilder::template_delete" title="Delete" sortOrder="6" />
+                        </resource>
+                        <resource id="Goomento_PageBuilder::section" title="Sections" sortOrder="3" >
+                            <resource id="Goomento_PageBuilder::section_view" title="View" sortOrder="1" />
+                            <resource id="Goomento_PageBuilder::section_grid" title="Grid" sortOrder="2" />
+                            <resource id="Goomento_PageBuilder::section_save" title="Save" sortOrder="3" />
+                            <resource id="Goomento_PageBuilder::section_publish" title="Publish" sortOrder="4" />
+                            <resource id="Goomento_PageBuilder::section_export" title="Export" sortOrder="5" />
+                            <resource id="Goomento_PageBuilder::section_delete" title="Delete" sortOrder="6" />
+                        </resource>
+                        <resource id="Goomento_PageBuilder::import" title="Import template" sortOrder="1" />
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

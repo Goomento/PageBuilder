@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Goomento_PageBuilder" setup_version="0.1.1">
+        <sequence>
+            <module name="Goomento_Core" />
+            <module name="Magento_Widget" />
+            <module name="Magento_Backend" />
+            <module name="Magento_Cms" />
+        </sequence>
+    </module>
+</config>

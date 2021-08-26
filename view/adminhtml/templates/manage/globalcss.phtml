@@ -1,0 +1,68 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+/**
+ * @var $block Template
+ */
+
+use Goomento\PageBuilder\Helper\StaticConfig;
+use Goomento\PageBuilder\Helper\StaticUtils;
+use Magento\Backend\Block\Template;
+
+$customCss = StaticConfig::getThemeOption('custom_css');
+?>
+
+<form action=""
+      method="POST"
+      id="custom_css_form">
+    <?= $block->getChildHtml('formkey')?>
+    <textarea style="display: none" name="custom_css" id="custom_css"><?= StaticUtils::escapeHtml($customCss) ?></textarea>
+    <div id="editor"></div>
+    <br />
+    <button type="submit"><?= __('Save') ?></button>
+</form>
+<script>
+    require.config({
+        paths: {
+            ace: ['//cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/'],
+        }
+    });
+
+    require([
+        'jquery',
+        'ace/ace',
+        'ace/ext-language_tools',
+    ], function ($, ace) {
+        let $custom_css = $('#custom_css'),
+            editor,
+            syncCss = function() {
+                $custom_css.val( editor.getSession().getValue() );
+            },
+            loadAce = function () {
+                editor = ace.edit( 'editor' );
+                editor.getSession().setUseWrapMode( true );
+                editor.setShowPrintMargin( false );
+
+                editor.getSession().setValue( $custom_css.val() );
+
+                $( '#custom_css_form').submit( syncCss );
+            };
+        $(document).ready(function () {
+            loadAce();
+        });
+    });
+</script>
+<style>
+    #editor {
+        width: 80%;
+        height: 400px;
+        max-width: 1000px;
+        border: 1px solid #e1e1e1;
+        box-shadow: 2px 2px 9px 2px #dfdfdf;
+        font-size: 1.5rem;
+    }
+</style>

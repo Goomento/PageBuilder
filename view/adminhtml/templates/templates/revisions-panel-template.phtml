@@ -1,0 +1,59 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+?>
+<script type="text/template" id="tmpl-gmt-panel-revisions">
+	<div class="gmt-panel-box">
+	<div class="gmt-panel-scheme-buttons">
+			<div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-discard">
+				<button class="gmt-button" disabled>
+					<i class="fas fa-times" aria-hidden="true"></i>
+					<?= __( 'Discard' ); ?>
+				</button>
+			</div>
+			<div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-save">
+				<button class="gmt-button gmt-button-success" disabled>
+					<?= __( 'Apply' ); ?>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="gmt-panel-box">
+		<div class="gmt-panel-heading">
+			<div class="gmt-panel-heading-title"><?= __( 'Revisions' ); ?></div>
+		</div>
+		<div id="gmt-revisions-list" class="gmt-panel-box-content"></div>
+	</div>
+</script>
+
+<script type="text/template" id="tmpl-gmt-panel-revisions-no-revisions">
+	<i class="gmt-nerd-box-icon fas fa-glasses" aria-hidden="true"></i>
+	<div class="gmt-nerd-box-title"><?= __( 'No Revisions Saved Yet' ); ?></div>
+	<div class="gmt-nerd-box-message">{{{ jQuery.mage.__( goomento.config.revisions_enabled ? 'no_revisions_1' : 'revisions_disabled_1' ) }}}</div>
+	<div class="gmt-nerd-box-message">{{{ jQuery.mage.__( goomento.config.revisions_enabled ? 'no_revisions_2' : 'revisions_disabled_2' ) }}}</div>
+</script>
+
+<script type="text/template" id="tmpl-gmt-panel-revisions-loading">
+    <i class="fa-circle-notch fas spinning"></i>
+</script>
+
+<script type="text/template" id="tmpl-gmt-panel-revisions-revision-item">
+	<div class="gmt-revision-item__wrapper {{ type }}" data-revision-id="{{ id }}">
+		<div class="gmt-revision-item__details">
+			<div class="gmt-revision-date">{{{ date }}}</div>
+			<div class="gmt-revision-meta"><span>{{{ jQuery.mage.__( type ) }}}</span> <?= __( 'By' ); ?> {{{ author }}}</div>
+		</div>
+		<div class="gmt-revision-item__tools">
+			<# if ( current === true ) { #>
+				<i class="gmt-revision-item__tools-current fa fa-star" aria-hidden="true"></i>
+				<span class="gmt-screen-only"><?= __( 'Current' ); ?></span>
+			<# } #>
+			<i class="gmt-revision-item__tools-spinner fa-circle-notch fas spinning" aria-hidden="true"></i>
+		</div>
+	</div>
+</script>

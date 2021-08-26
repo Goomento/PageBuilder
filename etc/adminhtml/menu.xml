@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Goomento_PageBuilder::hidden"
+             title="Page Builder"
+             module="Goomento_PageBuilder"
+             translate="title"
+             sortOrder="50"
+             parent="Goomento_Core::menu"
+             resource="Goomento_PageBuilder::hidden"/>
+        <add id="Goomento_PageBuilder::menu"
+             title="Page Builder"
+             module="Goomento_PageBuilder"
+             translate="title"
+             sortOrder="51"
+             parent="Goomento_Core::menu"
+             resource="Goomento_PageBuilder::menu"/>
+        <add id="Goomento_PageBuilder::page"
+             title="Pages"
+             module="Goomento_PageBuilder"
+             translate="title"
+             sortOrder="10"
+             action="pagebuilder/content/grid/type/page"
+             parent="Goomento_PageBuilder::menu"
+             resource="Goomento_PageBuilder::page_grid"/>
+        <add id="Goomento_PageBuilder::template"
+             title="Templates"
+             module="Goomento_PageBuilder"
+             translate="title"
+             sortOrder="20"
+             action="pagebuilder/content/grid/type/template"
+             parent="Goomento_PageBuilder::menu"
+             resource="Goomento_PageBuilder::template_grid"/>
+        <add id="Goomento_PageBuilder::section"
+             title="Sections"
+             module="Goomento_PageBuilder"
+             translate="title"
+             sortOrder="30"
+             action="pagebuilder/content/grid/type/section"
+             parent="Goomento_PageBuilder::menu"
+             resource="Goomento_PageBuilder::section_grid"/>
+        <add id="Goomento_PageBuilder::action"
+             title="Builder Actions"
+             module="Goomento_PageBuilder"
+             translate="title"
+             sortOrder="52"
+             parent="Goomento_Core::menu"
+             resource="Goomento_PageBuilder::action"/>
+        <add id="Goomento_PageBuilder::import"
+             title="Importer"
+             module="Goomento_PageBuilder"
+             translate="title"
+             sortOrder="10"
+             action="pagebuilder/content/importer"
+             parent="Goomento_PageBuilder::action"
+             resource="Goomento_PageBuilder::import"/>
+
+        <add id="Goomento_PageBuilder::config"
+             title="Configuration"
+             module="Goomento_PageBuilder"
+             translate="title"
+             sortOrder="20"
+             action="admin/system_config/edit/section/pagebuilder"
+             parent="Goomento_PageBuilder::action"
+             resource="Goomento_PageBuilder::config"/>
+    </menu>
+</config>

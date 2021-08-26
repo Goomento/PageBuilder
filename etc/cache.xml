@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Cache/etc/cache.xsd">
+    <type name="pagebuilder" translate="label,description" instance="Goomento\PageBuilder\Model\Cache\Type\PageBuilder">
+        <label>Pagebuilder Content</label>
+        <description>Goomento Pagebuilder Content Caching</description>
+    </type>
+</config>

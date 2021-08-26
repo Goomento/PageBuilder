@@ -1,0 +1,295 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Goomento\PageBuilder\Api\Data\ContentSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Goomento\PageBuilder\Api\Data\RevisionSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Goomento\PageBuilder\Api\Data\ContentInterface" type="Goomento\PageBuilder\Model\Content" />
+    <preference for="Goomento\PageBuilder\Api\Data\Revision" type="Goomento\PageBuilder\Model\Revision" />
+    <preference for="Goomento\PageBuilder\Api\ContentRepositoryInterface" type="Goomento\PageBuilder\Model\ContentRepository" />
+    <preference for="Goomento\PageBuilder\Api\RevisionRepositoryInterface" type="Goomento\PageBuilder\Model\RevisionRepository" />
+    <preference for="Goomento\PageBuilder\Api\ContentManagementInterface" type="Goomento\PageBuilder\Model\ContentManagement" />
+    <preference for="Goomento\PageBuilder\Api\ContentImportProcessorInterface" type="Goomento\PageBuilder\Model\ContentImportProcessor" />
+    <preference for="Goomento\PageBuilder\Api\ContentRegistryInterface" type="Goomento\PageBuilder\Model\ContentRegistry" />
+    <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
+        <arguments>
+            <argument name="extensionActions" xsi:type="array">
+                <item name="Magento\Cms\Api\Data\PageInterface" xsi:type="array">
+                    <item name="read" xsi:type="array">
+                        <item name="pageBuilderReader" xsi:type="string">
+                            Goomento\PageBuilder\Model\ResourceModel\Cms\Relation\ReadHandler
+                        </item>
+                    </item>
+                </item>
+                <item name="Magento\Cms\Api\Data\BlockInterface" xsi:type="array">
+                    <item name="read" xsi:type="array">
+                        <item name="pageBuilderReader" xsi:type="string">
+                            Goomento\PageBuilder\Model\ResourceModel\Cms\Relation\ReadHandler
+                        </item>
+                    </item>
+                </item>
+                <item name="Goomento\PageBuilder\Api\Data\ContentInterface" xsi:type="array">
+                    <item name="read" xsi:type="array">
+                        <item name="contentReader" xsi:type="string">
+                            Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Store\ReadHandler
+                        </item>
+                    </item>
+                    <item name="create" xsi:type="array">
+                        <item name="contentCreator" xsi:type="string">
+                            Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Store\SaveHandler
+                        </item>
+                        <item name="cacheHandler" xsi:type="string">
+                            Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Cache\SaveHandler
+                        </item>
+                    </item>
+                    <item name="update" xsi:type="array">
+                        <item name="contentUpdater" xsi:type="string">
+                            Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Store\SaveHandler
+                        </item>
+                        <item name="createRevision" xsi:type="string">
+                            Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Revision\SaveHandler
+                        </item>
+                        <item name="cacheHandler" xsi:type="string">
+                            Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Cache\SaveHandler
+                        </item>
+                    </item>
+                </item>
+                <item name="Goomento\PageBuilder\Api\Data\RevisionInterface" xsi:type="array">
+                    <item name="update" xsi:type="array">
+                        <item name="removeRevisions" xsi:type="string">
+                            Goomento\PageBuilder\Model\ResourceModel\Revision\Relation\Revisions\SaveHandler
+                        </item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="Goomento\PageBuilder\Api\Data\ContentInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">pagebuilder_content</item>
+                    <item name="identifierField" xsi:type="string">content_id</item>
+                </item>
+                <item name="Goomento\PageBuilder\Api\Data\RevisionInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">pagebuilder_content_revision</item>
+                    <item name="identifierField" xsi:type="string">revision_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Goomento\PageBuilder\Model\Config\Source\PageList">
+        <arguments>
+            <argument name="collectionFactory" xsi:type="object">
+                Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="pagebuilder_page_listing_data_source" xsi:type="string">
+                    Goomento\PageBuilder\Model\ResourceModel\Page\Grid\Collection
+                </item>
+                <item name="pagebuilder_template_listing_data_source" xsi:type="string">
+                    Goomento\PageBuilder\Model\ResourceModel\Template\Grid\Collection
+                </item>
+                <item name="pagebuilder_section_listing_data_source" xsi:type="string">
+                    Goomento\PageBuilder\Model\ResourceModel\Section\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Goomento\PageBuilder\Model\ResourceModel\Content\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">pagebuilder_content</argument>
+            <argument name="eventPrefix" xsi:type="string">pagebuilder_content_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">pagebuilder_content_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Goomento\PageBuilder\Model\ResourceModel\Content</argument>
+        </arguments>
+    </type>
+    <virtualType name="Goomento\PageBuilder\Model\ResourceModel\Page\Collection"
+                 type="Goomento\PageBuilder\Model\ResourceModel\Content\Collection">
+        <arguments>
+            <argument name="type" xsi:type="const">\Goomento\PageBuilder\Api\Data\ContentInterface::TYPE_PAGE</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Goomento\PageBuilder\Model\ResourceModel\Page\CollectionFactory"
+                 type="Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Goomento\PageBuilder\Model\ResourceModel\Page\Collection</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Goomento\PageBuilder\Model\Page\PageDataProvider"
+                 type="Goomento\PageBuilder\Model\Content\ContentDataProvider">
+        <arguments>
+            <argument name="contentCollectionFactory" xsi:type="object">Goomento\PageBuilder\Model\ResourceModel\Page\CollectionFactory</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Goomento\PageBuilder\Model\ResourceModel\Section\Collection"
+                 type="Goomento\PageBuilder\Model\ResourceModel\Content\Collection">
+        <arguments>
+            <argument name="type" xsi:type="const">\Goomento\PageBuilder\Api\Data\ContentInterface::TYPE_SECTION</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Goomento\PageBuilder\Model\ResourceModel\Section\CollectionFactory"
+                 type="Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Goomento\PageBuilder\Model\ResourceModel\Section\Collection</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Goomento\PageBuilder\Model\Section\PageDataProvider"
+                 type="Goomento\PageBuilder\Model\Content\ContentDataProvider">
+        <arguments>
+            <argument name="contentCollectionFactory" xsi:type="object">Goomento\PageBuilder\Model\ResourceModel\Section\CollectionFactory</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Goomento\PageBuilder\Model\ResourceModel\Template\Collection"
+                 type="Goomento\PageBuilder\Model\ResourceModel\Content\Collection">
+        <arguments>
+            <argument name="type" xsi:type="const">\Goomento\PageBuilder\Api\Data\ContentInterface::TYPE_TEMPLATE</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Goomento\PageBuilder\Model\ResourceModel\Template\CollectionFactory"
+                 type="Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Goomento\PageBuilder\Model\ResourceModel\Template\Collection</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Goomento\PageBuilder\Model\Template\PageDataProvider"
+                 type="Goomento\PageBuilder\Model\Content\ContentDataProvider">
+        <arguments>
+            <argument name="contentCollectionFactory" xsi:type="object">Goomento\PageBuilder\Model\ResourceModel\Template\CollectionFactory</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Goomento\PageBuilder\Model\ResourceModel\Page\Grid\Collection"
+                 type="Goomento\PageBuilder\Model\ResourceModel\Content\Grid\Collection">
+        <arguments>
+            <argument name="type" xsi:type="const">Goomento\PageBuilder\Api\Data\ContentInterface::TYPE_PAGE</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Goomento\PageBuilder\Model\ResourceModel\Template\Grid\Collection"
+                 type="Goomento\PageBuilder\Model\ResourceModel\Content\Grid\Collection">
+        <arguments>
+            <argument name="type" xsi:type="const">Goomento\PageBuilder\Api\Data\ContentInterface::TYPE_TEMPLATE</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Goomento\PageBuilder\Model\ResourceModel\Section\Grid\Collection"
+                 type="Goomento\PageBuilder\Model\ResourceModel\Content\Grid\Collection">
+        <arguments>
+            <argument name="type" xsi:type="const">Goomento\PageBuilder\Api\Data\ContentInterface::TYPE_SECTION</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\Model\Entity\RepositoryFactory">
+        <arguments>
+            <argument name="entities" xsi:type="array">
+                <item name="Goomento\PageBuilder\Api\Data\ContentInterface" xsi:type="string">
+                    Goomento\PageBuilder\Api\ContentRepositoryInterface
+                </item>
+                <item name="Goomento\PageBuilder\Api\Data\RevisionInterface" xsi:type="string">
+                    Goomento\PageBuilder\Api\RevisionRepositoryInterface
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Goomento\PageBuilder\Model\Api\SearchCriteria\CollectionProcessor\ContentFilterProcessor"
+                 type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor">
+        <arguments>
+            <argument name="customFilters" xsi:type="array">
+                <item name="store_id" xsi:type="object">
+                    Goomento\PageBuilder\Model\Api\SearchCriteria\CollectionProcessor\FilterProcessor\ContentStoreFilter
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Goomento\PageBuilder\Model\Api\SearchCriteria\ContentCollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="filters" xsi:type="object">Goomento\PageBuilder\Model\Api\SearchCriteria\CollectionProcessor\ContentFilterProcessor</item>
+                <item name="sorting" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\SortingProcessor</item>
+                <item name="pagination" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\PaginationProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Goomento\PageBuilder\Model\Api\SearchCriteria\RevisionCollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="sorting" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\SortingProcessor</item>
+                <item name="pagination" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\PaginationProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PageBuilderRenderer" type="Goomento\PageBuilder\Block\Content" shared="false" />
+    <type name="Goomento\PageBuilder\Block\Content" shared="false" />
+    <type name="Goomento\PageBuilder\Model\ContentRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">Goomento\PageBuilder\Model\Api\SearchCriteria\ContentCollectionProcessor</argument>
+        </arguments>
+    </type>
+    <type name="Goomento\PageBuilder\Model\RevisionRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">Goomento\PageBuilder\Model\Api\SearchCriteria\RevisionCollectionProcessor</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\EntityManager\HydratorPool">
+        <arguments>
+            <argument name="hydrators" xsi:type="array">
+                <item name="Goomento\PageBuilder\Api\Data\ContentInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
+                <item name="Goomento\PageBuilder\Api\Data\RevisionInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Goomento\PageBuilder\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Goomento\PageBuilder\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">pagebuilder</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Goomento\PageBuilder\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Goomento\Core\SubSystem">
+        <arguments>
+            <argument name="systems"  xsi:type="array">
+                <item name="pagebuilder" xsi:type="string">Goomento\PageBuilder\PageBuilder</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Goomento\PageBuilder\PageBuilder">
+        <arguments>
+            <argument name="components" xsi:type="array">
+                <item name="data" xsi:type="string">Goomento\PageBuilder\Builder\Data</item>
+                <item name="controls" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Controls</item>
+                <item name="documentsManager" xsi:type="string">Goomento\PageBuilder\Core\DocumentsManager</item>
+                <item name="managersSchemes" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Schemes</item>
+                <item name="managersElements" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Elements</item>
+                <item name="managersWidgets" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Widgets</item>
+                <item name="managersSkins" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Skins</item>
+                <item name="managersIcons" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Icons</item>
+                <item name="editor" xsi:type="string">Goomento\PageBuilder\Core\Editor\Editor</item>
+                <item name="preview" xsi:type="string">Goomento\PageBuilder\Builder\Preview</item>
+                <item name="frontend" xsi:type="string">Goomento\PageBuilder\Builder\Frontend</item>
+                <item name="templateLibrary" xsi:type="string">Goomento\PageBuilder\Builder\TemplateLibrary\Manager</item>
+                <item name="dynamicTags" xsi:type="string">Goomento\PageBuilder\Core\DynamicTags\Manager</item>
+                <item name="modulesManager" xsi:type="string">Goomento\PageBuilder\Core\ModulesManager</item>
+                <item name="revisionsManager" xsi:type="string">Goomento\PageBuilder\Core\RevisionsManager</item>
+                <item name="media" xsi:type="string">Goomento\PageBuilder\Core\Common\Media</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Goomento\PageBuilder\Model\ContentRepository">
+        <plugin name="goomento.saveAutosave"
+                type="Goomento\PageBuilder\Plugin\PageBuilder\Model\ContentRepository\SaveAutosave" />
+    </type>
+</config>
+
