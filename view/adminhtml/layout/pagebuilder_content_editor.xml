@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="after.body.start">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="goomento.config-js"
+                   template="Goomento_PageBuilder::editor/config-js.phtml"/>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <block class="Goomento\PageBuilder\Block\Adminhtml\LiveEditor"
+                   name="pagebuilder.content"
+                   template="Goomento_PageBuilder::editor/live-editor.phtml"
+            />
+        </referenceContainer>
+        <attribute name="class" value="gmt-editor-active"/>
+        <attribute name="class" value="gmt-editor-page"/>
+        <referenceContainer name="header.inner.left" remove="true"/>
+        <referenceContainer name="header.inner.right" remove="true"/>
+        <referenceContainer name="menu.wrapper" remove="true"/>
+        <referenceContainer name="main.top" remove="true"/>
+        <referenceBlock name="legal.system" remove="true"/>
+        <referenceBlock name="legal.copyright" remove="true"/>
+        <referenceBlock name="head.calendar" remove="true"/>
+        <referenceContainer name="notices.wrapper" remove="true"/>
+    </body>
+</page>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">pagebuilder_page_form.page_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Edit Page</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="save" class="\Goomento\PageBuilder\Block\Adminhtml\Page\Edit\SaveButton"/>
+            <button name="delete" class="\Goomento\PageBuilder\Block\Adminhtml\Content\Edit\DeleteButton"/>
+            <button name="live_editor" class="\Goomento\PageBuilder\Block\Adminhtml\Content\Edit\LiveEditorButton"/>
+            <button name="back" class="\Goomento\PageBuilder\Block\Adminhtml\Content\Edit\BackButton"/>
+            <button name="export" class="\Goomento\PageBuilder\Block\Adminhtml\Content\Edit\ExportButton"/>
+        </buttons>
+        <namespace>pagebuilder_page_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>pagebuilder_page_form.page_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="page_form_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="pagebuilder/content/save/type/page"/>
+        </settings>
+        <aclResource>Goomento_PageBuilder::page_view</aclResource>
+        <dataProvider class="Goomento\PageBuilder\Model\Page\PageDataProvider" name="page_form_data_source">
+            <settings>
+                <requestFieldName>content_id</requestFieldName>
+                <primaryFieldName>content_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="general">
+        <settings>
+            <label/>
+        </settings>
+        <field name="content_id" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">page</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <visible>false</visible>
+                <dataScope>content_id</dataScope>
+            </settings>
+        </field>
+        <field name="status" sortOrder="10" formElement="checkbox">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">page</item>
+                    <item name="default" xsi:type="string">pending</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Publish</label>
+                <dataScope>status</dataScope>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <valueMap>
+                            <map name="false" xsi:type="string">pending</map>
+                            <map name="true" xsi:type="string">publish</map>
+                        </valueMap>
+                        <prefer>toggle</prefer>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+        <field name="title" sortOrder="20" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">page</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>text</dataType>
+                <label translate="true">Page Title</label>
+                <dataScope>title</dataScope>
+            </settings>
+        </field>
+        <field name="storeviews" sortOrder="30" formElement="multiselect">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">page</item>
+                    <item name="default" xsi:type="number">0</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>int</dataType>
+                <label translate="true">Store View</label>
+                <dataScope>store_id</dataScope>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="Goomento\PageBuilder\Ui\Component\Listing\Column\Content\StoreOptions"/>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+    </fieldset>
+    <fieldset name="content">
+        <settings>
+            <collapsible>true</collapsible>
+            <label translate="true">Data</label>
+        </settings>
+        <field name="content_data" sortOrder="20" formElement="textarea">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">page</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Content Data</label>
+                <dataScope>content_data</dataScope>
+                <notice><![CDATA[You can copy or paste data to update content]]></notice>
+            </settings>
+        </field>
+    </fieldset>
+    <fieldset name="instruction">
+        <settings>
+            <label />
+        </settings>
+        <htmlContent name="html_content">
+            <block name="goomento.content.instruction" class="Magento\Backend\Block\Template">
+                <arguments>
+                    <argument name="template" xsi:type="string">Goomento_PageBuilder::content/tab/instruction.phtml</argument>
+                    <argument name="view_model" xsi:type="object">Goomento\PageBuilder\ViewModel\PageContent</argument>
+                </arguments>
+            </block>
+        </htmlContent>
+    </fieldset>
+</form>

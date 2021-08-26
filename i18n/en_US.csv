@@ -1,0 +1,740 @@
+"Page Builder","Page Builder"
+Save,Save
+"Save & Duplicate","Save & Duplicate"
+"Save & Close","Save & Close"
+Back,Back
+Delete,Delete
+"Are you sure you want to do this?","Are you sure you want to do this?"
+Export,Export
+Default,Default
+Skin,Skin
+Deprecated,Deprecated
+None,None
+Horizontal,Horizontal
+Vertical,Vertical
+Blur,Blur
+Spread,Spread
+Color,Color
+Top,Top
+Right,Right
+Bottom,Bottom
+Left,Left
+"Link values together","Link values together"
+"Unlinked values","Unlinked values"
+"Add Images","Add Images"
+Classic,Classic
+Gradient,Gradient
+Video,Video
+Slideshow,Slideshow
+"Background Type","Background Type"
+"Background Color","Background Color"
+Location,Location
+"Second Color","Second Color"
+Type,Type
+Linear,Linear
+Radial,Radial
+Angle,Angle
+Position,Position
+"Center Center","Center Center"
+"Center Left","Center Left"
+"Center Right","Center Right"
+"Top Center","Top Center"
+"Top Left","Top Left"
+"Top Right","Top Right"
+"Bottom Center","Bottom Center"
+"Bottom Left","Bottom Left"
+"Bottom Right","Bottom Right"
+Image,Image
+"Background Image","Background Image"
+Custom,Custom
+"X Position","X Position"
+"Y Position","Y Position"
+Attachment,Attachment
+Scroll,Scroll
+Fixed,Fixed
+"Note: Attachment Fixed works only on desktop.","Note: Attachment Fixed works only on desktop."
+Repeat,Repeat
+No-repeat,No-repeat
+Repeat-x,Repeat-x
+Repeat-y,Repeat-y
+Size,Size
+Auto,Auto
+Cover,Cover
+Contain,Contain
+Width,Width
+"Video Link","Video Link"
+"YouTube/Vimeo link, or link to video file (mp4 is recommended).","YouTube/Vimeo link, or link to video file (mp4 is recommended)."
+"Start Time","Start Time"
+"Specify a start time (in seconds)","Specify a start time (in seconds)"
+"End Time","End Time"
+"Specify an end time (in seconds)","Specify an end time (in seconds)"
+"Play Once","Play Once"
+"Play On Mobile","Play On Mobile"
+"Background Fallback","Background Fallback"
+"This cover image will replace the background video in case that the video could not be loaded.","This cover image will replace the background video in case that the video could not be loaded."
+Images,Images
+"Infinite Loop","Infinite Loop"
+Duration,Duration
+Transition,Transition
+"Transition Duration","Transition Duration"
+"Ken Burns Effect","Ken Burns Effect"
+Direction,Direction
+In,In
+Out,Out
+"Border Type","Border Type"
+Solid,Solid
+Double,Double
+Dotted,Dotted
+Dashed,Dashed
+Groove,Groove
+"Box Shadow","Box Shadow"
+Outline,Outline
+Inset,Inset
+Brightness,Brightness
+Contrast,Contrast
+Saturation,Saturation
+Hue,Hue
+"CSS Filters","CSS Filters"
+"Image Size","Image Size"
+"Image Dimension","Image Dimension"
+"You can crop the original image size to any custom size. You can also set a single value for height or width in order to keep the original size ratio.","You can crop the original image size to any custom size. You can also set a single value for height or width in order to keep the original size ratio."
+Full,Full
+"Text Shadow","Text Shadow"
+Family,Family
+Weight,Weight
+Transform,Transform
+Uppercase,Uppercase
+Lowercase,Lowercase
+Capitalize,Capitalize
+Normal,Normal
+Style,Style
+Italic,Italic
+Oblique,Oblique
+Decoration,Decoration
+Underline,Underline
+Overline,Overline
+"Line Through","Line Through"
+Line-Height,Line-Height
+"Letter Spacing","Letter Spacing"
+Typography,Typography
+"Select Icon","Select Icon"
+Remove,Remove
+"Icon Library","Icon Library"
+Height,Height
+Apply,Apply
+"Choose Image","Choose Image"
+"Choose Video","Choose Video"
+Edit,Edit
+"Back to default","Back to default"
+"Add Item","Add Item"
+Reset,Reset
+No,No
+Yes,Yes
+"Paste URL or type","Paste URL or type"
+"Link Options","Link Options"
+"Open in new window","Open in new window"
+"Add nofollow","Add nofollow"
+Column,Column
+Layout,Layout
+Title,Title
+"Column Width","Column Width"
+"Vertical Align","Vertical Align"
+Middle,Middle
+"Space Between","Space Between"
+"Space Around","Space Around"
+"Space Evenly","Space Evenly"
+"Horizontal Align","Horizontal Align"
+Start,Start
+Center,Center
+End,End
+"Widgets Space","Widgets Space"
+"HTML Tag","HTML Tag"
+Background,Background
+Hover,Hover
+"Background Overlay","Background Overlay"
+Opacity,Opacity
+"Blend Mode","Blend Mode"
+Border,Border
+"Border Radius","Border Radius"
+"Note: The following colors won't work if Default Colors are enabled.","Note: The following colors won't work if Default Colors are enabled."
+"Heading Color","Heading Color"
+"Text Color","Text Color"
+"Link Color","Link Color"
+"Link Hover Color","Link Hover Color"
+"Text Align","Text Align"
+Advanced,Advanced
+Margin,Margin
+Padding,Padding
+Z-Index,Z-Index
+"CSS ID","CSS ID"
+"Add your custom id WITHOUT the Pound key. e.g: my-id","Add your custom id WITHOUT the Pound key. e.g: my-id"
+"CSS Classes","CSS Classes"
+"Add your custom class WITHOUT the dot. e.g: my-class","Add your custom class WITHOUT the dot. e.g: my-class"
+"Motion Effects","Motion Effects"
+"Entrance Animation","Entrance Animation"
+"Animation Duration","Animation Duration"
+Slow,Slow
+Fast,Fast
+"Animation Delay","Animation Delay"
+Responsive,Responsive
+"Responsive visibility will take effect only on preview or live page, and not while editing in Goomento.","Responsive visibility will take effect only on preview or live page, and not while editing in Goomento."
+"Hide On Desktop","Hide On Desktop"
+"Hide On Tablet","Hide On Tablet"
+"Hide On Mobile","Hide On Mobile"
+Section,Section
+"Stretch Section","Stretch Section"
+"Stretch the section to the full width of the page using JS.","Stretch the section to the full width of the page using JS."
+"Content Width","Content Width"
+Boxed,Boxed
+"Full Width","Full Width"
+"Columns Gap","Columns Gap"
+"No Gap","No Gap"
+Narrow,Narrow
+Extended,Extended
+Wide,Wide
+Wider,Wider
+"Fit To Screen","Fit To Screen"
+"Min Height","Min Height"
+"Minimum Height","Minimum Height"
+"Column Position","Column Position"
+Stretch,Stretch
+Overflow,Overflow
+Hidden,Hidden
+Structure,Structure
+"Shape Divider","Shape Divider"
+Flip,Flip
+Invert,Invert
+"Bring to Front","Bring to Front"
+"Reverse Columns","Reverse Columns"
+Tablet,Tablet
+Mobile,Mobile
+Visibility,Visibility
+"Responsive visibility will take effect only on preview or live page, and not while editing in SagoTheme.","Responsive visibility will take effect only on preview or live page, and not while editing in SagoTheme."
+Hide,Hide
+Show,Show
+System,System
+Google,Google
+"Google Early Access","Google Early Access"
+Content,Content
+Settings,Settings
+"Custom CSS","Custom CSS"
+"Add your own custom CSS here","Add your own custom CSS here"
+Basic,Basic
+General,General
+Extension,Extension
+Theme,Theme
+Products,Products
+"Font Awesome - Regular","Font Awesome - Regular"
+"Font Awesome - Solid","Font Awesome - Solid"
+"Font Awesome - Brands","Font Awesome - Brands"
+"All Icons","All Icons"
+"Sorry, you need permissions to view this content","Sorry, you need permissions to view this content"
+Discard,Discard
+Colors,Colors
+"Color Palettes","Color Palettes"
+Primary,Primary
+Secondary,Secondary
+Text,Text
+Accent,Accent
+"More Palettes","More Palettes"
+"Color Palette","Color Palette"
+"Choose which colors appear in the editor's color picker. This makes accessing the colors you chose for the site much easier.","Choose which colors appear in the editor's color picker. This makes accessing the colors you chose for the site much easier."
+"Color Picker","Color Picker"
+"Default Fonts","Default Fonts"
+"Primary Headline","Primary Headline"
+"Secondary Headline","Secondary Headline"
+"Body Text","Body Text"
+"Accent Text","Accent Text"
+Mountains,Mountains
+Drops,Drops
+Clouds,Clouds
+Zigzag,Zigzag
+Pyramids,Pyramids
+Triangle,Triangle
+"Triangle Asymmetrical","Triangle Asymmetrical"
+Tilt,Tilt
+"Tilt Opacity","Tilt Opacity"
+"Fan Opacity","Fan Opacity"
+Curve,Curve
+"Curve Asymmetrical","Curve Asymmetrical"
+Waves,Waves
+"Waves Brush","Waves Brush"
+"Waves Pattern","Waves Pattern"
+Arrow,Arrow
+Split,Split
+Book,Book
+"Wrong Source Base","Wrong Source Base"
+"Source existed.","Source existed."
+"Sorry, you need permissions to save this content","Sorry, you need permissions to save this content"
+"Invalid template","Invalid template"
+"Sorry, you need permissions to update this template","Sorry, you need permissions to update this template"
+"Sorry, you need permissions to import template","Sorry, you need permissions to import template"
+"ContentCss not found.","ContentCss not found."
+"The required argument(s) ""%1"" not specified.","The required argument(s) ""%1"" not specified."
+Local,Local
+"(no title)","(no title)"
+"Template not exist.","Template not exist."
+"Import error","Import error"
+"Something went wrong when processing mass action.","Something went wrong when processing mass action."
+"Content Title","Content Title"
+"Content Type","Content Type"
+"Content View","Content View"
+Status,Status
+"To apply changes you should fill in hidden required ""%1"" field","To apply changes you should fill in hidden required ""%1"" field"
+"You deleted the content.","You deleted the content."
+"Something went wrong when deleting the content","Something went wrong when deleting the content"
+"Something went wrong when deleting content(s)","Something went wrong when deleting content(s)"
+"Something went wrong when display contents.","Something went wrong when display contents."
+"Something went wrong when display content(s)","Something went wrong when display content(s)"
+"Sorry, you need permissions to view this content.","Sorry, you need permissions to view this content."
+"Something went wrong when entering the Page Builder.","Something went wrong when entering the Page Builder."
+"Template content was empty","Template content was empty"
+"Something went wrong when exporting template.","Something went wrong when exporting template."
+". 's'",". 's'"
+Pages,Pages
+"Manage %1","Manage %1"
+"Import file must specify.","Import file must specify."
+"Import file should not empty.","Import file should not empty."
+"Imported %1 content(s) successfully.","Imported %1 content(s) successfully."
+"Something went wrong when importing template.","Something went wrong when importing template."
+Import,Import
+"You deleted %1 out of %2 content(s)","You deleted %1 out of %2 content(s)"
+"You have set %1 out of %2 content(s) to pending","You have set %1 out of %2 content(s) to pending"
+"Something went wrong when set content status","Something went wrong when set content status"
+"You have published %1 out of %2 content(s)","You have published %1 out of %2 content(s)"
+"Something went wrong when creating content(s)","Something went wrong when creating content(s)"
+"Sorry, you need permissions to save this content.","Sorry, you need permissions to save this content."
+"Invalid content type: %1","Invalid content type: %1"
+"Something went wrong when saving the content.","Something went wrong when saving the content."
+"You saved the content.","You saved the content."
+"Something went wrong while saving the content.","Something went wrong while saving the content."
+"( Duplicated from #%1 )","( Duplicated from #%1 )"
+"You duplicated the content.","You duplicated the content."
+"Global.css saved.","Global.css saved."
+"Something went wrong when saving Global.css","Something went wrong when saving Global.css"
+Global.css,Global.css
+"The entity must be specify","The entity must be specify"
+"Something went wrong when create the Page Builder. Please try again.","Something went wrong when create the Page Builder. Please try again."
+"Something went wrong when render content view.","Something went wrong when render content view."
+"Invalid access token.","Invalid access token."
+"Hurray! Your %1 is live.","Hurray! Your %1 is live."
+Document,Document
+"General Settings","General Settings"
+"%s Settings","%s Settings"
+"Updated %1","Updated %1"
+"Use `%1` hook to register ajax action","Use `%1` hook to register ajax action"
+"Action not found.","Action not found."
+Page,Page
+Single,Single
+"Body Style","Body Style"
+Template,Template
+"Type %1 does not exist.","Type %1 does not exist."
+Url,Url
+"Add Media","Add Media"
+Anonymous,Anonymous
+"Invalid revision.","Invalid revision."
+Lightbox,Lightbox
+"Default Generic Fonts","Default Generic Fonts"
+"The list of fonts used if the chosen font is not available.","The list of fonts used if the chosen font is not available."
+"Sets the default space between widgets (Default: 20)","Sets the default space between widgets (Default: 20)"
+"Stretched Section Fit To","Stretched Section Fit To"
+"Enter parent element selector to which stretched sections will fit to (e.g. #primary / .wrapper / main etc). Leave blank to fit to page width.","Enter parent element selector to which stretched sections will fit to (e.g. #primary / .wrapper / main etc). Leave blank to fit to page width."
+"Page Title Selector","Page Title Selector"
+"Goomento lets you hide the page title. This works for themes that have ""h1.entry-title"" selector. If your theme's selector is different, please enter it above.","Goomento lets you hide the page title. This works for themes that have ""h1.entry-title"" selector. If your theme's selector is different, please enter it above."
+"Image Lightbox","Image Lightbox"
+"Open all image links in a lightbox popup window. The lightbox will automatically work on any link that leads to an image file.","Open all image links in a lightbox popup window. The lightbox will automatically work on any link that leads to an image file."
+"Enable In Editor","Enable In Editor"
+"UI Color","UI Color"
+"UI Hover Color","UI Hover Color"
+"%1 Settings","%1 Settings"
+Internal,Internal
+External,External
+"Use Origin Content","Use Origin Content"
+"Use Cache","Use Cache"
+"Show Nothing","Show Nothing"
+"Do Nothing","Do Nothing"
+Pending,Pending
+Published,Published
+"Invalid content status: %1","Invalid content status: %1"
+"File does not exited: %1","File does not exited: %1"
+"Content Id does not specify","Content Id does not specify"
+"The `from` and `to` URL's must be different","The `from` and `to` URL's must be different"
+"The `from` and `to` URL's must be valid URL's","The `from` and `to` URL's must be valid URL's"
+"Invalid content Id: %1","Invalid content Id: %1"
+"Invalid relation type: %1","Invalid relation type: %1"
+"Could not save the page: %1","Could not save the page: %1"
+"You can't publish this content","You can't publish this content"
+"The content with the ""%1"" ID doesn't exist.","The content with the ""%1"" ID doesn't exist."
+"Could not delete the content: %1","Could not delete the content: %1"
+"Invalid file type to download: %1","Invalid file type to download: %1"
+Draft,Draft
+Autosave,Autosave
+Revision,Revision
+"Could not save the revision: %1","Could not save the revision: %1"
+"The revision with the ""%1"" ID doesn't exist.","The revision with the ""%1"" ID doesn't exist."
+"Could not delete the revision: %1","Could not delete the revision: %1"
+"Page content not found","Page content not found"
+editable_title,editable_title
+View,View
+"Delete %1","Delete %1"
+"Are you sure you want to delete a `%1`?","Are you sure you want to delete a `%1`?"
+"All Store Views","All Store Views"
+Accordion,Accordion
+"Title & Description","Title & Description"
+"Accordion Title","Accordion Title"
+"Accordion Content","Accordion Content"
+"Accordion Items","Accordion Items"
+"Accordion #1","Accordion #1"
+"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.","Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo."
+"Accordion #2","Accordion #2"
+Icon,Icon
+"Active Icon","Active Icon"
+"Title HTML Tag","Title HTML Tag"
+"Border Width","Border Width"
+"Border Color","Border Color"
+"Active Color","Active Color"
+Alignment,Alignment
+Spacing,Spacing
+Alert,Alert
+Info,Info
+Success,Success
+Warning,Warning
+Danger,Danger
+"Enter your title","Enter your title"
+"This is an Alert","This is an Alert"
+"Enter your description","Enter your description"
+"I am a description. Click the edit button to change this text.","I am a description. Click the edit button to change this text."
+"Dismiss Button","Dismiss Button"
+"Left Border Width","Left Border Width"
+Description,Description
+"Dismiss alert","Dismiss alert"
+Block,Block
+"Block class","Block class"
+Button,Button
+"Extra Small","Extra Small"
+Small,Small
+Medium,Medium
+Large,Large
+"Extra Large","Extra Large"
+"Click here","Click here"
+Link,Link
+https://your-link.com,https://your-link.com
+Justified,Justified
+"Icon Position","Icon Position"
+Before,Before
+After,After
+"Icon Spacing","Icon Spacing"
+"Button ID","Button ID"
+"Please make sure the ID is unique and not used elsewhere on the page this form is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces.","Please make sure the ID is unique and not used elsewhere on the page this form is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces."
+"Hover Animation","Hover Animation"
+"Custom Positioning","Custom Positioning"
+Inline,Inline
+"Custom Width","Custom Width"
+Absolute,Absolute
+"Horizontal Orientation","Horizontal Orientation"
+Offset,Offset
+"Vertical Orientation","Vertical Orientation"
+Counter,Counter
+"Starting Number","Starting Number"
+"Ending Number","Ending Number"
+"Number Prefix","Number Prefix"
+"Number Suffix","Number Suffix"
+Plus,Plus
+"Thousand Separator","Thousand Separator"
+Separator,Separator
+"Cool Number","Cool Number"
+Number,Number
+Heading,Heading
+"Add Your Heading Text Here","Add Your Heading Text Here"
+XL,XL
+XXL,XXL
+HTML,HTML
+"HTML Code","HTML Code"
+"Enter your code","Enter your code"
+Stacked,Stacked
+Framed,Framed
+Shape,Shape
+Circle,Circle
+Square,Square
+"Primary Color","Primary Color"
+"Secondary Color","Secondary Color"
+Rotate,Rotate
+"Icon Box","Icon Box"
+"This is the heading","This is the heading"
+"Vertical Alignment","Vertical Alignment"
+"Icon List","Icon List"
+"List Item","List Item"
+"List Item #1","List Item #1"
+"List Item #2","List Item #2"
+"List Item #3","List Item #3"
+List,List
+Divider,Divider
+Off,Off
+On,On
+"Text Indent","Text Indent"
+Caption,Caption
+"Custom Caption","Custom Caption"
+"Enter your image caption","Enter your image caption"
+"Media File","Media File"
+"Custom URL","Custom URL"
+"Max Width","Max Width"
+"Image Box","Image Box"
+"Image Position","Image Position"
+"Progress Bar","Progress Bar"
+"My Skill","My Skill"
+Percentage,Percentage
+"Display Percentage","Display Percentage"
+"Inner Text","Inner Text"
+"e.g. Web Designer","e.g. Web Designer"
+"Web Designer","Web Designer"
+"Title Style","Title Style"
+"Social Icons","Social Icons"
+"Official Color","Official Color"
+Rounded,Rounded
+"Icon Hover","Icon Hover"
+Spacer,Spacer
+Space,Space
+Tabs,Tabs
+"Tab Title","Tab Title"
+"Tab Content","Tab Content"
+"Tabs Items","Tabs Items"
+"Tab #1","Tab #1"
+"Tab #2","Tab #2"
+"Navigation Width","Navigation Width"
+"Text Editor","Text Editor"
+"Drop Cap","Drop Cap"
+Columns,Columns
+Toggle,Toggle
+"Toggle Title","Toggle Title"
+"Toggle Content","Toggle Content"
+"Toggle Items","Toggle Items"
+"Toggle #1","Toggle #1"
+"Toggle #2","Toggle #2"
+Source,Source
+YouTube,YouTube
+Vimeo,Vimeo
+Dailymotion,Dailymotion
+Other,Other
+"Enter your URL","Enter your URL"
+URL,URL
+"Video Options","Video Options"
+Autoplay,Autoplay
+Mute,Mute
+Loop,Loop
+"Player Controls","Player Controls"
+"Video Info","Video Info"
+"Modest Branding","Modest Branding"
+Logo,Logo
+"Controls Color","Controls Color"
+"Privacy Mode","Privacy Mode"
+"When you turn on privacy mode, YouTube won't store information about visitors on your website unless they play the video.","When you turn on privacy mode, YouTube won't store information about visitors on your website unless they play the video."
+"Suggested Videos","Suggested Videos"
+"Current Video Channel","Current Video Channel"
+"Any Video","Any Video"
+"Intro Title","Intro Title"
+"Intro Portrait","Intro Portrait"
+"Intro Byline","Intro Byline"
+"Download Button","Download Button"
+Poster,Poster
+"Image Overlay","Image Overlay"
+"Lazy Load","Lazy Load"
+"Play Icon","Play Icon"
+"Aspect Ratio","Aspect Ratio"
+Shadow,Shadow
+"Content Position","Content Position"
+"Play Video","Play Video"
+"Hello World","Hello World"
+File,File
+"Accepted: JSON files","Accepted: JSON files"
+"How to use","How to use"
+"Add Widget with name ""Page Builder Content"" and set ""Page"" for it.","Add Widget with name ""Page Builder Content"" and set ""Page"" for it."
+"CMS Page/Static Block","CMS Page/Static Block"
+"You can paste the above block of snippet into any page in Magento 2 and set %1 for it.","You can paste the above block of snippet into any page in Magento 2 and set %1 for it."
+"Template .phtml file","Template .phtml file"
+"Open a .phtml file and insert where you want to display Page Builder Content.","Open a .phtml file and insert where you want to display Page Builder Content."
+Loading,Loading
+"What's new?","What's new?"
+Close,Close
+"Add New Section","Add New Section"
+"Add Template","Add Template"
+"Drag widget here","Drag widget here"
+"Select your Structure","Select your Structure"
+"This tag has no settings.","This tag has no settings."
+Actions,Actions
+Revisions,Revisions
+"No History Yet","No History Yet"
+"Once you start working, you'll be able to redo / undo any action you make in the editor.","Once you start working, you'll be able to redo / undo any action you make in the editor."
+Undo,Undo
+Redo,Redo
+Copy,Copy
+Paste,Paste
+"Paste Style","Paste Style"
+Duplicate,Duplicate
+"Go To","Go To"
+"Show / Hide Panel","Show / Hide Panel"
+"Responsive Mode","Responsive Mode"
+History,History
+Navigator,Navigator
+"Template Library","Template Library"
+"Keyboard Shortcuts","Keyboard Shortcuts"
+Quit,Quit
+Skip,Skip
+Empty,Empty
+"Easy Navigation is Here!","Easy Navigation is Here!"
+"Once you fill your page with content, this window will give you an overview display of all the page elements. This way, you can easily move around any section, column, or widget.","Once you fill your page with content, this window will give you an overview display of all the page elements. This way, you can easily move around any section, column, or widget."
+"Thanks for using Goomento PageBuilder","Thanks for using Goomento PageBuilder"
+"Search Widget:","Search Widget:"
+Menu,Menu
+"Widgets Panel","Widgets Panel"
+Desktop,Desktop
+"Default Preview","Default Preview"
+"Preview for %1","Preview for %1"
+"Preview Changes","Preview Changes"
+Publish,Publish
+"Save Options","Save Options"
+"Save as Template","Save as Template"
+"Hide Panel","Hide Panel"
+"Update changes to page","Update changes to page"
+"%s are disabled","%s are disabled"
+"You can enable it from the <a href=""%s"" target=""_blank"">Goomento settings page</a>.","You can enable it from the <a href=""%s"" target=""_blank"">Goomento settings page</a>."
+"Drag & Drop","Drag & Drop"
+"No Revisions Saved Yet","No Revisions Saved Yet"
+By,By
+Current,Current
+"Import Template","Import Template"
+"Sync Library","Sync Library"
+"Back to Library","Back to Library"
+New,New
+Trend,Trend
+Popular,Popular
+"My Favorites","My Favorites"
+"Search Templates:","Search Templates:"
+Search,Search
+Name,Name
+"Created By","Created By"
+"Creation Date","Creation Date"
+"Stay tuned! More awesome templates coming real soon.","Stay tuned! More awesome templates coming real soon."
+Favorite,Favorite
+Preview,Preview
+Insert,Insert
+"More actions","More actions"
+"Enter Template Name","Enter Template Name"
+"Import Template to Your Library","Import Template to Your Library"
+"Drag & drop your .JSON or .zip template file","Drag & drop your .JSON or .zip template file"
+or,or
+"Select File","Select File"
+"My Libraries","My Libraries"
+Upload,Upload
+"Have a look","Have a look"
+"Please note: All unsaved changes will be lost","Please note: All unsaved changes will be lost"
+"Saving Disabled","Saving Disabled"
+"Server Error","Server Error"
+"Import Document Settings","Import Document Settings"
+"Do you want to also import the document settings of the template?","Do you want to also import the document settings of the template?"
+"Attention: Importing may override previous settings","Attention: Importing may override previous settings"
+Blocks,Blocks
+"My Templates","My Templates"
+"Your designs will be available for export and reuse on any page or website","Your designs will be available for export and reuse on any page or website"
+"Save your template","Save your template"
+"Delete template","Delete template"
+"An error occurred","An error occurred"
+"The following error(s) occurred while processing the request:","The following error(s) occurred while processing the request:"
+Library,Library
+"Haven’t Saved Templates Yet?","Haven’t Saved Templates Yet?"
+"This is where your templates should be. Design it. Save it. Reuse it.","This is where your templates should be. Design it. Save it. Reuse it."
+"No Results Found","No Results Found"
+"Please make sure your search is spelled correctly or try a different words.","Please make sure your search is spelled correctly or try a different words."
+"No Favorite Templates","No Favorite Templates"
+Category,Category
+"Are you sure you want to reset this gallery?","Are you sure you want to reset this gallery?"
+"Delete Gallery","Delete Gallery"
+Cancel,Cancel
+"Item #%1","Item #%1"
+"Inner section","Inner section"
+"Delete all content","Delete all content"
+"Attention: We are going to DELETE ALL CONTENT from this page. Are you sure you want to do that?","Attention: We are going to DELETE ALL CONTENT from this page. Are you sure you want to do that?"
+"Connection Lost","Connection Lost"
+"Unknown Error","Unknown Error"
+Refresh,Refresh
+"Go Back","Go Back"
+flexbox_attention_header,flexbox_attention_header
+flexbox_attention_message,flexbox_attention_message
+learn_more,learn_more
+got_it,got_it
+"Your browser isn't compatible","Your browser isn't compatible"
+"Your browser isn't compatible with all of Goomento's editing features. We recommend you switch to another browser like Chrome or Firefox.","Your browser isn't compatible with all of Goomento's editing features. We recommend you switch to another browser like Chrome or Firefox."
+"Proceed Anyway","Proceed Anyway"
+"Go back or Refresh this page if issue is persistent","Go back or Refresh this page if issue is persistent"
+"Edit %1","Edit %1"
+"Paste style","Paste style"
+"Reset style","Reset style"
+"Type here","Type here"
+"Meet Right Click","Meet Right Click"
+"Now you can access all editing actions using right click.","Now you can access all editing actions using right click."
+"Got it","Got it"
+"Duplicate  %1","Duplicate  %1"
+"Add %1","Add %1"
+"Delete  %1","Delete  %1"
+"Add New Column","Add New Column"
+"Save As Section","Save As Section"
+preview,preview
+elements,elements
+Help,Help
+"Go to","Go to"
+Shortcuts,Shortcuts
+"View page","View page"
+"Global style","Global style"
+"Default Colors","Default Colors"
+"Global settings","Global settings"
+"Saving has been disabled until you’re reconnected.","Saving has been disabled until you’re reconnected."
+"Server error","Server error"
+"Copy All Content","Copy All Content"
+"Delete All Content","Delete All Content"
+"All content","All content"
+Added,Added
+Removed,Removed
+Edited,Edited
+Moved,Moved
+"Style pasted","Style pasted"
+"Style reset","Style reset"
+"Editing started","Editing started"
+update,update
+"Color value","Color value"
+"Select Color","Select Color"
+"Select default color","Select default color"
+Clear,Clear
+"Clear color","Clear color"
+Templates,Templates
+Sections,Sections
+"Builder Actions","Builder Actions"
+Importer,Importer
+Configuration,Configuration
+Active,Active
+"Download Image","Download Image"
+"Downloaded Folder","Downloaded Folder"
+Editor,Editor
+"Css Print Method","Css Print Method"
+Render,Render
+Fallback,Fallback
+"Pagebuilder Content","Pagebuilder Content"
+"Goomento Pagebuilder Content Caching","Goomento Pagebuilder Content Caching"
+"Enable PageBuilder","Enable PageBuilder"
+"-- Please Select --","-- Please Select --"
+"Edit Page","Edit Page"
+"Page Title","Page Title"
+"Store View","Store View"
+Data,Data
+"Content Data","Content Data"
+"Add New Page","Add New Page"
+"Delete Page(s)","Delete Page(s)"
+"Are you sure you wan't to delete selected items?","Are you sure you wan't to delete selected items?"
+ID,ID
+Created,Created
+Modified,Modified
+"Edit Section","Edit Section"
+"Delete Section(s)","Delete Section(s)"
+"Edit Template","Edit Template"
+"Page in Websites","Page in Websites"
+"Add New Template","Add New Template"
+"Delete Template(s)","Delete Template(s)"
+"Are you sure you want to delete selected items?","Are you sure you want to delete selected items?"

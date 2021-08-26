@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="pagebuilder" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <resource>Goomento_PageBuilder::config</resource>
+            <label>Page Builder</label>
+            <tab>goomento</tab>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>General</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="0">
+                    <label>Active</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Allow to display on storefront.</comment>
+                </field>
+                <field id="version" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="0">
+                    <label />
+                    <frontend_model>Goomento\PageBuilder\Model\Config\Frontend\Version</frontend_model>
+                </field>
+            </group>
+            <group id="import" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Import</label>
+                <field id="allowed_download_image" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Download Image</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Image will be downloaded, otherwise keep the same link.</comment>
+                </field>
+                <field id="folder" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Downloaded Folder</label>
+                    <depends>
+                        <field id="pagebuilder/import/allowed_download_image">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="editor" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Editor</label>
+                <group id="style" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Style</label>
+                    <field id="css_print_method" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Css Print Method</label>
+                        <source_model>Goomento\PageBuilder\Model\Config\Source\CssPrintMethods</source_model>
+                        <backend_model>Goomento\PageBuilder\Model\Config\Backend\RefreshStyle</backend_model>
+                    </field>
+                </group>
+                <group id="render" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Render</label>
+                    <field id="fallback" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Fallback</label>
+                        <source_model>Goomento\PageBuilder\Model\Config\Source\RenderFallback</source_model>
+                        <comment>If any issue happens during display PageBuilder, choose its behavior.</comment>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

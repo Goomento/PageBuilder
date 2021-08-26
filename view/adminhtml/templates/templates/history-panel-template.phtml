@@ -1,0 +1,36 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+?>
+<script type="text/template" id="tmpl-gmt-panel-history-page">
+	<div id="gmt-panel-elements-navigation" class="gmt-panel-navigation">
+        <div class="gmt-component-tab gmt-panel-navigation-tab" data-tab="actions"><?= __( 'Actions' ); ?></div>
+        <div class="gmt-component-tab gmt-panel-navigation-tab" data-tab="revisions"><?= __( 'Revisions' ); ?></div>
+	</div>
+	<div id="gmt-panel-history-content"></div>
+</script>
+
+<script type="text/template" id="tmpl-gmt-panel-history-tab">
+	<div id="gmt-history-list"></div>
+</script>
+
+<script type="text/template" id="tmpl-gmt-panel-history-no-items">
+	<i class="gmt-nerd-box-icon fas fa-glasses"></i>
+	<div class="gmt-nerd-box-title"><?= __('No History Yet'); ?></div>
+	<div class="gmt-nerd-box-message"><?= __('Once you start working, you\'ll be able to redo / undo any action you make in the editor.'); ?></div>
+</script>
+
+<script type="text/template" id="tmpl-gmt-panel-history-item">
+	<div class="gmt-history-item__details">
+		<span class="gmt-history-item__title">{{{ title }}}</span>
+		<span class="gmt-history-item__subtitle">{{{ subTitle }}}</span>
+		<span class="gmt-history-item__action">{{{ action }}}</span>
+	</div>
+	<div class="gmt-history-item__icon">
+		<span class="gmt-icon" aria-hidden="true"></span>
+	</div>
+</script>

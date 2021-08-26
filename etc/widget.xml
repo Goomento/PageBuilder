@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:helloworld:Magento_Widget:etc/widget.xsd">
+    <widget class="PageBuilderRenderer" id="pagebuilder.content">
+        <label>Page Builder Content</label>
+        <description>Page Builder Content Renderer</description>
+        <parameters>
+            <parameter name="content_id" xsi:type="select" required="false" visible="true"
+                       source_model="Goomento\PageBuilder\Model\Config\Source\PageList">
+                <label translate="true">Page</label>
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>

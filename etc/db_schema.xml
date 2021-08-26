@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="pagebuilder_content" resource="default" engine="innodb" comment="Content Builder Table">
+        <column xsi:type="int" name="content_id" padding="11" unsigned="false" nullable="false" identity="true"
+                comment="Content ID"/>
+        <column xsi:type="varchar" name="title" nullable="true" length="255" comment="Content Title"/>
+        <column xsi:type="varchar" name="type" nullable="false" length="100" comment="Content Type"/>
+        <column xsi:type="text" name="content" nullable="true" comment="Content"/>
+        <column xsi:type="text" name="elements" nullable="true" comment="Content Elements"/>
+        <column xsi:type="mediumtext" name="settings" nullable="true" comment="Content Settings"/>
+        <column xsi:type="int" name="author_id" unsigned="true" identity="false" padding="10" nullable="false"
+                comment="Author ID"/>
+        <column xsi:type="varchar" name="status" length="64" nullable="false" default="draft" comment="Content Status"/>
+        <column xsi:type="int" name="last_editor_id" unsigned="true" identity="false" padding="10" nullable="false"
+                comment="Last Editor ID"/>
+        <column xsi:type="timestamp" name="creation_time" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Content Creation Time"/>
+        <column xsi:type="timestamp" name="update_time" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Content Modification Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="content_id"/>
+        </constraint>
+        <index referenceId="PAGEBUILDER_CONTENT_TITLE_CONTENT_ELEMENTS" indexType="fulltext">
+            <column name="title"/>
+            <column name="content"/>
+            <column name="elements"/>
+        </index>
+    </table>
+    <table name="pagebuilder_content_store" resource="default" engine="innodb" comment="Page Builder To Store Linkage Table">
+        <column xsi:type="int" name="content_id" padding="11" unsigned="false" nullable="false" identity="false"
+                comment="Content ID"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" identity="false"
+                comment="Store ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="content_id"/>
+            <column name="store_id"/>
+        </constraint>
+        <constraint xsi:type="foreign"
+                    referenceId="PAGEBUILDER_CONTENT_STORE_CONTENT_ID_PAGEBUILDER_CONTENT_CONTENT_ID"
+                    table="pagebuilder_content_store"
+                    column="content_id"
+                    referenceTable="pagebuilder_content"
+                    referenceColumn="content_id"
+                    onDelete="CASCADE"/>
+        <constraint xsi:type="foreign"
+                    referenceId="PAGEBUILDER_CONTENT_STORE_STORE_ID_STORE_STORE_ID"
+                    table="pagebuilder_content_store"
+                    column="store_id"
+                    referenceTable="store"
+                    referenceColumn="store_id"
+                    onDelete="CASCADE"/>
+        <index referenceId="PAGEBUILDER_CONTENT_STORE_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+    </table>
+    <table name="pagebuilder_content_revision" resource="default" engine="innodb"
+           comment="Content Builder Revisions Table">
+        <column xsi:type="int" name="revision_id" unsigned="false" nullable="false" identity="true"
+                comment="Revision ID"/>
+        <column xsi:type="int" name="content_id" padding="11" nullable="false" identity="false"
+                comment="Content ID"/>
+        <column xsi:type="text" name="elements" nullable="true" comment="Revision Elements"/>
+        <column xsi:type="mediumtext" name="settings" nullable="true" comment="Revision Settings"/>
+        <column xsi:type="int" name="author_id" unsigned="true" identity="false" padding="10" nullable="false"
+                comment="Author ID"/>
+        <column xsi:type="varchar" name="status" length="64" nullable="false" default="revision" comment="Revision Status"/>
+        <column xsi:type="timestamp" name="creation_time" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Revision Creation Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="revision_id"/>
+        </constraint>
+        <constraint xsi:type="foreign"
+                    referenceId="PAGEBUILDER_CONTENT_REVISION_CONTENT_ID_PAGEBUILDER_CONTENT_CONTENT_ID"
+                    table="pagebuilder_content_revision"
+                    column="content_id"
+                    referenceTable="pagebuilder_content"
+                    referenceColumn="content_id"
+                    onDelete="CASCADE"/>
+        <index referenceId="PAGEBUILDER_CONTENT_REVISION_CONTENT" indexType="fulltext">
+            <column name="elements"/>
+        </index>
+        <index referenceId="PAGEBUILDER_CONTENT_REVISION_CONTENT_ID" indexType="btree">
+            <column name="content_id"/>
+        </index>
+    </table>
+    <table name="cms_page" resource="default" engine="innodb" comment="CMS Page Table">
+        <column xsi:type="smallint" name="pagebuilder_is_active" unsigned="false" nullable="true" identity="false"
+                default="0" comment="Is Page Builder Active"/>
+        <column xsi:type="int" name="pagebuilder_content_id" padding="11" unsigned="false" nullable="true" identity="false"
+                comment="PageBuilder Content ID"/>
+    </table>
+    <table name="cms_block" resource="default" engine="innodb" comment="CMS Block Table">
+        <column xsi:type="smallint" name="pagebuilder_is_active" unsigned="false" nullable="true" identity="false"
+                default="0" comment="Is Page Builder Active"/>
+        <column xsi:type="int" name="pagebuilder_content_id" padding="11" unsigned="false" nullable="true" identity="false"
+                comment="PageBuilder Content ID"/>
+    </table>
+    <table name="pagebuilder_config_data" resource="default" engine="innodb" comment="PageBuilder Config Data">
+        <column xsi:type="int" name="config_id" unsigned="true" nullable="false" identity="true"
+                comment="Config ID"/>
+        <column xsi:type="int" name="store_id" unsigned="false" nullable="false" identity="false"
+                default="0" comment="Store ID"/>
+        <column xsi:type="varchar" name="path" nullable="false" length="255" default="general" comment="Config Path"/>
+        <column xsi:type="text" name="value" nullable="true" comment="Config Value"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="config_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="PAGEBUILDER_CONFIG_DATA_STORE_ID_PATH">
+            <column name="store_id"/>
+            <column name="path"/>
+        </constraint>
+    </table>
+</schema>

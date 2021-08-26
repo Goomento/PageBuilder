@@ -1,0 +1,53 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+?>
+<script type="text/template" id="tmpl-gmt-navigator">
+	<div id="gmt-navigator__header">
+		<i id="gmt-navigator__toggle-all" class="far fa-plus-square" data-gmt-action="expand"></i>
+		<div id="gmt-navigator__header__title"><?= __( 'Navigator' ); ?></div>
+		<i id="gmt-navigator__close" class="fas fa-times"></i>
+	</div>
+	<div id="gmt-navigator__elements"></div>
+	<div id="gmt-navigator__footer">
+        <i class="fas fa-ellipsis-h"></i>
+	</div>
+</script>
+
+<script type="text/template" id="tmpl-gmt-navigator__elements">
+	<# if ( obj.elType ) { #>
+		<div class="gmt-navigator__item">
+			<div class="gmt-navigator__element__list-toggle">
+				<i class="fas fa-caret-down"></i>
+			</div>
+			<#
+			if ( icon ) { #>
+				<div class="gmt-navigator__element__element-type">
+					<i class="{{{ icon }}}"></i>
+				</div>
+			<# } #>
+			<div class="gmt-navigator__element__title">
+				<span class="gmt-navigator__element__title__text">{{{ title }}}</span>
+			</div>
+			<div class="gmt-navigator__element__toggle">
+				<i class="fas fa-eye"></i>
+			</div>
+			<div class="gmt-navigator__element__indicators"></div>
+		</div>
+	<# } #>
+	<div class="gmt-navigator__elements"></div>
+</script>
+
+<script type="text/template" id="tmpl-gmt-navigator__elements--empty">
+	<div class="gmt-empty-view__title"><?= __( 'Empty' ); ?></div>
+</script>
+
+<script type="text/template" id="tmpl-gmt-navigator__root--empty">
+	<i class="gmt-nerd-box-icon fas fa-glasses" aria-hidden="true"></i>
+	<div class="gmt-nerd-box-title"><?= __( 'Easy Navigation is Here!' ); ?></div>
+	<div class="gmt-nerd-box-message"><?= __( 'Once you fill your page with content, this window will give you an overview display of all the page elements. This way, you can easily move around any section, column, or widget.' ); ?></div>
+</script>
