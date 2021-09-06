@@ -189,9 +189,6 @@ class Elements
             'theme' => [
                 'title' => __('Theme'),
             ],
-            'products' => [
-                'title' => __('Products'),
-            ],
         ];
 
         Hooks::doAction('pagebuilder/elements/categories_registered', $this);

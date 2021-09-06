@@ -21,12 +21,14 @@ define([
         for (let ob in objects) {
             w[ob] = w[ob] ||  objects[ob];
         }
-    })(typeof module !== 'undefined' ? module.exports : window, {
+    })(window, {
         'Swiper': Swiper,
     });
 
     if ( ! goomentoFrontend.isEditMode() ) {
-        $( () => goomentoFrontend.init() );
+        // window.addEventListener('load', function () {
+            goomentoFrontend.init();
+        // });
     }
 
     return window.goomentoFrontend;

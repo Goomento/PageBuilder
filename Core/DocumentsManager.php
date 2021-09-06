@@ -213,7 +213,6 @@ class DocumentsManager
      * Retrieve the all the registered document types.
      *
      * @return Document[] All the registered document types.
-     * @since  2.0.0
      *
      */
     public function getDocumentTypes()

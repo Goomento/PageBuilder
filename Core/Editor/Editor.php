@@ -286,17 +286,24 @@ class Editor
                 break;
             }
         }
-
+        /** @var Controls $controlsManager */
+        $controlsManager = StaticObjectManager::get(Controls::class);
+        /** @var Elements $elementsManager */
+        $elementsManager = StaticObjectManager::get(Elements::class);
+        /** @var Widgets $widgetsManager */
+        $widgetsManager = StaticObjectManager::get(Widgets::class);
+        /** @var Schemes $schemasManager */
+        $schemasManager = StaticObjectManager::get(Schemes::class);
         $config = [
             'version' => Configuration::VERSION,
             'data' => $editor_data,
             'document' => $document->getConfig(),
             'current_revision_id' => $revision['id'] ?? null,
             'autosave_interval' => StaticData::getPageBuilderConfig('editor/autosave_interval') ?: 60,
-            'tabs' => StaticObjectManager::get(Controls::class)->getTabs(),
-            'controls' => StaticObjectManager::get(Controls::class)->getControlsData(),
-            'elements' => StaticObjectManager::get(Elements::class)->getElementTypesConfig(),
-            'widgets' => StaticObjectManager::get(Widgets::class)->getWidgetTypesConfig(),
+            'tabs' => $controlsManager->getTabs(),
+            'controls' => $controlsManager->getControlsData(),
+            'elements' => $elementsManager->getElementTypesConfig(),
+            'widgets' => $widgetsManager->getWidgetTypesConfig(),
             'schemes' => [
                 'items' => $schemeManager->getRegisteredSchemesData(),
                 'enabled_schemes' => Schemes::getEnabledSchemes(),
@@ -306,7 +313,7 @@ class Editor
             ],
             'default_schemes' => $schemeManager->getSchemesDefaults(),
             'settings' => SettingsManager::getSettingsManagersConfig(),
-            'system_schemes' => StaticObjectManager::get(Schemes::class)->getSystemSchemes(),
+            'system_schemes' => $schemasManager->getSystemSchemes(),
             'goomento_editor' => $this->getEditorConfig(),
             'tinymce_pre_init' => $this->getTinyMCEPreInit(),
             'additional_shapes' => Shapes::getAdditionalShapesForConfig(),

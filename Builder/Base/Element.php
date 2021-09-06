@@ -120,8 +120,7 @@ abstract class Element extends ControlsStack
     /**
      * Enqueue scripts.
      *
-     * Registers all the scripts defined as element dependencies and enqueues
-     * them. Use `get_script_depends()` method to add custom script dependencies.
+     * Registers all the scripts defined as element dependencies and enqueues them.
      *
      */
     final public function enqueueScripts()
@@ -852,7 +851,7 @@ abstract class Element extends ControlsStack
      *
      * @return bool
      */
-    public static function isActive()
+    public function isActive()
     {
         return true;
     }
