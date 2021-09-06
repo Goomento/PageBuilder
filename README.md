@@ -17,6 +17,12 @@ php bin/magento module:enable Goomento_PageBuilder
 php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy
 ```
+For more functionalities (Eg: Slider, Banner, Audio, Products ...), check this out 
+**[Goomento_BuilderWidgets](https://github.com/Goomento/BuilderWidgets)** or run this command to install:
+
+```
+composer require goomento/module-builder-widgets
+```
 
 ## 2. Configuration
 
@@ -40,7 +46,7 @@ History / Revision management
 
 Reuse as page / template
 
-**Widgets hub / management**
+Widgets hub / management
 
 ## 4. Design concept
 
