@@ -23,7 +23,7 @@ abstract class AbstractSelect2 extends AbstractAjax
     {
         $term = $this->getRequest()->getParam('term');
         $data = [];
-        if (trim($term)) {
+        if ($term && trim($term)) {
             $collection = $this->search(
                 trim($term),
                 $this->getRequest()->getParam('content_id')

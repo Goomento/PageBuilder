@@ -499,7 +499,7 @@ class Button extends Widget
 		<#
 		view.addRenderAttribute( 'text', 'class', 'gmt-button-text' );
 		view.addInlineEditingAttributes( 'text', 'none' );
-		var iconHTML = goomento.helpers.renderIcon( view, settings.selected_icon, { 'aria-hidden': true }, 'i' , 'object' ),
+		var iconHTML = goomento.helpers.renderIcon( view, settings.selected_icon, { 'aria-hidden': true }, 'i' , 'object' );
         settings.size = settings.size ? settings.size : 'sm';
 		#>
 		<div class="gmt-button-wrapper">

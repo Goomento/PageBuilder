@@ -522,7 +522,7 @@ class Accordion extends Widget
             if ( settings.tabs ) {
             var tabindex = view.getIDInt().toString().substr( 0, 3 ),
             iconHTML = goomento.helpers.renderIcon( view, settings.selected_icon, {}, 'i' , 'object' ),
-            iconActiveHTML = goomento.helpers.renderIcon( view, settings.selected_active_icon, {}, 'i' , 'object' ),
+            iconActiveHTML = goomento.helpers.renderIcon( view, settings.selected_active_icon, {}, 'i' , 'object' );
 
             _.each( settings.tabs, function( item, index ) {
             var tabCount = index + 1,

@@ -726,7 +726,7 @@ abstract class Widget extends Element
      * @param string $since Plugin version widget was deprecated
      * @param string $last Plugin version in which the widget will be removed
      * @param string $replacement Widget replacement
-     * @throws ReflectionException
+     * @throws Exception
      */
     protected function deprecatedNotice($plugin_title, $since, $last = '', $replacement = '')
     {

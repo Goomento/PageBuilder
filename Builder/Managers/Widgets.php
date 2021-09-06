@@ -118,7 +118,7 @@ class Widgets
             $widget = StaticObjectManager::get($widget);
         }
 
-        if ($widget::isActive()) {
+        if ($widget->isActive()) {
             $this->_widget_types[ $widget->getName() ] = $widget;
         }
 
@@ -225,9 +225,11 @@ class Widgets
         /** @var \Magento\Framework\App\State $state */
         $state = StaticObjectManager::get(\Magento\Framework\App\State::class);
 
-        $render_html = $state->emulateAreaCode('frontend', function () use ($document, $request) {
-            return $document->renderElement($request['data']);
-        });
+//        $render_html = $state->emulateAreaCode('frontend', function () use ($document, $request) {
+//            return $document->renderElement($request['data']);
+//        });
+
+        $render_html = $document->renderElement($request['data']);
 
         $editor->setEditMode($is_edit_mode);
 
