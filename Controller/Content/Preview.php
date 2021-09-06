@@ -48,6 +48,7 @@ class Preview extends View
     protected function getPageConfig()
     {
         return [
+            'editable_title' => 'Preview: %1'
         ];
     }
 }

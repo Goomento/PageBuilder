@@ -21,6 +21,6 @@ Thumbs.db
 *.map
 *.zip
 .sass-cache
-dev
+build
 
 
