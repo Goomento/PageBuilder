@@ -263,16 +263,6 @@ class Frontend extends App
             '4.1.4'
         );
 
-
-        Theme::inlineScript(
-            'swiper',
-            <<<SWIPER
-require(['swiper'], function(swiper) {
-    window.Swiper = swiper;
-});
-SWIPER
-        );
-
         Theme::registerScript(
             'goomento-dialog',
             'Goomento_PageBuilder/lib/dialog/dialog' . $min_suffix,
@@ -310,9 +300,9 @@ SWIPER
                 'goomento-frontend-modules',
                 'goomento-dialog',
                 'goomento-waypoints',
+                'pagebuilderRegister',
             ]
         );
-
 
         Theme::registerScript(
             'goomento-frontend',

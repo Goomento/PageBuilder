@@ -176,11 +176,11 @@ class PageBuilder implements SubSystemInterface
     private function regisDefaultScripts()
     {
         /**
-         * Use `pagebuilderRegisterWidget` to register js handling which responsible for specify widget
+         * Use `pagebuilderWidgetRegister` to register js handling which responsible for specify widget
          */
         Theme::registerScript(
-            'pagebuilderRegisterWidget',
-            'Goomento_PageBuilder/js/action/pagebuilderRegisterWidget'
+            'pagebuilderRegister',
+            'Goomento_PageBuilder/js/action/pagebuilderRegister'
         );
 
         Theme::registerScript(

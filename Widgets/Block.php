@@ -69,7 +69,7 @@ class Block extends Widget
 	 */
 	public function getIcon()
     {
-		return 'fas fa-cubes';
+		return 'far fa-square';
 	}
 
 	/**

@@ -76,7 +76,6 @@ class Module extends BaseModule
      *
      * Retrieve the module name.
      *
-     * @since  1.7.0
      *
      * @return string Module name.
      */
