@@ -12,6 +12,9 @@
                 comment="Content ID"/>
         <column xsi:type="varchar" name="title" nullable="true" length="255" comment="Content Title"/>
         <column xsi:type="varchar" name="type" nullable="false" length="100" comment="Content Type"/>
+        <column xsi:type="varchar" name="fonts" nullable="true" length="255" comment="Content Fonts"/>
+        <column xsi:type="mediumtext" name="custom_css" nullable="true" comment="Content Settings"/>
+        <column xsi:type="varchar" name="identifier" nullable="false" length="255" comment="Content Identifier"/>
         <column xsi:type="text" name="content" nullable="true" comment="Content"/>
         <column xsi:type="text" name="elements" nullable="true" comment="Content Elements"/>
         <column xsi:type="mediumtext" name="settings" nullable="true" comment="Content Settings"/>
@@ -27,11 +30,15 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="content_id"/>
         </constraint>
-        <index referenceId="PAGEBUILDER_CONTENT_TITLE_CONTENT_ELEMENTS" indexType="fulltext">
+        <index referenceId="PAGEBUILDER_CONTENT_TITLE_CONTENT_ELEMENTS_IDENTIFIER" indexType="fulltext">
             <column name="title"/>
             <column name="content"/>
             <column name="elements"/>
+            <column name="identifier"/>
         </index>
+        <constraint xsi:type="unique" referenceId="PAGEBUILDER_CONTENT_IDENTIFIER">
+            <column name="identifier"/>
+        </constraint>
     </table>
     <table name="pagebuilder_content_store" resource="default" engine="innodb" comment="Page Builder To Store Linkage Table">
         <column xsi:type="int" name="content_id" padding="11" unsigned="false" nullable="false" identity="false"

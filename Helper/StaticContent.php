@@ -31,7 +31,7 @@ class StaticContent
     {
         /** @var ContentRegistry $instance */
         $instance = self::getInstance(ContentRegistry::class);
-        return $instance->get((int) $id);
+        return $instance->getById((int) $id);
     }
 
     /**

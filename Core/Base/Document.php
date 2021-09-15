@@ -25,7 +25,7 @@ use Goomento\PageBuilder\Core\Editor\Editor;
 use Goomento\PageBuilder\Core\Files\Css\ContentCss;
 use Goomento\PageBuilder\Core\Settings\Manager as SettingsManager;
 use Goomento\PageBuilder\Helper\Hooks;
-use Goomento\PageBuilder\Helper\StaticAccessToken;
+use Goomento\PageBuilder\Helper\StaticEncryptor;
 use Goomento\PageBuilder\Helper\StaticAuthorization;
 use Goomento\PageBuilder\Helper\StaticContent;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
@@ -264,7 +264,7 @@ abstract class Document extends ControlsStack
         $backUrl = StaticRequest::getParam('back_url');
         if (!empty($backUrl)) {
             try {
-                $backUrl = StaticAccessToken::decrypt($backUrl);
+                $backUrl = StaticEncryptor::decrypt($backUrl);
             } catch (\Exception $e) {
                 $backUrl = '';
             }
@@ -338,7 +338,7 @@ abstract class Document extends ControlsStack
      */
     public function save($data)
     {
-        if (!StaticAuthorization::isCurrentUserCan($this->getContentModel()->getType() . '_save')) {
+        if (!StaticAuthorization::isCurrentUserCan($this->getContentModel()->getRoleName('save'))) {
             throw new LocalizedException(
                 __('Sorry, you need permissions to view this content')
             );
@@ -600,10 +600,6 @@ abstract class Document extends ControlsStack
          * @param int|bool $is_meta_updated Meta ID if the key didn't exist, true on successful update, false on failure.
          */
         Hooks::doAction('pagebuilder/db/before_save', $this->getContentModel()->getStatus());
-
-        /** @var Data $data */
-        $data = StaticObjectManager::get(Data::class);
-        $data->savePlainText($this->getContentModel()->getId());
 
         /**
          * After saving data.

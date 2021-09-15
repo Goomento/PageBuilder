@@ -24,6 +24,7 @@ use Goomento\PageBuilder\Helper\StaticUrlBuilder;
 use Goomento\PageBuilder\Helper\StaticUtils;
 use Goomento\PageBuilder\Helper\Theme;
 use Goomento\PageBuilder\PageBuilder;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Class Frontend
@@ -671,8 +672,7 @@ class Frontend extends App
      * @param string $content The post content.
      *
      * @return string The post content.
-     * @throws \ReflectionException
-     *
+     * @throws LocalizedException
      */
     public function applyBuilderInContent($content)
     {

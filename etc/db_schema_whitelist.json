@@ -11,13 +11,16 @@
             "status": true,
             "last_editor_id": true,
             "creation_time": true,
-            "update_time": true
+            "update_time": true,
+            "identifier": true
         },
         "index": {
-            "PAGEBUILDER_CONTENT_TITLE_CONTENT_ELEMENTS": true
+            "PAGEBUILDER_CONTENT_TITLE_CONTENT_ELEMENTS": true,
+            "PAGEBUILDER_CONTENT_TITLE_CONTENT_ELEMENTS_IDENTIFIER": true
         },
         "constraint": {
-            "PRIMARY": true
+            "PRIMARY": true,
+            "PAGEBUILDER_CONTENT_IDENTIFIER": true
         }
     },
     "pagebuilder_content_store": {

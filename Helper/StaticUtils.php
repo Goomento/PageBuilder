@@ -11,7 +11,6 @@ namespace Goomento\PageBuilder\Helper;
 use Goomento\Core\Traits\TraitStaticInstances;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
-use Magento\Framework\Escaper;
 
 /**
  * Class StaticUtils
@@ -36,17 +35,6 @@ class StaticUtils
     public static function isAjax()
     {
         return ((isset($_SERVER['HTTP_X_REQUESTED_WITH'])) && ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'));
-    }
-
-    /**
-     * @param $text
-     * @return array|string
-     */
-    public static function escapeHtml($text)
-    {
-        /** @var Escaper $escaper */
-        $escaper = self::getInstance(Escaper::class);
-        return $escaper->escapeHtml($text);
     }
 
     /**

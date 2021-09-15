@@ -32,37 +32,50 @@
                         </item>
                     </item>
                 </item>
-                <item name="Goomento\PageBuilder\Api\Data\ContentInterface" xsi:type="array">
-                    <item name="read" xsi:type="array">
-                        <item name="contentReader" xsi:type="string">
-                            Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Store\ReadHandler
-                        </item>
-                    </item>
-                    <item name="create" xsi:type="array">
-                        <item name="contentCreator" xsi:type="string">
-                            Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Store\SaveHandler
-                        </item>
-                        <item name="cacheHandler" xsi:type="string">
-                            Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Cache\SaveHandler
-                        </item>
-                    </item>
-                    <item name="update" xsi:type="array">
-                        <item name="contentUpdater" xsi:type="string">
-                            Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Store\SaveHandler
-                        </item>
-                        <item name="createRevision" xsi:type="string">
-                            Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Revision\SaveHandler
-                        </item>
-                        <item name="cacheHandler" xsi:type="string">
-                            Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Cache\SaveHandler
-                        </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Goomento\PageBuilder\Model\ResourceModel\Content">
+        <arguments>
+            <argument name="relation" xsi:type="array">
+                <item name="read" xsi:type="array">
+                    <item name="contentReader" xsi:type="string">
+                        Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Store\ReadHandler
                     </item>
                 </item>
-                <item name="Goomento\PageBuilder\Api\Data\RevisionInterface" xsi:type="array">
-                    <item name="update" xsi:type="array">
-                        <item name="removeRevisions" xsi:type="string">
-                            Goomento\PageBuilder\Model\ResourceModel\Revision\Relation\Revisions\SaveHandler
-                        </item>
+                <item name="create" xsi:type="array">
+                    <item name="contentCreator" xsi:type="string">
+                        Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Store\SaveHandler
+                    </item>
+                    <item name="cacheHandler" xsi:type="string">
+                        Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Cache\SaveHandler
+                    </item>
+                </item>
+                <item name="update" xsi:type="array">
+                    <item name="contentUpdater" xsi:type="string">
+                        Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Store\SaveHandler
+                    </item>
+                    <item name="createRevision" xsi:type="string">
+                        Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Revision\SaveHandler
+                    </item>
+                    <item name="cacheHandler" xsi:type="string">
+                        Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Cache\SaveHandler
+                    </item>
+                </item>
+                <item name="delete" xsi:type="array">
+                    <item name="cacheHandler" xsi:type="string">
+                        Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Cache\SaveHandler
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Goomento\PageBuilder\Model\ResourceModel\Revision">
+        <arguments>
+            <argument name="relation" xsi:type="array">
+                <item name="update" xsi:type="array">
+                    <item name="removeRevisions" xsi:type="string">
+                        Goomento\PageBuilder\Model\ResourceModel\Revision\Relation\Revisions\SaveHandler
                     </item>
                 </item>
             </argument>

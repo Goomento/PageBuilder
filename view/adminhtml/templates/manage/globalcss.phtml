@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 
 use Goomento\PageBuilder\Helper\StaticConfig;
-use Goomento\PageBuilder\Helper\StaticUtils;
+use Goomento\PageBuilder\Helper\StaticEscaper;
 use Magento\Backend\Block\Template;
 
 $customCss = StaticConfig::getThemeOption('custom_css');
@@ -20,7 +20,7 @@ $customCss = StaticConfig::getThemeOption('custom_css');
       method="POST"
       id="custom_css_form">
     <?= $block->getChildHtml('formkey')?>
-    <textarea style="display: none" name="custom_css" id="custom_css"><?= StaticUtils::escapeHtml($customCss) ?></textarea>
+    <textarea style="display: none" name="custom_css" id="custom_css"><?= StaticEscaper::escapeHtml($customCss) ?></textarea>
     <div id="editor"></div>
     <br />
     <button type="submit"><?= __('Save') ?></button>

@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
+use Goomento\PageBuilder\Helper\StaticEscaper;
+
 /**
  * Class Dimensions
  * @package Goomento\PageBuilder\Builder\Controls
@@ -97,7 +99,7 @@ class Dimensions extends BaseUnits
                     foreach ($dimensions as $dimension_key => $dimension_title) :
                         $control_uid = $this->getControlUid($dimension_key); ?>
 						<li class="gmt-control-dimension">
-							<input id="<?= $control_uid; ?>" type="number" data-setting="<?= \Goomento\PageBuilder\Helper\StaticUtils::escapeHtml($dimension_key); ?>"
+							<input id="<?= $control_uid; ?>" type="number" data-setting="<?= StaticEscaper::escapeHtml($dimension_key); ?>"
 								   placeholder="<#
 							   if ( _.isObject( data.placeholder ) ) {
 								if ( ! _.isUndefined( data.placeholder.<?= $dimension_key; ?> ) ) {
@@ -110,7 +112,7 @@ class Dimensions extends BaseUnits
 								disabled
 								<# } #>
 									/>
-							<label for="<?= \Goomento\PageBuilder\Helper\StaticUtils::escapeHtml($control_uid); ?>" class="gmt-control-dimension-label"><?= $dimension_title; ?></label>
+							<label for="<?= StaticEscaper::escapeHtml($control_uid); ?>" class="gmt-control-dimension-label"><?= $dimension_title; ?></label>
 						</li>
 					<?php endforeach; ?>
 					<li>

@@ -16,8 +16,8 @@ use Goomento\PageBuilder\Builder\Managers\Icons;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
 use Goomento\PageBuilder\Helper\StaticData;
+use Goomento\PageBuilder\Helper\StaticEscaper;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
-use Goomento\PageBuilder\Helper\StaticUtils;
 
 /**
  * Class Toggle
@@ -514,15 +514,15 @@ class Toggle extends Widget
 
         $this->addInlineEditingAttributes($tab_content_setting_key, 'advanced'); ?>
 				<div class="gmt-toggle-item">
-					<<?= StaticUtils::escapeHtml($settings['title_html_tag']); ?> <?= $this->getRenderAttributeString($tab_title_setting_key); ?>>
+					<<?= StaticEscaper::escapeHtml($settings['title_html_tag']); ?> <?= $this->getRenderAttributeString($tab_title_setting_key); ?>>
 						<?php if ($has_icon) : ?>
-						<span class="gmt-toggle-icon gmt-toggle-icon-<?= StaticUtils::escapeHtml($settings['icon_align']); ?>" aria-hidden="true">
+						<span class="gmt-toggle-icon gmt-toggle-icon-<?= StaticEscaper::escapeHtml($settings['icon_align']); ?>" aria-hidden="true">
 								<span class="gmt-toggle-icon-closed"><?php Icons::renderIcon($settings['selected_icon']); ?></span>
 								<span class="gmt-toggle-icon-opened"><?php Icons::renderIcon($settings['selected_active_icon'], [ 'class' => 'gmt-toggle-icon-opened' ]); ?></span>
 						</span>
 						<?php endif; ?>
 						<a href=""><?= $item['tab_title']; ?></a>
-					</<?= StaticUtils::escapeHtml($settings['title_html_tag']); ?>>
+					</<?= StaticEscaper::escapeHtml($settings['title_html_tag']); ?>>
 					<div <?= $this->getRenderAttributeString($tab_content_setting_key); ?>><?= $this->parseTextEditor($item['tab_content']); ?></div>
 				</div>
 			<?php endforeach; ?>

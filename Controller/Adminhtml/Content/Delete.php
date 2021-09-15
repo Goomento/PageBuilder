@@ -26,10 +26,18 @@ class Delete extends AbstractContent implements HttpPostActionInterface
      */
     public function execute()
     {
+        /** @var Redirect $resultRedirect */
+        $resultRedirect = $this->resultRedirectFactory->create();
         try {
             $content = $this->getContent(true);
+            $type = $content->getType();
             $this->contentRepository->delete($content);
             $this->messageManager->addSuccessMessage(__('You deleted the content.'));
+            return $resultRedirect->setPath(
+                'pagebuilder/*/grid', [
+                    'type' => $type
+                ]
+            );
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
         } catch (Exception $e) {
@@ -39,12 +47,7 @@ class Delete extends AbstractContent implements HttpPostActionInterface
             );
         }
 
-        /** @var Redirect $resultRedirect */
-        $resultRedirect = $this->resultRedirectFactory->create();
-
-        return $resultRedirect->setPath(
-            'pagebuilder/*/grid'
-        );
+        return $resultRedirect->setRefererUrl();
     }
 
     /**
