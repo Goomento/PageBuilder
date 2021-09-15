@@ -43,7 +43,7 @@ class SaveHandler implements ExtensionInterface
     public function execute($entity, $arguments = [])
     {
         /** @var $entity Content */
-        if ($entity->getId() && $entity->hasDataChanges()) {
+        if ($entity->getId() && ($entity->hasDataChanges() || $entity->isDeleted())) {
             $this->contentRegistry->cleanContentCache($entity->getId());
         }
         return $entity;

@@ -26,7 +26,6 @@ class StaticEscaper
 {
     use TraitStaticInstances;
     use TraitStaticCaller;
-
     /**
      * @return Escaper
      */

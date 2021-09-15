@@ -10,8 +10,8 @@ namespace Goomento\PageBuilder\Builder;
 
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Helper\Hooks;
+use Goomento\PageBuilder\Helper\StaticEscaper;
 use Goomento\PageBuilder\Helper\StaticUrlBuilder;
-use Goomento\PageBuilder\Helper\StaticUtils;
 use Goomento\PageBuilder\Helper\Theme;
 
 /**
@@ -96,7 +96,7 @@ class Utils
                 $attribute_values = implode(' ', $attribute_values);
             }
 
-            $rendered_attributes[] = sprintf('%1$s="%2$s"', $attribute_key, StaticUtils::escapeHtml($attribute_values));
+            $rendered_attributes[] = sprintf('%1$s="%2$s"', $attribute_key, StaticEscaper::escapeHtml($attribute_values));
         }
 
         return implode(' ', $rendered_attributes);

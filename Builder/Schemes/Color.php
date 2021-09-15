@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Schemes;
 
+use Goomento\PageBuilder\Helper\StaticEscaper;
+
 /**
  * Class Color
  * @package Goomento\PageBuilder\Builder\Schemes
@@ -139,10 +141,10 @@ class Color extends Base
 			</div>
 			<div class="gmt-panel-box-content">
 				<?php foreach ($this->_getSystemSchemesToPrint() as $scheme_name => $scheme) : ?>
-					<div class="gmt-panel-scheme-color-system-scheme" data-scheme-name="<?= \Goomento\PageBuilder\Helper\StaticUtils::escapeHtml($scheme_name); ?>">
+					<div class="gmt-panel-scheme-color-system-scheme" data-scheme-name="<?= StaticEscaper::escapeHtml($scheme_name); ?>">
 						<div class="gmt-panel-scheme-color-system-items">
 							<?php foreach ($scheme['items'] as $color_value) : ?>
-								<div class="gmt-panel-scheme-color-system-item" style="background-color: <?= \Goomento\PageBuilder\Helper\StaticUtils::escapeHtml($color_value); ?>;"></div>
+								<div class="gmt-panel-scheme-color-system-item" style="background-color: <?= StaticEscaper::escapeHtml($color_value); ?>;"></div>
 							<?php endforeach; ?>
 						</div>
 						<div class="gmt-title"><?= $scheme['title']; ?></div>

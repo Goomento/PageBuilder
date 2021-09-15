@@ -130,6 +130,12 @@
                 <label translate="true">Title</label>
             </settings>
         </column>
+        <column name="identifier">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Identifier</label>
+            </settings>
+        </column>
         <column name="store_id" class="Magento\Store\Ui\Component\Listing\Column\Store">
             <settings>
                 <label translate="true">Store View</label>

@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Helper\StaticUtils;
+use Goomento\PageBuilder\Helper\StaticEscaper;
 
 /**
  * Class TextShadow
@@ -100,21 +100,21 @@ class TextShadow extends BaseMultiple
 		<div class="gmt-control-field">
 			<label class="gmt-control-title"><?= __('Color'); ?></label>
 			<div class="gmt-control-input-wrapper">
-				<input data-setting="color" class="gmt-shadow-color-picker" type="text" placeholder="<?= StaticUtils::escapeHtml('Hex/rgba'); ?>" data-alpha="true" {{{ defaultColorValue }}} />
+				<input data-setting="color" class="gmt-shadow-color-picker" type="text" placeholder="<?= StaticEscaper::escapeHtml('Hex/rgba'); ?>" data-alpha="true" {{{ defaultColorValue }}} />
 			</div>
 		</div>
 		<?php
         foreach ($this->getSliders() as $slider_name => $slider) :
             $control_uid = $this->getControlUid($slider_name); ?>
 			<div class="gmt-shadow-slider gmt-control-type-slider">
-				<label for="<?= StaticUtils::escapeHtml($control_uid); ?>" class="gmt-control-title"><?= $slider['label']; ?></label>
+				<label for="<?= StaticEscaper::escapeHtml($control_uid); ?>" class="gmt-control-title"><?= $slider['label']; ?></label>
 				<div class="gmt-control-input-wrapper">
-					<div class="gmt-slider" data-input="<?= StaticUtils::escapeHtml($slider_name); ?>"></div>
+					<div class="gmt-slider" data-input="<?= StaticEscaper::escapeHtml($slider_name); ?>"></div>
 					<div class="gmt-slider-input">
-						<input id="<?= StaticUtils::escapeHtml($control_uid); ?>" type="number"
-                               min="<?= StaticUtils::escapeHtml($slider['min']); ?>"
-                               max="<?= StaticUtils::escapeHtml($slider['max']); ?>"
-                               data-setting="<?= StaticUtils::escapeHtml($slider_name); ?>"/>
+						<input id="<?= StaticEscaper::escapeHtml($control_uid); ?>" type="number"
+                               min="<?= StaticEscaper::escapeHtml($slider['min']); ?>"
+                               max="<?= StaticEscaper::escapeHtml($slider['max']); ?>"
+                               data-setting="<?= StaticEscaper::escapeHtml($slider_name); ?>"/>
 					</div>
 				</div>
 			</div>

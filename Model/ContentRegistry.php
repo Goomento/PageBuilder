@@ -9,8 +9,9 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Model;
 
 use Goomento\PageBuilder\Api\ContentRepositoryInterface;
+use Goomento\PageBuilder\Model\ResourceModel\Content as ContentResourceModel;
+use Goomento\PageBuilder\Api\Data;
 use Goomento\PageBuilder\Api\Data\ContentInterfaceFactory;
-use Goomento\PageBuilder\Helper\Cache;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\ContentRegistryInterface;
 use Goomento\PageBuilder\Logger\Logger;
@@ -38,106 +39,178 @@ class ContentRegistry implements ContentRegistryInterface
     /**
      * @var Cache
      */
-    private $cacheHelper;
+    private $cache;
     /**
      * @var ContentInterfaceFactory
      */
     private $contentFactory;
+    /**
+     * @var ContentResourceModel
+     */
+    private $contentResourceModel;
+    /**
+     * @var Content|null
+     */
+    private $processing;
 
     /**
      * ContentRegistry constructor.
      * @param ContentRepositoryInterface $contentRepository
+     * @param ContentResourceModel $contentResourceModel
      * @param ContentInterfaceFactory $contentFactory
-     * @param Cache $cacheHelper
+     * @param Cache $cache
      * @param Logger $logger
      */
     public function __construct(
         ContentRepositoryInterface $contentRepository,
+        ContentResourceModel $contentResourceModel,
         ContentInterfaceFactory $contentFactory,
-        Cache $cacheHelper,
+        Cache $cache,
         Logger $logger
     ) {
         $this->contentRepository = $contentRepository;
+        $this->contentResourceModel = $contentResourceModel;
         $this->contentFactory = $contentFactory;
         $this->logger = $logger;
-        $this->cacheHelper = $cacheHelper;
+        $this->cache = $cache;
     }
 
     /**
      * @inheritDoc
      */
-    public function get(int $contentId)
+    public function getById(int $contentId)
+    {
+        return $this->getBy($contentId, ContentInterface::CONTENT_ID);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getByIdentifier(string $identifier)
+    {
+        return $this->getBy($identifier, ContentInterface::IDENTIFIER);
+    }
+
+    /**
+     * @param string $field
+     * @param $value
+     * @return null
+     * @throws \Exception
+     */
+    public function getBy($value, string $field)
     {
         $content = null;
-        try {
-            $content = $this->getInstance($contentId);
-            if (!$content) {
-                $content = $this->getFromCache($contentId);
-                if (empty($content)) {
-                    $content = $this->contentRepository->getById($contentId);
-                    if ($content && $content->getId()) {
-                        $this->saveToCache($content);
+        if (!empty($value)) {
+            $actions = [
+                'getFromInstance',
+                'getFromCache',
+                'getFromRepo',
+                'saveToCache',
+                'saveToInstance',
+            ];
+            try {
+                $this->processing = null;
+                foreach ($actions as $action) {
+                    $result = $this->{$action}($value, $field);
+                    if ($result) {
+                        break;
                     }
                 }
-                $this->setInstance($contentId, $content);
+            } finally {
+                $content = $this->processing;
+                $this->processing = null;
             }
-        } catch (\Exception $e) {
-            $this->logger->error($e);
         }
-
         return $content;
     }
 
     /**
-     * @param $id
-     * @return Content|null
-     * @throws LocalizedException
+     * @param $value
+     * @param $field
+     * @return false Return false to allow process to continue and caching
      */
-    private function getFromCache($id)
+    public function getFromRepo($value, $field)
     {
-        $key = $this->getContentCacheKey($id);
-        $data = $this->cacheHelper->load($key);
-        if (!empty($data)) {
-            try {
-                $data = \Zend_Json::decode($data);
-            } catch (\Exception $e) {
-                $data = null;
-            }
-            if ($data) {
-                /** @var Content $content */
-                $content = $this->contentFactory->create();
-                $content->setData($data);
-                $content->setIsCaching(true);
-                $content->setOrigData();
-                $content->setHasDataChanges(false);
-                return $content;
+        if (!$this->processing) {
+            $model = $this->contentFactory->create();
+            $this->contentResourceModel->load($model, $value, $field);
+            if ($model && $model->getId()) {
+                $this->processing = $model;
+            } else {
+                // stop processing
+                return true;
             }
         }
 
-        return null;
+        return false;
     }
 
     /**
-     * @param ContentInterface $content
-     * @throws LocalizedException
+     * @param $value
+     * @param $field
+     * @return bool
+     * @throws \Exception
      */
-    private function saveToCache(ContentInterface $content)
+    private function getFromCache($value, $field)
     {
-        /** @var Content $content */
-        if ($content->getIsCaching() !== true) {
-            $data = \Zend_Json::encode($content);
-            if (!empty($data)){
-                $this->cacheHelper->saveToContentCollection(
-                    $data,
-                    $this->getContentCacheKey($content->getId())
+        if (!$this->processing) {
+            $key = $this->getContentCacheKey($value);
+            $data = $this->cache->load($key);
+            // if identifier
+            if ($data && is_numeric($data)) {
+                $data = $this->cache->load(
+                    $this->getContentCacheKey($data)
+                );
+            }
+            if (!empty($data)) {
+                try {
+                    $data = \Zend_Json::decode($data);
+                } catch (\Exception $e) {}
+                if ($data) {
+                    /** @var Content $content */
+                    $content = $this->contentFactory->create();
+                    $content->setData($data);
+                    $content->setIsCaching(true);
+                    $content->setOrigData();
+                    $content->setHasDataChanges(false);
+                    $this->processing = $content;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param null $value
+     * @param null $field
+     * @return false
+     * @throws \Exception
+     */
+    private function saveToCache($value = null, $field = null)
+    {
+        if ($this->processing && $this->processing->getIsCaching() !== true) {
+            $data = \Zend_Json::encode($this->processing);
+            $this->cache->saveToContentCollection(
+                $data,
+                $this->getContentCacheKey($this->processing->getId())
+            );
+            $identifier = $this->processing->getIdentifier();
+            if ($identifier) {
+                $this->cache->saveToContentCollection(
+                    $this->processing->getId(),
+                    $this->getContentCacheKey($identifier)
                 );
             }
         }
+
+        return false;
     }
 
     /**
      * @param $content
-     * @throws LocalizedException
+     * @throws LocalizedException|\Exception
      */
     public function cleanContentCache($content)
     {
@@ -150,53 +223,72 @@ class ContentRegistry implements ContentRegistryInterface
             unset($this->registry[$id]);
         }
 
-        $this->cacheHelper->remove($this->getContentCacheKey($id));
+        $this->cache->remove($this->getContentCacheKey($id));
+//        $this->cache->remove($this->getContentCacheKey($content->getIdentifier()));
+    }
+
+
+    private function cleanContentIdentifier($contentId)
+    {
+
     }
 
     /**
      * @param $id
      * @return string
-     * @throws LocalizedException
+     * @throws \Exception
      */
     private function getContentCacheKey($id)
     {
-        $id = (int) $id;
-        if ($id < 1) {
+        if (!($id = trim((string) $id))) {
             throw new LocalizedException(
-                __('Invalid content Id: %1', $id)
+                __('Content identifier must not empty.')
             );
         }
-        return 'pagebuilder_content_' . (string) $id;
+        return md5('pagebuilder_content_' . $id);
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return void
      * @throws LocalizedException
      */
-    public function delete($id)
+    public function delete(int $id)
     {
         $this->cleanContentCache($id);
         $this->contentRepository->deleteById($id);
     }
 
     /**
-     * @param $id
-     * @param ContentInterface|null $content
-     * @return ContentRegistry
+     * @param $value
+     * @param $field
+     * @return false
      */
-    private function setInstance($id, ContentInterface $content = null)
+    private function saveToInstance($value, $field)
     {
-        $this->registry[$id] = $content;
-        return $this;
+        if ($this->processing && $this->processing->getId()) {
+            $this->registry[$this->processing->getId()] = $this->processing;
+        }
+
+        return false;
     }
 
     /**
-     * @param $id
-     * @return Content|null
+     * @param int|string $value
+     * @param string $field
+     * @return bool
      */
-    private function getInstance($id)
+    private function getFromInstance($value, string $field)
     {
-        return $this->registry[$id] ?? null;
+        if (!$this->processing) {
+            foreach ($this->registry as $instance) {
+                if ($instance && $instance->getData($field) == $value) {
+                    $this->processing = $instance;
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

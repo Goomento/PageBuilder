@@ -24,7 +24,9 @@ use Magento\User\Model\UserFactory;
  * Class Content
  * @package Goomento\PageBuilder\Model
  */
-class Content extends AbstractModel implements ContentInterface, IdentityInterface
+class Content extends AbstractModel implements
+    ContentInterface,
+    IdentityInterface
 {
     /**
      * Cache tag
@@ -140,7 +142,7 @@ class Content extends AbstractModel implements ContentInterface, IdentityInterfa
      */
     public function getId()
     {
-        return parent::getData(self::CONTENT_ID);
+        return (int) parent::getData(self::CONTENT_ID);
     }
 
     /**
@@ -473,5 +475,21 @@ class Content extends AbstractModel implements ContentInterface, IdentityInterfa
     public function getRoleName(string $role)
     {
         return sprintf('%s_%s', $this->getType(), $role);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getIdentifier()
+    {
+        return $this->getData(self::IDENTIFIER);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setIdentifier($value)
+    {
+        return $this->setData(self::IDENTIFIER, $value);
     }
 }

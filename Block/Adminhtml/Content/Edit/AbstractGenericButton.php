@@ -80,7 +80,7 @@ abstract class AbstractGenericButton
     protected function getContent()
     {
         if ($this->getContentId() && is_null($this->content)) {
-            $this->content = $this->contentRegistry->get(
+            $this->content = $this->contentRegistry->getById(
                 $this->getContentId()
             );
         }
