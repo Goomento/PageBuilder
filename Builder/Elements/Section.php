@@ -19,8 +19,8 @@ use Goomento\PageBuilder\Builder\Managers\Elements;
 use Goomento\PageBuilder\Builder\Managers\Schemes;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Shapes;
+use Goomento\PageBuilder\Helper\StaticEscaper;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
-use Goomento\PageBuilder\Helper\StaticUtils;
 
 /**
  * Class Section
@@ -1385,7 +1385,7 @@ class Section extends Element
     public function beforeRender()
     {
         $settings = $this->getSettingsForDisplay(); ?>
-		<<?= StaticUtils::escapeHtml($this->getHtmlTag()); ?> <?php $this->printRenderAttributeString('_wrapper'); ?>>
+		<<?= StaticEscaper::escapeHtml($this->getHtmlTag()); ?> <?php $this->printRenderAttributeString('_wrapper'); ?>>
 			<?php
             if ('video' === $settings['background_background']) :
                 if ($settings['background_video_link']) :
@@ -1428,7 +1428,7 @@ class Section extends Element
         if ($settings['shape_divider_bottom']) {
             $this->printShapeDivider('bottom');
         } ?>
-			<div class="gmt-container gmt-column-gap-<?= StaticUtils::escapeHtml($settings['gap']); ?>">
+			<div class="gmt-container gmt-column-gap-<?= StaticEscaper::escapeHtml($settings['gap']); ?>">
 				<div class="gmt-row">
 		<?php
     }
@@ -1444,7 +1444,7 @@ class Section extends Element
         ?>
 				</div>
 			</div>
-		</<?= StaticUtils::escapeHtml($this->getHtmlTag()); ?>>
+		</<?= StaticEscaper::escapeHtml($this->getHtmlTag()); ?>>
 		<?php
     }
 
@@ -1521,7 +1521,7 @@ class Section extends Element
         if (! is_file($shape_path) || ! is_readable($shape_path)) {
             return;
         } ?>
-		<div class="gmt-shape gmt-shape-<?= StaticUtils::escapeHtml($side); ?>" data-negative="<?= var_export($negative); ?>">
+		<div class="gmt-shape gmt-shape-<?= StaticEscaper::escapeHtml($side); ?>" data-negative="<?= var_export($negative); ?>">
 			<?= file_get_contents($shape_path); ?>
 		</div>
 		<?php

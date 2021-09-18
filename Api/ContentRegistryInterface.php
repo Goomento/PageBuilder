@@ -16,10 +16,19 @@ interface ContentRegistryInterface
 {
     /**
      * Get content by id
-     * Return Null if content not found
+     * Return null if content not found
      *
-     * @param int $contentId
+     * @param int $contentId Content Id
      * @return Data\ContentInterface|null
      */
-    public function get(int $contentId);
+    public function getById(int $contentId);
+
+    /**
+     * Get content by identifier
+     * Return null if content not found
+     *
+     * @param string $identifier
+     * @return Data\ContentInterface|null
+     */
+    public function getByIdentifier(string $identifier);
 }

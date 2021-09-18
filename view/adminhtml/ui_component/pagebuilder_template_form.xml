@@ -119,33 +119,4 @@
             </settings>
         </field>
     </fieldset>
-    <fieldset name="websites" class="Magento\Store\Ui\Component\Form\Fieldset\Websites" sortOrder="30">
-        <settings>
-            <collapsible>true</collapsible>
-            <label translate="true">Page in Websites</label>
-        </settings>
-        <field name="storeviews" formElement="multiselect">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="source" xsi:type="string">content</item>
-                    <item name="default" xsi:type="number">0</item>
-                </item>
-            </argument>
-            <settings>
-                <validation>
-                    <rule name="required-entry" xsi:type="boolean">true</rule>
-                </validation>
-                <dataType>int</dataType>
-                <label translate="true">Store View</label>
-                <dataScope>store_id</dataScope>
-            </settings>
-            <formElements>
-                <multiselect>
-                    <settings>
-                        <options class="Goomento\PageBuilder\Ui\Component\Listing\Column\Content\StoreOptions"/>
-                    </settings>
-                </multiselect>
-            </formElements>
-        </field>
-    </fieldset>
 </form>

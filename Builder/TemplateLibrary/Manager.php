@@ -186,7 +186,7 @@ class Manager
     public function getLibraryData(array $args)
     {
         $content = StaticContent::get($args['editor_post_id']);
-        if (!StaticAuthorization::isCurrentUserCan($content->getType() . '_view')) {
+        if (!StaticAuthorization::isCurrentUserCan($content->getRoleName('view'))) {
             throw new LocalizedException(
                 __('Sorry, you need permissions to view this content')
             );
@@ -197,8 +197,17 @@ class Manager
         $documentManager = StaticObjectManager::get(DocumentsManager::class);
         $documentManager->get($content->getId());
 
+        $templates = $this->getTemplates();
+
+        foreach ($templates as $index => $template) {
+            if ($template['template_id'] == $args['editor_post_id']) {
+                unset($templates[$index]);
+                break;
+            }
+        }
+
         return [
-            'templates' => $this->getTemplates(),
+            'templates' => $templates,
         ];
     }
 

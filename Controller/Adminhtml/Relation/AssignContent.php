@@ -12,7 +12,7 @@ use Exception;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Controller\Adminhtml\AbstractAction;
 use Goomento\PageBuilder\Api\ContentManagementInterface;
-use Goomento\PageBuilder\Helper\StaticAccessToken;
+use Goomento\PageBuilder\Helper\StaticEncryptor;
 use Goomento\PageBuilder\Model\ContentRelation;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Exception\LocalizedException;
@@ -30,7 +30,7 @@ class AssignContent extends AbstractAction
     /**
      * @var ContentRelation
      */
-    private $contentRelationMapping;
+    private $contentRelation;
 
     /**
      * AssignContent constructor.
@@ -45,7 +45,7 @@ class AssignContent extends AbstractAction
     )
     {
         $this->contentManagement = $contentManagement;
-        $this->contentRelationMapping = $contentRelationMapping;
+        $this->contentRelation = $contentRelationMapping;
         parent::__construct($context);
     }
 
@@ -56,34 +56,30 @@ class AssignContent extends AbstractAction
     {
         $redirect = $this->resultRedirectFactory->create();
         try {
-            $type = $this->getRequest()->getParam('type');
-            $relationId = $this->getRequest()->getParam('id');
-            $relationData = $this->contentRelationMapping->getRelationData($type);
+            $type = (string) $this->getRequest()->getParam('type');
+            $relationId = (int) $this->getRequest()->getParam('id');
             if (empty($relationId)) {
                 throw new LocalizedException(
                     __('The entity must be specify')
                 );
             }
-            $repository = $this->contentRelationMapping->getRepositoryByType($type);
+            $repository = $this->contentRelation->getRepositoryByType($type);
             /** @var \Magento\Cms\Model\Page|\Magento\Cms\Model\Block $relationObject */
             $relationObject = $repository->getById($relationId);
-            $contentData = [
-                'title' => $relationData['label'] . ': #' . $relationObject->getId() . ' ' . $relationObject->getTitle(),
-                'type' => $relationData['pagebuilder_type'],
-                'status' => ContentInterface::STATUS_PUBLISHED,
-            ];
+            $contentData = [];
+            $contentData = $this->contentRelation->prepareContent($type, $relationObject, $contentData);
+            $contentData['status'] = ContentInterface::STATUS_PUBLISHED;
 
-            $contentData['store_id'] = $relationObject->getStores();
             $content = $this->contentManagement->createContent($contentData);
-            $this->contentRelationMapping->setRelation(
+            $this->contentRelation->setRelation(
                 $content->getId(),
                 $type,
                 $relationId
             );
-            $backUrl = $this->contentRelationMapping->getRelationEditableUrl($type, $relationId);
+            $backUrl = $this->contentRelation->getRelationEditableUrl($type, $relationId);
             return $redirect->setUrl($this->getUrl('pagebuilder/content/editor', [
                 'content_id' => $content->getId(),
-                'back_url' => StaticAccessToken::encrypt($backUrl),
+                'back_url' => StaticEncryptor::encrypt($backUrl),
             ]));
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());

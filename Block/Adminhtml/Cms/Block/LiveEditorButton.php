@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Block\Adminhtml\Cms\Block;
 
-use Goomento\PageBuilder\Helper\StaticAccessToken;
+use Goomento\PageBuilder\Helper\StaticEncryptor;
 use Goomento\PageBuilder\Model\ContentRelation;
 use Magento\Cms\Api\BlockRepositoryInterface;
 use Magento\Cms\Model\Block;
@@ -106,7 +106,7 @@ class LiveEditorButton implements ButtonProviderInterface
         );
         return $this->url->getUrl('pagebuilder/content/editor', [
             'content_id' => $contentId,
-            'back_url' => StaticAccessToken::encrypt($backUrl)
+            'back_url' => StaticEncryptor::encrypt($backUrl)
         ]);
     }
 

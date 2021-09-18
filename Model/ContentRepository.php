@@ -12,6 +12,7 @@ use Goomento\PageBuilder\Api\Data;
 use Goomento\PageBuilder\Api\ContentRepositoryInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Helper\Authorization;
+use Goomento\PageBuilder\Helper\StaticEncryptor;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
@@ -99,6 +100,7 @@ class ContentRepository implements ContentRepositoryInterface
             $this->validateStatus($content);
             $this->validateContentType($content);
             $this->setStoreId($content);
+            $this->setIdentifier($content);
             $this->resource->save($content);
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
@@ -130,8 +132,27 @@ class ContentRepository implements ContentRepositoryInterface
     {
         if ($content->getStoreId() === null) {
             $storeId = $this->storeManager->getStore()->getId();
-            $storeId = [0, $storeId];
+            if ($storeId != 0) {
+                $storeId = [0, $storeId];
+            } else {
+                $storeId = [0];
+            }
             $content->setStoreId($storeId);
+        }
+    }
+
+    /**
+     * @param ContentInterface $content
+     */
+    private function setIdentifier(ContentInterface $content)
+    {
+        if (!$content->getIdentifier()) {
+            $content->setIdentifier(
+                implode('_',[
+                    $content->getType(),
+                    StaticEncryptor::uniqueString()
+                ])
+            );
         }
     }
 

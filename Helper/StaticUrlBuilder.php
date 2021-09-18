@@ -99,7 +99,7 @@ class StaticUrlBuilder
         return self::getFrontendUrl('pagebuilder/content/preview', [
             'content_id' => $content,
             '_query' => [
-                StaticAccessToken::ACCESS_TOKEN_PARAM => StaticAccessToken::createAccessToken($content, $userId)
+                StaticEncryptor::ACCESS_TOKEN_PARAM => StaticEncryptor::createAccessToken($content, $userId)
             ]
         ]);
     }
@@ -117,7 +117,7 @@ class StaticUrlBuilder
         return self::getFrontendUrl('pagebuilder/content/view', [
             'content_id' => $content,
             '_query' => [
-                StaticAccessToken::ACCESS_TOKEN_PARAM => StaticAccessToken::createAccessToken($content, $userId)
+                StaticEncryptor::ACCESS_TOKEN_PARAM => StaticEncryptor::createAccessToken($content, $userId)
             ]
         ]);
     }

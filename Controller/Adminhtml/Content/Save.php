@@ -10,6 +10,7 @@ namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 
 use Exception;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
+use Goomento\PageBuilder\Helper\StaticEncryptor;
 use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -97,6 +98,15 @@ class Save extends AbstractContent implements HttpPostActionInterface
                     }
                 }
 
+                $identifier = isset($data['identifier']) ? trim($data['identifier']) : '';
+                if (empty($identifier)) {
+                    $identifier = $content->getType() . '_' . StaticEncryptor::uniqueString();
+                }
+
+                if ($content->getIdentifier() !== $identifier) {
+                    $content->setIdentifier($identifier);
+                }
+
                 $content = $this->contentRepository->save($content);
                 $this->contentManagement->createRevision($content);
                 $this->messageManager->addSuccessMessage(__('You saved the content.'));
@@ -130,9 +140,15 @@ class Save extends AbstractContent implements HttpPostActionInterface
             $content = $this->contentFactory->create(['data' => $data]);
             $content->setId(null);
             $title = $content->getTitle();
-            $title .= ' ' . (string) __('( Duplicated from #%1 )', $model->getId());
+            $title .= ' ' .  __('( Duplicated from #%1 )', $model->getId());
             $content->setTitle($title);
             $content->setStatus(ContentInterface::STATUS_PENDING);
+            $identifier = $model->getIdentifier();
+            $identifiers = explode('_', $identifier);
+            array_pop($identifiers);
+            $identifiers[] = StaticEncryptor::uniqueString();
+
+            $content->setIdentifier(implode('_', $identifiers));
             $this->contentRepository->save($content);
             $this->messageManager->addSuccessMessage(__('You duplicated the content.'));
             return $resultRedirect->setPath(

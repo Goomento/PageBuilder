@@ -44,7 +44,7 @@ trait TraitHttpContentAction
 
         if (true === $force && !$this->content) {
             throw new LocalizedException(
-                __('Page content not found')
+                __('Page Builder content\'s not found.')
             );
         }
 

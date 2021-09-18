@@ -10,9 +10,9 @@
         <label>Page Builder Content</label>
         <description>Page Builder Content Renderer</description>
         <parameters>
-            <parameter name="content_id" xsi:type="select" required="false" visible="true"
+            <parameter name="identifier" xsi:type="select" required="true" visible="true"
                        source_model="Goomento\PageBuilder\Model\Config\Source\PageList">
-                <label translate="true">Page</label>
+                <label translate="true">Page or Section</label>
             </parameter>
         </parameters>
     </widget>

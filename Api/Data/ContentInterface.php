@@ -26,6 +26,7 @@ interface ContentInterface
     const CONTENT                  = 'content';
     const ELEMENTS                 = 'elements';
     const SETTINGS                 = 'settings';
+    const IDENTIFIER               = 'identifier';
     const CREATION_TIME            = 'creation_time';
     const UPDATE_TIME              = 'update_time';
     const AUTHOR_ID                = 'author_id';
@@ -88,7 +89,20 @@ interface ContentInterface
     public function hasSetting($name);
 
     /**
-     * Has setting
+     * Get identifier
+     * @return string
+     */
+    public function getIdentifier();
+
+    /**
+     * Set identifier
+     * @param $value
+     * @return ContentInterface
+     */
+    public function setIdentifier($value);
+
+    /**
+     * Get setting
      * @param $name
      * @return array|string|bool
      */

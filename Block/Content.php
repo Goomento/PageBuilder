@@ -26,7 +26,9 @@ use Magento\Widget\Block\BlockInterface;
  */
 class Content extends Template implements BlockInterface
 {
-    const CONTENT_ID = 'content_id';
+    const CONTENT_ID = ContentInterface::CONTENT_ID;
+    const IDENTIFIER = ContentInterface::IDENTIFIER;
+
     const BLOCK_CONTENT_KEY = 'pagebuilder_content_html';
     const BLOCK_CONTENT_RENDER_ORDER = 2021;
 
@@ -102,7 +104,7 @@ class Content extends Template implements BlockInterface
      * @param int $id
      * @return Content
      */
-    public function setContentId(int $id)
+    public function setContentId($id)
     {
         $this->setData(self::CONTENT_ID, $id);
         return $this;
@@ -113,7 +115,25 @@ class Content extends Template implements BlockInterface
      */
     public function getContentId()
     {
-        return $this->getData(self::CONTENT_ID);
+        return (int) $this->getData(self::CONTENT_ID);
+    }
+
+    /**
+     * @param string $identifier
+     * @return Content
+     */
+    public function setIdentifier(string $identifier)
+    {
+        $this->setData(self::IDENTIFIER, $identifier);
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getIdentifier()
+    {
+        return $this->getData(self::IDENTIFIER);
     }
 
     /**
@@ -134,14 +154,22 @@ class Content extends Template implements BlockInterface
      */
     protected function isValidContent()
     {
+        $content = null;
         if ($this->getContentId()) {
-            $content = $this->contentRegistry->get(
+            $content = $this->contentRegistry->getById(
                 (int) $this->getContentId()
             );
-            if ($content) {
-                if ($content->isPublished() && $this->isContentAllowedInStore($content)) {
-                    return true;
-                }
+        }
+        if ($this->getIdentifier()) {
+            $content = $this->contentRegistry->getByIdentifier(
+                (string) $this->getIdentifier()
+            );
+        }
+
+        if ($content) {
+            $this->setContentId($content->getId());
+            if ($content->isPublished() && $this->isContentAllowedInStore($content)) {
+                return true;
             }
         }
 
@@ -240,7 +268,7 @@ class Content extends Template implements BlockInterface
         $fallback = $this->dataHelper->getRenderFallback();
         switch ($fallback) {
             case 'use_cache':
-                $html = $this->contentRegistry->get(
+                $html = $this->contentRegistry->getById(
                     $this->getContentId()
                 )->getContent();
                 break;

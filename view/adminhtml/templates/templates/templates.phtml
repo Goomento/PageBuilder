@@ -6,9 +6,10 @@
 
 declare(strict_types=1);
 
-use Goomento\PageBuilder\Helper\StaticUtils;
 use Goomento\PageBuilder\Core\DocumentsManager;
+use Goomento\PageBuilder\Helper\StaticEscaper;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
+
 /** @var DocumentsManager $documentManager */
 $documentManager = StaticObjectManager::get(DocumentsManager::class);
 $document = $documentManager->getCurrent();
@@ -16,15 +17,15 @@ $document = $documentManager->getCurrent();
 ?>
 <script type="text/template" id="tmpl-gmt-template-library-header-actions">
 	<div id="gmt-template-library-header-import" class="gmt-templates-modal__header__item">
-		<i class="fas fa-upload" aria-hidden="true" title="<?= StaticUtils::escapeHtml( 'Import Template' ); ?>"></i>
+		<i class="fas fa-upload" aria-hidden="true" title="<?= StaticEscaper::escapeHtml('Import Template'); ?>"></i>
 		<span class="gmt-screen-only"><?= __( 'Import Template' ); ?></span>
 	</div>
 	<div id="gmt-template-library-header-sync" class="gmt-templates-modal__header__item">
-		<i class="fas fa-sync-alt" aria-hidden="true" title="<?= StaticUtils::escapeHtml( 'Sync Library' ); ?>"></i>
+		<i class="fas fa-sync-alt" aria-hidden="true" title="<?= StaticEscaper::escapeHtml('Sync Library'); ?>"></i>
 		<span class="gmt-screen-only"><?= __( 'Sync Library' ); ?></span>
 	</div>
 	<div id="gmt-template-library-header-save" class="gmt-templates-modal__header__item">
-		<i class="far fa-save" aria-hidden="true" title="<?= StaticUtils::escapeHtml( 'Save' ); ?>"></i>
+		<i class="far fa-save" aria-hidden="true" title="<?= StaticEscaper::escapeHtml('Save'); ?>"></i>
 		<span class="gmt-screen-only"><?= __( 'Save' ); ?></span>
 	</div>
 </script>

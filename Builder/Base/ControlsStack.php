@@ -14,8 +14,8 @@ use Goomento\PageBuilder\Builder\Managers\Schemes;
 use Goomento\PageBuilder\Core\Base\BaseObject;
 use Goomento\PageBuilder\Core\DynamicTags\Manager;
 use Goomento\PageBuilder\Helper\Hooks;
+use Goomento\PageBuilder\Helper\StaticEscaper;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
-use Goomento\PageBuilder\Helper\StaticUtils;
 
 /**
  * Class ControlsStack
@@ -1517,7 +1517,7 @@ abstract class ControlsStack extends BaseObject
             return;
         }
         ?>
-		<script type="text/html" id="tmpl-gmt-<?= StaticUtils::escapeHtml($this->getName()); ?>-content">
+		<script type="text/html" id="tmpl-gmt-<?= StaticEscaper::escapeHtml($this->getName()); ?>-content">
 			<?php $this->printTemplateContent($template_content); ?>
 		</script>
 		<?php

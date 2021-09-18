@@ -10,6 +10,7 @@ namespace Goomento\PageBuilder\Core\DynamicTags;
 
 use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Helper\StaticEscaper;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
 
 /**
@@ -93,10 +94,10 @@ abstract class BaseTag extends ControlsStack
         if (! $panel_template_setting_key) {
             return;
         } ?><#
-		var key = <?= \Goomento\PageBuilder\Helper\StaticUtils::escapeHtml($panel_template_setting_key); ?>;
+		var key = <?= StaticEscaper::escapeHtml($panel_template_setting_key); ?>;
 
 		if ( key ) {
-			var settingsKey = "<?= \Goomento\PageBuilder\Helper\StaticUtils::escapeHtml($panel_template_setting_key); ?>";
+			var settingsKey = "<?= StaticEscaper::escapeHtml($panel_template_setting_key); ?>";
 
 			/*
 			 * If the tag has controls,

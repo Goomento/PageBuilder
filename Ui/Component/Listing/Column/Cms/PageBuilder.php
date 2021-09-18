@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Ui\Component\Listing\Column\Cms;
 
-use Goomento\PageBuilder\Helper\StaticAccessToken;
+use Goomento\PageBuilder\Helper\StaticEncryptor;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
@@ -75,7 +75,7 @@ class PageBuilder extends Column
                             'pagebuilder/content/editor',
                             [
                                 'content_id' => $item['pagebuilder_content_id'],
-                                'back_url' => StaticAccessToken::encrypt($backUrl)
+                                'back_url' => StaticEncryptor::encrypt($backUrl)
                             ]
                         ),
                         'label' =>$label
