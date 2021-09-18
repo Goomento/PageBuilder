@@ -1,0 +1,277 @@
+@import "../helpers/grid-mixin";
+//
+// Grid
+//
+// Section
+.gmt-section {
+	position: relative;
+
+	// Container
+	.gmt-container {
+		display: flex;
+		margin-right: auto;
+		margin-left: auto;
+		position: relative;
+	}
+
+	// Max-width of container depending on section settings
+	&.gmt-section-boxed {
+		& > .gmt-container {
+			max-width: 1280px;
+		}
+	}
+
+	// Stretched section settings
+	&.gmt-section-stretched {
+		position: relative;
+		width: 100%;
+	}
+
+	// In section min-height / fit to screen mode
+	&.gmt-section-items- {
+
+		&top {
+
+			> .gmt-container {
+				align-items: flex-start;
+			}
+		}
+
+		&middle {
+
+			> .gmt-container {
+				align-items: center;
+			}
+		}
+
+		&bottom {
+
+			> .gmt-container {
+				align-items: flex-end;
+			}
+		}
+	}
+
+	@media (min-width: $screen-md-min) {
+
+		// Section Full Height (note: don't be smart - min-height does not work well with the content position)
+		&.gmt-section-height-full {
+			height: 100vh;
+
+			> .gmt-container {
+				height: 100%;
+			}
+		}
+	}
+}
+
+// TODO: BC since 2.7.0
+.gmt-bc-flex-widget {
+
+	.gmt-section-content-top {
+
+		> .gmt-container {
+
+			> .gmt-row {
+
+				> .gmt-column {
+
+					> .gmt-column-wrap {
+						align-items: flex-start;
+					}
+				}
+			}
+		}
+	}
+
+	.gmt-section-content-middle {
+
+		> .gmt-container {
+
+			> .gmt-row {
+
+				> .gmt-column {
+
+					> .gmt-column-wrap {
+						align-items: center;
+					}
+				}
+			}
+		}
+	}
+
+	.gmt-section-content-bottom {
+
+		> .gmt-container {
+
+			> .gmt-row {
+
+				> .gmt-column {
+
+					> .gmt-column-wrap {
+						align-items: flex-end;
+					}
+				}
+			}
+		}
+	}
+}
+
+// Row
+.gmt-row {
+	width: 100%;
+	display: flex;
+
+	//@media (max-width: $screen-md-max) {
+		flex-wrap: wrap;
+	//}
+}
+
+// Widget
+.gmt-column-wrap {
+	width: 100%;
+	position: relative;
+	display: flex;
+}
+
+.gmt-widget-wrap {
+	position: relative;
+	width: 100%;
+	flex-wrap: wrap;
+	align-content: flex-start;
+
+	.gmt:not(.gmt-bc-flex-widget) & {
+		display: flex;
+	}
+
+	> .gmt-element {
+		width: 100%;
+	}
+}
+
+.gmt-widget {
+	position: relative;
+
+	&:not(:last-child) {
+		margin-bottom: 20px;
+
+		&.gmt-widget__width-auto,
+		&.gmt-widget__width-initial,
+		&.gmt-absolute {
+			margin-bottom: 0;
+		}
+	}
+}
+
+// Columns
+.gmt-column {
+	position: relative;
+	min-height: 1px;
+	display: flex;
+
+}
+
+
+
+// Columns Gap
+.gmt-row {
+	> .gmt-column {
+		> .gmt-element-populated {
+			.gmt-column-gap-narrow  > & {
+				padding: 5px;
+			}
+
+			.gmt-column-gap-default > & {
+				padding: 10px;
+			}
+
+			.gmt-column-gap-extended > & {
+				padding: 15px;
+			}
+
+			.gmt-column-gap-wide > & {
+				padding: 20px;
+			}
+
+			.gmt-column-gap-wider > & {
+				padding: 30px;
+			}
+		}
+	}
+}
+
+// Columns Gap for Inner section
+.gmt-inner-section {
+
+	.gmt-column-gap-no {
+
+		.gmt-element-populated {
+			padding: 0;
+		}
+	}
+}
+
+// Responsive Grid
+@media (min-width: $screen-md-min) {
+
+	.gmt-column {
+		@include gmt-grid-classes;
+	}
+}
+
+.gmt-column {
+
+	@media (max-width: $screen-xs-max) {
+		@include gmt-responsive(xs);
+	}
+
+	@media (max-width: $screen-sm-max) {
+		@include gmt-responsive(sm);
+	}
+
+	@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
+		@include gmt-responsive(md);
+	}
+}
+
+@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
+	@include reverse-columns(-tablet);
+}
+
+@media (max-width: $screen-sm-max) {
+	@include reverse-columns(-mobile);
+
+	.gmt-column {
+		width: 100%; //Default width for mobile
+	}
+}
+
+// Minimal simple Grid
+
+ul.gmt-icon-list-items.gmt-inline-items {
+	display: flex;
+	flex-wrap: wrap;
+
+	.gmt-inline-item {
+		word-break: break-word;
+	}
+}
+
+// Simple 12 Columns responsive grid
+.gmt-grid {
+
+	.gmt-grid-item {
+		word-break: break-word;
+		min-width: 0; // Prevent columns from overflowing the grid area in Firefox browser
+	}
+
+	@include grid_loop('');
+
+	@media (max-width: $screen-md-max) {
+		@include grid_loop(-tablet);
+	}
+
+	@media (max-width: $screen-sm-max) {
+		@include grid_loop(-mobile);
+	}
+}

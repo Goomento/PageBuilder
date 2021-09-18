@@ -1,0 +1,48 @@
+.gmt-widget-text-editor {
+
+	&.gmt-drop-cap {
+
+		&-view- {
+
+			&stacked {
+
+				.gmt-drop-cap {
+					background-color: $gray;
+					color: #fff;
+				}
+			}
+
+			&framed {
+
+				.gmt-drop-cap {
+					color: $gray;
+					border: 3px solid;
+					background-color: transparent;
+				}
+			}
+		}
+	}
+
+	&:not(.gmt-drop-cap-view-default) {
+
+		.gmt-drop-cap {
+			margin-top: 8px;
+
+			&-letter {
+				width: 1em;
+				height: 1em;
+			}
+		}
+	}
+
+	.gmt-drop-cap {
+		float: $start;
+		text-align: center;
+		line-height: 1;
+		font-size: 50px;
+
+		&-letter {
+			display: inline-block;
+		}
+	}
+}
