@@ -10,17 +10,46 @@ namespace Goomento\PageBuilder\Model\ResourceModel;
 
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\DB\Select;
+use Magento\Framework\EntityManager\EntityManager;
+use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Context;
 use Magento\Store\Model\Store;
-use Magento\Framework\ObjectManagerInterface;
-
 /**
  * Class Content
  * @package Goomento\PageBuilder\Model\ResourceModel
  */
 class Content extends AbstractDb
 {
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    /**
+     * @var MetadataPool
+     */
+    protected $metadataPool;
+
+    /**
+     * @param Context $context
+     * @param EntityManager $entityManager
+     * @param MetadataPool $metadataPool
+     * @param null $connectionName
+     */
+    public function __construct(
+        Context $context,
+        EntityManager $entityManager,
+        MetadataPool $metadataPool,
+        $connectionName = null
+    ) {
+        parent::__construct($context, $connectionName);
+        $this->entityManager = $entityManager;
+        $this->metadataPool = $metadataPool;
+    }
+
     /**
      * Initialize resource model
      *
@@ -29,6 +58,27 @@ class Content extends AbstractDb
     protected function _construct()
     {
         $this->_init('pagebuilder_content', 'content_id');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getConnection()
+    {
+        return $this->metadataPool->getMetadata(ContentInterface::class)->getEntityConnection();
+    }
+
+
+    /**
+     * @param AbstractModel $object
+     * @param mixed $value
+     * @param null $field
+     * @return $this|Content
+     */
+    public function load(AbstractModel $object, $value, $field = null)
+    {
+        $this->entityManager->load($object, $value);
+        return $this;
     }
 
     /**
@@ -42,7 +92,8 @@ class Content extends AbstractDb
      */
     protected function _getLoadSelect($field, $value, $object)
     {
-        $linkField = $this->getIdFieldName();
+        $entityMetadata = $this->metadataPool->getMetadata(ContentInterface::class);
+        $linkField = $entityMetadata->getLinkField();
 
         $select = parent::_getLoadSelect($field, $value, $object);
 
@@ -77,17 +128,37 @@ class Content extends AbstractDb
     {
         $connection = $this->getConnection();
 
-        $linkField = $this->getIdFieldName();
+        $entityMetadata = $this->metadataPool->getMetadata(ContentInterface::class);
+        $linkField = $entityMetadata->getLinkField();
 
         $select = $connection->select()
-            ->from(['stores' => $this->getTable('pagebuilder_content_store')], 'store_id')
+            ->from(['goomento_page_store' => $this->getTable('pagebuilder_content_store')], 'store_id')
             ->join(
-                ['content' => $this->getMainTable()],
-                'stores.' . $linkField . ' = content.' . $linkField,
+                ['goomento_page' => $this->getMainTable()],
+                'goomento_page_store.' . $linkField . ' = goomento_page.' . $linkField,
                 []
             )
-            ->where('content.' . $linkField . ' = :content_id');
+            ->where('goomento_page.' . $entityMetadata->getIdentifierField() . ' = :content_id');
 
         return $connection->fetchCol($select, ['content_id' => (int)$contentId]);
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function save(AbstractModel $object)
+    {
+        $this->entityManager->save($object);
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function delete(AbstractModel $object)
+    {
+        $this->entityManager->delete($object);
+        return $this;
     }
 }

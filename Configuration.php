@@ -16,7 +16,7 @@ namespace Goomento\PageBuilder;
  */
 class Configuration
 {
-    const DEBUG = true;
+    const DEBUG = false;
 
     const VERSION = 1.0;
 

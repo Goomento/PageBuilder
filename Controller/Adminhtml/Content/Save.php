@@ -143,6 +143,12 @@ class Save extends AbstractContent implements HttpPostActionInterface
             $title .= ' ' .  __('( Duplicated from #%1 )', $model->getId());
             $content->setTitle($title);
             $content->setStatus(ContentInterface::STATUS_PENDING);
+            $identifier = $model->getIdentifier();
+            $identifiers = explode('_', $identifier);
+            array_pop($identifiers);
+            $identifiers[] = StaticEncryptor::uniqueString();
+
+            $content->setIdentifier(implode('_', $identifiers));
             $this->contentRepository->save($content);
             $this->messageManager->addSuccessMessage(__('You duplicated the content.'));
             return $resultRedirect->setPath(

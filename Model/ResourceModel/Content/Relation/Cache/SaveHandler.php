@@ -45,6 +45,7 @@ class SaveHandler implements ExtensionInterface
         /** @var $entity Content */
         if ($entity->getId() && ($entity->hasDataChanges() || $entity->isDeleted())) {
             $this->contentRegistry->cleanContentCache($entity->getId());
+            $this->contentRegistry->contentIdentifier($entity->isDeleted() ? false : $entity->getIdentifier(), $entity->getId());
         }
         return $entity;
     }

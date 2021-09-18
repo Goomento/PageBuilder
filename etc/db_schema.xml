@@ -13,13 +13,15 @@
         <column xsi:type="varchar" name="title" nullable="true" length="255" comment="Content Title"/>
         <column xsi:type="varchar" name="type" nullable="false" length="100" comment="Content Type"/>
         <column xsi:type="varchar" name="fonts" nullable="true" length="255" comment="Content Fonts"/>
-        <column xsi:type="mediumtext" name="custom_css" nullable="true" comment="Content Settings"/>
         <column xsi:type="varchar" name="identifier" nullable="false" length="255" comment="Content Identifier"/>
         <column xsi:type="text" name="content" nullable="true" comment="Content"/>
         <column xsi:type="text" name="elements" nullable="true" comment="Content Elements"/>
         <column xsi:type="mediumtext" name="settings" nullable="true" comment="Content Settings"/>
+        <column xsi:type="mediumtext" name="custom_css" nullable="true" comment="Content Custom Css"/>
         <column xsi:type="int" name="author_id" unsigned="true" identity="false" padding="10" nullable="false"
                 comment="Author ID"/>
+        <column xsi:type="int" name="css_updated_time" unsigned="true" padding="11" nullable="true"
+                comment="Content Css Updated Time"/>
         <column xsi:type="varchar" name="status" length="64" nullable="false" default="draft" comment="Content Status"/>
         <column xsi:type="int" name="last_editor_id" unsigned="true" identity="false" padding="10" nullable="false"
                 comment="Last Editor ID"/>
@@ -30,11 +32,12 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="content_id"/>
         </constraint>
-        <index referenceId="PAGEBUILDER_CONTENT_TITLE_CONTENT_ELEMENTS_IDENTIFIER" indexType="fulltext">
+        <index referenceId="PAGEBUILDER_CONTENT_TITLE_CONTENT_ELEMENTS_IDENTIFIER_FONTS" indexType="fulltext">
             <column name="title"/>
             <column name="content"/>
             <column name="elements"/>
             <column name="identifier"/>
+            <column name="fonts"/>
         </index>
         <constraint xsi:type="unique" referenceId="PAGEBUILDER_CONTENT_IDENTIFIER">
             <column name="identifier"/>
