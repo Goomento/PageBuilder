@@ -10,7 +10,7 @@ namespace Goomento\PageBuilder\Controller\Content;
 
 use Goomento\PageBuilder\Helper\Hooks;
 use Goomento\PageBuilder\Controller\AbstractAction;
-use Goomento\PageBuilder\Helper\StaticAccessToken;
+use Goomento\PageBuilder\Helper\StaticEncryptor;
 use Goomento\PageBuilder\Traits\TraitHttpPage;
 use Magento\Framework\Exception\LocalizedException;
 
@@ -54,8 +54,8 @@ class View extends AbstractAction
     protected function validateToken()
     {
         $content = $this->getContent(true);
-        $token = $this->getRequest()->getParam(StaticAccessToken::ACCESS_TOKEN_PARAM);
-        $isValid = StaticAccessToken::isAllowed($token, $content);
+        $token = $this->getRequest()->getParam(StaticEncryptor::ACCESS_TOKEN_PARAM);
+        $isValid = StaticEncryptor::isAllowed($token, $content);
 
         if ($isValid !== true) {
             throw new LocalizedException(

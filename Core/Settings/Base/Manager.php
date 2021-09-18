@@ -14,8 +14,8 @@ use Goomento\PageBuilder\Core\Common\Modules\Ajax\Module as Ajax;
 use Goomento\PageBuilder\Core\Files\CSS\Base;
 use Goomento\PageBuilder\Core\Settings\Base\Model as BaseModel;
 use Goomento\PageBuilder\Helper\Hooks;
+use Goomento\PageBuilder\Helper\StaticEscaper;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
-use Goomento\PageBuilder\Helper\StaticUtils;
 
 /**
  * Class Manager
@@ -303,15 +303,15 @@ abstract class Manager
     {
         ?>
 		<div class="gmt-panel-navigation">
-			<# _.each( goomento.config.settings.<?= StaticUtils::escapeHtml($name); ?>.tabs, function( tabTitle, tabSlug ) {
-				$e.bc.ensureTab( 'panel/<?= StaticUtils::escapeHtml($name); ?>-settings', tabSlug );
+			<# _.each( goomento.config.settings.<?= StaticEscaper::escapeHtml($name); ?>.tabs, function( tabTitle, tabSlug ) {
+				$e.bc.ensureTab( 'panel/<?= StaticEscaper::escapeHtml($name); ?>-settings', tabSlug );
 			#>
 				<div class="gmt-component-tab gmt-panel-navigation-tab gmt-tab-control-{{ tabSlug }}" data-tab="{{ tabSlug }}">
 					<a href="#">{{{ tabTitle }}}</a>
 				</div>
 				<# } ); #>
 		</div>
-		<div id="gmt-panel-<?= StaticUtils::escapeHtml($name); ?>-settings-controls"></div>
+		<div id="gmt-panel-<?= StaticEscaper::escapeHtml($name); ?>-settings-controls"></div>
 		<?php
     }
 
@@ -351,7 +351,7 @@ abstract class Manager
         $name = $this->getName();
 
         ob_start(); ?>
-		<script type="text/template" id="tmpl-gmt-panel-<?= StaticUtils::escapeHtml($name); ?>-settings">
+		<script type="text/template" id="tmpl-gmt-panel-<?= StaticEscaper::escapeHtml($name); ?>-settings">
 			<?php $this->printEditorTemplateContent($name); ?>
 		</script>
 		<?php

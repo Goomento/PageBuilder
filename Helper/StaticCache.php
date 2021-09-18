@@ -10,6 +10,7 @@ namespace Goomento\PageBuilder\Helper;
 
 use Goomento\Core\Traits\TraitStaticCaller;
 use Goomento\Core\Traits\TraitStaticInstances;
+use Goomento\PageBuilder\Model\Cache;
 
 /**
  * Class StaticCache
@@ -24,11 +25,6 @@ class StaticCache
 {
     use TraitStaticCaller;
     use TraitStaticInstances;
-
-    /**
-     * @var bool|null
-     */
-    private static $isValidCache = null;
 
     /**
      * @return Cache

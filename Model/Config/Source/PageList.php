@@ -44,9 +44,10 @@ class PageList implements OptionSourceInterface
         ]);
         $collection->addFieldToFilter('status', ['eq' => ContentInterface::STATUS_PUBLISHED]);
         $results = [];
+        /** @var ContentInterface $content */
         foreach ($collection->getItems() as $content) {
             $results[] = [
-                'value' => $content->getId(),
+                'value' => $content->getIdentifier(),
                 'label' => $this->getLabel($content),
             ];
         }

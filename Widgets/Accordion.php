@@ -15,8 +15,8 @@ use Goomento\PageBuilder\Builder\Managers\Icons;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
 use Goomento\PageBuilder\Helper\StaticData;
+use Goomento\PageBuilder\Helper\StaticEscaper;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
-use Goomento\PageBuilder\Helper\StaticUtils;
 
 /**
  * Class Accordion
@@ -494,7 +494,7 @@ class Accordion extends Widget
             <div class="gmt-accordion-item">
             <<?= $settings['title_html_tag']; ?> <?= $this->getRenderAttributeString($tab_title_setting_key); ?>>
             <?php if ($has_icon) : ?>
-                <span class="gmt-accordion-icon gmt-accordion-icon-<?= StaticUtils::escapeHtml($settings['icon_align']); ?>" aria-hidden="true">
+                <span class="gmt-accordion-icon gmt-accordion-icon-<?= StaticEscaper::escapeHtml($settings['icon_align']); ?>" aria-hidden="true">
 						<span class="gmt-accordion-icon-closed"><?php Icons::renderIcon($settings['selected_icon']); ?></span>
 								<span class="gmt-accordion-icon-opened"><?php Icons::renderIcon($settings['selected_active_icon']); ?></span>
 							</span>

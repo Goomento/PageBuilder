@@ -3,6 +3,8 @@
 namespace Goomento\PageBuilder\Model;
 
 use Exception;
+use Goomento\PageBuilder\Api\Data\ContentInterface;
+use Goomento\PageBuilder\Helper\StaticEncryptor;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
 use Magento\Backend\Model\Url;
 use Magento\Cms\Api\BlockRepositoryInterface;
@@ -10,6 +12,7 @@ use Magento\Cms\Api\PageRepositoryInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DataObject;
 use Magento\Framework\DB\Adapter\AdapterInterface;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Class ContentRelation
@@ -22,10 +25,6 @@ class ContentRelation
     const FIELD_PAGEBUILDER_CONTENT_ID = 'pagebuilder_content_id';
     const FIELD_PAGEBUILDER_IS_ACTIVE = 'pagebuilder_is_active';
 
-    /**
-     * @var AdapterInterface
-     */
-    private $connection;
     /**
      * @var Url
      */
@@ -86,6 +85,35 @@ class ContentRelation
         return StaticObjectManager::get(
             $this->getRelationData($relationType)['repository']
         );
+    }
+
+    /**
+     * @param string $relationType
+     * @param $relationObject
+     * @param array $contentData
+     * @return array
+     * @throws Exception
+     */
+    public function prepareContent(string $relationType, $relationObject, array $contentData)
+    {
+        $relationData = $this->getRelationData($relationType);
+        switch ($relationType) {
+            case self::TYPE_CMS_PAGE:
+            case self::TYPE_CMS_BLOCK:
+                $contentData = [
+                    'title' => $relationData['label'] . ': #' . $relationObject->getId() . ' ' . $relationObject->getTitle(),
+                    'type' => $relationData['pagebuilder_type'],
+                    'status' => ContentInterface::STATUS_PUBLISHED,
+                ];
+                if ($relationObject->getStores()) {
+                    $contentData['store_id'] = $relationObject->getStores();
+                } else {
+                    $contentData['store_id'] = [0];
+                }
+                $contentData['identifier'] = $relationObject->getIdentifier() . '_' . StaticEncryptor::uniqueString();
+            default:
+        }
+        return $contentData;
     }
 
 

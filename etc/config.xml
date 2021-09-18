@@ -10,7 +10,7 @@
         <system>
             <pagebuilder>
                 <general>
-                    <active>0</active>
+                    <active>1</active>
                 </general>
                 <import>
                     <allowed_download_image>0</allowed_download_image>

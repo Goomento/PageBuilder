@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder;
 
 use Goomento\PageBuilder\Helper\Hooks;
-use Goomento\PageBuilder\Helper\StaticUtils;
+use Goomento\PageBuilder\Helper\StaticEscaper;
 
 /**
  * Class Embed
@@ -150,7 +150,7 @@ class Embed
         $attributes_for_print = [];
 
         foreach ($frame_attributes as $attribute_key => $attribute_value) {
-            $attribute_value = StaticUtils::escapeHtml($attribute_value);
+            $attribute_value = StaticEscaper::escapeHtml($attribute_value);
 
             if (is_numeric($attribute_key)) {
                 $attributes_for_print[] = $attribute_value;

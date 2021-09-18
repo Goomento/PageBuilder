@@ -13,10 +13,10 @@ use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
 
 /**
- * Class StaticAccessToken
+ * Class StaticEncryptor
  * @package Goomento\PageBuilder\Helper
  */
-class StaticAccessToken
+class StaticEncryptor
 {
     const ACCESS_TOKEN_PARAM = 'gmt_token';
     /**
@@ -36,6 +36,15 @@ class StaticAccessToken
         }
         $data = sprintf('CONTENT__%s__USER__%s__TIME__%s', $content, $userId, time());
         return self::encrypt($data);
+    }
+
+    /**
+     * @param int $length
+     * @return false|string
+     */
+    public static function uniqueString(int $length = 6)
+    {
+        return substr(md5(uniqid((string) rand(0, 99), true)), 1, $length);
     }
 
     /**

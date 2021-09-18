@@ -37,7 +37,7 @@ class StaticRequest
      */
     public static function getAccessToken()
     {
-        return self::getParam(StaticAccessToken::ACCESS_TOKEN_PARAM);
+        return self::getParam(StaticEncryptor::ACCESS_TOKEN_PARAM);
     }
 
     /**

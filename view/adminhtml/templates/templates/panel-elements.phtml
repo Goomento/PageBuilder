@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-use Goomento\PageBuilder\Helper\StaticUtils;
+use Goomento\PageBuilder\Helper\StaticEscaper;
 
 ?>
 <script type="text/template" id="tmpl-gmt-panel-elements">
@@ -39,7 +39,7 @@ use Goomento\PageBuilder\Helper\StaticUtils;
 <script type="text/template" id="tmpl-gmt-panel-element-search">
 	<label for="gmt-panel-elements-search-input" class="screen-reader-text"><?php
         echo __( 'Search Widget:' ); ?></label>
-	<input type="search" id="gmt-panel-elements-search-input" placeholder="<?= StaticUtils::escapeHtml( 'Search Widget...' ); ?>" autocomplete="off"/>
+	<input type="search" id="gmt-panel-elements-search-input" placeholder="<?= StaticEscaper::escapeHtml('Search Widget...'); ?>" autocomplete="off"/>
 	<i class="fas fa-search" aria-hidden="true"></i>
 </script>
 
