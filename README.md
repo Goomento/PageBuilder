@@ -3,7 +3,7 @@
 
 **Goomento Page Builder** is a *Free Magento 2 Page Builder Extension*, allows you to set up your own website in any industry easily by simple dragging and dropping manipulation. Notably, it can reuse your previous templates and sections to customize and redesign with your new creativity. All this process has an absence of coding involvement and configures instantly.
 
-_This module is inspired by Elementor for WordPress but Goomento for Magento_
+_This module is inspired by Elementor for WordPress let say Elementor for Magento, precisely, It's Goomento for Magento_
 
 ## 1. How to install Magento 2 Goomento Page Builder
 
@@ -18,7 +18,7 @@ php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy
 ```
 For more functionalities (Eg: Slider, Banner, Audio, Products ...), check this out 
-**[Goomento_BuilderWidgets](https://github.com/Goomento/BuilderWidgets)** or run this command to install:
+**[Goomento BuilderWidgets](https://github.com/Goomento/BuilderWidgets)** or run this command to install in short:
 
 ```
 composer require goomento/module-builder-widgets
@@ -59,19 +59,7 @@ Goomento Page Builder will overwrite the main content of these entities:
 
 ## 5. How to use
 
-- Use default instruction on Cms Page/ Block Grid / Form to create a landing page, section or template
-
-- Add Widget with name "Page Builder Content" and set "Page Builders" for it.
-
-- Add snippet `{{block class="PageBuilderRenderer" content_id="your-content-id"}}` into any content
-
-- On template **.phtml** add this code
-
-
-    `<?= $block->getLayout()
-            ->getBlock("pagebuilder.content.renderer")
-            ->setContentId("your-content-id")
-            ->toHtml(); ?>`
+Check this [Wiki page](https://github.com/Goomento/PageBuilder/wiki/How-To-Use) for use
 
 ## 6. Create your own widgets / template
 

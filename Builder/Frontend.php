@@ -473,14 +473,6 @@ class Frontend extends App
         $preview = StaticObjectManager::get(Preview::class);
         if (! $preview->isPreviewMode()) {
             $this->parseGlobalCssCode();
-
-            //			$post_id = get_the_ID();
-            // Check $post_id for virtual pages. check is singular because the $post_id is set to the first post on archive pages.
-            // TODO check this
-//			if ( Request::getPageData() ) {
-//				$css_file = \Goomento\PageBuilder\Core\Files\Css\ContentCss::create( Request::getPageData() );
-//				$css_file->enqueue();
-//			}
         }
     }
 
@@ -684,7 +676,6 @@ class Frontend extends App
         }
 
         $this->removeContentFilter();
-
 
         $contentId = Hooks::applyFilters('pagebuilder/current/content_id');
         $builderContent = $this->getBuilderContent($contentId);

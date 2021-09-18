@@ -142,7 +142,7 @@ class Content extends AbstractModel implements
      */
     public function getId()
     {
-        return (int) parent::getData(self::CONTENT_ID);
+        return parent::getData(self::CONTENT_ID);
     }
 
     /**

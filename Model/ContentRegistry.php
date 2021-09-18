@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model;
 
-use Goomento\PageBuilder\Api\ContentRepositoryInterface;
+
 use Goomento\PageBuilder\Model\ResourceModel\Content as ContentResourceModel;
-use Goomento\PageBuilder\Api\Data;
+use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory as ContentCollectionFactory;
 use Goomento\PageBuilder\Api\Data\ContentInterfaceFactory;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\ContentRegistryInterface;
@@ -23,15 +23,11 @@ use Magento\Framework\Exception\LocalizedException;
  */
 class ContentRegistry implements ContentRegistryInterface
 {
+    const CACHE_KEY_IDENTIFIER_MAPPING = 'pagebuilder_identifier_mapping';
     /**
      * @var Content[]
      */
     protected $registry = [];
-
-    /**
-     * @var ContentRepositoryInterface
-     */
-    protected $contentRepository;
     /**
      * @var Logger
      */
@@ -53,22 +49,36 @@ class ContentRegistry implements ContentRegistryInterface
      */
     private $processing;
 
+    private $allowFields = [
+        ContentInterface::CONTENT_ID,
+        ContentInterface::IDENTIFIER,
+    ];
+    /**
+     * @var ContentCollectionFactory
+     */
+    private $contentCollectionFactory;
+
+    /**
+     * @var array
+     */
+    private $identifiers;
+
     /**
      * ContentRegistry constructor.
-     * @param ContentRepositoryInterface $contentRepository
      * @param ContentResourceModel $contentResourceModel
      * @param ContentInterfaceFactory $contentFactory
+     * @param ContentCollectionFactory $contentCollectionFactory
      * @param Cache $cache
      * @param Logger $logger
      */
     public function __construct(
-        ContentRepositoryInterface $contentRepository,
         ContentResourceModel $contentResourceModel,
         ContentInterfaceFactory $contentFactory,
+        ContentCollectionFactory $contentCollectionFactory,
         Cache $cache,
         Logger $logger
     ) {
-        $this->contentRepository = $contentRepository;
+        $this->contentCollectionFactory = $contentCollectionFactory;
         $this->contentResourceModel = $contentResourceModel;
         $this->contentFactory = $contentFactory;
         $this->logger = $logger;
@@ -100,7 +110,7 @@ class ContentRegistry implements ContentRegistryInterface
     public function getBy($value, string $field)
     {
         $content = null;
-        if (!empty($value)) {
+        if (!empty($value) && in_array($field, $this->allowFields)) {
             $actions = [
                 'getFromInstance',
                 'getFromCache',
@@ -132,8 +142,9 @@ class ContentRegistry implements ContentRegistryInterface
     public function getFromRepo($value, $field)
     {
         if (!$this->processing) {
-            $model = $this->contentFactory->create();
-            $this->contentResourceModel->load($model, $value, $field);
+            $collection = $this->contentCollectionFactory->create();
+            $collection->addFieldToFilter($field, ['eq' => $value]);
+            $model = $collection->getFirstItem();
             if ($model && $model->getId()) {
                 $this->processing = $model;
             } else {
@@ -154,28 +165,22 @@ class ContentRegistry implements ContentRegistryInterface
     private function getFromCache($value, $field)
     {
         if (!$this->processing) {
+            if ($field === ContentInterface::IDENTIFIER) {
+                $value = $this->contentIdentifier($value);
+                if (!$value) {
+                    return false;
+                }
+            }
             $key = $this->getContentCacheKey($value);
             $data = $this->cache->load($key);
-            // if identifier
-            if ($data && is_numeric($data)) {
-                $data = $this->cache->load(
-                    $this->getContentCacheKey($data)
-                );
-            }
             if (!empty($data)) {
-                try {
-                    $data = \Zend_Json::decode($data);
-                } catch (\Exception $e) {}
-                if ($data) {
-                    /** @var Content $content */
-                    $content = $this->contentFactory->create();
-                    $content->setData($data);
-                    $content->setIsCaching(true);
-                    $content->setOrigData();
-                    $content->setHasDataChanges(false);
-                    $this->processing = $content;
-                    return true;
-                }
+                /** @var Content $content */
+                $content = $this->contentFactory->create();
+                $content->setData($data);
+                $content->setIsCaching(true);
+                $content->setOrigData();
+                $content->setHasDataChanges(false);
+                $this->processing = $content;
             }
         }
 
@@ -191,18 +196,12 @@ class ContentRegistry implements ContentRegistryInterface
     private function saveToCache($value = null, $field = null)
     {
         if ($this->processing && $this->processing->getIsCaching() !== true) {
-            $data = \Zend_Json::encode($this->processing);
-            $this->cache->saveToContentCollection(
-                $data,
+            $this->cache->save(
+                $this->processing->toArray(),
                 $this->getContentCacheKey($this->processing->getId())
             );
             $identifier = $this->processing->getIdentifier();
-            if ($identifier) {
-                $this->cache->saveToContentCollection(
-                    $this->processing->getId(),
-                    $this->getContentCacheKey($identifier)
-                );
-            }
+            $this->contentIdentifier($identifier, $this->processing->getId());
         }
 
         return false;
@@ -224,13 +223,43 @@ class ContentRegistry implements ContentRegistryInterface
         }
 
         $this->cache->remove($this->getContentCacheKey($id));
-//        $this->cache->remove($this->getContentCacheKey($content->getIdentifier()));
+        $this->contentIdentifier(false, $id);
     }
 
 
-    private function cleanContentIdentifier($contentId)
+    /**
+     * @param $identifier
+     * @param null $contentId
+     * @return mixed|null
+     */
+    public function contentIdentifier($identifier, $contentId = null)
     {
+        $result = null;
 
+        if (is_null($this->identifiers)) {
+            $this->identifiers = [];
+            $this->identifiers = (array) $this->cache->load(self::CACHE_KEY_IDENTIFIER_MAPPING);
+        }
+
+        if (!is_null($contentId)) {
+            if (!$identifier && isset($this->identifiers[$contentId])) {
+                unset($this->identifiers[$contentId]);
+            } elseif ($identifier) {
+                $this->identifiers[$contentId] = $identifier;
+            }
+
+            $this->cache->save($this->identifiers, self::CACHE_KEY_IDENTIFIER_MAPPING);
+            $result = $contentId;
+        } else {
+            foreach ($this->identifiers as $id => $url) {
+                if ($identifier === $url) {
+                    $result = $id;
+                    break;
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -256,7 +285,9 @@ class ContentRegistry implements ContentRegistryInterface
     public function delete(int $id)
     {
         $this->cleanContentCache($id);
-        $this->contentRepository->deleteById($id);
+        $this->contentResourceModel->delete(
+            $this->getById($id)
+        );
     }
 
     /**

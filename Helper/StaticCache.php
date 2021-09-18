@@ -16,8 +16,6 @@ use Goomento\PageBuilder\Model\Cache;
  * Class StaticCache
  * @package Goomento\PageBuilder\Helper
  * @method static save($data, $identifier, $tags = [], $lifeTime = null);
- * @method static saveToContentCollection($data, $identifier);
- * @method static cleanContentCollection();
  * @method static remove($identifier);
  * @method static clean($tags = []);
  * @method static load($identifier);

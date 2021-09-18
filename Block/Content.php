@@ -104,7 +104,7 @@ class Content extends Template implements BlockInterface
      * @param int $id
      * @return Content
      */
-    public function setContentId(int $id)
+    public function setContentId($id)
     {
         $this->setData(self::CONTENT_ID, $id);
         return $this;
@@ -115,7 +115,7 @@ class Content extends Template implements BlockInterface
      */
     public function getContentId()
     {
-        return $this->getData(self::CONTENT_ID);
+        return (int) $this->getData(self::CONTENT_ID);
     }
 
     /**

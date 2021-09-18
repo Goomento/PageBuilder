@@ -9,93 +9,105 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Model;
 
 use Magento\Framework\App\CacheInterface;
+use Goomento\PageBuilder\Model\Cache\Type\PageBuilder;
 
 /**
  * Class Cache
  * @package Goomento\PageBuilder\Model
  */
-class Cache implements CacheInterface
+class Cache
 {
-    const CONTENT_COLLECTION_TAG = 'pagebuilder_content';
+    const DEFAULT_LIFE_TIME = 86400; // 01 day
 
-    const DEFAULT_LIFE_TIME = 3600;
+    const CACHE_TAG = PageBuilder::TYPE_IDENTIFIER;
 
     /**
      * @var Cache\Type\PageBuilder
      */
-    private $frontend;
+    private $cache;
 
     /**
-     * @param Cache\Type\PageBuilder $builderCache
+     * @param CacheInterface $cache
      */
     public function __construct(
-        Cache\Type\PageBuilder $builderCache
+        CacheInterface $cache
     )
     {
-        $this->frontend = $builderCache;
+        $this->cache = $cache;
     }
 
     /**
-     * @inheritDoc
+     * @param string $identifier
+     * @return mixed|string|null
      */
-    public function getFrontend()
+    public function load(string $identifier)
     {
-        return $this->frontend;
+        $data = $this->cache->load($identifier);
+        return $this->unSerializer($data);
     }
 
     /**
-     * @inheritDoc
+     * @param mixed $data
+     * @param $identifier
+     * @param array $tags
+     * @param null $lifeTime
+     * @return bool
      */
-    public function load($identifier)
+    public function save($data, $identifier, $tags = [self::CACHE_TAG], $lifeTime = self::DEFAULT_LIFE_TIME)
     {
-        return $this->frontend->load($identifier);
+        if (is_numeric($tags) && is_null($lifeTime)) {
+            $lifeTime = (int) $tags;
+            $tags = [self::CACHE_TAG];
+        }
+        $data = $this->serializer($data);
+        return $this->cache->save((string)$data, $identifier, $tags, $lifeTime);
     }
 
     /**
-     * @inheritDoc
-     */
-    public function save($data, $identifier, $tags = [], $lifeTime = null)
-    {
-        return $this->frontend->save((string)$data, $identifier, $tags, $lifeTime);
-    }
-
-    /**
-     * @inheritDoc
+     * @param $identifier
+     * @return bool
      */
     public function remove($identifier)
     {
-        return $this->frontend->remove($identifier);
+        return $this->cache->remove($identifier);
     }
 
     /**
-     * @inheritDoc
+     * @param array $tags
+     * @return bool
      */
-    public function clean($tags = [])
+    public function clean($tags = [self::CACHE_TAG])
     {
-        return $this->frontend->clean(\Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG, (array)$tags);
+        return $this->cache->clean(\Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG, (array) $tags);
     }
 
     /**
      * @param $data
-     * @param $identifier
-     * @param null $lifeTime
-     * @return bool
+     * @return mixed|string
      */
-    public function saveToContentCollection($data, $identifier, $lifeTime = self::DEFAULT_LIFE_TIME)
+    private function serializer($data)
     {
-        return $this->save(
-            $data,
-            $identifier,
-            [self::CONTENT_COLLECTION_TAG],
-            $lifeTime
-        );
+        if (!is_scalar($data)) {
+            try {
+                $data = \Zend_Json::encode($data);
+            } catch (\Exception $e) {}
+        }
+
+        return $data;
     }
 
     /**
-     * @return bool
+     * @param $data
+     * @return mixed|string|null
      */
-    public function cleanContentCollection()
+    private function unSerializer($data)
     {
-        return $this->clean([self::DEFAULT_LIFE_TIME]);
+        if (is_string($data)) {
+            try {
+                $data = \Zend_Json::decode($data);
+            } catch (\Exception $e) {}
+        }
+
+        return $data;
     }
 }
