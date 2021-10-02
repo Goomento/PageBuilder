@@ -58,7 +58,7 @@ class SaveHandler implements ExtensionInterface
     public function execute($entity, $arguments = [])
     {
         /** @var \Goomento\PageBuilder\Model\Content $entity */
-        if ($entity->getId() && $entity->hasDataChanges()) {
+        if ($entity->getId() && $entity->hasDataChanges() && $entity->getCreateRevisionFlag() === true) {
             /** @var \Goomento\PageBuilder\Model\Revision|null $revision */
             $revision = $this->revisions[$entity->getId()] ?? null;
 

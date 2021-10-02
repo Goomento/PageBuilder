@@ -76,17 +76,6 @@ class Frontend extends App
     private $icon_fonts_to_enqueue = [];
 
     /**
-     * Enqueue Icon Fonts
-     *
-     * Holds the list of Icon fonts already enqueued  in the current page.
-     *
-     *
-     * @var array enqueued icon fonts. Default is an empty array.
-     */
-    private $enqueued_icon_fonts = [];
-
-
-    /**
      * Filters removed from the content.
      *
      * @var array Filters removed from the content. Default is an empty array.
@@ -384,9 +373,9 @@ class Frontend extends App
         if ($has_custom_file) {
             $frontend_file = new FrontendFile('custom-' . $frontend_file_name, Responsive::getStylesheetTemplatesPath() . $frontend_file_name);
 
-            $time = $frontend_file->getMeta('time');
+            $time = $frontend_file->getMeta('css_updated_time');
 
-            if (! $time) {
+            if (!$time) {
                 $frontend_file->update();
             }
 

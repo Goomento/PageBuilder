@@ -1,0 +1,68 @@
+//
+// Alert
+//
+.gmt-alert {
+	padding: 15px;
+	border-left: 5px solid transparent;
+	position: relative;
+	text-align: $start;
+
+	.gmt-alert-title {
+		display: block;
+		font-weight: bold;
+	}
+
+	.gmt-alert-description {
+		font-size: 13px;
+	}
+
+	button.gmt-alert-dismiss {
+		position: absolute;
+		@include end(10px);
+		top: 10px;
+		padding: 3px;
+		font-size: 20px;
+		line-height: 1;
+		background: transparent;
+		color: inherit;
+		border: none;
+		cursor: pointer;
+	}
+
+	&.gmt-alert-info {
+		color: $info-text;
+		background-color: $info-bg;
+		border-color: $info-border;
+	}
+
+	&.gmt-alert-success {
+		color: $success-text;
+		background-color: $success-bg;
+		border-color: $success-border;
+	}
+
+	&.gmt-alert-warning {
+		color: $warning-text;
+		background-color: $warning-bg;
+		border-color: $warning-border;
+	}
+
+	&.gmt-alert-danger {
+		color: $danger-text;
+		background-color: $danger-bg;
+		border-color: $danger-border;
+	}
+}
+
+// Responsive mode
+@media (max-width: $screen-sm-max) {
+
+	.gmt-alert {
+		padding: 10px;
+
+		button.gmt-alert-dismiss {
+			right: 7px;
+			top: 7px;
+		}
+	}
+}

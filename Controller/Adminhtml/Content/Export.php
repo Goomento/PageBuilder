@@ -42,7 +42,7 @@ class Export extends AbstractContent implements HttpGetActionInterface
                 );
             }
 
-            $this->contentManagement->exportContent($content);
+            $this->contentManagement->httpContentExport($content);
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
         } catch (Exception $e) {

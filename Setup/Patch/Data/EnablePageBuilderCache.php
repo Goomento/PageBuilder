@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Setup\Patch\Data;
 
+use Magento\Framework\App\Cache\StateInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\App\Cache\Manager as CacheManager;
 use Goomento\PageBuilder\Model\Cache\Type\PageBuilder;
@@ -18,14 +19,21 @@ class EnablePageBuilderCache implements DataPatchInterface
      * @var CacheManager
      */
     private $cacheManager;
+    /**
+     * @var StateInterface
+     */
+    private $cacheState;
 
     /**
      * @param CacheManager $cacheManager
+     * @param StateInterface $cacheState
      */
     public function __construct(
-        CacheManager $cacheManager
+        CacheManager $cacheManager,
+        StateInterface $cacheState
     )
     {
+        $this->cacheState = $cacheState;
         $this->cacheManager = $cacheManager;
     }
 
@@ -34,7 +42,9 @@ class EnablePageBuilderCache implements DataPatchInterface
      */
     public function apply()
     {
-        $this->cacheManager->setEnabled([PageBuilder::TYPE_IDENTIFIER], true);
+        if (!$this->cacheState->isEnabled(PageBuilder::TYPE_IDENTIFIER)) {
+            $this->cacheManager->setEnabled([PageBuilder::TYPE_IDENTIFIER], true);
+        }
     }
 
     /**

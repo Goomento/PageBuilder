@@ -1,0 +1,65 @@
+// Global style for animate.css
+
+.animated {
+	animation-duration: 1.25s;
+
+	&.animated-slow {
+		animation-duration: 2s;
+	}
+
+	&.animated-fast {
+		animation-duration: .75s;
+	}
+
+	&.infinite {
+		animation-iteration-count: infinite;
+	}
+
+	&.reverse {
+		animation-direction: reverse;
+	}
+}
+
+// Disable animations for users who experience motion sickness / vertigo
+@media (prefers-reduced-motion: reduce) {
+	.animated {
+		animation: none;
+	}
+}
+
+.has-hover {
+	.bg, [class*="image-"] img {
+		transition: opacity .6s, box-shadow .3s, -webkit-filter .6s, -webkit-transform .6s;
+		transition: filter .6s, opacity .6s, transform .6s, box-shadow .3s;
+		transition: filter .6s, opacity .6s, transform .6s, box-shadow .3s, -webkit-filter .6s, -webkit-transform .6s;
+	}
+
+	&:hover {
+		.show-on-hover {
+			opacity: 1;
+		}
+	}
+}
+
+.show-on-hover, .hover-slide, .hover-slide-in, .hover-zoom, .hover-zoom-in {
+	opacity: 0;
+	transition: opacity .5s, max-height .6s, -webkit-transform .3s, -webkit-filter .6s;
+	transition: opacity .5s, transform .3s, max-height .6s, filter .6s;
+	transition: opacity .5s, transform .3s, max-height .6s, filter .6s, -webkit-transform .3s, -webkit-filter .6s;
+	-webkit-filter: blur(0);
+	filter: blur(0);
+	pointer-events: none;
+
+}
+
+img.back-image, .image-cover img, .has-format img {
+	right: 0;
+	width: 100%;
+	height: 100%;
+	bottom: 0;
+	left: 0;
+	top: 0;
+	position: absolute;
+	object-position: 50% 50%;
+	object-fit: cover;
+}

@@ -1,5 +1,11 @@
 # Magento 2 Goomento Page Builder
 
+## 0.1.4: Global.css added 
+### Features:
+- Enhanced caching
+- Global.css Added
+  Fixed minor bugs
+
 ## 0.1.3: Added identifier
 ### Features:
 - Added identifier

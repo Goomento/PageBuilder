@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Model;
 
 
+use Exception;
 use Goomento\PageBuilder\Model\ResourceModel\Content as ContentResourceModel;
 use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory as ContentCollectionFactory;
 use Goomento\PageBuilder\Api\Data\ContentInterfaceFactory;
@@ -105,7 +106,7 @@ class ContentRegistry implements ContentRegistryInterface
      * @param string $field
      * @param $value
      * @return null
-     * @throws \Exception
+     * @throws Exception
      */
     public function getBy($value, string $field)
     {
@@ -142,9 +143,15 @@ class ContentRegistry implements ContentRegistryInterface
     public function getFromRepo($value, $field)
     {
         if (!$this->processing) {
-            $collection = $this->contentCollectionFactory->create();
-            $collection->addFieldToFilter($field, ['eq' => $value]);
-            $model = $collection->getFirstItem();
+            if ($field === ContentInterface::CONTENT_ID) {
+                $model = $this->contentFactory->create();
+                $this->contentResourceModel->load($model, $value);
+            } else {
+                $collection = $this->contentCollectionFactory->create();
+                $collection->addFieldToFilter($field, ['eq' => $value]);
+                $model = $collection->getFirstItem();
+            }
+
             if ($model && $model->getId()) {
                 $this->processing = $model;
             } else {
@@ -160,7 +167,7 @@ class ContentRegistry implements ContentRegistryInterface
      * @param $value
      * @param $field
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     private function getFromCache($value, $field)
     {
@@ -191,7 +198,7 @@ class ContentRegistry implements ContentRegistryInterface
      * @param null $value
      * @param null $field
      * @return false
-     * @throws \Exception
+     * @throws Exception
      */
     private function saveToCache($value = null, $field = null)
     {
@@ -209,7 +216,6 @@ class ContentRegistry implements ContentRegistryInterface
 
     /**
      * @param $content
-     * @throws LocalizedException|\Exception
      */
     public function cleanContentCache($content)
     {
@@ -265,16 +271,10 @@ class ContentRegistry implements ContentRegistryInterface
     /**
      * @param $id
      * @return string
-     * @throws \Exception
      */
     private function getContentCacheKey($id)
     {
-        if (!($id = trim((string) $id))) {
-            throw new LocalizedException(
-                __('Content identifier must not empty.')
-            );
-        }
-        return md5('pagebuilder_content_' . $id);
+        return 'pagebuilder_content_' . (string) $id;
     }
 
     /**

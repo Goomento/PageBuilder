@@ -86,7 +86,7 @@ class Frontend extends Base
 
     private function loadMetaOption()
     {
-        $option = StaticConfig::getThemeOption(static::META_KEY);
+        $option = StaticConfig::getOption(static::META_KEY);
 
         if (! $option) {
             $option = [];

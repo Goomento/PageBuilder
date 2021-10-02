@@ -31,15 +31,23 @@ interface ContentInterface
     const UPDATE_TIME              = 'update_time';
     const AUTHOR_ID                = 'author_id';
     const LAST_EDITOR_ID           = 'last_editor_id';
+
     const STATUS                   = 'status';
     const STATUS_PENDING           = 'pending';
     const STATUS_PUBLISHED         = 'publish';
     const STATUS_AUTOSAVE          = 'autosave';
     const STATUS_DRAFT             = 'draft';
+
     const TYPE_PAGE                = 'page';
     const TYPE_TEMPLATE            = 'template';
     const TYPE_SECTION             = 'section';
-    const REVISION_FLAG            = 'revision_flag';
+
+    const CREATE_REVISION_FLAG     = 'create_revision_flag';
+
+    const SERIALIZABLE_FIELDS      = [
+        self::SETTINGS => [[], []],
+        self::ELEMENTS => [[], []],
+    ];
 
     /**
      * Get ID
@@ -78,6 +86,8 @@ interface ContentInterface
      * Set settings
      *
      * @return array
+     * @deprecated
+     * @see ContentInterface::getSetting()
      */
     public function getSettings();
 
@@ -225,18 +235,20 @@ interface ContentInterface
     /**
      * Set elements
      *
-     * @param array|string $elements
+     * @param array $elements
      * @return ContentInterface
      */
-    public function setElements($elements);
+    public function setElements(array $elements);
 
     /**
      * Set elements
      *
      * @param array $settings
      * @return ContentInterface
+     * @deprecated
+     * @see ContentInterface::setSetting()
      */
-    public function setSettings($settings);
+    public function setSettings(array $settings);
 
     /**
      * Set elements
@@ -299,4 +311,15 @@ interface ContentInterface
      * @return string
      */
     public function getRoleName(string $role);
+
+    /**
+     * @param bool $flag
+     * @return ContentInterface
+     */
+    public function setCreateRevisionFlag(bool $flag);
+
+    /**
+     * @return bool
+     */
+    public function getCreateRevisionFlag();
 }

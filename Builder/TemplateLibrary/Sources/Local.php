@@ -61,16 +61,6 @@ class Local extends Base
     private static $template_types = [];
 
     /**
-     * ContentCss type object.
-     *
-     * Holds the post type object of the current post.
-     *
-     *
-     * @var \Goomento\PageBuilder\Api\Data\ContentInterface
-     */
-    private $post_type_object;
-
-    /**
      * @return array
      */
     public static function getTemplateTypes()
@@ -322,7 +312,7 @@ class Local extends Base
     /**
      * @param ContentInterface $model
      * @return array
-     * @throws Zend_Json_Exception
+     * @throws Exception
      */
     public function getItem($model)
     {
@@ -332,6 +322,7 @@ class Local extends Base
 
         return [
             'template_id' => $model->getId(),
+            'content_id' => $model->getId(),
             'source' => $this->getId(),
             'type' => $model->getType(),
             'title' => $model->getTitle(),
@@ -340,6 +331,7 @@ class Local extends Base
             'hasPageSettings' => ! empty($page_settings),
             'export_link' => StaticUrlBuilder::getContentExportUrl($model),
             'url' => StaticUrlBuilder::getContentViewUrl($model),
+            'edit_url' => StaticUrlBuilder::getContentEditUrl($model),
         ];
     }
 
@@ -400,8 +392,8 @@ class Local extends Base
 
     /**
      * @param int $template_id
-     * @return array|Exception|null
-     * @throws NoSuchEntityException
+     * @return array|null
+     * @throws NoSuchEntityException|Exception
      */
     public function exportTemplate($template_id)
     {
@@ -427,14 +419,16 @@ class Local extends Base
     /**
      * @param $name
      * @param $path
-     * @return array|Exception
+     * @return array
      * @throws NoSuchEntityException
-     * @throws Zend_Json_Exception|LocalizedException
+     * @throws LocalizedException
      */
     public function importTemplate($name, $path)
     {
         if (empty($path)) {
-            return new Exception('Please upload a file to import');
+            throw new Exception(
+                __('Please upload a file to import')
+            );
         }
 
         $items = [];
@@ -463,7 +457,6 @@ class Local extends Base
      * @throws LocalizedException
      * @throws NoSuchEntityException
      * @throws Exception
-     * @throws Zend_Json_Exception
      */
     private function importSingleTemplate($file_name)
     {
@@ -496,20 +489,20 @@ class Local extends Base
             }
         }
 
-        $template_id = $this->saveItem([
+        $content_id = $this->saveItem([
             'content' => $content,
-            'title' => $data['title'] ?? '(no title)',
+            'title' => $data['title'] ?? '',
             'type' => $data['type'],
             'page_settings' => $page_settings,
         ]);
 
-        if (!$template_id) {
+        if (!$content_id) {
             throw new LocalizedException(
                 __('Import error')
             );
         }
 
-        $template = StaticContent::get($template_id);
+        $template = StaticContent::get($content_id);
 
         return $this->getItem($template);
     }

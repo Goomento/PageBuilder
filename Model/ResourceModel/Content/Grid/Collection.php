@@ -20,7 +20,6 @@ use Magento\Framework\EntityManager\MetadataPool;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\View\Element\UiComponent\DataProvider\Document;
-use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -39,7 +38,6 @@ class Collection extends ContentCollection implements SearchResultInterface
      * @param LoggerInterface $logger
      * @param FetchStrategyInterface $fetchStrategy
      * @param ManagerInterface $eventManager
-     * @param StoreManagerInterface $storeManager
      * @param MetadataPool $metadataPool
      * @param mixed|null $mainTable
      * @param string $eventPrefix
@@ -56,7 +54,6 @@ class Collection extends ContentCollection implements SearchResultInterface
         LoggerInterface $logger,
         FetchStrategyInterface $fetchStrategy,
         ManagerInterface $eventManager,
-        StoreManagerInterface $storeManager,
         MetadataPool $metadataPool,
         $mainTable,
         $eventPrefix,
@@ -72,7 +69,6 @@ class Collection extends ContentCollection implements SearchResultInterface
             $logger,
             $fetchStrategy,
             $eventManager,
-            $storeManager,
             $metadataPool,
             $connection,
             $resource,
@@ -115,7 +111,7 @@ class Collection extends ContentCollection implements SearchResultInterface
     /**
      * Set search criteria.
      *
-     * @param SearchCriteriaInterface $searchCriteria
+     * @param SearchCriteriaInterface|null $searchCriteria
      * @return $this
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */

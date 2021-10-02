@@ -169,7 +169,7 @@ abstract class Element extends ControlsStack
      */
     final public static function isEditButtonsEnabled()
     {
-        return StaticConfig::getThemeOption('edit_buttons');
+        return StaticConfig::getOption('edit_buttons');
     }
 
     /**

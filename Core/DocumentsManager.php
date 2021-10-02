@@ -158,18 +158,15 @@ class DocumentsManager
     {
         $this->registerTypes();
 
-        if (! $id || ! StaticContent::get($id)) {
+        $model = StaticContent::get($id);
+
+        if (! $id || ! $model) {
             return false;
         }
 
-        $model = StaticContent::get($id);
-
         if (! $from_cache || ! isset($this->documents[$id])) {
             $doc_type_class = $this->getDocumentType($model->getType());
-
-            $this->documents[$id] = new $doc_type_class([
-                'id' => $id
-            ]);
+            $this->documents[$id] = StaticObjectManager::create($doc_type_class, ['data' => ['id' => $id]]);
         }
 
         /** TODO check the array over here */
@@ -274,53 +271,6 @@ class DocumentsManager
         $document->save([]);
 
         return $document;
-    }
-
-    /**
-     * Remove user edit capabilities if document is not editable.
-     *
-     * Filters the user capabilities to disable editing in admin.
-     *
-     * @param array $allcaps An array of all the user's capabilities.
-     * @param array $caps    Actual capabilities for meta capability.
-     * @param array $args    Optional parameters passed to has_cap(), typically object ID.
-     *
-     * @return array
-     */
-    public function removeUserEditCap($allcaps, $caps, $args)
-    {
-        global $pagenow;
-
-        if (! in_array($pagenow, [ 'post.php', 'edit.php' ], true)) {
-            return $allcaps;
-        }
-
-        // Don't touch not existing or not allowed caps.
-        if (empty($caps[0]) || empty($allcaps[ $caps[0] ])) {
-            return $allcaps;
-        }
-
-        $capability = $args[0];
-
-        if ('edit_post' !== $capability) {
-            return $allcaps;
-        }
-
-        if (empty($args[2])) {
-            return $allcaps;
-        }
-
-        $post_id = $args[2];
-
-        $document = StaticObjectManager::get(\Goomento\PageBuilder\Core\DocumentsManager::class)->get($post_id);
-
-        if (! $document) {
-            return $allcaps;
-        }
-
-        $allcaps[ $caps[0] ] = $document::getProperty('is_editable');
-
-        return $allcaps;
     }
 
     /**

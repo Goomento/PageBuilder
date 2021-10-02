@@ -54,12 +54,20 @@ trait TraitHttpPage
 
         if (!empty($pageConfig['title']) || !empty($pageConfig['editable_title'])) {
             $content = $this->getContent();
-            $resultPage->getConfig()->getTitle()
-                ->prepend(
+            $title = $resultPage->getConfig()->getTitle();
+            if (!empty($pageConfig['breadcrumb'])) {
+                $title->prepend(
                     $content && $content->getId() ?
                         __($pageConfig['editable_title'], $content->getTitle()) :
                         $pageConfig['title']
                 );
+            } else {
+                $title->set(
+                    $content && $content->getId() ?
+                        __($pageConfig['editable_title'], $content->getTitle()) :
+                        $pageConfig['title']
+                );
+            }
         }
 
         return $resultPage;

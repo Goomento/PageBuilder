@@ -18,6 +18,7 @@ use Goomento\PageBuilder\Helper\Data;
 use Goomento\PageBuilder\Helper\StaticConfig;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
 use Goomento\PageBuilder\Helper\UserHelper;
+use Goomento\PageBuilder\PageBuilder;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\FilterGroupBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
@@ -53,18 +54,6 @@ class ContentManagement implements ContentManagementInterface
      */
     private $userHelper;
     /**
-     * @var SortOrderBuilder
-     */
-    private $sortOrderBuilder;
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-    /**
-     * @var FilterGroupBuilder
-     */
-    private $filterGroupBuilder;
-    /**
      * @var RevisionRepository
      */
     private $revisionRepository;
@@ -77,9 +66,13 @@ class ContentManagement implements ContentManagementInterface
      */
     private $resourceConnection;
     /**
-     * @var Data
+     * @var ContentRegistry
      */
-    private $dataHelper;
+    private $contentRegistry;
+    /**
+     * @var Config
+     */
+    private $config;
 
     /**
      * ContentManagement constructor.
@@ -88,13 +81,11 @@ class ContentManagement implements ContentManagementInterface
      * @param ContentRepository $contentRepository
      * @param RevisionRepository $revisionRepository
      * @param UserHelper $userHelper
-     * @param Data $dataHelper
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterBuilder $filterBuilder
-     * @param SortOrderBuilder $sortOrderBuilder
-     * @param StoreManagerInterface $storeManager
-     * @param FilterGroupBuilder $filterGroupBuilder
      * @param ResourceConnection $resourceConnection
+     * @param ContentRegistry $contentRegistry
+     * @param Config $config
      */
     public function __construct(
         ContentFactory $contentFactory,
@@ -102,13 +93,11 @@ class ContentManagement implements ContentManagementInterface
         ContentRepository $contentRepository,
         RevisionRepository $revisionRepository,
         UserHelper $userHelper,
-        Data $dataHelper,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         FilterBuilder $filterBuilder,
-        SortOrderBuilder $sortOrderBuilder,
-        StoreManagerInterface $storeManager,
-        FilterGroupBuilder $filterGroupBuilder,
-        ResourceConnection $resourceConnection
+        ResourceConnection $resourceConnection,
+        ContentRegistry $contentRegistry,
+        Config $config
     ) {
         $this->contentFactory = $contentFactory;
         $this->revisionFactory = $revisionFactory;
@@ -117,11 +106,9 @@ class ContentManagement implements ContentManagementInterface
         $this->revisionRepository = $revisionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
-        $this->sortOrderBuilder = $sortOrderBuilder;
-        $this->storeManager = $storeManager;
-        $this->filterGroupBuilder = $filterGroupBuilder;
         $this->resourceConnection = $resourceConnection;
-        $this->dataHelper = $dataHelper;
+        $this->contentRegistry = $contentRegistry;
+        $this->config = $config;
     }
 
     /**
@@ -131,10 +118,11 @@ class ContentManagement implements ContentManagementInterface
      */
     public function getBuildableContents(array $filters = [])
     {
-        $pageTypes = $this->filterBuilder->setField(ContentInterface::TYPE)
-        ->setValue([ContentInterface::TYPE_SECTION, ContentInterface::TYPE_TEMPLATE])
-        ->setConditionType('in')
-        ->create();
+        $pageTypes = $this->filterBuilder
+            ->setField(ContentInterface::TYPE)
+            ->setValue([ContentInterface::TYPE_SECTION, ContentInterface::TYPE_TEMPLATE])
+            ->setConditionType('in')
+            ->create();
         $this->searchCriteriaBuilder->addFilters([$pageTypes]);
         return $this->contentRepository->getList(
             $this->searchCriteriaBuilder->create()
@@ -177,36 +165,29 @@ class ContentManagement implements ContentManagementInterface
             ]
         );
 
-        if (!isset(Content::getAvailableTypes()[$data['type']])) {
-            throw new LocalizedException(
-                __('Invalid content type: %1', $data['type'])
-            );
-        }
-
-        if (!isset(Content::getAvailableStatuses()[$data['status']])) {
-            throw new LocalizedException(
-                __('Invalid content status: %1', $data['status'])
-            );
-        }
-
         $model = $this->contentFactory->create();
         $model->addData($data);
+        $model->setStatus($data['status'] ?? null);
+        $model->setType($data['type'] ?? null);
         return $this->contentRepository->save($model);
     }
 
     /**
      * @inheritDoc
      */
-    public function refreshContentCache($content)
+    public function refreshContentCache(ContentInterface $content)
     {
-    }
+        PageBuilder::initialize();
 
-    /**
-     * @inheritDoc
-     */
-    public function refreshAllContentCache()
-    {
-        StaticConfig::updateThemeOption('css_updated_time', time());
+        $content->setSetting('css/' . Config::CSS_UPDATED_TIME, 0);
+        $flag = $content->getCreateRevisionFlag();
+        $content->setCreateRevisionFlag(false);
+        $content->save();
+
+        $css = new \Goomento\PageBuilder\Core\Files\Css\ContentCss($content->getId());
+        $css->update();
+
+        $content->setCreateRevisionFlag($flag);
     }
 
     /**
@@ -214,41 +195,20 @@ class ContentManagement implements ContentManagementInterface
      */
     public function refreshGlobalCache()
     {
-        $this->refreshAllContentCache();
-        StaticConfig::deleteThemeOption(GlobalCss::META_KEY);
+        $this->config->setOption(Config::CSS_UPDATED_TIME, 0);
+        PageBuilder::initialize();
+
+        $globalCss = new \Goomento\PageBuilder\Core\Files\Css\GlobalCss();
+        $globalCss->update();
     }
 
     /**
      * @param string $from
      * @param string $to
      * @param null $content
-     * @throws LocalizedException
      */
     public function replaceUrls(string $from, string $to, $content = null)
     {
-        $from = trim($from);
-        $to = trim($to);
-
-        if ($from === $to) {
-            throw new LocalizedException(
-                __('The `from` and `to` URL\'s must be different')
-            );
-        }
-
-        $is_valid_urls = (filter_var($from, FILTER_VALIDATE_URL) && filter_var($to, FILTER_VALIDATE_URL));
-        if (! $is_valid_urls) {
-            throw new LocalizedException(
-                __('The `from` and `to` URL\'s must be valid URL\'s')
-            );
-        }
-
-        $connection = $this->resourceConnection->getConnection();
-        $table = $connection->getTableName('pagebuilder_content');
-        $query = "UPDATE `" . $table . "` SET `elements` =  REPLACE(`elements`, '" . str_replace('/', '\\\/', $from) . "', '" . str_replace('/', '\\\/', $to) . "') ";
-
-        $connection->query($query);
-
-        $this->refreshAllContentCache();
     }
 
     /**
@@ -258,18 +218,18 @@ class ContentManagement implements ContentManagementInterface
     {
         return [
             'title' => '',
-            'status' => 'pending',
+            'status' => ContentInterface::STATUS_PUBLISHED,
             'type' => '',
-            'elements' => null,
-            'content' => null,
-            'settings' => null,
+            'elements' => [],
+            'content' => '',
+            'settings' => [],
         ];
     }
 
     /**
      * @inheridoc
      */
-    public function exportContent(ContentInterface $content): void
+    public function httpContentExport(ContentInterface $content): void
     {
         /** @var Local $localSource */
         $localSource = StaticObjectManager::get(Local::class);

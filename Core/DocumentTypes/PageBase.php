@@ -8,9 +8,14 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Core\DocumentTypes;
 
+use Exception;
+use Goomento\PageBuilder\Builder\Controls\Groups\Background;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Builder\Utils;
 use Goomento\PageBuilder\Core\Base\Document;
 use Goomento\PageBuilder\Core\Settings\Manager as SettingsManager;
+use Goomento\PageBuilder\Helper\StaticObjectManager;
+use ReflectionException;
 
 /**
  * Class PageBase
@@ -22,18 +27,13 @@ abstract class PageBase extends Document
 
     public static function getProperties()
     {
-        $properties = parent::getProperties();
-
-        $properties['admin_tab_group'] = '';
-        $properties['support_wp_page_templates'] = true;
-
-        return $properties;
+        return parent::getProperties();
     }
 
 
     protected static function getEditorPanelCategories()
     {
-        return \Goomento\PageBuilder\Builder\Utils::arrayInject(
+        return Utils::arrayInject(
             parent::getEditorPanelCategories(),
             'theme-elements',
             [
@@ -88,7 +88,7 @@ abstract class PageBase extends Document
 
     /**
      * @param Document $document
-     * @throws \ReflectionException
+     * @throws ReflectionException|Exception
      */
     public static function registerStyleControls($document)
     {
@@ -101,7 +101,7 @@ abstract class PageBase extends Document
         );
 
         $document->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\Background::getType(),
+            Background::getType(),
             [
                 'name'  => 'background',
                 'fields_options' => [
@@ -129,7 +129,7 @@ abstract class PageBase extends Document
 
         $document->endControlsSection();
 
-        \Goomento\PageBuilder\Helper\StaticObjectManager::get(Controls::class)->addCustomCssControls($document);
+        StaticObjectManager::get(Controls::class)->addCustomCssControls($document);
     }
 
     /**
@@ -151,7 +151,7 @@ abstract class PageBase extends Document
      *
      * @param array $data
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(array $data = [])
     {
