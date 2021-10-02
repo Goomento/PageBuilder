@@ -11,7 +11,6 @@ namespace Goomento\PageBuilder\Core\Files\Css;
 use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Base\Element;
 use Goomento\PageBuilder\Builder\Managers\Elements;
-use Goomento\PageBuilder\Core\DocumentsManager;
 use Goomento\PageBuilder\Helper\Hooks;
 use Goomento\PageBuilder\Helper\StaticContent;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
@@ -148,8 +147,7 @@ class ContentCss extends Base
      */
     protected function getData()
     {
-        $document = StaticObjectManager::get(DocumentsManager::class)->get($this->contentId);
-        return $document ? $document->getElementsData() : [];
+        return StaticContent::get($this->contentId)->getElements();
     }
 
     /**

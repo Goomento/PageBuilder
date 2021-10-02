@@ -137,6 +137,18 @@ class StaticUrlBuilder
     }
 
     /**
+     * @param ContentInterface $content
+     * @return string
+     */
+    public static function getContentEditUrl(ContentInterface $content)
+    {
+        return self::getUrl('pagebuilder/content/edit', [
+            'content_id' => $content->getId(),
+            'type' => $content->getType()
+        ]);
+    }
+
+    /**
      * @param $src
      * @param null $area
      * @return string

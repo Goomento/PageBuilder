@@ -9,8 +9,9 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Controller\Adminhtml\Manage;
 
 
-use Goomento\PageBuilder\Helper\StaticConfig;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
+use Exception;
+use Goomento\PageBuilder\Model\Config;
+use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\Exception\LocalizedException;
 
 /**
@@ -31,27 +32,23 @@ class GlobalCss extends AbstractManage
     {
         try {
             $data = $this->getRequest()->getPostValue();
-            if (isset($data['custom_css']) && $data['custom_css'] !== StaticConfig::getThemeOption('custom_css')) {
-                StaticConfig::updateThemeOption('custom_css', $data['custom_css']);
+            $data = (new \Zend_Filter_Input([], [], $data))->getUnescaped();
+            if (isset($data[Config::CUSTOM_CSS]) && $data[Config::CUSTOM_CSS] !== $this->config->getOption(Config::CUSTOM_CSS)) {
+                $this->dataPersistor->set(Config::CUSTOM_CSS, $data['custom_css']);
+                $this->config->setOption(Config::CUSTOM_CSS, $data['custom_css']);
             }
 
-            /** Update global.css file */
-            /** @var \Goomento\PageBuilder\PageBuilder $pagebuilder */
-            $pagebuilder = StaticObjectManager::get(\Goomento\PageBuilder\PageBuilder::class);
-            $pagebuilder->init();
-
-            /** @var \Goomento\PageBuilder\Core\Files\Css\GlobalCss $globalCss */
-            $globalCss = StaticObjectManager::create(\Goomento\PageBuilder\Core\Files\Css\GlobalCss::class);
-            $globalCss->updateFile();
+            $this->contentManagement->refreshGlobalCache();
 
             $this->messageManager->addSuccessMessage(__('Global.css saved.'));
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            $this->logger->error($e);
             $this->messageManager->addErrorMessage(__('Something went wrong when saving Global.css'));
         }
 
-        /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+        /** @var Redirect $resultRedirect */
         $result = $this->resultRedirectFactory->create();
         return $result->setRefererUrl();
     }

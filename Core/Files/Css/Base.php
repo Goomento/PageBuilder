@@ -136,7 +136,7 @@ abstract class Base extends BaseFile
 
         $meta = $this->getMeta();
 
-        $meta['time'] = time();
+        $meta['css_updated_time'] = time();
 
         $content = $this->getContent();
         $meta['fonts'] = $this->getFonts();
@@ -205,7 +205,12 @@ abstract class Base extends BaseFile
                 Theme::inlineStyle($dep, $meta['css']);
             }
         } else { // Re-check if it's not empty after CSS update.
-            Theme::enqueueStyle($this->getFileHandleId(), $this->getUrl(), $this->getEnqueueDependencies(), $this->getMeta('time'));
+            Theme::enqueueStyle(
+                $this->getFileHandleId(),
+                $this->getUrl(),
+                $this->getEnqueueDependencies(),
+                $this->getMeta('css_updated_time')
+            );
         }
 
         /** @var Frontend $frontend */
@@ -468,10 +473,6 @@ abstract class Base extends BaseFile
                 $this->addDynamicControlStyleRules($control, $control[ Manager::DYNAMIC_SETTING_KEY ][ $control['name'] ]);
             }
 
-            if (Controls::ICONS === $control['type']) {
-                $this->icons_fonts[] = $values[ $control['name'] ]['library'];
-            }
-
             if (! empty($parsed_dynamic_settings[ Manager::DYNAMIC_SETTING_KEY ][ $control['name'] ])) {
                 // Dynamic CSS should not be added to the CSS files.
                 // Instead it's handled by \Goomento\PageBuilder\Core\DynamicTags\Dynamic_CSS
@@ -515,7 +516,6 @@ abstract class Base extends BaseFile
     {
         return array_merge(parent::getDefaultMeta(), [
             'fonts' => array_unique($this->fonts),
-            'icons' => array_unique($this->icons_fonts),
             'status' => '',
         ]);
     }
@@ -553,11 +553,11 @@ abstract class Base extends BaseFile
         if ($isAdmin) {
             return true;
         }
-        $time = $this->getMeta('time');
+        $time = $this->getMeta('css_updated_time');
         if (!$time) {
             return true;
         }
-        $css_updated_time = StaticConfig::getThemeOption('css_updated_time', 0);
+        $css_updated_time = StaticConfig::getOption('css_updated_time', 0);
         if ($css_updated_time && $css_updated_time > $time) {
             return true;
         }

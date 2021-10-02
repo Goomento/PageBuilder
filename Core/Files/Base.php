@@ -106,7 +106,9 @@ abstract class Base
         return self::getBaseUploadsUrl() . $this->files_dir . $this->file_name;
     }
 
-
+    /**
+     * @return string
+     */
     public function getContent()
     {
         if (! $this->content) {
@@ -123,7 +125,7 @@ abstract class Base
 
         $meta = $this->getMeta();
 
-        $meta['time'] = time();
+        $meta['css_updated_time'] = time();
 
         $this->updateMeta($meta);
     }
@@ -194,7 +196,7 @@ abstract class Base
      */
     protected function loadMeta()
     {
-        return StaticConfig::getThemeOption(static::META_KEY);
+        return StaticConfig::getOption(static::META_KEY);
     }
 
     /**
@@ -207,7 +209,7 @@ abstract class Base
      */
     protected function updateMeta($meta)
     {
-        StaticConfig::updateThemeOption(static::META_KEY, $meta);
+        StaticConfig::setOption(static::META_KEY, $meta);
     }
 
     /**
@@ -218,14 +220,16 @@ abstract class Base
      */
     protected function deleteMeta()
     {
-        StaticConfig::deleteThemeOption(static::META_KEY);
+        StaticConfig::delOption(static::META_KEY);
     }
 
-
+    /**
+     * @return array
+     */
     protected function getDefaultMeta()
     {
         return [
-            'time' => 0,
+            'css_updated_time' => 0,
             'status'=> 'inline',
             'css'=> ''
         ];

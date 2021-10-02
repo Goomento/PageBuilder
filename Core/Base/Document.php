@@ -366,14 +366,7 @@ abstract class Document extends ControlsStack
 
         $this->saveVersion();
 
-        /** @var ContentRepositoryInterface $contentRepository */
-        $contentRepository = StaticObjectManager::get(ContentRepositoryInterface::class);
-
-        $content = $this->getContentModel();
-        // Save content
-        $contentRepository->save(
-            $content
-        );
+        $this->getContentModel()->save();
 
         // Remove ContentCss CSS
         /** @var ContentCss $content_css */
@@ -500,19 +493,11 @@ abstract class Document extends ControlsStack
 
     /**
      *
-     * @param string $status
-     *
      * @return array
      */
-    public function getElementsData($status = Data::STATUS_PUBLISH)
+    public function getElementsData()
     {
-        $elements = $this->getContentModel()->getElements();
-
-        if (! empty($autosave_elements)) {
-            $elements = $autosave_elements;
-        }
-
-        return $elements;
+        return $this->getContentModel()->getElements();
     }
 
 
@@ -616,7 +601,7 @@ abstract class Document extends ControlsStack
     public function saveVersion()
     {
         // Save per revision.
-        $this->updateMeta('GOOMENTO_VER', Configuration::VERSION);
+        $this->updateMeta('version', Configuration::VERSION);
 
         /**
          * Document version save.
@@ -707,12 +692,12 @@ abstract class Document extends ControlsStack
      */
     public function __construct(array $data = [])
     {
-        if ($data) {
+        if (!empty($data)) {
             $this->contentModel = StaticContent::get($data['id']);
 
             if (!$this->contentModel) {
                 throw new Exception(
-                    'Content ID #%s does not exist.', $data['post_id']
+                    'Content ID #%s does not exist.', $data['id']
                 );
             }
 

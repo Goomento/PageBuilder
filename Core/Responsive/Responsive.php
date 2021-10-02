@@ -96,7 +96,7 @@ class Responsive
                 if (! in_array($breakpoint_key, self::$editable_breakpoints_keys)) {
                     $new_array[ $breakpoint_key ] = self::$default_breakpoints[ $breakpoint_key ];
                 } else {
-                    $saved_option = StaticConfig::getThemeOption(self::BREAKPOINT_OPTION_PREFIX . $breakpoint_key);
+                    $saved_option = StaticConfig::getOption(self::BREAKPOINT_OPTION_PREFIX . $breakpoint_key);
 
                     $new_array[ $breakpoint_key ] = $saved_option ? (int) $saved_option : self::$default_breakpoints[ $breakpoint_key ];
                 }

@@ -27,7 +27,7 @@ interface ContentManagementInterface
      *
      * @param Data\ContentInterface $content
      */
-    public function exportContent(Data\ContentInterface $content) : void;
+    public function httpContentExport(Data\ContentInterface $content) : void;
 
     /**
      * @param array $data
@@ -37,15 +37,10 @@ interface ContentManagementInterface
     public function createContent(array $data) : Data\ContentInterface;
 
     /**
-     * @param Data\ContentInterface|int $content
+     * @param Data\ContentInterface $content
      * @return mixed
      */
-    public function refreshContentCache($content);
-
-    /**
-     * @return mixed
-     */
-    public function refreshAllContentCache();
+    public function refreshContentCache(Data\ContentInterface $content);
 
     /**
      * @return mixed

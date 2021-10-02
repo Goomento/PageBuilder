@@ -33,6 +33,8 @@ class Content extends AbstractDb
      */
     protected $metadataPool;
 
+    protected $_serializableFields = ContentInterface::SERIALIZABLE_FIELDS;
+
     /**
      * @param Context $context
      * @param EntityManager $entityManager
@@ -68,7 +70,6 @@ class Content extends AbstractDb
         return $this->metadataPool->getMetadata(ContentInterface::class)->getEntityConnection();
     }
 
-
     /**
      * @param AbstractModel $object
      * @param mixed $value
@@ -78,6 +79,7 @@ class Content extends AbstractDb
     public function load(AbstractModel $object, $value, $field = null)
     {
         $this->entityManager->load($object, $value);
+        $this->unserializeFields($object);
         return $this;
     }
 
@@ -143,13 +145,20 @@ class Content extends AbstractDb
         return $connection->fetchCol($select, ['content_id' => (int)$contentId]);
     }
 
-
     /**
      * @inheritDoc
      */
     public function save(AbstractModel $object)
     {
+        $hasChanged = $object->hasDataChanges();
+        $this->serializeFields($object);
+        $object->setDataChanges($hasChanged);
+
         $this->entityManager->save($object);
+
+        $this->unserializeFields($object);
+        $object->setHasDataChanges(false);
+
         return $this;
     }
 

@@ -86,10 +86,18 @@ class Importer extends AbstractAction implements HttpGetActionInterface, HttpPos
             }
 
             $imported = $this->importProcessor->importOnUpload(self::FILE_NAME);
-            $this->messageManager->addSuccessMessage(__('Imported %1 content(s) successfully.', count($imported)));
+            $linkHtml = '';
+            if (!empty($imported)) {
+                $contentLinks = [];
+                foreach ($imported as $content) {
+                    $contentLinks[] = '<a target="_blank" href="' . $content['edit_url'] . '">' . $content['title'] . '</a>';
+                }
+                $linkHtml = __('Content(s): %1', implode(', ', $contentLinks));
+            }
+
+            $this->messageManager->addSuccess(__('Imported %1 content(s) successfully.' . ' ' . $linkHtml, count($imported)));
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
-            $this->logger->error($e);
         } catch (Exception $e) {
             $this->logger->error($e);
             $this->messageManager->addErrorMessage(__('Something went wrong when importing template.'));

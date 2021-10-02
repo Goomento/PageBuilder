@@ -148,7 +148,7 @@ class ContentRepository implements ContentRepositoryInterface
     {
         if (!$content->getIdentifier()) {
             $content->setIdentifier(
-                implode('_',[
+                implode('-',[
                     $content->getType(),
                     StaticEncryptor::uniqueString()
                 ])
