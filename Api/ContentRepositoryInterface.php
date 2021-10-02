@@ -16,7 +16,8 @@ use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Interface ContentRepositoryInterface
- * For loading content from cached, use ContentRegistryInterface instead.
+ * For loading content from caching, use ContentRegistryInterface instead.
+ * @see ContentRegistryInterface
  *
  * @package Goomento\PageBuilder\Api
  */

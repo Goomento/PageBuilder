@@ -8,15 +8,26 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model;
 
-use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Store\Model\Store;
 
 /**
  * Class Content
  * @package Goomento\PageBuilder\Model
  */
-class Config extends DataObject
+class Config
 {
+    const CSS_UPDATED_TIME = 'css_updated_time';
+    const CUSTOM_CSS = 'custom_css';
+    const DEFAULT_STORE_ID = Store::DEFAULT_STORE_ID;
+
+    const CACHE_KEY = 'config_data';
+
+    /**
+     * @var bool
+     */
+    private $dataChanged = [];
+
     protected $loaded = false;
     /**
      * @var ResourceModel\Config
@@ -24,39 +35,78 @@ class Config extends DataObject
     private $configResource;
 
     /**
+     * Eg: [path => [storeId => value]]
+     *
      * @var array
      */
     private $config = [];
+    /**
+     * @var Cache
+     */
+    private $cache;
+    /**
+     * @var array
+     */
+    private static $underscoreCache = [];
 
     /**
      * @param ResourceModel\Config $configResource
-     * @param array $data
+     * @param Cache $cache
      */
     public function __construct(
         ResourceModel\Config $configResource,
-        array $data = []
+        Cache $cache
     )
     {
         $this->configResource = $configResource;
-        parent::__construct($data);
+        $this->cache = $cache;
     }
 
     /**
      * @throws LocalizedException
      */
-    public function load()
+    private function loadAll()
     {
         if ($this->loaded === false) {
-            $configs = $this->configResource->fetchAll();
-            if (!empty($configs)) {
-                foreach ($configs as $configData) {
-                    $this->setValue($configData['path'], $configData['value'], (int) $configData['store_id']);
+            $this->loaded = true;
+            $configs = $this->cache->load(self::CACHE_KEY);
+            if ($configs) {
+                $this->config = $configs;
+            } else {
+                $configs = $this->configResource->fetchAll();
+                if (!empty($configs)) {
+                    foreach ($configs as $configData) {
+                        $value = $configData['value'];
+                        $this->_setValue($configData['path'], $value, (int) $configData['store_id']);
+                        $this->dataChanged = false;
+                    }
                 }
             }
-
-            $this->loaded = true;
         }
     }
+
+    /**
+     * @param $path
+     * @param $value
+     * @param int $storeId
+     * @return $this
+     */
+    private function _setValue($path, $value, int $storeId = self::DEFAULT_STORE_ID)
+    {
+        if (!isset($this->config[$path])) {
+            $this->config[$path] = [];
+        }
+        $originValue = $this->config[$path][$storeId] ?? null;
+        if ($originValue !== $value) {
+            if (!isset($this->dataChanged[$path])) {
+                $this->dataChanged[$path] = [];
+            }
+            $this->dataChanged[$path][$storeId] = $value;
+        }
+        $this->config[$path][$storeId] = $value;
+        return $this;
+    }
+
 
     /**
      * @param $path
@@ -64,21 +114,16 @@ class Config extends DataObject
      * @return mixed|null
      * @throws LocalizedException
      */
-    public function getValue($path,int $storeId = 0)
+    public function getValue($path,int $storeId = self::DEFAULT_STORE_ID)
     {
-        $this->load();
-        if ($storeId !== 0) {
-            if (!isset($this->config[$storeId])) {
-                return $this->getValue($path, 0);
-            }
+        $this->loadAll();
+        $valueData = $this->config[$path] ?? [];
+        $value = null;
+        if (isset($valueData[$storeId])) {
+            $value = $valueData[$storeId];
+        } elseif ($storeId !== self::DEFAULT_STORE_ID && isset($valueData[self::DEFAULT_STORE_ID])) {
+            $value = $valueData[self::DEFAULT_STORE_ID];
         }
-
-        if (!isset($this->config[$storeId])) {
-            $value = null;
-        } else {
-            $value = $this->config[$storeId][$path] ?? null;
-        }
-
         return $value;
     }
 
@@ -87,52 +132,72 @@ class Config extends DataObject
      * @param $value
      * @param int $storeId
      * @return Config
+     * @throws LocalizedException
      */
-    public function setValue($path, $value, int $storeId = 0)
+    public function setValue($path, $value, int $storeId = self::DEFAULT_STORE_ID)
     {
-        if (is_string($value)) {
-            try {
-                $value = \Zend_Json::decode($value);
-            } catch (\Exception $e) {
-            }
-        }
-
-        if (!isset($this->config[$storeId])) {
-            $this->config[$storeId] = [];
-        }
-        $this->config[$storeId][$path] = $value;
+        $this->_setValue($path, $value, (int) $storeId);
+        $this->save();
         return $this;
     }
 
     /**
      * @param $path
-     * @param int $storeId
-     * @return Config
-     */
-    public function deleteValue($path, int $storeId = 0)
-    {
-        if (isset($this->config[$storeId])) {
-            unset($this->config[$storeId][$path]);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param $path
-     * @param $value
      * @param int $storeId
      * @return Config
      * @throws LocalizedException
      */
-    public function save($path, $value, int $storeId = 0)
+    public function deleteValue($path, int $storeId = self::DEFAULT_STORE_ID)
     {
-        if (!is_scalar($value)) {
-            $value = \Zend_Json::encode($value);
+        if (isset($this->config[$path][$storeId])) {
+            unset($this->config[$path][$storeId]);
         }
-        $this->configResource->saveConfig($path, $value, $storeId);
-        $this->setValue($path, $value, $storeId);
+
+        if (!isset($this->dataChanged[$path])) {
+            $this->dataChanged[$path] = [];
+        }
+
+        $this->dataChanged[$path][$storeId] = null;
+
+        $this->save();
+
         return $this;
+    }
+
+    /**
+     * @return Config
+     * @throws LocalizedException
+     */
+    public function save()
+    {
+        if ($this->dataChanged) {
+            foreach ($this->dataChanged as $path => $storeValue) {
+                foreach ($storeValue as $storeId => $value) {
+                    if ($value === null) {
+                        $this->configResource->deleteConfig($path, $storeId);
+                    } else {
+                        $this->configResource->saveConfig($path, $value, $storeId);
+                    }
+                }
+            }
+            $this->dataChanged = [];
+            $this->saveToCache();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $path
+     * @param null $default
+     * @param int $storeId
+     * @return mixed|null
+     * @throws LocalizedException
+     */
+    public function getOption($path, $default = null, $storeId = 0)
+    {
+        $value = $this->getValue("option_{$path}", $storeId);
+        return $value === null ? $default : $value;
     }
 
     /**
@@ -141,10 +206,73 @@ class Config extends DataObject
      * @return $this
      * @throws LocalizedException
      */
-    public function delete($path, int $storeId = 0)
+    public function setOption($path, $storeId = 0)
     {
-        $this->configResource->deleteConfig($path, $storeId);
-        $this->deleteValue($path, $storeId);
-        return $this;
+        return $this->setValue("option_{$path}", $storeId);
+    }
+
+    /**
+     * @param $path
+     * @param int $storeId
+     * @return $this
+     * @throws LocalizedException
+     */
+    public function delOption($path, $storeId = 0)
+    {
+        return $this->deleteValue("option_{$path}", $storeId);
+    }
+
+    /**
+     * Save configs to cache
+     */
+    private function saveToCache()
+    {
+        if (!empty($this->config)) {
+            $this->cache->save($this->config, self::CACHE_KEY);
+        }
+    }
+
+    /**
+     * Set/Get attribute wrapper
+     *
+     * @param   string $method
+     * @param   array $args
+     * @return  mixed
+     * @throws LocalizedException
+     */
+    public function __call($method, $args)
+    {
+        $storeId = $args[0] ?? self::DEFAULT_STORE_ID;
+        switch (substr($method, 0, 3)) {
+            case 'get':
+                $key = $this->underscore(substr($method, 3));
+                return $this->getValue($key, $storeId);
+            case 'set':
+                $key = $this->underscore(substr($method, 3));
+                $value = $args[1] ?? null;
+                return $this->setValue($key, $value, $storeId);
+            case 'del':
+                $key = $this->underscore(substr($method, 3));
+                return $this->deleteValue($key, $storeId);
+        }
+        throw new LocalizedException(
+            __('Invalid method %1::%2', [get_class($this), $method])
+        );
+    }
+
+    /**
+     * Converts field names for setters and getters
+     *
+     * @param string $name
+     * @return string
+     */
+    protected function underscore($name)
+    {
+        if (isset(self::$underscoreCache[$name])) {
+            return self::$underscoreCache[$name];
+        }
+        $result = strtolower(trim(preg_replace('/([A-Z]|[0-9]+)/', "_$1", $name), '_'));
+        self::$underscoreCache[$name] = $result;
+        return $result;
     }
 }

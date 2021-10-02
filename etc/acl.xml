@@ -35,7 +35,12 @@
                             <resource id="Goomento_PageBuilder::section_export" title="Export" sortOrder="5" />
                             <resource id="Goomento_PageBuilder::section_delete" title="Delete" sortOrder="6" />
                         </resource>
-                        <resource id="Goomento_PageBuilder::import" title="Import template" sortOrder="1" />
+                        <resource id="Goomento_PageBuilder::import" title="Import template" sortOrder="4" />
+
+                        <resource id="Goomento_PageBuilder::manage" title="Management" sortOrder="5">
+                            <resource id="Goomento_PageBuilder::manage_global_css" title="Global.css" sortOrder="1" />
+                        </resource>
+
                     </resource>
                 </resource>
             </resource>

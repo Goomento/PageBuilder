@@ -10,13 +10,13 @@ namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 
 use Exception;
 use Goomento\PageBuilder\Api\ContentRepositoryInterface;
+use Goomento\PageBuilder\Api\ContentManagementInterface;
 use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory;
 use Goomento\PageBuilder\Logger\Logger;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
@@ -46,13 +46,18 @@ abstract class AbstractMassAction extends Action implements HttpPostActionInterf
     /**
      * @var Logger
      */
-    private $logger;
+    protected $logger;
+    /**
+     * @var ContentManagementInterface
+     */
+    protected $contentManagement;
 
     /**
      * @param Context $context
      * @param Filter $filter
      * @param CollectionFactory $collectionFactory
      * @param ContentRepositoryInterface $contentRepository
+     * @param ContentManagementInterface $contentManagement
      * @param Logger $logger
      */
     public function __construct(
@@ -60,12 +65,14 @@ abstract class AbstractMassAction extends Action implements HttpPostActionInterf
         Filter $filter,
         CollectionFactory $collectionFactory,
         ContentRepositoryInterface $contentRepository,
+        ContentManagementInterface $contentManagement,
         Logger $logger
     ) {
         parent::__construct($context);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->contentRepository = $contentRepository;
+        $this->contentManagement = $contentManagement;
         $this->logger = $logger;
     }
 

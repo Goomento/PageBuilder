@@ -179,14 +179,14 @@ class Editor
 
         Theme::registerScript(
             'ace',
-            'Goomento_PageBuilder/lib/ace/ace',
+            'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace',
             [],
             '1.2.5'
         );
 
         Theme::registerScript(
             'ace-language-tools',
-            'Goomento_PageBuilder/lib/ace/ext-language_tools.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ext-language_tools',
             [
                 'ace',
             ],
@@ -272,7 +272,7 @@ class Editor
         // Get document data *after* the scripts hook - so plugins can run compatibility before get data, but *before* enqueue the editor script - so elements can enqueue their own scripts that depended in editor script.
         $editor_data = $document->getElementsRawData(null, true);
 
-        $page_title_selector = StaticConfig::getThemeOption('page_title_selector');
+        $page_title_selector = StaticConfig::getOption('page_title_selector');
 
         if (empty($page_title_selector)) {
             $page_title_selector = 'h1.entry-title';
@@ -338,7 +338,7 @@ class Editor
             'page_title_selector' => $page_title_selector,
             'inlineEditing' => StaticObjectManager::get(Widgets::class)->getInlineEditingConfig(),
             'dynamicTags' => StaticObjectManager::get(Manager::class)->getConfig(),
-            'editButtons' => StaticConfig::getThemeOption('edit_buttons'),
+            'editButtons' => StaticConfig::getOption('edit_buttons'),
         ];
 
         Utils::printJsConfig('goomento-editor', 'goomentoConfig', $config);

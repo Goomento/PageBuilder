@@ -44,6 +44,7 @@ Change to **Yes** to enable module on storefront.
 - Widgets hub / management
 - Adaptability in any store
 - High speed optimize
+- Add custom CSS
 
 ## 4. Design concept
 
@@ -72,7 +73,7 @@ Check this [Wiki page](https://github.com/Goomento/PageBuilder/wiki/Personalize)
 
 ## 7. Version compatible
 
-**Magento**: 2.3.x, 2.4.x
+Magento: 2.3.x, 2.4.x
 
 ## 8. Changelog
 
@@ -80,16 +81,20 @@ What's news? See here [CHANGELOG.md](https://github.com/Goomento/PageBuilder/blo
 
 ## 9. Open an issue and Contribution
 
-Feel free to open an Issue, Fork and Create Pull Request (PR) on GitHub
+Feel free to Open an Issue, Fork and Create Pull Request (PR) on GitHub
 
 For opening an issue, click [here](https://github.com/Goomento/PageBuilder/issues).
 
 ## 10. Screenshots
 
 ![Goomento Page Builder Interface](https://i.imgur.com/hiRyX5Y.gif)
+One click to use
 
 ![Goomento Page Builder History Management](https://i.imgur.com/cpxv7Kn.gif)
+History/ Revision Management
 
 ![Goomento Page Builder Editing](https://i.imgur.com/rj10Ncs.gif)
+Easy to use
 
 ![Goomento Page Builder Responsive](https://i.imgur.com/abT8OtO.gif)
+Responsive control

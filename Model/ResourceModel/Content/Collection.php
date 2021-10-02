@@ -8,8 +8,21 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model\ResourceModel\Content;
 
+use Exception;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
+use Goomento\PageBuilder\Model\Content as ContentModel;
 use Goomento\PageBuilder\Model\ResourceModel\AbstractCollection;
+use Goomento\PageBuilder\Model\ResourceModel\Content;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Data\Collection\Db\FetchStrategyInterface;
+use Magento\Framework\Data\Collection\EntityFactoryInterface;
+use Magento\Framework\DB\Adapter\AdapterInterface;
+use Magento\Framework\EntityManager\MetadataPool;
+use Magento\Framework\Event\ManagerInterface;
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+use Magento\Framework\Serialize\Serializer\Json;
+use Magento\Store\Model\Store;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Collection
@@ -47,31 +60,33 @@ class Collection extends AbstractCollection
      * @var string
      */
     protected $type;
+    /**
+     * @var Json|mixed
+     */
+    private $serializer;
 
     /**
      * Collection constructor.
-     * @param \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory
-     * @param \Psr\Log\LoggerInterface $logger
-     * @param \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy
-     * @param \Magento\Framework\Event\ManagerInterface $eventManager
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\EntityManager\MetadataPool $metadataPool
-     * @param \Magento\Framework\DB\Adapter\AdapterInterface|null $connection
-     * @param \Magento\Framework\Model\ResourceModel\Db\AbstractDb|null $resource
+     * @param EntityFactoryInterface $entityFactory
+     * @param LoggerInterface $logger
+     * @param FetchStrategyInterface $fetchStrategy
+     * @param ManagerInterface $eventManager
+     * @param MetadataPool $metadataPool
+     * @param AdapterInterface|null $connection
+     * @param AbstractDb|null $resource
      * @param string $type
      */
     public function __construct(
-        \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory,
-        \Psr\Log\LoggerInterface $logger,
-        \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy,
-        \Magento\Framework\Event\ManagerInterface $eventManager,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\EntityManager\MetadataPool $metadataPool,
-        \Magento\Framework\DB\Adapter\AdapterInterface $connection = null,
-        \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null,
-        $type = null
+        EntityFactoryInterface $entityFactory,
+        LoggerInterface $logger,
+        FetchStrategyInterface $fetchStrategy,
+        ManagerInterface $eventManager,
+        MetadataPool $metadataPool,
+        AdapterInterface $connection = null,
+        AbstractDb $resource = null,
+        string $type = null
     ) {
-        parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $storeManager, $metadataPool, $connection, $resource);
+        parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $metadataPool, $connection, $resource);
         $this->type = $type;
     }
 
@@ -82,7 +97,7 @@ class Collection extends AbstractCollection
      */
     protected function _construct()
     {
-        $this->_init(\Goomento\PageBuilder\Model\Content::class, \Goomento\PageBuilder\Model\ResourceModel\Content::class);
+        $this->_init(ContentModel::class, Content::class);
         $this->_map['fields']['content_id'] = 'main_table.content_id';
         $this->_map['fields']['store'] = 'store_table.store_id';
     }
@@ -95,27 +110,50 @@ class Collection extends AbstractCollection
     {
         $entityMetadata = $this->metadataPool->getMetadata(ContentInterface::class);
         $this->performAfterLoad('pagebuilder_content_store', $entityMetadata->getLinkField());
+        $this->unserializeFields();
         $this->_previewFlag = false;
-
         return parent::_afterLoad();
     }
 
     /**
-     * Set first store flag
-     *
-     * @param bool $flag
-     * @return $this
+     * Get serializer
      */
-    public function setFirstStoreFlag($flag = false)
+    protected function getSerializer()
     {
-        $this->_previewFlag = $flag;
-        return $this;
+        if (null === $this->serializer) {
+            $this->serializer = ObjectManager::getInstance()->get(Json::class);
+        }
+        return $this->serializer;
+    }
+
+    /**
+     * Unserialize Fields
+     */
+    protected function unserializeFields()
+    {
+        /** @var \Goomento\PageBuilder\Model\Content $item */
+        foreach ($this->_items as $item) {
+            foreach (ContentInterface::SERIALIZABLE_FIELDS as $field => $parameters) {
+                list($serializeDefault, $unserializeDefault) = $parameters;
+                $value = $item->getData($field);
+                if ($value) {
+                    $data = $this->getSerializer()->unserialize($value);
+                    if (empty($data)) {
+                        $item->setData($field, $unserializeDefault);
+                    } else {
+                        $item->setData($field, $data);
+                    }
+                } else {
+                    $item->setData($field, $unserializeDefault);
+                }
+            }
+        }
     }
 
     /**
      * Add filter by store
      *
-     * @param int|array|\Magento\Store\Model\Store $store
+     * @param int|array|Store $store
      * @param bool $withAdmin
      * @return $this
      */
@@ -123,6 +161,7 @@ class Collection extends AbstractCollection
     {
         if (!$this->getFlag('store_filter_added')) {
             $this->performAddStoreFilter($store, $withAdmin);
+            $this->setFlag('store_filter_added', true);
         }
         return $this;
     }
@@ -131,14 +170,14 @@ class Collection extends AbstractCollection
      * Perform operations before rendering filters
      *
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     protected function _renderFiltersBefore()
     {
         $entityMetadata = $this->metadataPool->getMetadata(ContentInterface::class);
         $this->joinStoreRelationTable('pagebuilder_content_store', $entityMetadata->getLinkField());
-        if ($this->type) {
-            $this->addFilter('type', $this->type, 'public');
+        if (!empty($this->type)) {
+            $this->addFilter('type', $this->type , 'public');
         }
     }
 }

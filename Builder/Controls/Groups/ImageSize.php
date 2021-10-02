@@ -121,31 +121,6 @@ class ImageSize extends Base
     }
 
     /**
-     * Get all image sizes.
-     *
-     * Retrieve available image sizes with data like `width`, `height` and `crop`.
-     *
-     *
-     * @return array An array of available image sizes.
-     */
-    public static function getAllImageSizes()
-    {
-        $default_image_sizes = [ 'thumbnail', 'medium', 'medium_large', 'large' ];
-
-        $image_sizes = [];
-
-        foreach ($default_image_sizes as $size) {
-            $image_sizes[ $size ] = [
-                'width' => (int)StaticConfig::getThemeOption($size . '_size_w'),
-                'height' => (int)StaticConfig::getThemeOption($size . '_size_h'),
-                'crop' => (bool)StaticConfig::getThemeOption($size . '_crop'),
-            ];
-        }
-
-        return Hooks::applyFilters('image_size_names_choose', $image_sizes);
-    }
-
-    /**
      * Get attachment image src.
      *
      * Retrieve the attachment image source URL.

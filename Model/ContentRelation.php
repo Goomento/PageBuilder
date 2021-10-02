@@ -110,7 +110,7 @@ class ContentRelation
                 } else {
                     $contentData['store_id'] = [0];
                 }
-                $contentData['identifier'] = $relationObject->getIdentifier() . '_' . StaticEncryptor::uniqueString();
+                $contentData['identifier'] = $relationObject->getIdentifier() . '-' . StaticEncryptor::uniqueString();
             default:
         }
         return $contentData;

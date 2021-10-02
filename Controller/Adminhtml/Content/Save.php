@@ -92,15 +92,20 @@ class Save extends AbstractContent implements HttpPostActionInterface
                 if (!empty($data['content_data'])) {
                     $contentData = base64_decode($data['content_data']);
                     if ($contentData && self::isJson($contentData)) {
-                        if ($contentData !== $content->getData(ContentInterface::ELEMENTS)) {
-                            $content->setData(ContentInterface::ELEMENTS, $contentData);
+                        $contentData = \Zend_Json::decode($contentData);
+                        if ($contentData !== $content->getElements()) {
+                            $content->setElements($contentData);
                         }
+                    } else {
+                        throw new LocalizedException(
+                            __('Data content invalidated. Make sure you copy the right way.')
+                        );
                     }
                 }
 
                 $identifier = isset($data['identifier']) ? trim($data['identifier']) : '';
                 if (empty($identifier)) {
-                    $identifier = $content->getType() . '_' . StaticEncryptor::uniqueString();
+                    $identifier = $content->getType() . '-' . StaticEncryptor::uniqueString();
                 }
 
                 if ($content->getIdentifier() !== $identifier) {
@@ -109,6 +114,7 @@ class Save extends AbstractContent implements HttpPostActionInterface
 
                 $content = $this->contentRepository->save($content);
                 $this->contentManagement->createRevision($content);
+                $this->contentManagement->refreshContentCache($content);
                 $this->messageManager->addSuccessMessage(__('You saved the content.'));
                 return $this->processResultRedirect($content, $resultRedirect, $data);
             } catch (LocalizedException $e) {
@@ -144,11 +150,11 @@ class Save extends AbstractContent implements HttpPostActionInterface
             $content->setTitle($title);
             $content->setStatus(ContentInterface::STATUS_PENDING);
             $identifier = $model->getIdentifier();
-            $identifiers = explode('_', $identifier);
+            $identifiers = explode('-', $identifier);
             array_pop($identifiers);
             $identifiers[] = StaticEncryptor::uniqueString();
 
-            $content->setIdentifier(implode('_', $identifiers));
+            $content->setIdentifier(implode('-', $identifiers));
             $this->contentRepository->save($content);
             $this->messageManager->addSuccessMessage(__('You duplicated the content.'));
             return $resultRedirect->setPath(

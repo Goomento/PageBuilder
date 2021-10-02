@@ -168,12 +168,9 @@ class GlobalCss extends Base
 
         $name = $this->getName();
 
-        $customCss = StaticConfig::getCustomCss();
+        $customCss = (string) StaticConfig::getOption('custom_css');
 
-        if (trim((string) $customCss)) {
-            $compressor = new CSSmin();
-            $customCss = $compressor->run($customCss);
-
+        if (trim( $customCss)) {
             $this->stylesheet_obj->addRawCss(
                 $customCss
             );

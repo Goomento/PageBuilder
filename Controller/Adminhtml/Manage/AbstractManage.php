@@ -9,10 +9,14 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Controller\Adminhtml\Manage;
 
 use Goomento\Core\Traits\TraitHttpExecutable;
+use Goomento\PageBuilder\Logger\Logger;
+use Goomento\PageBuilder\Model\Config;
+use Goomento\PageBuilder\Api\ContentManagementInterface;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Framework\View\Result\PageFactory;
 
 /**
@@ -32,17 +36,45 @@ abstract class AbstractManage extends Action implements HttpGetActionInterface, 
      * @var PageFactory
      */
     protected $resultPageFactory;
+    /**
+     * @var Config
+     */
+    protected $config;
+    /**
+     * @var ContentManagementInterface
+     */
+    protected $contentManagement;
+    /**
+     * @var Logger
+     */
+    protected $logger;
+    /**
+     * @var DataPersistorInterface
+     */
+    protected $dataPersistor;
 
     /**
      * Import constructor.
      * @param Context $context
      * @param PageFactory $resultPageFactory
+     * @param Config $config
+     * @param ContentManagementInterface $contentManagement
+     * @param DataPersistorInterface $dataPersistor
+     * @param Logger $logger
      */
     public function __construct(
         Action\Context $context,
-        PageFactory $resultPageFactory
+        PageFactory $resultPageFactory,
+        Config $config,
+        ContentManagementInterface $contentManagement,
+        DataPersistorInterface $dataPersistor,
+        Logger $logger
     ) {
         $this->resultPageFactory = $resultPageFactory;
+        $this->config = $config;
+        $this->contentManagement = $contentManagement;
+        $this->dataPersistor = $dataPersistor;
+        $this->logger = $logger;
         parent::__construct($context);
     }
 

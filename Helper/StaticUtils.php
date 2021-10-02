@@ -98,4 +98,73 @@ class StaticUtils
         $string .= ' (' . $ago->format('F j, Y, g:i a') . ')';
         return $string;
     }
+
+    /**
+     * @param array $array
+     * @param $path
+     * @param string $delimiter
+     * @return array|mixed|null
+     */
+    public static function arrayGetValue(array &$array, $path, $delimiter = '/')
+    {
+        if (!is_array($path)) {
+            $path = explode($delimiter, $path);
+        }
+
+        $ref = &$array;
+
+        foreach ((array) $path as $parent) {
+            if (is_array($ref) && array_key_exists($parent, $ref)) {
+                $ref = &$ref[$parent];
+            } else {
+                return null;
+            }
+        }
+        return $ref;
+    }
+
+    /**
+     * @param array $array
+     * @param $path
+     * @param $value
+     * @param string $delimiter
+     */
+    public static function arraySetValue(array &$array, $path, $value, $delimiter = '/')
+    {
+        if (!is_array($path)) {
+            $path = explode($delimiter, (string) $path);
+        }
+
+        $ref = &$array;
+
+        foreach ($path as $parent) {
+            if (isset($ref) && !is_array($ref)) {
+                $ref = [];
+            }
+
+            $ref = &$ref[$parent];
+        }
+
+        $ref = $value;
+    }
+
+    /**
+     * @param $array
+     * @param $path
+     * @param string $delimiter
+     */
+    public static function arrayUnsetValue(&$array, $path, $delimiter = '/')
+    {
+        if (!is_array($path)) {
+            $path = explode($delimiter, $path);
+        }
+
+        $key = array_shift($path);
+
+        if (empty($path)) {
+            unset($array[$key]);
+        } else {
+            self::arrayUnsetValue($array[$key], $path);
+        }
+    }
 }

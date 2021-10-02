@@ -91,10 +91,10 @@ class Manager extends BaseManager
         foreach ($model_controls as $tab_name => $sections) {
             foreach ($sections as $section_name => $section_data) {
                 foreach ($section_data['controls'] as $control_name => $control_data) {
-                    $saved_setting = StaticConfig::getThemeOption($control_name, null);
+                    $saved_setting = StaticConfig::getOption($control_name, null);
 
                     if (null !== $saved_setting) {
-                        $settings[ $control_name ] = StaticConfig::getThemeOption($control_name);
+                        $settings[ $control_name ] = StaticConfig::getOption($control_name);
                     }
                 }
             }
@@ -139,9 +139,9 @@ class Manager extends BaseManager
                         $one_list_control_name = str_replace('goomento_', '', $control_name);
 
                         $one_list_settings[ $one_list_control_name ] = $settings[ $control_name ];
-                        StaticConfig::updateThemeOption($control_name, $settings[$control_name]);
+                        StaticConfig::setOption($control_name, $settings[$control_name]);
                     } else {
-                        StaticConfig::deleteThemeOption($control_name);
+                        StaticConfig::delOption($control_name);
                     }
                 }
             }
@@ -149,9 +149,9 @@ class Manager extends BaseManager
 
         // Save all settings in one list for a future usage
         if (! empty($one_list_settings)) {
-            StaticConfig::updateThemeOption(self::META_KEY, $one_list_settings);
+            StaticConfig::setOption(self::META_KEY, $one_list_settings);
         } else {
-            StaticConfig::deleteThemeOption(self::META_KEY);
+            StaticConfig::delOption(self::META_KEY);
         }
     }
 

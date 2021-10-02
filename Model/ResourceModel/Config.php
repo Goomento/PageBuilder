@@ -39,16 +39,22 @@ class Config extends AbstractDb
      */
     public function saveConfig($path, $value, int $storeId = 0)
     {
+        if (is_array($value)) {
+            try {
+                $value = \Zend_Json::encode($value);
+            } catch (\Exception $e) {}
+        }
         $connection = $this->getConnection();
-        $select = $connection->select()->from(
-            $this->getMainTable()
-        )->where(
-            'path = ?',
-            $path
-        )->where(
-            'store_id = ?',
-            $storeId
-        );
+        $select = $connection->select()
+            ->from(
+                $this->getMainTable()
+            )->where(
+                'path = ?',
+                $path
+            )->where(
+                'store_id = ?',
+                $storeId
+            );
         $row = $connection->fetchRow($select);
 
         $newData = ['store_id' => $storeId, 'path' => $path, 'value' => $value];
@@ -80,7 +86,18 @@ class Config extends AbstractDb
                 $storeId
             );
         }
-        return $connection->fetchAll($select);
+        $result = $connection->fetchAll($select);
+        if (!empty($result)) {
+            foreach ($result as &$row) {
+                if (is_string($row['value'])) {
+                    try {
+                        $row['value'] = \Zend_Json::decode($row['value']);
+                    } catch (\Exception $e) {}
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -91,7 +108,7 @@ class Config extends AbstractDb
      * @return $this
      * @throws LocalizedException
      */
-    public function deleteConfig($path, $storeId = 0)
+    public function deleteConfig($path, $storeId = \Goomento\PageBuilder\Model\Config::DEFAULT_STORE_ID)
     {
         $connection = $this->getConnection();
         $connection->delete(

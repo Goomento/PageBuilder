@@ -8,7 +8,10 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\TemplateLibrary;
 
+use Exception;
 use Goomento\Core\Helper\ObjectManager;
+use Goomento\PageBuilder\Builder\TemplateLibrary\Sources\Base;
+use Goomento\PageBuilder\Core\Editor\Editor;
 use Goomento\PageBuilder\Model\Media;
 use Goomento\PageBuilder\Builder\TemplateLibrary\Sources\Local;
 use Goomento\PageBuilder\Core\Common\Modules\Ajax\Module as Ajax;
@@ -20,6 +23,7 @@ use Goomento\PageBuilder\Helper\StaticContent;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Zend_Json_Exception;
 
 /**
  * Class Manager
@@ -84,7 +88,7 @@ class Manager
         $source_instance = ObjectManager::get($source_class);
 
         if (! $source_instance instanceof Sources\Base) {
-            throw new \Exception(
+            throw new Exception(
                 __('Wrong Source Base')
             );
         }
@@ -92,7 +96,7 @@ class Manager
         $source_id = $source_instance->getId();
 
         if (isset($this->_registered_sources[ $source_id ])) {
-            throw new \Exception(
+            throw new Exception(
                 __('Source existed.')
             );
         }
@@ -141,7 +145,7 @@ class Manager
      *
      * @param string $id The source ID.
      *
-     * @return false|\Goomento\PageBuilder\Builder\TemplateLibrary\Sources\Base Template sources if one exist, False otherwise.
+     * @return false|Base Template sources if one exist, False otherwise.
      */
     public function getSource($id)
     {
@@ -234,7 +238,7 @@ class Manager
         $source = $this->getSource($args['source']);
 
         if (! $source) {
-            throw new \Exception('Template source not found');
+            throw new Exception('Template source not found');
         }
 
         $args['content'] = json_decode($args['content'], true);
@@ -258,7 +262,7 @@ class Manager
      *
      * @param array $template_data New template data.
      *
-     * @return \Exception
+     * @return Exception
      * @throws LocalizedException
      */
     public function updateTemplate(array $template_data)
@@ -275,7 +279,7 @@ class Manager
         $source = $this->getSource($template_data['source']);
 
         if (! $source) {
-            return new \Exception('template_error', 'Template source not found.');
+            return new Exception('template_error', 'Template source not found.');
         }
 
         $template_data['content'] = json_decode($template_data['content'], true);
@@ -312,7 +316,7 @@ class Manager
      *
      * @param array $args Template arguments.
      *
-     * @return array|bool|\Exception
+     * @return array|bool|Exception
      * @throws LocalizedException
      */
     public function getTemplateData(array $args)
@@ -327,13 +331,13 @@ class Manager
         $validate_args = $this->ensureArgs([ 'source', 'template_id' ], $args);
 
         if (isset($args['edit_mode'])) {
-            StaticObjectManager::get(\Goomento\PageBuilder\Core\Editor\Editor::class)->setEditMode($args['edit_mode']);
+            StaticObjectManager::get(Editor::class)->setEditMode($args['edit_mode']);
         }
 
         $source = $this->getSource($args['source']);
 
         if (! $source) {
-            return new \Exception('template_error', 'Template source not found.');
+            return new Exception('template_error', 'Template source not found.');
         }
 
         Hooks::doAction('pagebuilder/template-library/before_get_source_data', $args, $source);
@@ -353,7 +357,7 @@ class Manager
      *
      * @param array $args Template arguments.
      *
-     * @return \Exception ContentCss data on success, false or null
+     * @return Exception ContentCss data on success, false or null
      * @throws LocalizedException
      */
     public function deleteTemplate(array $args)
@@ -374,7 +378,7 @@ class Manager
         $source = $this->getSource($args['source']);
 
         if (! $source) {
-            return new \Exception('template_error', 'Template source not found.');
+            return new Exception('template_error', 'Template source not found.');
         }
 
         return $source->deleteTemplate($args['template_id']);
@@ -401,7 +405,7 @@ class Manager
         $source = $this->getSource($args['source']);
 
         if (! $source) {
-            return new \Exception('template_error', 'Template source not found');
+            return new Exception('template_error', 'Template source not found');
         }
 
         return $source->exportTemplate($args['template_id']);
@@ -409,10 +413,10 @@ class Manager
 
     /**
      * @param string $filename
-     * @return array|\Exception|int|null
+     * @return array|null
      * @throws LocalizedException
      * @throws NoSuchEntityException
-     * @throws \Zend_Json_Exception
+     * @throws Zend_Json_Exception
      */
     public function directImportTemplate($filename = 'file')
     {
@@ -430,10 +434,9 @@ class Manager
      *
      * @param array $data
      *
-     * @return mixed Whether the export succeeded or failed.
+     * @return array|null Whether the export succeeded or failed.
      * @throws LocalizedException
      * @throws NoSuchEntityException
-     * @throws \Zend_Json_Exception
      */
     public function importTemplate(array $data)
     {
@@ -486,7 +489,7 @@ class Manager
      * @param array $data
      *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     private function handleAjaxRequest($ajax_request, array $data)
     {
@@ -494,7 +497,7 @@ class Manager
             $editor_post_id = (int) $data['editor_post_id'];
 
             if (!StaticContent::get($editor_post_id)) {
-                throw new \Exception(__('ContentCss not found.'));
+                throw new Exception(__('ContentCss not found.'));
             }
 
         }
@@ -509,7 +512,7 @@ class Manager
      *
      *
      * @param Ajax $ajax
-     * @throws \Exception
+     * @throws Exception
      */
     public function registerAjaxActions(Ajax $ajax)
     {
@@ -532,14 +535,14 @@ class Manager
     /**
      * @param array $required_args
      * @param array $specified_args
-     * @return bool|\Exception
+     * @return bool|Exception
      */
     private function ensureArgs(array $required_args, array $specified_args)
     {
         $not_specified_args = array_diff($required_args, array_keys(array_filter($specified_args)));
 
         if ($not_specified_args) {
-            return new \Exception(
+            return new Exception(
                 __('The required argument(s) "%1" not specified.', implode(', ', $not_specified_args))
             );
         }

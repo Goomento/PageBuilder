@@ -76,12 +76,12 @@ abstract class Base
      */
     public function getSchemeValue()
     {
-        $scheme_value = StaticConfig::getThemeOption('scheme_' . static::getType());
+        $scheme_value = StaticConfig::getOption('scheme_' . static::getType());
 
         if (empty($scheme_value)) {
             $scheme_value = $this->getDefaultScheme();
 
-            StaticConfig::updateThemeOption('scheme_' . static::getType(), $scheme_value);
+            StaticConfig::setOption('scheme_' . static::getType(), $scheme_value);
         }
 
         return $scheme_value;
@@ -99,7 +99,7 @@ abstract class Base
     public function saveScheme(array $posted)
     {
         $scheme_value = $this->getSchemeValue();
-        StaticConfig::updateThemeOption('scheme_' . static::getType(),
+        StaticConfig::setOption('scheme_' . static::getType(),
             array_replace($scheme_value, array_intersect_key($posted, $scheme_value)));
     }
 

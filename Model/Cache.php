@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model;
 
+use Magento\Framework\App\Cache\StateInterface;
 use Magento\Framework\App\CacheInterface;
 use Goomento\PageBuilder\Model\Cache\Type\PageBuilder;
 
@@ -19,7 +20,7 @@ class Cache
 {
     const DEFAULT_LIFE_TIME = 86400; // 01 day
 
-    const CACHE_TAG = PageBuilder::TYPE_IDENTIFIER;
+    const CACHE_TAG = PageBuilder::CACHE_TAG;
 
     /**
      * @var Cache\Type\PageBuilder
@@ -27,13 +28,21 @@ class Cache
     private $cache;
 
     /**
+     * @var bool
+     */
+    private $enabled;
+
+    /**
      * @param CacheInterface $cache
+     * @param StateInterface $cacheState
      */
     public function __construct(
-        CacheInterface $cache
+        CacheInterface $cache,
+        StateInterface $cacheState
     )
     {
         $this->cache = $cache;
+        $this->enabled = $cacheState->isEnabled(PageBuilder::TYPE_IDENTIFIER);
     }
 
     /**
@@ -42,25 +51,32 @@ class Cache
      */
     public function load(string $identifier)
     {
-        $data = $this->cache->load($identifier);
+        if (!$this->enabled) {
+            return false;
+        }
+        $data = $this->cache->load($this->getCacheKey($identifier));
         return $this->unSerializer($data);
     }
 
     /**
      * @param mixed $data
      * @param $identifier
-     * @param array $tags
+     * @param array|int $tags
      * @param null $lifeTime
      * @return bool
      */
-    public function save($data, $identifier, $tags = [self::CACHE_TAG], $lifeTime = self::DEFAULT_LIFE_TIME)
+    public function save($data, $identifier, $tags = [self::CACHE_TAG], $lifeTime = null)
     {
+        if (!$this->enabled) {
+            return false;
+        }
+
         if (is_numeric($tags) && is_null($lifeTime)) {
             $lifeTime = (int) $tags;
             $tags = [self::CACHE_TAG];
         }
         $data = $this->serializer($data);
-        return $this->cache->save((string)$data, $identifier, $tags, $lifeTime);
+        return $this->cache->save((string)$data, $this->getCacheKey($identifier), $tags, $lifeTime);
     }
 
     /**
@@ -69,7 +85,13 @@ class Cache
      */
     public function remove($identifier)
     {
-        return $this->cache->remove($identifier);
+        if (!$this->enabled) {
+            return false;
+        }
+
+        return $this->cache->remove(
+            $this->getCacheKey($identifier)
+        );
     }
 
     /**
@@ -78,6 +100,9 @@ class Cache
      */
     public function clean($tags = [self::CACHE_TAG])
     {
+        if (!$this->enabled) {
+            return false;
+        }
         return $this->cache->clean(\Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG, (array) $tags);
     }
 
@@ -109,5 +134,14 @@ class Cache
         }
 
         return $data;
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    private function getCacheKey(string $key)
+    {
+        return 'pagebuilder_' . sha1($key);
     }
 }
