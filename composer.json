@@ -2,7 +2,7 @@
     "name": "goomento/module-page-builder",
     "description": "Free Magento 2 Page Builder Extension - Goomento Page Builder supports to create the custom pages, landing pages, blocks, and store designs without writing a line of code",
     "type": "magento2-module",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "license": [
         "OSL-3.0"
     ],
@@ -42,10 +42,7 @@
         }
     },
     "require": {
-        "goomento/module-core": "^1.0.1",
-        "ext-fileinfo": "*",
-        "ext-curl": "*",
-        "ext-json": "*"
+        "goomento/module-core": "^1.0.1"
     },
     "minimum-stability": "dev"
 }

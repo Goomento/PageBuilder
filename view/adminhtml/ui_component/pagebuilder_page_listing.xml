@@ -107,6 +107,15 @@
                     </item>
                 </argument>
             </action>
+            <action name="refresh">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">refresh</item>
+                        <item name="label" xsi:type="string" translate="true">Refresh</item>
+                        <item name="url" xsi:type="url" path="pagebuilder/content/massRefresh/type/template"/>
+                    </item>
+                </argument>
+            </action>
         </massaction>
     </listingToolbar>
     <columns name="pagebuilder_page_columns">

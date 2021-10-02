@@ -93,13 +93,11 @@ class Manager extends BaseManager
             throw new \Exception('Invalid content.');
         }
 
-        // Avoid save empty post title.
         if (! empty($data['title'])) {
             $model->setTitle($data['title']);
         }
 
         if (!empty($data['status'])) {
-            // To avoid exception for `autosave` status
             $model->setData('status', $data['status']);
         }
 

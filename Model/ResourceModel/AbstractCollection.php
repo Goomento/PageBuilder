@@ -28,13 +28,6 @@ use Psr\Log\LoggerInterface;
 abstract class AbstractCollection extends FrameworkAbstractCollection
 {
     /**
-     * Store manager
-     *
-     * @var StoreManagerInterface
-     */
-    protected $storeManager;
-
-    /**
      * @var MetadataPool
      */
     protected $metadataPool;
@@ -44,7 +37,6 @@ abstract class AbstractCollection extends FrameworkAbstractCollection
      * @param LoggerInterface $logger
      * @param FetchStrategyInterface $fetchStrategy
      * @param ManagerInterface $eventManager
-     * @param StoreManagerInterface $storeManager
      * @param MetadataPool $metadataPool
      * @param AdapterInterface|null $connection
      * @param AbstractDb|null $resource
@@ -54,12 +46,10 @@ abstract class AbstractCollection extends FrameworkAbstractCollection
         LoggerInterface $logger,
         FetchStrategyInterface $fetchStrategy,
         ManagerInterface $eventManager,
-        StoreManagerInterface $storeManager,
         MetadataPool $metadataPool,
         AdapterInterface $connection = null,
         AbstractDb $resource = null
     ) {
-        $this->storeManager = $storeManager;
         $this->metadataPool = $metadataPool;
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $connection, $resource);
     }
@@ -147,8 +137,10 @@ abstract class AbstractCollection extends FrameworkAbstractCollection
         $linkedIds = $this->getColumnValues($linkField);
         if (count($linkedIds)) {
             $connection = $this->getConnection();
-            $select = $connection->select()->from(['pagebuilder_entity_store' => $this->getTable($tableName)])
+            $select = $connection->select()
+                ->from(['pagebuilder_entity_store' => $this->getTable($tableName)])
                 ->where('pagebuilder_entity_store.' . $linkField . ' IN (?)', $linkedIds);
+
             $result = $connection->fetchAll($select);
             if ($result) {
                 $storesData = [];
@@ -161,17 +153,6 @@ abstract class AbstractCollection extends FrameworkAbstractCollection
                     if (!isset($storesData[$linkedId])) {
                         continue;
                     }
-                    $storeIdKey = array_search(Store::DEFAULT_STORE_ID, $storesData[$linkedId], true);
-                    if ($storeIdKey !== false) {
-                        $stores = $this->storeManager->getStores(false, true);
-                        $storeId = current($stores)->getId();
-                        $storeCode = key($stores);
-                    } else {
-                        $storeId = current($storesData[$linkedId]);
-                        $storeCode = $this->storeManager->getStore($storeId)->getCode();
-                    }
-                    $item->setData('_first_store_id', $storeId);
-                    $item->setData('store_code', $storeCode);
                     $item->setData('store_id', $storesData[$linkedId]);
                 }
             }

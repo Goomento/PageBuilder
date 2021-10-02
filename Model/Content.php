@@ -11,6 +11,7 @@ namespace Goomento\PageBuilder\Model;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
+use Goomento\PageBuilder\Helper\StaticUtils;
 use Goomento\PageBuilder\Helper\UserHelper;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -70,6 +71,8 @@ class Content extends AbstractModel implements
      * @var RevisionInterface[]
      */
     protected $revisions = [];
+
+    private $createRevisionFlag = true;
 
     /**
      * @inheridoc
@@ -230,15 +233,7 @@ class Content extends AbstractModel implements
      */
     public function getElements()
     {
-        $element = $this->getData(self::ELEMENTS);
-        if (!is_array($element)) {
-            $element = json_decode((string) $element, true);
-            if (!$element) {
-                $element = [];
-            }
-        }
-
-        return $element;
+        return $this->getData(self::ELEMENTS);
     }
 
     /**
@@ -246,15 +241,7 @@ class Content extends AbstractModel implements
      */
     public function getSettings()
     {
-        $settings = $this->getData(self::SETTINGS);
-        if ($settings && !is_array($settings)) {
-            $settings = json_decode($settings, true);
-            if (!$settings) {
-                $settings = [];
-            }
-        }
-
-        return $settings;
+        return $this->getData(self::SETTINGS);
     }
 
     /**
@@ -268,22 +255,16 @@ class Content extends AbstractModel implements
     /**
      * @inheridoc
      */
-    public function setElements($elements)
+    public function setElements(array $elements)
     {
-        if (is_array($elements)) {
-            $elements = json_encode($elements);
-        }
         return $this->setData(self::ELEMENTS, $elements);
     }
 
     /**
      * @inheridoc
      */
-    public function setSettings($settings)
+    public function setSettings(array $settings)
     {
-        if (is_array($settings)) {
-            $settings = json_encode($settings);
-        }
         return $this->setData(self::SETTINGS, $settings);
     }
 
@@ -363,18 +344,6 @@ class Content extends AbstractModel implements
     }
 
     /**
-     * @return UserHelper
-     */
-    protected function getUserHelper()
-    {
-        if (is_null($this->userHelper)) {
-            /** @var UserHelper userHelper */
-            $this->userHelper = StaticObjectManager::get(UserHelper::class);
-        }
-
-        return $this->userHelper;
-    }
-    /**
      * @inheridoc
      */
     public function hasSetting($name)
@@ -388,7 +357,7 @@ class Content extends AbstractModel implements
     public function getSetting($name)
     {
         $settings = $this->getSettings();
-        return $settings[$name] ?? null;
+        return StaticUtils::arrayGetValue($settings, $name);
     }
 
     /**
@@ -397,7 +366,7 @@ class Content extends AbstractModel implements
     public function setSetting($name, $value)
     {
         $settings = $this->getSettings();
-        $settings[$name] = $value;
+        StaticUtils::arraySetValue($settings, $name, $value);
         return $this->setSettings($settings);
     }
 
@@ -408,7 +377,7 @@ class Content extends AbstractModel implements
     {
         if ($this->hasSetting($name)) {
             $settings = $this->getSettings();
-            unset($settings[$name]);
+            StaticUtils::arrayUnsetValue($settings, $name);
             $this->setSettings($settings);
         }
 
@@ -491,5 +460,22 @@ class Content extends AbstractModel implements
     public function setIdentifier($value)
     {
         return $this->setData(self::IDENTIFIER, $value);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCreateRevisionFlag(bool $flag)
+    {
+        $this->createRevisionFlag = $flag;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCreateRevisionFlag()
+    {
+        return (bool) $this->createRevisionFlag;
     }
 }

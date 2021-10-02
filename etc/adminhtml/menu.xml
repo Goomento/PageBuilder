@@ -52,6 +52,16 @@
              sortOrder="52"
              parent="Goomento_Core::menu"
              resource="Goomento_PageBuilder::action"/>
+
+        <add id="Goomento_PageBuilder::manage_global_css"
+             title="Global.css"
+             module="Goomento_PageBuilder"
+             translate="title"
+             sortOrder="5"
+             action="pagebuilder/manage/globalCss"
+             parent="Goomento_PageBuilder::action"
+             resource="Goomento_PageBuilder::manage_global_css"/>
+
         <add id="Goomento_PageBuilder::import"
              title="Importer"
              module="Goomento_PageBuilder"

@@ -41,7 +41,9 @@ class Edit extends AbstractContent implements HttpGetActionInterface
             );
         }
 
-        return $this->resultRedirectFactory->create()->setRefererUrl();
+        return $this->resultRedirectFactory->create()->setPath('*/*/grid', [
+            'type' => $this->getContentType()
+        ]);
     }
 
     /**

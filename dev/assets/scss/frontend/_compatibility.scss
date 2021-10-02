@@ -1,0 +1,20 @@
+// Canvas Page template
+.page-template-gmt_canvas {
+
+	&.gmt-page {
+
+		&:before {
+			display: none; // Twenty Fifteen Theme
+		}
+	}
+}
+
+.gmt-post__thumbnail__link {
+	transition: none; // Avoid size calculation failures on some themes
+}
+
+#left-area ul.gmt-icon-list-items,
+.gmt .gmt-element ul.gmt-icon-list-items,
+#gmt .gmt-element ul.gmt-icon-list-items {
+	padding: 0;
+}

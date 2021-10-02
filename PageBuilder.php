@@ -69,12 +69,20 @@ class PageBuilder implements SubSystemInterface
 
             Hooks::doAction('pagebuilder/construct');
 
-            $this->initComponents();
+            $this->initComponents($buildSubject);
 
             Hooks::addAction('init', function () {
                 self::registerHooks();
             });
         }
+    }
+
+    /**
+     * Initialize the page builder
+     */
+    public static function initialize()
+    {
+        StaticObjectManager::get(__CLASS__)->init();
     }
 
     /**
@@ -135,12 +143,15 @@ class PageBuilder implements SubSystemInterface
     /**
      * Initialize components
      */
-    private function initComponents()
+    private function initComponents(array $buildSubject = [])
     {
         SettingsManager::run();
 
-        foreach ($this->components as $component) {
-            $this->objectManager->get($component);
+        foreach ($this->components as $class) {
+            $component = $this->objectManager->get($class);
+            if ($component instanceof BuildableInterface) {
+                $component->init($buildSubject);
+            }
         }
 
         if (true === StaticState::isAdminhtml()) {
@@ -156,14 +167,24 @@ class PageBuilder implements SubSystemInterface
      */
     private function regisDefaultHook()
     {
-        Hooks::addAction('pagebuilder/header', [$this, 'printStyles'], 11);
-        Hooks::addAction('pagebuilder/header', [$this, 'printHeadScripts'], 11);
+        Hooks::addAction('pagebuilder/header', function () {
+            Theme::getStylesManager()->doItems(false);
+            Theme::getScriptsManager()->doHeadItems();
+        }, 11);
 
-        Hooks::addAction('pagebuilder/footer', [$this, 'printStyles'], 11);
-        Hooks::addAction('pagebuilder/footer', [$this, 'printFooterScripts'], 11);
+        Hooks::addAction('pagebuilder/footer', function () {
+            Theme::getStylesManager()->doItems(false);
+            Theme::getScriptsManager()->doFooterItems();
+        }, 11);
 
-        Hooks::addAction('style_loader_src', [$this, 'getCssStatic']);
-        Hooks::addAction('script_loader_src', [$this, 'getJsStatic']);
+
+        Hooks::addAction('style_loader_src',function ($src = '') {
+            if (strpos($src, 'http') === false) {
+                $src = Helper\StaticUrlBuilder::urlStaticBuilder($src);
+            }
+
+            return $src;
+        });
 
         return $this;
     }
@@ -240,60 +261,6 @@ class PageBuilder implements SubSystemInterface
     }
 
     /**
-     * @param $src
-     * @return string
-     */
-    public function getCssStatic($src)
-    {
-        if (strpos($src, 'http') === false) {
-            $src = Helper\StaticUrlBuilder::urlStaticBuilder($src);
-        }
-
-        return $src;
-    }
-
-    /**
-     * @param $src
-     * @return string
-     */
-    public function getJsStatic($src)
-    {
-        if (strpos($src, '.js') !== false) {
-            return str_replace('.js', '', $src);
-        }
-
-        return $src;
-    }
-
-    /**
-     * @param false $handles
-     * @return array
-     */
-    public function printStyles($handles = false)
-    {
-        return Theme::getStylesManager()
-            ->doItems(false);
-    }
-
-    /**
-     * @return array
-     */
-    public function printHeadScripts()
-    {
-        return Theme::getScriptsManager()
-            ->doHeadItems();
-    }
-
-    /**
-     * @return array
-     */
-    public function printFooterScripts()
-    {
-        return Theme::getScriptsManager()
-            ->doFooterItems();
-    }
-
-    /**
      * @inheritdoc
      */
     public function getAreaScopes()
@@ -305,6 +272,7 @@ class PageBuilder implements SubSystemInterface
             'pagebuilder_content_preview',
             'pagebuilder_content_view',
             'pagebuilder_ajax_json',
+            'pagebuilder_content_massRefresh',
         ];
 
         if ($this->dataHelper->isActive()) {

@@ -1,3 +1,4 @@
+![Goomento Page Builder - Drag and Drop](https://i.imgur.com/pR0pLoA.png)
 
 # Goomento **Page Builder**, a free drag and drop toolkit that supports to create custom pages, landing pages, blocks and store designs without writing a line of code
 
@@ -34,42 +35,45 @@ Change to **Yes** to enable module on storefront.
 
 ## 3. Features
 
-Drag and Drop visual editor
-
-Section / Pages / Templates control
-
-Import / Export
-
-Undo / Redo / Duplicate and more
-
-History / Revision management
-
-Reuse as page / template
-
-Widgets hub / management
+- Drag and Drop visual editor
+- Section / Pages / Templates control
+- Import / Export content
+- Undo / Redo / Duplicate and more ...
+- History / Revision management
+- Reuse as page / template
+- Widgets hub / management
+- Adaptability in any store
+- High speed optimize
+- Add custom CSS
 
 ## 4. Design concept
 
-Goomento Page Builder will overwrite the main content of these entities:
+#### Goomento Page Builder will overwrite the main content of these Magento entities:
 
 - Cms Page
 - Cms Block
 - Catalog Product (_-- Under develop --_)
 - Catalog Category (_-- Under develop --_)
 
+#### For every buildable content, asset resource files (CSS, Javascript, downloaded images ... ) will be stored in `pub/media/goomento` 
+Make sure this folder is writeable for fully functional 
+
 ## 5. How to use
 
 Check this [Wiki page](https://github.com/Goomento/PageBuilder/wiki/How-To-Use) for use
 
-## 6. Create your own widgets / template
+## 6. Personalize
 
-_-- Update soon --_
+**Goomento Page Builder** was designed to be extendable easily, including: 
+
+- Widget (The piece of your page, Eg: Image, Text, Banner, Video, Audio ...)
+- Control (The place where you define data type and behavior, Eg: Image selector, Text input field ...)
+
+Check this [Wiki page](https://github.com/Goomento/PageBuilder/wiki/Personalize) for more detail
 
 ## 7. Version compatible
 
-**Magento 2 Community**: 2.3.x, 2.4.x
-
-**Magento 2 Enterprise**: -- Not tested yet --
+Magento: 2.3.x, 2.4.x
 
 ## 8. Changelog
 
@@ -77,24 +81,20 @@ What's news? See here [CHANGELOG.md](https://github.com/Goomento/PageBuilder/blo
 
 ## 9. Open an issue and Contribution
 
-Feel free to open an Issue, Fork and Create Pull Request (PR) on GitHub
+Feel free to Open an Issue, Fork and Create Pull Request (PR) on GitHub
 
 For opening an issue, click [here](https://github.com/Goomento/PageBuilder/issues).
 
-## 10. Screen capture
+## 10. Screenshots
 
-![Configuration](https://i.imgur.com/2NStubU.png)
+![Goomento Page Builder Interface](https://i.imgur.com/hiRyX5Y.gif)
+One click to use
 
-![Manage](https://i.imgur.com/RbXWlCx.png)
+![Goomento Page Builder History Management](https://i.imgur.com/cpxv7Kn.gif)
+History/ Revision Management
 
-![Editor](https://i.imgur.com/oMzVXXf.png)
+![Goomento Page Builder Editing](https://i.imgur.com/rj10Ncs.gif)
+Easy to use
 
-![Widget](https://i.imgur.com/RLSw6iV.png)
-
-![Media](https://i.imgur.com/kZAMNEU.png)
-
-![Color picker](https://i.imgur.com/Zs1MZwc.png)
-
-![Responsive](https://i.imgur.com/sSBWWdv.png)
-
-![CMS config](https://i.imgur.com/4GCLcVx.png)
+![Goomento Page Builder Responsive](https://i.imgur.com/abT8OtO.gif)
+Responsive control

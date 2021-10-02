@@ -4,21 +4,18 @@
             "content_id": true,
             "title": true,
             "type": true,
-            "fonts": true,
             "identifier": true,
             "content": true,
             "elements": true,
             "settings": true,
-            "custom_css": true,
             "author_id": true,
-            "css_updated_time": true,
             "status": true,
             "last_editor_id": true,
             "creation_time": true,
             "update_time": true
         },
         "index": {
-            "PAGEBUILDER_CONTENT_TITLE_CONTENT_ELEMENTS_IDENTIFIER_FONTS": true
+            "PAGEBUILDER_CONTENT_TITLE_CONTENT_ELEMENTS_IDENTIFIER": true
         },
         "constraint": {
             "PRIMARY": true,
