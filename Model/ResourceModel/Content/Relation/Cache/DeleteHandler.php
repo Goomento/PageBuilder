@@ -8,16 +8,14 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Cache;
 
-use Goomento\PageBuilder\Model\Content;
 use Goomento\PageBuilder\Model\ContentRegistry;
 use Magento\Framework\EntityManager\Operation\ExtensionInterface;
-use Magento\Framework\Exception\LocalizedException;
 
 /**
- * Class SaveHandler
+ * Class DeleteHandler
  * @package Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Cache
  */
-class SaveHandler implements ExtensionInterface
+class DeleteHandler implements ExtensionInterface
 {
     /**
      * @var ContentRegistry
@@ -41,10 +39,7 @@ class SaveHandler implements ExtensionInterface
      */
     public function execute($entity, $arguments = [])
     {
-        /** @var $entity Content */
-        if ($entity->getId() && ($entity->hasDataChanges() || $entity->isDeleted())) {
-            $this->contentRegistry->cleanContentCache($entity->getId());
-        }
+        $this->contentRegistry->cleanContentCache($entity->getId());
         return $entity;
     }
 }

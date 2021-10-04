@@ -59,39 +59,21 @@ class PageBuilder extends Column
      */
     public function prepareDataSource(array $dataSource)
     {
-        $label = __('Edit');
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as & $item) {
                 $name = $this->getData('name');
                 $field = $item['id_field_name'];
                 $type = $field === 'page_id' ? ContentRelation::TYPE_CMS_PAGE : ContentRelation::TYPE_CMS_BLOCK;
-                if (isset($item['pagebuilder_content_id']) && $item['pagebuilder_content_id']) {
-                    $backUrl = $this->contentRelation->getRelationEditableUrl(
-                        $type,
-                        $item[$field]
-                    );
-                    $item[$name]['editor'] = [
-                        'href' => $this->urlBuilder->getUrl(
-                            'pagebuilder/content/editor',
-                            [
-                                'content_id' => $item['pagebuilder_content_id'],
-                                'back_url' => StaticEncryptor::encrypt($backUrl)
-                            ]
-                        ),
-                        'label' =>$label
-                    ];
-                } else {
-                    $item[$name]['create'] = [
-                        'href' => $this->urlBuilder->getUrl(
-                            'pagebuilder/relation/assignContent',
-                            [
-                                'type' => $type,
-                                'id' => $item[$field],
-                            ]
-                        ),
-                        'label' => $label,
-                    ];
-                }
+                $item[$name]['pagebuilder'] = [
+                    'href' => $this->urlBuilder->getUrl(
+                        'pagebuilder/relation/assign',
+                        [
+                            'type' => $type,
+                            'id' => $item[$field],
+                        ]
+                    ),
+                    'label' => __('Edit'),
+                ];
             }
         }
 

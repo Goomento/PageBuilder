@@ -57,6 +57,11 @@
                             Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Cache\SaveHandler
                         </item>
                     </item>
+                    <item name="delete" xsi:type="array">
+                        <item name="cleanCache" xsi:type="string">
+                            Goomento\PageBuilder\Model\ResourceModel\Content\Relation\Cache\DeleteHandler
+                        </item>
+                    </item>
                 </item>
                 <item name="Goomento\PageBuilder\Api\Data\RevisionInterface" xsi:type="array">
                     <item name="update" xsi:type="array">
