@@ -70,9 +70,11 @@ class ReadHandler implements ExtensionInterface
                 (int) $entity->getData('pagebuilder_is_active') === 1 &&
                 $contentId = (int) $entity->getData('pagebuilder_content_id')
             ) {
+                $block = $this->getBlockContent($contentId);
+                $block->setOrigin($entity->getData('content'));
                 $entity->setData(
                     'content',
-                    $this->getBlockContent($contentId)
+                    $block
                 );
             }
         }

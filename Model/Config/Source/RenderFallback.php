@@ -27,10 +27,6 @@ class RenderFallback implements OptionSourceInterface
                 'label' => __('Use Origin Content'),
             ],
             [
-                'value' => 'use_cache',
-                'label' => __('Use Cache'),
-            ],
-            [
                 'value' => 'empty',
                 'label' => __('Show Nothing'),
             ],

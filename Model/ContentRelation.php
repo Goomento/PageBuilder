@@ -60,44 +60,56 @@ class ContentRelation
     }
 
     /**
-     * @param $relationType
+     * @param $entityType
      * @return string[]
      * @throws Exception
      */
-    public function getRelationData($relationType)
+    public function getRelationData($entityType)
     {
-        if (isset(self::mapping()[$relationType])) {
-            return self::mapping()[$relationType];
+        if (isset(self::mapping()[$entityType])) {
+            return self::mapping()[$entityType];
         }
 
         throw new Exception(
-            __('Invalid relation type: %1', $relationType)
+            __('Invalid relation type: %1', $entityType)
         );
     }
 
     /**
-     * @param $relationType
+     * @param string $entityType
+     * @param int $entityId
+     * @return DataObject
+     * @throws Exception
+     */
+    public function getEntityObject(string $entityType, int $entityId)
+    {
+        $repository = $this->getRepositoryByType($entityType);
+        return $repository->getById($entityId);
+    }
+
+    /**
+     * @param $entityType
      * @return mixed
      * @throws Exception
      */
-    public function getRepositoryByType($relationType)
+    public function getRepositoryByType($entityType)
     {
         return StaticObjectManager::get(
-            $this->getRelationData($relationType)['repository']
+            $this->getRelationData($entityType)['repository']
         );
     }
 
     /**
-     * @param string $relationType
+     * @param string $entityType
      * @param $relationObject
      * @param array $contentData
      * @return array
      * @throws Exception
      */
-    public function prepareContent(string $relationType, $relationObject, array $contentData)
+    public function prepareContent(string $entityType, $relationObject, array $contentData)
     {
-        $relationData = $this->getRelationData($relationType);
-        switch ($relationType) {
+        $relationData = $this->getRelationData($entityType);
+        switch ($entityType) {
             case self::TYPE_CMS_PAGE:
             case self::TYPE_CMS_BLOCK:
                 $contentData = [
@@ -118,49 +130,49 @@ class ContentRelation
 
 
     /**
-     * @param $relationType
-     * @param $relationId
+     * @param $entityType
+     * @param $entityId
      * @return array
      * @throws Exception
      */
-    public function getRelation($relationType, $relationId)
+    public function getRelation($entityType, $entityId)
     {
-        $repository = $this->getRepositoryByType($relationType);
+        $repository = $this->getRepositoryByType($entityType);
         /** @var DataObject $object */
-        $object = $repository->getById($relationId);
+        $object = $repository->getById($entityId);
         return [
-            self::FIELD_PAGEBUILDER_CONTENT_ID => $object->getData(self::FIELD_PAGEBUILDER_CONTENT_ID),
-            self::FIELD_PAGEBUILDER_IS_ACTIVE => $object->getData(self::FIELD_PAGEBUILDER_IS_ACTIVE),
+            self::FIELD_PAGEBUILDER_CONTENT_ID => (int) $object->getData(self::FIELD_PAGEBUILDER_CONTENT_ID),
+            self::FIELD_PAGEBUILDER_IS_ACTIVE => (bool) $object->getData(self::FIELD_PAGEBUILDER_IS_ACTIVE),
         ];
     }
 
     /**
      * @param $contentId
-     * @param $relationType
-     * @param $relationId
+     * @param $entityType
+     * @param $entityId
      * @param int $isActive
      * @throws Exception
      */
-    public function setRelation($contentId, $relationType, $relationId, int $isActive = 0)
+    public function setRelation($contentId, $entityType, $entityId, int $isActive = 0)
     {
-        $repository = $this->getRepositoryByType($relationType);
+        $repository = $this->getRepositoryByType($entityType);
         /** @var DataObject $object */
-        $object = $repository->getById($relationId);
+        $object = $repository->getById($entityId);
         $object->setData(self::FIELD_PAGEBUILDER_CONTENT_ID, $contentId);
         $object->setData(self::FIELD_PAGEBUILDER_IS_ACTIVE, $isActive);
         $repository->save($object);
     }
 
     /**
-     * @param $relationType
-     * @param $relationId
+     * @param $entityType
+     * @param $entityId
      * @throws Exception
      */
-    public function removeRelation($relationType, $relationId)
+    public function removeRelation($entityType, $entityId)
     {
-        $repository = $this->getRepositoryByType($relationType);
+        $repository = $this->getRepositoryByType($entityType);
         /** @var DataObject $object */
-        $object = $repository->getById($relationId);
+        $object = $repository->getById($entityId);
         $object->setData(self::FIELD_PAGEBUILDER_CONTENT_ID, null);
         $object->setData(self::FIELD_PAGEBUILDER_IS_ACTIVE, 0);
         $repository->save($object);
@@ -168,23 +180,23 @@ class ContentRelation
 
     /**
      * Get Editable URL
-     * @param $relationType
-     * @param $relationId
+     * @param $entityType
+     * @param $entityId
      * @return string|null
      * @throws Exception
      */
-    public function getRelationEditableUrl($relationType, $relationId)
+    public function getEntityEditableUrl($entityType, $entityId)
     {
-        $this->getRelationData($relationType);
-        if ($relationType === self::TYPE_CMS_PAGE) {
+        $this->getRelationData($entityType);
+        if ($entityType === self::TYPE_CMS_PAGE) {
             return $this->url->getUrl('cms/page/edit', [
-                'page_id' => $relationId
+                'page_id' => $entityId
             ]);
         }
 
-        if ($relationType === self::TYPE_CMS_BLOCK) {
+        if ($entityType === self::TYPE_CMS_BLOCK) {
             return $this->url->getUrl('cms/block/edit', [
-                'block_id' => $relationId
+                'block_id' => $entityId
             ]);
         }
 
