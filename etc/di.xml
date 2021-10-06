@@ -9,7 +9,7 @@
     <preference for="Goomento\PageBuilder\Api\Data\ContentSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
     <preference for="Goomento\PageBuilder\Api\Data\RevisionSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
     <preference for="Goomento\PageBuilder\Api\Data\ContentInterface" type="Goomento\PageBuilder\Model\Content" />
-    <preference for="Goomento\PageBuilder\Api\Data\Revision" type="Goomento\PageBuilder\Model\Revision" />
+    <preference for="Goomento\PageBuilder\Api\Data\RevisionInterface" type="Goomento\PageBuilder\Model\Revision" />
     <preference for="Goomento\PageBuilder\Api\ContentRepositoryInterface" type="Goomento\PageBuilder\Model\ContentRepository" />
     <preference for="Goomento\PageBuilder\Api\RevisionRepositoryInterface" type="Goomento\PageBuilder\Model\RevisionRepository" />
     <preference for="Goomento\PageBuilder\Api\ContentManagementInterface" type="Goomento\PageBuilder\Model\ContentManagement" />
@@ -18,6 +18,11 @@
     <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
         <arguments>
             <argument name="extensionActions" xsi:type="array">
+                <item name="Magento\Catalog\Api\Data\ProductInterface" xsi:type="array">
+                    <item name="read" xsi:type="array">
+                        <item name="pageBuilderReader" xsi:type="string">Goomento\PageBuilder\Model\ResourceModel\Catalog\Product\ReadHandler</item>
+                    </item>
+                </item>
                 <item name="Magento\Cms\Api\Data\PageInterface" xsi:type="array">
                     <item name="read" xsi:type="array">
                         <item name="pageBuilderReader" xsi:type="string">
@@ -89,9 +94,7 @@
     </type>
     <type name="Goomento\PageBuilder\Model\Config\Source\PageList">
         <arguments>
-            <argument name="collectionFactory" xsi:type="object">
-                Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory
-            </argument>
+            <argument name="collectionFactory" xsi:type="object">Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory</argument>
         </arguments>
     </type>
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
@@ -291,6 +294,10 @@
                 <item name="media" xsi:type="string">Goomento\PageBuilder\Core\Common\Media</item>
             </argument>
         </arguments>
+    </type>
+    <type name="Magento\Catalog\Helper\Output">
+        <plugin name="goomento.catalog.convert-string"
+                type="Goomento\PageBuilder\Plugin\Catalog\Helper\Output\ConvertString" />
     </type>
     <type name="Goomento\PageBuilder\Model\ContentRepository">
         <plugin name="goomento.saveAutosave"

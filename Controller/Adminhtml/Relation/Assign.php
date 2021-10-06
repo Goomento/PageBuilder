@@ -107,7 +107,9 @@ class Assign extends AbstractAction
             $this->contentRelation->setRelation(
                 (int) $content->getId(),
                 $entityType,
-                $entityId
+                $entityId,
+                0,
+                ['store_id' => (int) $this->getRequest()->getParam('store_id')]
             );
             $backUrl = $this->contentRelation->getEntityEditableUrl($entityType, $entityId);
             return $redirect->setUrl($this->getUrl('pagebuilder/content/editor', [
