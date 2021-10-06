@@ -353,6 +353,11 @@ class Content extends Template implements BlockInterface
         return $this->html;
     }
 
+    public function __invoke()
+    {
+        echo 1;
+    }
+
     /**
      * Get Block html by magic call
      *

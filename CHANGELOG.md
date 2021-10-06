@@ -4,6 +4,7 @@
 ### Features:
 - Enhanced block render
 - Enhanced content relation
+- Added Page Builder for Product
 - Fixed minor bugs
 
 ## 0.1.4: Global.css added 
