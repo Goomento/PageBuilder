@@ -6,19 +6,21 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\Model\ResourceModel\Cms\Relation;
+namespace Goomento\PageBuilder\Model\ResourceModel\Catalog\Product;
 
 use Goomento\Core\Helper\State;
 use Goomento\PageBuilder\Block\Content;
 use Goomento\PageBuilder\Block\ContentFactory;
+use Goomento\PageBuilder\Model\ContentRelation;
 use Goomento\PageBuilder\Helper\Data;
+use Magento\Catalog\Model\Product;
 use Magento\Framework\DataObject;
 use Magento\Framework\EntityManager\Operation\ExtensionInterface;
 use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Class ReadHandler
- * @package \Goomento\PageBuilder\Model\ResourceModel\Cms\Relation
+ * @package Goomento\PageBuilder\Model\ResourceModel\Catalog\Product
  */
 class ReadHandler implements ExtensionInterface
 {
@@ -39,46 +41,64 @@ class ReadHandler implements ExtensionInterface
      * @var Content[]
      */
     private $blockContent = [];
+    /**
+     * @var ContentRelation
+     */
+    private $contentRelation;
 
     /**
      * @param State $state
      * @param Data $dataHelper
      * @param ContentFactory $contentFactory
+     * @param ContentRelation $contentRelation
      */
     public function __construct(
         State $state,
         Data $dataHelper,
-        ContentFactory $contentFactory
+        ContentFactory $contentFactory,
+        ContentRelation $contentRelation
     )
     {
         $this->state = $state;
         $this->contentFactory = $contentFactory;
         $this->dataHelper = $dataHelper;
+        $this->contentRelation = $contentRelation;
     }
 
     /**
-     * @param DataObject $entity
-     * @param array $arguments
-     * @return DataObject
-     * @throws LocalizedException
+     * @inheirtDoc
      */
     public function execute($entity, $arguments = [])
     {
         if (!$this->state->isAdminhtml()) {
+            /** @var Product $entity */
+            $relation = $this->contentRelation->getRelationByEntity(ContentRelation::TYPE_CATALOG_PRODUCT, $entity);
             if (
                 $this->dataHelper->isActive() &&
-                (int) $entity->getData('pagebuilder_is_active') === 1 &&
-                $contentId = (int) $entity->getData('pagebuilder_content_id')
+                self::isValidRelation($relation)
             ) {
-                $block = $this->getBlockContent($contentId);
-                $block->setOrigin($entity->getData('content'));
+                $block = $this->getBlockContent($relation[ContentRelation::FIELD_PAGEBUILDER_CONTENT_ID]);
+                $block->setOrigin($entity->getData('description'));
                 $entity->setData(
-                    'content',
+                    'description',
                     $block
                 );
             }
         }
         return $entity;
+    }
+
+    /**
+     * @param array $relation
+     * @return bool
+     */
+    private function isValidRelation(array $relation)
+    {
+        return !empty($relation) &&
+            isset($relation[ContentRelation::FIELD_PAGEBUILDER_CONTENT_ID]) &&
+            $relation[ContentRelation::FIELD_PAGEBUILDER_CONTENT_ID] &&
+            isset($relation[ContentRelation::FIELD_PAGEBUILDER_IS_ACTIVE]) &&
+            true === $relation[ContentRelation::FIELD_PAGEBUILDER_IS_ACTIVE];
     }
 
     /**

@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\Block\Adminhtml\Cms\Block;
+namespace Goomento\PageBuilder\Block\Adminhtml\Catalog\Product;
 
 use Goomento\PageBuilder\Model\ContentRelation;
 use Magento\Framework\App\RequestInterface;
@@ -16,7 +16,7 @@ use Magento\Backend\Block\Template\Context;
 
 /**
  * Class LiveEditorButton
- * @package Goomento\PageBuilder\Block\Adminhtml\Cms\Block
+ * @package Goomento\PageBuilder\Block\Adminhtml\Catalog\Product
  */
 class LiveEditorButton implements ButtonProviderInterface
 {
@@ -46,14 +46,14 @@ class LiveEditorButton implements ButtonProviderInterface
      */
     public function getButtonData()
     {
-        $blockId = $this->request->getParam('block_id');
+        $productId = $this->request->getParam('id');
         $button = [];
-        if (!empty($blockId)) {
+        if (!empty($productId)) {
             $button = [
                 'label' => __('Page Builder'),
                 'class' => 'gmt-pagebuilder',
                 'on_click' => sprintf("location.href = '%s';", $this->getCreateEditorUrl()),
-                'sort_order' => 20,
+                'sort_order' => 5,
             ];
         }
 
@@ -66,8 +66,9 @@ class LiveEditorButton implements ButtonProviderInterface
     private function getCreateEditorUrl()
     {
         return $this->url->getUrl('pagebuilder/relation/assign', [
-            'id' => $this->request->getParam('block_id'),
-            'type' => ContentRelation::TYPE_CMS_BLOCK
+            'id' => $this->request->getParam('id'),
+            'store_id' => $this->request->getParam('store') ?: 0,
+            'type' => ContentRelation::TYPE_CATALOG_PRODUCT
         ]);
     }
 }

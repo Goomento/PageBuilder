@@ -97,6 +97,13 @@ class PageBuilder implements SubSystemInterface
 
         Hooks::doAction('pagebuilder/init');
         Hooks::doAction("pagebuilder/{$areaCode}/init");
+
+        Hooks::doAction('pagebuilder/register_styles');
+        Hooks::doAction('pagebuilder/register_scripts');
+
+
+        Hooks::doAction("pagebuilder/{$areaCode}/register_styles");
+        Hooks::doAction("pagebuilder/{$areaCode}/register_scripts");
     }
 
     /**
@@ -111,16 +118,10 @@ class PageBuilder implements SubSystemInterface
         });
 
         Hooks::addAction('pagebuilder/header', function () use ($areaCode) {
-
-            Hooks::doAction('pagebuilder/register_styles');
-            Hooks::doAction('pagebuilder/register_scripts');
-            Hooks::doAction('pagebuilder/enqueue_scripts');
-
-            Hooks::doAction("pagebuilder/{$areaCode}/register_styles");
-            Hooks::doAction("pagebuilder/{$areaCode}/register_scripts");
-            Hooks::doAction("pagebuilder/{$areaCode}/enqueue_scripts");
-
             Hooks::doAction("pagebuilder/{$areaCode}/header");
+
+            Hooks::doAction('pagebuilder/enqueue_scripts');
+            Hooks::doAction("pagebuilder/{$areaCode}/enqueue_scripts");
         });
     }
 
@@ -137,6 +138,9 @@ class PageBuilder implements SubSystemInterface
 
         Hooks::addAction('pagebuilder/footer', function () use ($areaCode) {
             Hooks::doAction("pagebuilder/{$areaCode}/footer");
+
+            Hooks::doAction('pagebuilder/enqueue_scripts');
+            Hooks::doAction("pagebuilder/{$areaCode}/enqueue_scripts");
         });
     }
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <columns name="product_columns">
+        <actionsColumn name="pageBuilderActions"
+                       class="Goomento\PageBuilder\Ui\Component\Listing\Column\Product\PageBuilder"
+                       sortOrder="210">
+            <settings>
+                <indexField>entity_id</indexField>
+                <label translate="true">Page Builder</label>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

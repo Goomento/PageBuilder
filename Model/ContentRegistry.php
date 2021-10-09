@@ -280,7 +280,7 @@ class ContentRegistry implements ContentRegistryInterface
     /**
      * @param int $id
      * @return void
-     * @throws LocalizedException
+     * @throws Exception
      */
     public function delete(int $id)
     {

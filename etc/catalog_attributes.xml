@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Catalog:etc/catalog_attributes.xsd">
+    <group name="catalog_category">
+        <attribute name="pagebuilder_is_active"/>
+        <attribute name="pagebuilder_content_id"/>
+    </group>
+    <group name="catalog_product">
+        <attribute name="pagebuilder_is_active"/>
+        <attribute name="pagebuilder_content_id"/>
+    </group>
+</config>

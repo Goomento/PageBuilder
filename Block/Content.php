@@ -16,6 +16,7 @@ use Goomento\PageBuilder\Logger\Logger;
 use Goomento\PageBuilder\Model\ContentRegistry;
 use Goomento\PageBuilder\Helper\Data;
 use Magento\Cms\Model\Template\FilterProvider;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Template;
 use Magento\Widget\Block\BlockInterface;
@@ -28,9 +29,20 @@ class Content extends Template implements BlockInterface
 {
     const CONTENT_ID = ContentInterface::CONTENT_ID;
     const IDENTIFIER = ContentInterface::IDENTIFIER;
+    const ORIGIN = 'origin';
 
     const BLOCK_CONTENT_KEY = 'pagebuilder_content_html';
     const BLOCK_CONTENT_RENDER_ORDER = 2021;
+
+    /**
+     * @var null|ContentInterface
+     */
+    private $content = null;
+
+    /**
+     * @var null|bool
+     */
+    private $validated = null;
 
     /**
      * @inheritdoc
@@ -101,6 +113,23 @@ class Content extends Template implements BlockInterface
     }
 
     /**
+     * @return string
+     */
+    public function getOrigin()
+    {
+        return (string) $this->getData(self::ORIGIN);
+    }
+
+    /**
+     * @param string $content
+     * @return Content
+     */
+    public function setOrigin($content = '')
+    {
+        return $this->setData(self::ORIGIN, $content);
+    }
+
+    /**
      * @param int $id
      * @return Content
      */
@@ -129,6 +158,43 @@ class Content extends Template implements BlockInterface
     }
 
     /**
+     * @param ContentInterface $content
+     * @return Content
+     */
+    public function setContent(ContentInterface $content)
+    {
+        $this->content = $content;
+        return $this;
+    }
+
+    /**
+     * @return ContentInterface|null
+     */
+    public function getContent()
+    {
+        if ($this->content === null) {
+            $content = null;
+            if (!$content && $this->getContentId()) {
+                $content = $this->contentRegistry->getById(
+                    (int) $this->getContentId()
+                );
+            }
+            if (!$content && $this->getIdentifier()) {
+                $content = $this->contentRegistry->getByIdentifier(
+                    (string) $this->getIdentifier()
+                );
+            }
+
+            $this->content = false;
+            if ($content instanceof ContentInterface && $content->getId()) {
+                $this->content = $content;
+            }
+        }
+
+        return $this->content;
+    }
+
+    /**
      * @return string|null
      */
     public function getIdentifier()
@@ -137,43 +203,22 @@ class Content extends Template implements BlockInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    protected function _toHtml()
-    {
-        if (!$this->isValidContent()) {
-            $this->setTemplate(null);
-        }
-
-        return parent::_toHtml();
-    }
-
-    /**
      * @return bool
-     * @throws NoSuchEntityException
+     * @throws NoSuchEntityException|LocalizedException
      */
     protected function isValidContent()
     {
-        $content = null;
-        if ($this->getContentId()) {
-            $content = $this->contentRegistry->getById(
-                (int) $this->getContentId()
-            );
-        }
-        if ($this->getIdentifier()) {
-            $content = $this->contentRegistry->getByIdentifier(
-                (string) $this->getIdentifier()
-            );
-        }
-
-        if ($content) {
-            $this->setContentId($content->getId());
-            if ($content->isPublished() && $this->isContentAllowedInStore($content)) {
-                return true;
+        if ($this->validated === null) {
+            $this->validated = false;
+            if ($content = $this->getContent()) {
+                $this->setContentId($content->getId());
+                if ($content->isPublished() && $this->isContentAllowedInStore($content)) {
+                    $this->validated = true;
+                }
             }
         }
 
-        return false;
+        return (bool) $this->validated;
     }
 
     /**
@@ -208,47 +253,52 @@ class Content extends Template implements BlockInterface
      */
     public function getContentHtml(?string $html = '')
     {
-        $html = (string) $html;
-        try {
-            Hooks::addFilter(
-                'pagebuilder/content/html',
-                [$this, 'applyDefaultFilter'],
-                self::BLOCK_CONTENT_RENDER_ORDER
-            );
-
-            $currentProcessingContentId = Hooks::applyFilters('pagebuilder/current/content_id');
-
-            if ($currentProcessingContentId) {
-                Hooks::removeFilter('pagebuilder/current/content_id');
-            }
-
-            Hooks::addFilter(
-                'pagebuilder/current/content_id',
-                [$this, 'getContentId'],
-                self::BLOCK_CONTENT_RENDER_ORDER
-            );
-
-            /**
-             * Get HTML content
-             */
-            $html = Hooks::applyFilters('pagebuilder/content/html', $html);
-
-            if ($currentProcessingContentId) {
-                $this->currentContentId = $currentProcessingContentId;
+        if ($this->isValidContent()) {
+            $html = (string) $html;
+            try {
                 Hooks::addFilter(
-                    'pagebuilder/current/content_id',
-                    [$this, 'getCurrentContentId'],
+                    'pagebuilder/content/html',
+                    [$this, 'applyDefaultFilter'],
                     self::BLOCK_CONTENT_RENDER_ORDER
                 );
+
+                $currentProcessingContentId = Hooks::applyFilters('pagebuilder/current/content_id');
+
+                if ($currentProcessingContentId) {
+                    Hooks::removeFilter('pagebuilder/current/content_id');
+                }
+
+                Hooks::addFilter(
+                    'pagebuilder/current/content_id',
+                    [$this, 'getContentId'],
+                    self::BLOCK_CONTENT_RENDER_ORDER
+                );
+
+                /**
+                 * Get HTML content
+                 */
+                $html = Hooks::applyFilters('pagebuilder/content/html', $html);
+
+                if ($currentProcessingContentId) {
+                    $this->currentContentId = $currentProcessingContentId;
+                    Hooks::addFilter(
+                        'pagebuilder/current/content_id',
+                        [$this, 'getCurrentContentId'],
+                        self::BLOCK_CONTENT_RENDER_ORDER
+                    );
+                }
+            } catch (Exception $e) {
+                $this->logger->error($e);
+                if ($this->isAllowedFallback()) {
+                    $html = $this->fallback();
+                } else {
+                    throw $e;
+                }
             }
-        } catch (Exception $e) {
-            $this->logger->error($e);
-            if (!Configuration::DEBUG && $this->isAllowedFallback()) {
-                $html = $this->fallback();
-            } else {
-                throw $e;
-            }
+        } else {
+            $html = $this->getOrigin();
         }
+
         return $html;
     }
 
@@ -267,13 +317,8 @@ class Content extends Template implements BlockInterface
     {
         $fallback = $this->dataHelper->getRenderFallback();
         switch ($fallback) {
-            case 'use_cache':
-                $html = $this->contentRegistry->getById(
-                    $this->getContentId()
-                )->getContent();
-                break;
             case 'use_origin':
-                $html = (string) $this->getFallback();
+                $html = $this->getOrigin();
                     break;
             case 'empty':
             default:
@@ -288,12 +333,17 @@ class Content extends Template implements BlockInterface
      */
     public function getCacheKey()
     {
-        $contentId = (int) $this->getContentId();
-        return self::BLOCK_CONTENT_KEY . '_' . $contentId;
+        $content = $this->getContent();
+        if ($content instanceof ContentInterface) {
+            $contentId = (int) $content->getId();
+            return self::BLOCK_CONTENT_KEY . '_' . $contentId;
+        }
+
+        return self::BLOCK_CONTENT_KEY;
     }
 
     /**
-     * @return string
+     * @inheritDoc
      */
     public function toHtml()
     {
@@ -303,7 +353,14 @@ class Content extends Template implements BlockInterface
         return $this->html;
     }
 
+    public function __invoke()
+    {
+        echo 1;
+    }
+
     /**
+     * Get Block html by magic call
+     *
      * @return string
      */
     public function __toString()

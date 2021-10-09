@@ -21,7 +21,7 @@
                     <number_of_revision>100</number_of_revision>
                     <is_rtl>0</is_rtl>
                     <render>
-                        <fallback>use_cache</fallback>
+                        <fallback>use_origin</fallback>
                     </render>
                     <style>
                         <css_print_method>internal</css_print_method>
