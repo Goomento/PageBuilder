@@ -23,6 +23,11 @@
                         <item name="pageBuilderReader" xsi:type="string">Goomento\PageBuilder\Model\ResourceModel\Catalog\Product\ReadHandler</item>
                     </item>
                 </item>
+                <item name="Magento\Catalog\Api\Data\CategoryInterface" xsi:type="array">
+                    <item name="read" xsi:type="array">
+                        <item name="pageBuilderReader" xsi:type="string">Goomento\PageBuilder\Model\ResourceModel\Catalog\Category\ReadHandler</item>
+                    </item>
+                </item>
                 <item name="Magento\Cms\Api\Data\PageInterface" xsi:type="array">
                     <item name="read" xsi:type="array">
                         <item name="pageBuilderReader" xsi:type="string">
@@ -74,6 +79,20 @@
                             Goomento\PageBuilder\Model\ResourceModel\Revision\Relation\Revisions\SaveHandler
                         </item>
                     </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Eav\Model\Config">
+        <arguments>
+            <argument name="attributesForPreload" xsi:type="array">
+                <item name="catalog_product" xsi:type="array">
+                    <item name="pagebuilder_is_active" xsi:type="string">catalog_category</item>
+                    <item name="pagebuilder_content_id" xsi:type="string">catalog_category</item>
+                </item>
+                <item name="catalog_category" xsi:type="array">
+                    <item name="pagebuilder_is_active" xsi:type="string">catalog_category</item>
+                    <item name="pagebuilder_content_id" xsi:type="string">catalog_category</item>
                 </item>
             </argument>
         </arguments>

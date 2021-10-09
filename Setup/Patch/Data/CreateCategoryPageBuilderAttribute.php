@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Setup\Patch\Data;
 
 use Goomento\PageBuilder\Model\Config\Source\BuildableContent;
-use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Category;
 use Magento\Catalog\Setup\CategorySetup;
 use Magento\Catalog\Setup\CategorySetupFactory;
 use Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface;
@@ -21,10 +21,10 @@ use Goomento\PageBuilder\Model\ContentRelation;
 use Zend_Validate_Exception;
 
 /**
- * Class CreateProductPageBuilderAttribute
+ * Class CreateCategoryPageBuilderAttribute
  * @package Goomento\PageBuilder\Setup\Patch\Data
  */
-class CreateProductPageBuilderAttribute implements DataPatchInterface
+class CreateCategoryPageBuilderAttribute implements DataPatchInterface
 {
     const PAGEBUILDER_GROUP = 'Page Builder';
 
@@ -54,21 +54,6 @@ class CreateProductPageBuilderAttribute implements DataPatchInterface
         $this->categorySetupFactory = $categorySetupFactory;
     }
 
-    /**
-     * Create Page Builder Group
-     */
-    public function createPageBuilderGroup()
-    {
-        $attributeSetIds = $this->categorySetup->getAllAttributeSetIds(Product::ENTITY);
-        foreach ($attributeSetIds as $attributeSetId) {
-            $this->categorySetup->addAttributeGroup(
-                Product::ENTITY,
-                $attributeSetId,
-                self::PAGEBUILDER_GROUP,
-                10
-            );
-        }
-    }
 
     /**
      * @throws LocalizedException
@@ -77,73 +62,33 @@ class CreateProductPageBuilderAttribute implements DataPatchInterface
     public function createPageBuilderAttribute()
     {
         $this->categorySetup->addAttribute(
-            Product::ENTITY,
+            Category::ENTITY,
             ContentRelation::FIELD_PAGEBUILDER_CONTENT_ID,
             [
                 'type' => 'int',
                 'label' => 'Content',
                 'input' => 'select',
-                'visible' => true,
-                'required' => false,
-                'user_defined' => false,
-                'searchable' => false,
-                'filterable' => false,
-                'comparable' => false,
                 'source' => BuildableContent::class,
-                'visible_in_advanced_search' => false,
-                'is_used_in_grid' => false,
-                'is_visible_in_grid' => false,
-                'is_filterable_in_grid' => false,
-                'used_in_product_listing' => true,
-                'visible_on_front' => false,
-                'used_for_sort_by' => false,
+                'required' => false,
+                'sort_order' => 10,
                 'global' => ScopedAttributeInterface::SCOPE_STORE,
+                'group' => self::PAGEBUILDER_GROUP,
             ]
         );
 
         $this->categorySetup->addAttribute(
-            Product::ENTITY,
+            Category::ENTITY,
             ContentRelation::FIELD_PAGEBUILDER_IS_ACTIVE,
             [
                 'type' => 'int',
-                'label' => 'Active',
+                'label' => 'Is Active',
                 'input' => 'select',
-                'visible' => true,
-                'required' => false,
-                'user_defined' => false,
-                'searchable' => false,
-                'filterable' => false,
-                'comparable' => false,
                 'source' => Boolean::class,
-                'visible_in_advanced_search' => false,
-                'default' => '0',
-                'is_used_in_grid' => false,
-                'is_visible_in_grid' => false,
-                'is_filterable_in_grid' => false,
-                'used_in_product_listing' => true,
-                'visible_on_front' => false,
-                'used_for_sort_by' => false,
+                'sort_order' => 2,
                 'global' => ScopedAttributeInterface::SCOPE_STORE,
+                'group' => self::PAGEBUILDER_GROUP,
             ]
         );
-        $attributeSetIds = $this->categorySetup->getAllAttributeSetIds(Product::ENTITY);
-        foreach ($attributeSetIds as $attributeSetId) {
-            $groupId = $this->categorySetup->getAttributeGroupId(Product::ENTITY, $attributeSetId, self::PAGEBUILDER_GROUP);
-            $this->categorySetup->addAttributeToGroup(
-                Product::ENTITY,
-                $attributeSetId,
-                $groupId,
-                ContentRelation::FIELD_PAGEBUILDER_IS_ACTIVE,
-                10
-            );
-            $this->categorySetup->addAttributeToGroup(
-                Product::ENTITY,
-                $attributeSetId,
-                $groupId,
-                ContentRelation::FIELD_PAGEBUILDER_CONTENT_ID,
-                20
-            );
-        }
     }
 
     /**
@@ -153,7 +98,6 @@ class CreateProductPageBuilderAttribute implements DataPatchInterface
     {
         $this->moduleDataSetup->getConnection()->startSetup();
         $this->categorySetup = $this->categorySetupFactory->create(['setup' => $this->moduleDataSetup]);
-        $this->createPageBuilderGroup();
         $this->createPageBuilderAttribute();
         $this->moduleDataSetup->getConnection()->endSetup();
     }
