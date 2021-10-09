@@ -74,11 +74,13 @@ class Assign extends AbstractAction
         try {
             $entityType = (string) $this->getRequest()->getParam('type');
             $entityId = (int) $this->getRequest()->getParam('id');
+            $storeId = (int) $this->getRequest()->getParam('store_id');
             if (empty($entityId) || empty($entityType)) {
                 throw new LocalizedException(
                     __('The entity must be specify')
                 );
             }
+            $this->contentRelation->setStoreId($storeId);
             $relation = $this->contentRelation->getRelation($entityType, $entityId);
             if (
                 isset($relation[ContentRelation::FIELD_PAGEBUILDER_CONTENT_ID]) &&
@@ -109,7 +111,7 @@ class Assign extends AbstractAction
                 $entityType,
                 $entityId,
                 0,
-                ['store_id' => (int) $this->getRequest()->getParam('store_id')]
+                ['store_id' => $storeId]
             );
             $backUrl = $this->contentRelation->getEntityEditableUrl($entityType, $entityId);
             return $redirect->setUrl($this->getUrl('pagebuilder/content/editor', [

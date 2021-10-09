@@ -6,21 +6,19 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\Model\ResourceModel\Catalog\Product;
+namespace Goomento\PageBuilder\Model\ResourceModel\Catalog\Category;
 
 use Goomento\Core\Helper\State;
 use Goomento\PageBuilder\Block\Content;
 use Goomento\PageBuilder\Block\ContentFactory;
 use Goomento\PageBuilder\Model\ContentRelation;
 use Goomento\PageBuilder\Helper\Data;
-use Magento\Catalog\Model\Product;
-use Magento\Framework\DataObject;
+use Magento\Catalog\Model\Category;
 use Magento\Framework\EntityManager\Operation\ExtensionInterface;
-use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Class ReadHandler
- * @package Goomento\PageBuilder\Model\ResourceModel\Catalog\Product
+ * @package Goomento\PageBuilder\Model\ResourceModel\Catalog\Category
  */
 class ReadHandler implements ExtensionInterface
 {
@@ -71,8 +69,8 @@ class ReadHandler implements ExtensionInterface
     public function execute($entity, $arguments = [])
     {
         if (!$this->state->isAdminhtml()) {
-            /** @var Product $entity */
-            $relation = $this->contentRelation->getRelationByEntity(ContentRelation::TYPE_CATALOG_PRODUCT, $entity);
+            /** @var Category $entity */
+            $relation = $this->contentRelation->getRelationByEntity(ContentRelation::TYPE_CATALOG_CATEGORY, $entity);
             if (
                 $this->dataHelper->isActive() &&
                 self::isValidRelation($relation)

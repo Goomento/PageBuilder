@@ -13,10 +13,10 @@ use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory;
 use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
 /**
- * Class PageIdList
+ * Class BuildableContent
  * @package Goomento\PageBuilder\Model\Config\Source
  */
-class PageIdList extends AbstractSource
+class BuildableContent extends AbstractSource
 {
     /**
      * @var array
