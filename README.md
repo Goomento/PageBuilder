@@ -27,7 +27,7 @@ composer require goomento/module-builder-widgets
 
 ## 2. Configuration
 
-By default,  Goomento Page Builder disabled on storefront, to enable the module go to
+To display Goomento Page Builder content on storefront, enable module in
 
     Stores > Settings > Configuration > Goomento > Page Builder > General > Active
 
@@ -52,11 +52,11 @@ Change to **Yes** to enable module on storefront.
 
 - Cms Page
 - Cms Block
-- Catalog Product (_-- Under develop --_)
-- Catalog Category (_-- Under develop --_)
+- Catalog Product
+- Catalog Category
 
-#### For every buildable content, asset resource files (CSS, Javascript, downloaded images ... ) will be stored in `pub/media/goomento` 
-Make sure this folder is writeable for fully functional 
+#### For every buildable content, asset resource files (CSS, Javascript, images ... ) will be stored or downloaded 
+Make sure this folder `pub/media/goomento`  is writeable for fully functional 
 
 ## 5. How to use
 
@@ -71,21 +71,36 @@ Check this [Wiki page](https://github.com/Goomento/PageBuilder/wiki/How-To-Use) 
 
 Check this [Wiki page](https://github.com/Goomento/PageBuilder/wiki/Personalize) for more detail
 
-## 7. Version compatible
+## 7. Troubleshoot
+
+**The Page Builder did not display on storefront**
+
+- Make sure that Goomento Page Builder module was enabled, click [here](https://github.com/Goomento/PageBuilder#2-configuration)
+- Make sure Page Builder status is `Published` and `Store view` is matching with current storefront
+- For Magento entity, (Eg: Product, Category ...) make sure `Page Builder Content` was selected and `Active` turned to `Yes`
+
+**Visual editor did not load**
+
+- Visual editor may crash for the first load, it's due to the timeout of loading resources from CDN,
+try to reload your browser, It'll go away
+
+Something else? Contact us: [store.goomento@gmail.com](mailto:store.goomento@gmail.com)
+
+## 8. Version compatible
 
 Magento: 2.3.x, 2.4.x
 
-## 8. Changelog
+## 9. Changelog
 
 What's news? See here [CHANGELOG.md](https://github.com/Goomento/PageBuilder/blob/master/CHANGELOG.md).
 
-## 9. Open an issue and Contribution
+## 10. Open an issue and Contribution
 
 Feel free to Open an Issue, Fork and Create Pull Request (PR) on GitHub
 
-For opening an issue, click [here](https://github.com/Goomento/PageBuilder/issues).
+For opening an issue, click [here](https://github.com/Goomento/PageBuilder/issues/new).
 
-## 10. Screenshots
+## 11. Screenshots
 
 ![Goomento Page Builder Interface](https://i.imgur.com/hiRyX5Y.gif)
 One click to use

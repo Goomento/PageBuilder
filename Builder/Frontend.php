@@ -94,13 +94,11 @@ class Frontend extends App
      */
     public function __construct()
     {
-        if (!StaticUtils::isAdminhtml() || StaticUtils::isAjax()) {
-            Hooks::addAction('pagebuilder/frontend/init', [$this, 'init']);
-            Hooks::addAction('pagebuilder/frontend/register_scripts', [$this, 'registerScripts']);
-            Hooks::addAction('pagebuilder/frontend/register_styles', [$this, 'registerStyles']);
+        Hooks::addAction('pagebuilder/frontend/init', [$this, 'init']);
+        Hooks::addAction('pagebuilder/frontend/register_scripts', [$this, 'registerScripts']);
+        Hooks::addAction('pagebuilder/frontend/register_styles', [$this, 'registerStyles']);
 
-            $this->addContentFilter();
-        }
+        $this->addContentFilter();
     }
 
     /**
