@@ -1,10 +1,12 @@
 # Magento 2 Goomento Page Builder
 
-## 0.1.5:
+## 0.1.5: Added Page Builder for Catalog
 ### Features:
 - Enhanced block render
 - Enhanced content relation
 - Added Page Builder for Product
+- Added Page Builder for Category
+- Added shortcode column
 - Fixed minor bugs
 
 ## 0.1.4: Global.css added 
