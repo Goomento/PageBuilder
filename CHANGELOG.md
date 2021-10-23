@@ -1,5 +1,9 @@
 # Magento 2 Goomento Page Builder
 
+## 0.1.6: Enhanced widget renderer
+- Fixed media URL issue
+- Enhanced widget renderer
+
 ## 0.1.5: Added Page Builder for Catalog
 ### Features:
 - Enhanced block render

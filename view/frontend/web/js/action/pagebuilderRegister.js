@@ -7,12 +7,30 @@ define([
     'jquery'
 ], function ($) {
 
-    let addAction = function (widgetType, callback) {
+    let
+        /**
+         * Regis widget
+         * @param widgetType
+         * @param callback
+         */
+        addAction = function (widgetType, callback) {
             goomentoFrontend.hooks.addAction( 'frontend/element_ready/' + widgetType,  callback);
         },
+        /**
+         * This method will pass the parameters into callback, the parameters contains
+         * {
+         *     $element: {jQuery}, // Elements that bond with widget
+         *     settings: {JSON}, // Settings that set
+         *     ... // The 'options' param in `widgetRegister`
+         * }
+         * @param callback
+         * @param options
+         * @returns {(function(*=): void)|*}
+         */
         wrapper = function (callback, options) {
             return function ($element) {
                 options.$element = $element;
+                options.settings = getElementSettings($element);
                 goomentoFrontend.elementsHandler.addHandler( callback, options);
             }
         },
@@ -83,9 +101,55 @@ define([
         } else {
             triggerSavedWidget(widgetType, callback);
         }
-    };
+    }, getElementSettings = $object => {
+        let cid = null,
+            elementSettings = [];
+        if ($object instanceof jQuery) {
+            cid = $object.data( 'model-cid' );
+        }
+
+        if (cid) {
+            const settings = goomentoFrontend.config.elements.data[ cid ],
+                attributes = settings.attributes;
+
+            let type = attributes.widgetType || attributes.elType;
+
+            if ( attributes.isInner ) {
+                type = 'inner-' + type;
+            }
+
+            let settingsKeys = goomentoFrontend.config.elements.keys[ type ];
+
+            if ( ! settingsKeys ) {
+                settingsKeys = goomentoFrontend.config.elements.keys[ type ] = [];
+
+                jQuery.each( settings.controls, ( name, control ) => {
+                    if ( control.frontend_available ) {
+                        settingsKeys.push( name );
+                    }
+                } );
+            }
+
+            jQuery.each( settings.getActiveControls(), function( controlKey ) {
+                if ( -1 !== settingsKeys.indexOf( controlKey ) ) {
+                    let value = attributes[ controlKey ];
+
+                    if ( value.toJSON ) {
+                        value = value.toJSON();
+                    }
+
+                    elementSettings[ controlKey ] = value;
+                }
+            } );
+        } else {
+            elementSettings = $object.data( 'settings' ) || {};
+        }
+
+        return elementSettings;
+    }
 
     return {
-        'widgetRegister': widgetRegister
+        'widgetRegister': widgetRegister,
+        'getElementSettings': getElementSettings
     };
 });

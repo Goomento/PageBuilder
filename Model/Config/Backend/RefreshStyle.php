@@ -58,7 +58,7 @@ class RefreshStyle extends Value
      */
     public function afterSave()
     {
-        $this->contentManagement->refreshContentCache();
+        $this->contentManagement->refreshGlobalCache();
         return parent::afterSave();
     }
 }
