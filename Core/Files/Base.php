@@ -58,7 +58,7 @@ abstract class Base
 
     public static function getBaseUploadsUrl()
     {
-        return StaticUrlBuilder::getUrl(self::UPLOADS_DIR);
+        return StaticAssets::pathToUrl(self::UPLOADS_DIR);
     }
 
 

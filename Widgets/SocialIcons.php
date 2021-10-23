@@ -99,7 +99,7 @@ class SocialIcons extends Widget
             ]
         );
         /** @var Repeater $repeater */
-        $repeater = StaticObjectManager::get(Repeater::class);
+        $repeater = StaticObjectManager::create(Repeater::class);
 
         $repeater->addControl(
             'social_icon',

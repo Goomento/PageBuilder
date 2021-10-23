@@ -195,7 +195,7 @@ class ContentManagement implements ContentManagementInterface
      */
     public function refreshGlobalCache()
     {
-        $this->config->setOption(Config::CSS_UPDATED_TIME, 0);
+        $this->config->setOption(Config::CSS_UPDATED_TIME, time());
         PageBuilder::initialize();
 
         $globalCss = new \Goomento\PageBuilder\Core\Files\Css\GlobalCss();

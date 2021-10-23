@@ -100,7 +100,7 @@ class Accordion extends Widget
             ]
         );
 
-        $repeater = StaticObjectManager::get(Repeater::class);
+        $repeater = StaticObjectManager::create(Repeater::class);
 
         $repeater->addControl(
             'tab_title',

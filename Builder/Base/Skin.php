@@ -102,7 +102,6 @@ abstract class Skin
      *
      * Retrieve all the skin settings or, when requested, a specific setting.
      *
-     * @TODO: rename to get_setting() and create backward compatibility.
      *
      *
      * @param string $control_base_id Control base ID.

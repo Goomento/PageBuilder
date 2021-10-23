@@ -56,7 +56,6 @@ class BuildableContent extends AbstractSource
             $collection->addFieldToFilter('type', [
                 'in' => [ContentInterface::TYPE_SECTION, ContentInterface::TYPE_PAGE]
             ]);
-            $collection->addFieldToFilter('status', ['eq' => ContentInterface::STATUS_PUBLISHED]);
             $this->options[] = [
                 'value' => '',
                 'label' => __('-- Select content --'),

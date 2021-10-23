@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Elements;
 
+use Goomento\PageBuilder\Builder\Base\Element;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
 
@@ -15,7 +16,7 @@ use Goomento\PageBuilder\Helper\StaticObjectManager;
  * Class Repeater
  * @package Goomento\PageBuilder\Builder\Elements
  */
-class Repeater extends \Goomento\PageBuilder\Builder\Base\Element
+class Repeater extends Element
 {
 
     /**

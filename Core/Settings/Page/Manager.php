@@ -97,7 +97,7 @@ class Manager extends BaseManager
             $model->setTitle($data['title']);
         }
 
-        if (!empty($data['status'])) {
+        if (!empty($data['status']) &&isset(Content::getAvailableStatuses()[$data['status']])) {
             $model->setData('status', $data['status']);
         }
 
