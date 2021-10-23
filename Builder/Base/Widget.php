@@ -16,7 +16,6 @@ use Goomento\PageBuilder\Builder\Managers\Widgets;
 use Goomento\PageBuilder\Core\Editor\Editor;
 use Goomento\PageBuilder\Helper\Hooks;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
-use ReflectionException;
 
 /**
  * Class Widget
@@ -427,8 +426,18 @@ abstract class Widget extends Element
 
         if (empty($widget_content)) {
             return;
-        } ?>
-		<div class="gmt-widget-container">
+        }
+        $settings = $this->getSettingsForDisplay();
+
+        $this->addRenderAttribute('_container', 'class', 'gmt-widget-container');
+
+        if (!empty($settings['_hover_animation'])) {
+            $this->addRenderAttribute('_container', 'class', 'gmt-animation-' . trim($settings['_hover_animation']));
+        }
+
+        $container = $this->getRenderAttributeString('_container');
+        ?>
+		<div <?= $container ?>>
 			<?php
 
             /**

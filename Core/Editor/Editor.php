@@ -270,7 +270,7 @@ class Editor
         $document = $documentManager->get($this->_id);
 
         // Get document data *after* the scripts hook - so plugins can run compatibility before get data, but *before* enqueue the editor script - so elements can enqueue their own scripts that depended in editor script.
-        $editor_data = $document->getElementsRawData(null, true);
+        $editor_data = $document->getElementsRawData();
 
         $page_title_selector = StaticConfig::getOption('page_title_selector');
 

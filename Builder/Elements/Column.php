@@ -8,15 +8,24 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Elements;
 
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
+use Goomento\PageBuilder\Builder\Base\Element;
+use Goomento\PageBuilder\Builder\Controls\Groups\Background;
+use Goomento\PageBuilder\Builder\Controls\Groups\Border;
+use Goomento\PageBuilder\Builder\Controls\Groups\BoxShadow;
+use Goomento\PageBuilder\Builder\Controls\Groups\CssFilter;
+use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Elements;
+use Goomento\PageBuilder\Builder\Managers\Schemes;
 use Goomento\PageBuilder\Builder\Managers\Widgets;
+use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Helper\StaticObjectManager;
 
 /**
  * Class Column
  * @package Goomento\PageBuilder\Builder\Elements
  */
-class Column extends \Goomento\PageBuilder\Builder\Base\Element
+class Column extends Element
 {
 
     /**
@@ -106,7 +115,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'layout',
             [
                 'label' => __('Layout'),
-                'tab' => \Goomento\PageBuilder\Builder\Managers\Controls::TAB_LAYOUT,
+                'tab' => Controls::TAB_LAYOUT,
             ]
         );
 
@@ -115,7 +124,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             '_title',
             [
                 'label' => __('Title'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::HIDDEN,
+                'type' => Controls::HIDDEN,
                 'render_type' => 'none',
             ]
         );
@@ -124,23 +133,23 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             '_inline_size',
             [
                 'label' => __('Column Width') . ' (%)',
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::NUMBER,
+                'type' => Controls::NUMBER,
                 'min' => 2,
                 'max' => 98,
                 'required' => true,
                 'device_args' => [
-                    \Goomento\PageBuilder\Builder\Base\ControlsStack::RESPONSIVE_TABLET => [
+                    ControlsStack::RESPONSIVE_TABLET => [
                         'max' => 100,
                         'required' => false,
                     ],
-                    \Goomento\PageBuilder\Builder\Base\ControlsStack::RESPONSIVE_MOBILE => [
+                    ControlsStack::RESPONSIVE_MOBILE => [
                         'max' => 100,
                         'required' => false,
                     ],
                 ],
                 'min_affected_device' => [
-                    \Goomento\PageBuilder\Builder\Base\ControlsStack::RESPONSIVE_DESKTOP => \Goomento\PageBuilder\Builder\Base\ControlsStack::RESPONSIVE_TABLET,
-                    \Goomento\PageBuilder\Builder\Base\ControlsStack::RESPONSIVE_TABLET => \Goomento\PageBuilder\Builder\Base\ControlsStack::RESPONSIVE_TABLET,
+                    ControlsStack::RESPONSIVE_DESKTOP => ControlsStack::RESPONSIVE_TABLET,
+                    ControlsStack::RESPONSIVE_TABLET => ControlsStack::RESPONSIVE_TABLET,
                 ],
                 'selectors' => [
                     '{{WRAPPER}}' => 'width: {{VALUE}}%',
@@ -152,7 +161,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'content_position',
             [
                 'label' => __('Vertical Align'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SELECT,
+                'type' => Controls::SELECT,
                 'default' => '',
                 'options' => [
                     '' => __('Default'),
@@ -180,7 +189,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'align',
             [
                 'label' => __('Horizontal Align'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SELECT,
+                'type' => Controls::SELECT,
                 'default' => '',
                 'options' => [
                     '' => __('Default'),
@@ -201,7 +210,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'space_between_widgets',
             [
                 'label' => __('Widgets Space') . ' (px)',
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::NUMBER,
+                'type' => Controls::NUMBER,
                 'placeholder' => 20,
                 'selectors' => [
                     '{{WRAPPER}} > .gmt-column-wrap > .gmt-widget-wrap > .gmt-widget:not(.gmt-widget__width-auto):not(.gmt-widget__width-initial):not(:last-child):not(.gmt-absolute)' => 'margin-bottom: {{VALUE}}px', //Need the full path for exclude the inner section
@@ -228,7 +237,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'html_tag',
             [
                 'label' => __('HTML Tag'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SELECT,
+                'type' => Controls::SELECT,
                 'options' => $options,
                 'render_type' => 'none',
             ]
@@ -240,7 +249,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'section_style',
             [
                 'label' => __('Background'),
-                'tab' => \Goomento\PageBuilder\Builder\Managers\Controls::TAB_STYLE,
+                'tab' => Controls::TAB_STYLE,
             ]
         );
 
@@ -254,7 +263,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\Background::getType(),
+            Background::getType(),
             [
                 'name' => 'background',
                 'types' => [ 'classic', 'gradient', 'slideshow' ],
@@ -277,7 +286,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\Background::getType(),
+            Background::getType(),
             [
                 'name' => 'background_hover',
                 'selector' => '{{WRAPPER}}:hover > .gmt-element-populated',
@@ -288,7 +297,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'background_hover_transition',
             [
                 'label' => __('Transition Duration'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SLIDER,
+                'type' => Controls::SLIDER,
                 'default' => [
                     'size' => 0.3,
                 ],
@@ -314,7 +323,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'section_background_overlay',
             [
                 'label' => __('Background Overlay'),
-                'tab' => \Goomento\PageBuilder\Builder\Managers\Controls::TAB_STYLE,
+                'tab' => Controls::TAB_STYLE,
                 'condition' => [
                     'background_background' => [ 'classic', 'gradient' ],
                 ],
@@ -331,7 +340,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\Background::getType(),
+            Background::getType(),
             [
                 'name' => 'background_overlay',
                 'selector' => '{{WRAPPER}} > .gmt-element-populated >  .gmt-background-overlay',
@@ -342,7 +351,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'background_overlay_opacity',
             [
                 'label' => __('Opacity'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SLIDER,
+                'type' => Controls::SLIDER,
                 'default' => [
                     'size' => .5,
                 ],
@@ -362,7 +371,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\CssFilter::getType(),
+            CssFilter::getType(),
             [
                 'name' => 'css_filters',
                 'selector' => '{{WRAPPER}} > .gmt-element-populated >  .gmt-background-overlay',
@@ -373,7 +382,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'overlay_blend_mode',
             [
                 'label' => __('Blend Mode'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SELECT,
+                'type' => Controls::SELECT,
                 'options' => [
                     '' => __('Normal'),
                     'multiply' => 'Multiply',
@@ -402,7 +411,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\Background::getType(),
+            Background::getType(),
             [
                 'name' => 'background_overlay_hover',
                 'selector' => '{{WRAPPER}}:hover > .gmt-element-populated >  .gmt-background-overlay',
@@ -413,7 +422,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'background_overlay_hover_opacity',
             [
                 'label' => __('Opacity'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SLIDER,
+                'type' => Controls::SLIDER,
                 'default' => [
                     'size' => .5,
                 ],
@@ -433,7 +442,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\CssFilter::getType(),
+            CssFilter::getType(),
             [
                 'name' => 'css_filters_hover',
                 'selector' => '{{WRAPPER}}:hover > .gmt-element-populated >  .gmt-background-overlay',
@@ -444,7 +453,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'background_overlay_hover_transition',
             [
                 'label' => __('Transition Duration'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SLIDER,
+                'type' => Controls::SLIDER,
                 'default' => [
                     'size' => 0.3,
                 ],
@@ -469,7 +478,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'section_border',
             [
                 'label' => __('Border'),
-                'tab' => \Goomento\PageBuilder\Builder\Managers\Controls::TAB_STYLE,
+                'tab' => Controls::TAB_STYLE,
             ]
         );
 
@@ -483,7 +492,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\Border::getType(),
+            Border::getType(),
             [
                 'name' => 'border',
                 'selector' => '{{WRAPPER}} > .gmt-element-populated',
@@ -494,7 +503,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'border_radius',
             [
                 'label' => __('Border Radius'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::DIMENSIONS,
+                'type' => Controls::DIMENSIONS,
                 'size_units' => [ 'px', '%' ],
                 'selectors' => [
                     '{{WRAPPER}} > .gmt-element-populated, {{WRAPPER}} > .gmt-element-populated > .gmt-background-overlay, {{WRAPPER}} > .gmt-background-slideshow' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -503,7 +512,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\BoxShadow::getType(),
+            BoxShadow::getType(),
             [
                 'name' => 'box_shadow',
                 'selector' => '{{WRAPPER}} > .gmt-element-populated',
@@ -520,7 +529,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\Border::getType(),
+            Border::getType(),
             [
                 'name' => 'border_hover',
                 'selector' => '{{WRAPPER}}:hover > .gmt-element-populated',
@@ -531,7 +540,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'border_radius_hover',
             [
                 'label' => __('Border Radius'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::DIMENSIONS,
+                'type' => Controls::DIMENSIONS,
                 'size_units' => [ 'px', '%' ],
                 'selectors' => [
                     '{{WRAPPER}}:hover > .gmt-element-populated, {{WRAPPER}}:hover > .gmt-element-populated > .gmt-background-overlay' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -540,7 +549,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\BoxShadow::getType(),
+            BoxShadow::getType(),
             [
                 'name' => 'box_shadow_hover',
                 'selector' => '{{WRAPPER}}:hover > .gmt-element-populated',
@@ -551,7 +560,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'border_hover_transition',
             [
                 'label' => __('Transition Duration'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SLIDER,
+                'type' => Controls::SLIDER,
                 'separator' => 'before',
                 'default' => [
                     'size' => 0.3,
@@ -595,16 +604,16 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'section_typo',
             [
                 'label' => __('Typography'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SECTION,
-                'tab' => \Goomento\PageBuilder\Builder\Managers\Controls::TAB_STYLE,
+                'type' => Controls::SECTION,
+                'tab' => Controls::TAB_STYLE,
             ]
         );
 
-        if (in_array(\Goomento\PageBuilder\Builder\Schemes\Color::getType(), \Goomento\PageBuilder\Builder\Managers\Schemes::getEnabledSchemes(), true)) {
+        if (in_array(Color::getType(), Schemes::getEnabledSchemes(), true)) {
             $this->addControl(
                 'colors_warning',
                 [
-                    'type' => \Goomento\PageBuilder\Builder\Managers\Controls::RAW_HTML,
+                    'type' => Controls::RAW_HTML,
                     'raw' => __('Note: The following colors won\'t work if Default Colors are enabled.'),
                     'content_classes' => 'gmt-panel-alert gmt-panel-alert-warning',
                 ]
@@ -615,7 +624,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'heading_color',
             [
                 'label' => __('Heading Color'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::COLOR,
+                'type' => Controls::COLOR,
                 'default' => '',
                 'selectors' => [
                     '{{WRAPPER}} .gmt-element-populated .gmt-heading-title' => 'color: {{VALUE}};',
@@ -628,7 +637,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'color_text',
             [
                 'label' => __('Text Color'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::COLOR,
+                'type' => Controls::COLOR,
                 'default' => '',
                 'selectors' => [
                     '{{WRAPPER}} > .gmt-element-populated' => 'color: {{VALUE}};',
@@ -640,7 +649,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'color_link',
             [
                 'label' => __('Link Color'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::COLOR,
+                'type' => Controls::COLOR,
                 'default' => '',
                 'selectors' => [
                     '{{WRAPPER}} .gmt-element-populated a' => 'color: {{VALUE}};',
@@ -652,7 +661,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'color_link_hover',
             [
                 'label' => __('Link Hover Color'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::COLOR,
+                'type' => Controls::COLOR,
                 'default' => '',
                 'selectors' => [
                     '{{WRAPPER}} .gmt-element-populated a:hover' => 'color: {{VALUE}};',
@@ -664,7 +673,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'text_align',
             [
                 'label' => __('Text Align'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::CHOOSE,
+                'type' => Controls::CHOOSE,
                 'options' => [
                     'left' => [
                         'title' => __('Left'),
@@ -692,8 +701,8 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'section_advanced',
             [
                 'label' => __('Advanced'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SECTION,
-                'tab' => \Goomento\PageBuilder\Builder\Managers\Controls::TAB_ADVANCED,
+                'type' => Controls::SECTION,
+                'tab' => Controls::TAB_ADVANCED,
             ]
         );
 
@@ -701,7 +710,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'margin',
             [
                 'label' => __('Margin'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::DIMENSIONS,
+                'type' => Controls::DIMENSIONS,
                 'size_units' => [ 'px', '%' ],
                 'selectors' => [
                     '{{WRAPPER}} > .gmt-element-populated' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -713,7 +722,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'padding',
             [
                 'label' => __('Padding'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::DIMENSIONS,
+                'type' => Controls::DIMENSIONS,
                 'size_units' => [ 'px', 'em', '%' ],
                 'selectors' => [
                     '{{WRAPPER}} > .gmt-element-populated' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -725,7 +734,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'z_index',
             [
                 'label' => __('Z-Index'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::NUMBER,
+                'type' => Controls::NUMBER,
                 'min' => 0,
                 'selectors' => [
                     '{{WRAPPER}}' => 'z-index: {{VALUE}};',
@@ -738,7 +747,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             '_element_id',
             [
                 'label' => __('CSS ID'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::TEXT,
+                'type' => Controls::TEXT,
                 'default' => '',
                 'dynamic' => [
                     'active' => true,
@@ -754,7 +763,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'css_classes',
             [
                 'label' => __('CSS Classes'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::TEXT,
+                'type' => Controls::TEXT,
                 'default' => '',
                 'dynamic' => [
                     'active' => true,
@@ -770,14 +779,14 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
         $this->addControl(
             'screen_sm',
             [
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::HIDDEN,
+                'type' => Controls::HIDDEN,
             ]
         );
 
         $this->addControl(
             'screen_sm_width',
             [
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::HIDDEN,
+                'type' => Controls::HIDDEN,
                 'condition' => [
                     'screen_sm' => [ 'custom' ],
                 ],
@@ -792,7 +801,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'section_effects',
             [
                 'label' => __('Motion Effects'),
-                'tab' => \Goomento\PageBuilder\Builder\Managers\Controls::TAB_ADVANCED,
+                'tab' => Controls::TAB_ADVANCED,
             ]
         );
 
@@ -800,7 +809,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'animation',
             [
                 'label' => __('Entrance Animation'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::ANIMATION,
+                'type' => Controls::ANIMATION,
                 'frontend_available' => true,
             ]
         );
@@ -809,7 +818,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'animation_duration',
             [
                 'label' => __('Animation Duration'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SELECT,
+                'type' => Controls::SELECT,
                 'default' => '',
                 'options' => [
                     'slow' => __('Slow'),
@@ -827,7 +836,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'animation_delay',
             [
                 'label' => __('Animation Delay') . ' (ms)',
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::NUMBER,
+                'type' => Controls::NUMBER,
                 'default' => '',
                 'min' => 0,
                 'step' => 100,
@@ -845,7 +854,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             '_section_responsive',
             [
                 'label' => __('Responsive'),
-                'tab' => \Goomento\PageBuilder\Builder\Managers\Controls::TAB_ADVANCED,
+                'tab' => Controls::TAB_ADVANCED,
             ]
         );
 
@@ -853,7 +862,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'responsive_description',
             [
                 'raw' => __('Responsive visibility will take effect only on preview or live page, and not while editing in Goomento.'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::RAW_HTML,
+                'type' => Controls::RAW_HTML,
                 'content_classes' => 'gmt-descriptor',
             ]
         );
@@ -862,7 +871,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'hide_desktop',
             [
                 'label' => __('Hide On Desktop'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SWITCHER,
+                'type' => Controls::SWITCHER,
                 'default' => '',
                 'prefix_class' => 'gmt-',
                 'label_on' => 'Hide',
@@ -875,7 +884,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'hide_tablet',
             [
                 'label' => __('Hide On Tablet'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SWITCHER,
+                'type' => Controls::SWITCHER,
                 'default' => '',
                 'prefix_class' => 'gmt-',
                 'label_on' => 'Hide',
@@ -888,7 +897,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
             'hide_mobile',
             [
                 'label' => __('Hide On Mobile'),
-                'type' => \Goomento\PageBuilder\Builder\Managers\Controls::SWITCHER,
+                'type' => Controls::SWITCHER,
                 'default' => '',
                 'prefix_class' => 'gmt-',
                 'label_on' => 'Hide',
@@ -899,7 +908,7 @@ class Column extends \Goomento\PageBuilder\Builder\Base\Element
 
         $this->endControlsSection();
 
-        StaticObjectManager::get(\Goomento\PageBuilder\Builder\Managers\Controls::class)->addCustomCssControls($this);
+        StaticObjectManager::get(Controls::class)->addCustomCssControls($this);
     }
 
     /**

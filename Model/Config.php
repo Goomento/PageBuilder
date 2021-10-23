@@ -202,13 +202,13 @@ class Config
 
     /**
      * @param $path
-     * @param int $storeId
+     * @param mixed $value
      * @return $this
      * @throws LocalizedException
      */
-    public function setOption($path, $storeId = 0)
+    public function setOption($path, $value)
     {
-        return $this->setValue("option_{$path}", $storeId);
+        return $this->setValue("option_{$path}", $value);
     }
 
     /**
