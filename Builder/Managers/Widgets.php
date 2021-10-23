@@ -35,6 +35,8 @@ use Goomento\PageBuilder\Widgets\TextEditor;
 use Goomento\PageBuilder\Widgets\Toggle;
 use Goomento\PageBuilder\Widgets\Video;
 use Goomento\PageBuilder\Widgets\Block;
+use Magento\Framework\App\Area;
+use Magento\Framework\App\State;
 
 /**
  * Class Widgets
@@ -210,6 +212,7 @@ class Widgets
      * @param $request
      * @return array
      * @throws Exception
+     * @deprecated
      */
     public function ajaxRenderWidget($request)
     {
@@ -222,14 +225,12 @@ class Widgets
         $is_edit_mode = $editor->isEditMode();
         $editor->setEditMode(true);
 
-        /** @var \Magento\Framework\App\State $state */
-        $state = StaticObjectManager::get(\Magento\Framework\App\State::class);
+        /** @var State $state */
+        $state = StaticObjectManager::get(State::class);
 
-//        $render_html = $state->emulateAreaCode('frontend', function () use ($document, $request) {
-//            return $document->renderElement($request['data']);
-//        });
-
-        $render_html = $document->renderElement($request['data']);
+        $render_html = $state->emulateAreaCode(Area::AREA_FRONTEND, function () use ($document, $request) {
+            return $document->renderElement($request['data']);
+        });
 
         $editor->setEditMode($is_edit_mode);
 

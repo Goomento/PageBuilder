@@ -8,10 +8,13 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Base;
 
+use Goomento\PageBuilder\Builder\Managers\Elements;
 use Goomento\PageBuilder\Builder\Utils;
 use Goomento\PageBuilder\Helper\Hooks;
 use Goomento\PageBuilder\Helper\StaticConfig;
+use Goomento\PageBuilder\Helper\StaticObjectManager;
 use Goomento\PageBuilder\Helper\Theme;
+use Zend_Json;
 
 /**
  * Class Element
@@ -307,8 +310,8 @@ abstract class Element extends ControlsStack
         if (! $child_type) {
             return false;
         }
-        /** @var \Goomento\PageBuilder\Builder\Managers\Elements $elementsManager */
-        $elementsManager = \Goomento\PageBuilder\Helper\StaticObjectManager::get(\Goomento\PageBuilder\Builder\Managers\Elements::class);
+        /** @var Elements $elementsManager */
+        $elementsManager = StaticObjectManager::get(Elements::class);
         $child = $elementsManager->createElementInstance($child_data, $child_args, $child_type);
 
         if ($child) {
@@ -696,7 +699,7 @@ abstract class Element extends ControlsStack
         }
 
         if ($frontend_settings) {
-            $this->addRenderAttribute('_wrapper', 'data-settings', \Zend_Json::encode($frontend_settings));
+            $this->addRenderAttribute('_wrapper', 'data-settings', Zend_Json::encode($frontend_settings));
         }
 
         /**

@@ -10,6 +10,7 @@ namespace Goomento\PageBuilder\Core\Common\Modules\Ajax;
 
 use Goomento\PageBuilder\Core\Base\Module as BaseModule;
 use Goomento\PageBuilder\Helper\Hooks;
+use Goomento\PageBuilder\Helper\StaticEncryptor;
 use Goomento\PageBuilder\Helper\StaticUrlBuilder;
 
 /**
@@ -184,7 +185,14 @@ class Module extends BaseModule
     protected function getInitSettings()
     {
         return [
-            'url' => StaticUrlBuilder::getAjaxUrl(),
+            'url' => StaticUrlBuilder::getUrl('pagebuilder/ajax/json'),
+            'actions' => [
+                'render_widget' => StaticUrlBuilder::getFrontendUrl('pagebuilder/actions/renderWidget', [
+                    '_query' => [
+                        StaticEncryptor::ACCESS_TOKEN_PARAM => StaticEncryptor::createAccessToken('')
+                    ]
+                ])
+            ],
         ];
     }
 

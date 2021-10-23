@@ -149,6 +149,14 @@ class Common extends Widget
             ]
         );
 
+        $this->addControl(
+            '_hover_animation',
+            [
+                'label' => __('Hover Animation'),
+                'type' => Controls::HOVER_ANIMATION,
+            ]
+        );
+
         $this->addResponsiveControl(
             '_animation',
             [

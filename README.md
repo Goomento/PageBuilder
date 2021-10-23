@@ -36,12 +36,12 @@ Change to **Yes** to enable module on storefront.
 ## 3. Features
 
 - Drag and Drop visual editor
-- Section / Pages / Templates control
-- Import / Export content
-- Undo / Redo / Duplicate and more ...
-- History / Revision management
-- Reuse as page / template
-- Widgets hub / management
+- Section, Pages, Templates control
+- Import, Export content
+- Undo, Redo, Duplicate and more ...
+- History, Revision management
+- Reuse as page, template
+- Widgets hub management
 - Adaptability in any store
 - High speed optimize
 - Add custom CSS
@@ -54,9 +54,6 @@ Change to **Yes** to enable module on storefront.
 - Cms Block
 - Catalog Product
 - Catalog Category
-
-#### For every buildable content, asset resource files (CSS, Javascript, images ... ) will be stored or downloaded 
-Make sure this folder `pub/media/goomento`  is writeable for fully functional 
 
 ## 5. How to use
 
@@ -78,11 +75,22 @@ Check this [Wiki page](https://github.com/Goomento/PageBuilder/wiki/Personalize)
 - Make sure that Goomento Page Builder module was enabled, click [here](https://github.com/Goomento/PageBuilder#2-configuration)
 - Make sure Page Builder status is `Published` and `Store view` is matching with current storefront
 - For Magento entity, (Eg: Product, Category ...) make sure `Page Builder Content` was selected and `Active` turned to `Yes`
+- Flush/ Clean Magento Cache
 
 **Visual editor did not load**
 
 - Visual editor may crash for the first load, it's due to the timeout of loading resources from CDN,
 try to reload your browser, It'll go away
+
+**Missing style on storefront**
+
+Goomento stored CSS files in `pub/media/goomento/css`, those files responsible for each content styling, so you can check 
+
+- Folder `pub/media/goomento/css` is writable
+- Try to generate the new style, go to `Goomento > Global.Css > Save and Refesh` - Will refresh all global and contents styling
+- Use different `CSS Print Method` in `Stores > Settings > Configuration > Goomento > Page Builder > Editor > Style > CSS Print Method` then
+choose `Internal` - Will use inline CSS instead
+- Flush/ Clean Magento Cache
 
 Something else? Contact us: [store.goomento@gmail.com](mailto:store.goomento@gmail.com)
 
