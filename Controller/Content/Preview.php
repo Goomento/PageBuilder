@@ -8,14 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Controller\Content;
 
-use Goomento\PageBuilder\Helper\Hooks;
-use Goomento\PageBuilder\Helper\StaticRegistry;
+use Goomento\PageBuilder\Helper\HooksHelper;
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Class Preview
- * @package Goomento\PageBuilder\Controller\Editor
- */
 class Preview extends View
 {
     /**
@@ -24,19 +19,23 @@ class Preview extends View
     public function execute()
     {
         try {
-            $this->validateToken();
-            Hooks::doAction('pagebuilder/content/preview');
-            StaticRegistry::register('current_preview_content', $this->getContent(true));
+            // Set current model
+            $this->registry->register('current_preview_content', $this->getContent(true));
+
+            HooksHelper::doAction('pagebuilder/content/preview');
             return $this->renderPage();
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage(
                 $e->getMessage()
             );
         } catch (\Exception $e) {
-            $this->logger->error($e);
             $this->messageManager->addErrorMessage(
                 __('Something went wrong when render content view.')
             );
+        } finally {
+            if (!empty($e)) {
+                $this->logger->error($e);
+            }
         }
 
         return $this->redirect404Page();
@@ -47,8 +46,11 @@ class Preview extends View
      */
     protected function getPageConfig()
     {
+        $layout = $this->getRequest()->getParam('layout', '1column');
+
         return [
-            'editable_title' => 'Preview: %1'
+            'editable_title' => 'Preview: %1',
+            'handler' => 'pagebuilder_content_' . $layout,
         ];
     }
 }

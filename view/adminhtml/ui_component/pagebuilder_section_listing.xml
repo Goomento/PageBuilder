@@ -145,11 +145,10 @@
                 <label translate="true">Identifier</label>
             </settings>
         </column>
-        <column name="shortcode" class="Goomento\PageBuilder\Ui\Component\Listing\Column\Content\Shortcode">
+        <column name="shortcode">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="resizeEnabled" xsi:type="boolean">true</item>
-                    <item name="resizeDefaultWidth" xsi:type="string">60</item>
+                    <item name="component" xsi:type="string">Goomento_PageBuilder/js/form/element/shortcode</item>
                 </item>
             </argument>
             <settings>

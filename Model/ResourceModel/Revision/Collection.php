@@ -10,10 +10,6 @@ namespace Goomento\PageBuilder\Model\ResourceModel\Revision;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
-/**
- * Class Collection
- * @package Goomento\PageBuilder\Model\ResourceModel\Revison
- */
 class Collection extends AbstractCollection
 {
 

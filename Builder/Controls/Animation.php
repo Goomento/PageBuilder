@@ -8,27 +8,11 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Helper\Hooks;
+use Goomento\PageBuilder\Helper\HooksHelper;
 
-/**
- * Class Animation
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Animation extends BaseData
+class Animation extends AbstractControlData
 {
-
-    /**
-     * Get control type.
-     *
-     * Retrieve the animation control type.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'animation';
-    }
+    const NAME = 'animation';
 
     /**
      * Retrieve default control settings.
@@ -120,7 +104,7 @@ class Animation extends BaseData
          *
          * @param array $additional_animations Additional Animations array.
          */
-        $additional_animations = Hooks::applyFilters('pagebuilder/controls/animations/additional_animations', []);
+        $additional_animations = HooksHelper::applyFilters('pagebuilder/controls/animations/additional_animations', []);
 
         return array_merge($animations, $additional_animations);
     }

@@ -8,25 +8,10 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class Structure
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Structure extends BaseData
+class Structure extends AbstractControlData
 {
 
-    /**
-     * Get structure control type.
-     *
-     * Retrieve the control type, in this case `structure`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'structure';
-    }
+    const NAME = 'structure';
 
     /**
      * Render structure control output in the editor.

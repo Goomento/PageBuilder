@@ -10,10 +10,6 @@ namespace Goomento\PageBuilder\Api\Data;
 
 use Magento\Framework\Api\SearchResultsInterface;
 
-/**
- * Interface RevisionSearchResultsInterface
- * @package Goomento\PageBuilder\Api\Data
- */
 interface RevisionSearchResultsInterface extends SearchResultsInterface
 {
     /**

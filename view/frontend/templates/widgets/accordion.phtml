@@ -1,0 +1,58 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Builder\Managers\Icons;
+use Goomento\PageBuilder\Helper\EscaperHelper;
+
+/**
+ * @var Widget $block
+ */
+$widget = $block->getWidget();
+$settings = $widget->getSettingsForDisplay();
+
+$hasIcon = ! empty($settings['accordion_selected_icon']['value']);
+$idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
+    <div class="gmt-accordion" role="tablist">
+    <?php foreach ($settings['accordion_tabs'] as $index => $item) :
+        $tab_count = $index + 1;
+        $tab_title_setting_key = $widget->getRepeaterSettingKey('tab_title', 'tabs', $index);
+        $tab_content_setting_key = $widget->getRepeaterSettingKey('tab_content', 'tabs', $index);
+
+        $widget->addRenderAttribute($tab_title_setting_key, [
+            'id' => 'gmt-tab-title-' . $idInt . $tab_count,
+            'class' => [ 'gmt-tab-title' ],
+            'data-tab' => $tab_count,
+            'role' => 'tab',
+            'aria-controls' => 'gmt-tab-content-' . $idInt . $tab_count,
+        ]);
+
+        $widget->addRenderAttribute($tab_content_setting_key, [
+            'id' => 'gmt-tab-content-' . $idInt . $tab_count,
+            'class' => [ 'gmt-tab-content', 'gmt-clearfix' ],
+            'data-tab' => $tab_count,
+            'role' => 'tabpanel',
+            'aria-labelledby' => 'gmt-tab-title-' . $idInt . $tab_count,
+        ]);
+
+        $widget->addInlineEditingAttributes($tab_content_setting_key, 'advanced'); ?>
+        <div class="gmt-accordion-item">
+        <<?= $settings['accordion_title_html_tag']; ?> <?= $widget->getRenderAttributeString($tab_title_setting_key); ?>>
+            <?php if ($hasIcon) : ?>
+                <span class="gmt-accordion-icon gmt-accordion-icon-<?= EscaperHelper::escapeHtml($settings['accordion_icon_align']); ?>" aria-hidden="true">
+                    <span class="gmt-accordion-icon-closed"><?php Icons::renderIcon($settings['accordion_selected_icon']); ?></span>
+                        <span class="gmt-accordion-icon-opened"><?php Icons::renderIcon($settings['accordion_selected_active_icon']); ?></span>
+                    </span>
+            <?php endif; ?>
+        <a href=""><?= $item['accordion_tab_title']; ?></a>
+        </<?= $settings['accordion_title_html_tag']; ?>>
+        <div <?= $widget->getRenderAttributeString($tab_content_setting_key); ?>><?= /** @noEscape  */ $item['accordion_tab_content']; ?></div>
+        </div>
+    <?php endforeach; ?>
+    </div>
+<?php

@@ -8,27 +8,12 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Helper\StaticEscaper;
+use Goomento\PageBuilder\Helper\EscaperHelper;
 
-/**
- * Class TextShadow
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class TextShadow extends BaseMultiple
+class TextShadow extends AbstractBaseMultiple
 {
 
-    /**
-     * Get text shadow control type.
-     *
-     * Retrieve the control type, in this case `text_shadow`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'text_shadow';
-    }
+    const NAME = 'text_shadow';
 
     /**
      * Get text shadow control default values.
@@ -39,7 +24,7 @@ class TextShadow extends BaseMultiple
      *
      * @return array Control default value.
      */
-    public function getDefaultValue()
+    public static function getDefaultValue()
     {
         return [
             'horizontal' => 0,
@@ -100,21 +85,21 @@ class TextShadow extends BaseMultiple
 		<div class="gmt-control-field">
 			<label class="gmt-control-title"><?= __('Color'); ?></label>
 			<div class="gmt-control-input-wrapper">
-				<input data-setting="color" class="gmt-shadow-color-picker" type="text" placeholder="<?= StaticEscaper::escapeHtml('Hex/rgba'); ?>" data-alpha="true" {{{ defaultColorValue }}} />
+				<input data-setting="color" class="gmt-shadow-color-picker" type="text" placeholder="<?= EscaperHelper::escapeHtml('Hex/rgba'); ?>" data-alpha="true" {{{ defaultColorValue }}} />
 			</div>
 		</div>
 		<?php
         foreach ($this->getSliders() as $slider_name => $slider) :
             $control_uid = $this->getControlUid($slider_name); ?>
 			<div class="gmt-shadow-slider gmt-control-type-slider">
-				<label for="<?= StaticEscaper::escapeHtml($control_uid); ?>" class="gmt-control-title"><?= $slider['label']; ?></label>
+				<label for="<?= EscaperHelper::escapeHtml($control_uid); ?>" class="gmt-control-title"><?= $slider['label']; ?></label>
 				<div class="gmt-control-input-wrapper">
-					<div class="gmt-slider" data-input="<?= StaticEscaper::escapeHtml($slider_name); ?>"></div>
+					<div class="gmt-slider" data-input="<?= EscaperHelper::escapeHtml($slider_name); ?>"></div>
 					<div class="gmt-slider-input">
-						<input id="<?= StaticEscaper::escapeHtml($control_uid); ?>" type="number"
-                               min="<?= StaticEscaper::escapeHtml($slider['min']); ?>"
-                               max="<?= StaticEscaper::escapeHtml($slider['max']); ?>"
-                               data-setting="<?= StaticEscaper::escapeHtml($slider_name); ?>"/>
+						<input id="<?= EscaperHelper::escapeHtml($control_uid); ?>" type="number"
+                               min="<?= EscaperHelper::escapeHtml($slider['min']); ?>"
+                               max="<?= EscaperHelper::escapeHtml($slider['max']); ?>"
+                               data-setting="<?= EscaperHelper::escapeHtml($slider_name); ?>"/>
 					</div>
 				</div>
 			</div>

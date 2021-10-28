@@ -5,27 +5,12 @@
  */
 
 declare(strict_types=1);
+
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class ExitAnimation
- * @package Goomento\PageBuilder\Builder\Controls
- */
 class ExitAnimation extends Animation
 {
-
-    /**
-     * Get control type.
-     *
-     * Retrieve the animation control type.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'exit_animation';
-    }
+    const NAME = 'exit_animation';
 
     /**
      * Get animations list.
@@ -79,7 +64,7 @@ class ExitAnimation extends Animation
          *
          * @param array $additional_animations Additional Animations array.
          */
-        $additional_animations = \Goomento\PageBuilder\Helper\Hooks::applyFilters('pagebuilder/controls/exit-animations/additional_animations', []);
+        $additional_animations = \Goomento\PageBuilder\Helper\HooksHelper::applyFilters('pagebuilder/controls/exit-animations/additional_animations', []);
 
         return array_merge($animations, $additional_animations);
     }

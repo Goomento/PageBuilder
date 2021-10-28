@@ -6,9 +6,23 @@ Back,Back
 Delete,Delete
 "Are you sure you want to do this?","Are you sure you want to do this?"
 Export,Export
-Default,Default
-Skin,Skin
+Settings,Settings
+"Hurray! Your %1 is live.","Hurray! Your %1 is live."
+Document,Document
+"General Settings","General Settings"
+Title,Title
+Status,Status
+"Sorry, you need permissions to view this content","Sorry, you need permissions to view this content"
+"%s Settings","%s Settings"
+"Updated %1","Updated %1"
+Single,Single
+"Body Style","Body Style"
+Padding,Padding
+Reset,Reset
+Discard,Discard
+Apply,Apply
 Deprecated,Deprecated
+Default,Default
 None,None
 Horizontal,Horizontal
 Vertical,Vertical
@@ -121,22 +135,25 @@ Typography,Typography
 Remove,Remove
 "Icon Library","Icon Library"
 Height,Height
-Apply,Apply
 "Choose Image","Choose Image"
 "Choose Video","Choose Video"
 Edit,Edit
 "Back to default","Back to default"
 "Add Item","Add Item"
-Reset,Reset
 No,No
 Yes,Yes
 "Paste URL or type","Paste URL or type"
 "Link Options","Link Options"
 "Open in new window","Open in new window"
 "Add nofollow","Add nofollow"
-Column,Column
 Layout,Layout
-Title,Title
+1-Column,1-Column
+"Full width","Full width"
+Empty,Empty
+Page,Page
+Section,Section
+Template,Template
+Column,Column
 "Column Width","Column Width"
 "Vertical Align","Vertical Align"
 Middle,Middle
@@ -164,7 +181,6 @@ Border,Border
 "Text Align","Text Align"
 Advanced,Advanced
 Margin,Margin
-Padding,Padding
 Z-Index,Z-Index
 "CSS ID","CSS ID"
 "Add your custom id WITHOUT the Pound key. e.g: my-id","Add your custom id WITHOUT the Pound key. e.g: my-id"
@@ -181,7 +197,6 @@ Responsive,Responsive
 "Hide On Desktop","Hide On Desktop"
 "Hide On Tablet","Hide On Tablet"
 "Hide On Mobile","Hide On Mobile"
-Section,Section
 "Stretch Section","Stretch Section"
 "Stretch the section to the full width of the page using JS.","Stretch the section to the full width of the page using JS."
 "Content Width","Content Width"
@@ -216,25 +231,28 @@ System,System
 Google,Google
 "Google Early Access","Google Early Access"
 Content,Content
-Settings,Settings
 "Custom CSS","Custom CSS"
 "Add your own custom CSS here","Add your own custom CSS here"
 Basic,Basic
 General,General
 Extension,Extension
 Theme,Theme
-Products,Products
+Lightbox,Lightbox
 "Font Awesome - Regular","Font Awesome - Regular"
 "Font Awesome - Solid","Font Awesome - Solid"
 "Font Awesome - Brands","Font Awesome - Brands"
 "All Icons","All Icons"
-"Sorry, you need permissions to view this content","Sorry, you need permissions to view this content"
-Discard,Discard
+Anonymous,Anonymous
+"Invalid format.","Invalid format."
+"Action not found.","Action not found."
+"Something went wrong. Please try again later.","Something went wrong. Please try again later."
+Url,Url
+Text,Text
+"Add Media","Add Media"
 Colors,Colors
 "Color Palettes","Color Palettes"
 Primary,Primary
 Secondary,Secondary
-Text,Text
 Accent,Accent
 "More Palettes","More Palettes"
 "Color Palette","Color Palette"
@@ -245,6 +263,19 @@ Accent,Accent
 "Secondary Headline","Secondary Headline"
 "Body Text","Body Text"
 "Accent Text","Accent Text"
+"Default Generic Fonts","Default Generic Fonts"
+"The list of fonts used if the chosen font is not available.","The list of fonts used if the chosen font is not available."
+"Sets the default space between widgets (Default: 20)","Sets the default space between widgets (Default: 20)"
+"Stretched Section Fit To","Stretched Section Fit To"
+"Enter parent element selector to which stretched sections will fit to (e.g. #primary / .wrapper / main etc). Leave blank to fit to page width.","Enter parent element selector to which stretched sections will fit to (e.g. #primary / .wrapper / main etc). Leave blank to fit to page width."
+"Page Title Selector","Page Title Selector"
+"Goomento lets you hide the page title. This works for themes that have ""h1.entry-title"" selector. If your theme's selector is different, please enter it above.","Goomento lets you hide the page title. This works for themes that have ""h1.entry-title"" selector. If your theme's selector is different, please enter it above."
+"Image Lightbox","Image Lightbox"
+"Open all image links in a lightbox popup window. The lightbox will automatically work on any link that leads to an image file.","Open all image links in a lightbox popup window. The lightbox will automatically work on any link that leads to an image file."
+"Enable In Editor","Enable In Editor"
+"UI Color","UI Color"
+"UI Hover Color","UI Hover Color"
+"%1 Settings","%1 Settings"
 Mountains,Mountains
 Drops,Drops
 Clouds,Clouds
@@ -263,122 +294,8 @@ Waves,Waves
 Arrow,Arrow
 Split,Split
 Book,Book
-"Wrong Source Base","Wrong Source Base"
-"Source existed.","Source existed."
-"Sorry, you need permissions to save this content","Sorry, you need permissions to save this content"
-"Invalid template","Invalid template"
-"Sorry, you need permissions to update this template","Sorry, you need permissions to update this template"
-"Sorry, you need permissions to import template","Sorry, you need permissions to import template"
-"ContentCss not found.","ContentCss not found."
-"The required argument(s) ""%1"" not specified.","The required argument(s) ""%1"" not specified."
 Local,Local
 "(no title)","(no title)"
-"Template not exist.","Template not exist."
-"Import error","Import error"
-"Something went wrong when processing mass action.","Something went wrong when processing mass action."
-"Content Title","Content Title"
-"Content Type","Content Type"
-"Content View","Content View"
-Status,Status
-"To apply changes you should fill in hidden required ""%1"" field","To apply changes you should fill in hidden required ""%1"" field"
-"You deleted the content.","You deleted the content."
-"Something went wrong when deleting the content","Something went wrong when deleting the content"
-"Something went wrong when deleting content(s)","Something went wrong when deleting content(s)"
-"Something went wrong when display contents.","Something went wrong when display contents."
-"Something went wrong when display content(s)","Something went wrong when display content(s)"
-"Sorry, you need permissions to view this content.","Sorry, you need permissions to view this content."
-"Something went wrong when entering the Page Builder.","Something went wrong when entering the Page Builder."
-"Template content was empty","Template content was empty"
-"Something went wrong when exporting template.","Something went wrong when exporting template."
-". 's'",". 's'"
-Pages,Pages
-"Manage %1","Manage %1"
-"Import file must specify.","Import file must specify."
-"Import file should not empty.","Import file should not empty."
-"Imported %1 content(s) successfully.","Imported %1 content(s) successfully."
-"Something went wrong when importing template.","Something went wrong when importing template."
-Import,Import
-"You deleted %1 out of %2 content(s)","You deleted %1 out of %2 content(s)"
-"You have set %1 out of %2 content(s) to pending","You have set %1 out of %2 content(s) to pending"
-"Something went wrong when set content status","Something went wrong when set content status"
-"You have published %1 out of %2 content(s)","You have published %1 out of %2 content(s)"
-"Something went wrong when creating content(s)","Something went wrong when creating content(s)"
-"Sorry, you need permissions to save this content.","Sorry, you need permissions to save this content."
-"Invalid content type: %1","Invalid content type: %1"
-"Something went wrong when saving the content.","Something went wrong when saving the content."
-"You saved the content.","You saved the content."
-"Something went wrong while saving the content.","Something went wrong while saving the content."
-"( Duplicated from #%1 )","( Duplicated from #%1 )"
-"You duplicated the content.","You duplicated the content."
-"Global.css saved.","Global.css saved."
-"Something went wrong when saving Global.css","Something went wrong when saving Global.css"
-Global.css,Global.css
-"The entity must be specify","The entity must be specify"
-"Something went wrong when create the Page Builder. Please try again.","Something went wrong when create the Page Builder. Please try again."
-"Something went wrong when render content view.","Something went wrong when render content view."
-"Invalid access token.","Invalid access token."
-"Hurray! Your %1 is live.","Hurray! Your %1 is live."
-Document,Document
-"General Settings","General Settings"
-"%s Settings","%s Settings"
-"Updated %1","Updated %1"
-"Use `%1` hook to register ajax action","Use `%1` hook to register ajax action"
-"Action not found.","Action not found."
-Page,Page
-Single,Single
-"Body Style","Body Style"
-Template,Template
-"Type %1 does not exist.","Type %1 does not exist."
-Url,Url
-"Add Media","Add Media"
-Anonymous,Anonymous
-"Invalid revision.","Invalid revision."
-Lightbox,Lightbox
-"Default Generic Fonts","Default Generic Fonts"
-"The list of fonts used if the chosen font is not available.","The list of fonts used if the chosen font is not available."
-"Sets the default space between widgets (Default: 20)","Sets the default space between widgets (Default: 20)"
-"Stretched Section Fit To","Stretched Section Fit To"
-"Enter parent element selector to which stretched sections will fit to (e.g. #primary / .wrapper / main etc). Leave blank to fit to page width.","Enter parent element selector to which stretched sections will fit to (e.g. #primary / .wrapper / main etc). Leave blank to fit to page width."
-"Page Title Selector","Page Title Selector"
-"Goomento lets you hide the page title. This works for themes that have ""h1.entry-title"" selector. If your theme's selector is different, please enter it above.","Goomento lets you hide the page title. This works for themes that have ""h1.entry-title"" selector. If your theme's selector is different, please enter it above."
-"Image Lightbox","Image Lightbox"
-"Open all image links in a lightbox popup window. The lightbox will automatically work on any link that leads to an image file.","Open all image links in a lightbox popup window. The lightbox will automatically work on any link that leads to an image file."
-"Enable In Editor","Enable In Editor"
-"UI Color","UI Color"
-"UI Hover Color","UI Hover Color"
-"%1 Settings","%1 Settings"
-Internal,Internal
-External,External
-"Use Origin Content","Use Origin Content"
-"Use Cache","Use Cache"
-"Show Nothing","Show Nothing"
-"Do Nothing","Do Nothing"
-Pending,Pending
-Published,Published
-"Invalid content status: %1","Invalid content status: %1"
-"File does not exited: %1","File does not exited: %1"
-"Content Id does not specify","Content Id does not specify"
-"The `from` and `to` URL's must be different","The `from` and `to` URL's must be different"
-"The `from` and `to` URL's must be valid URL's","The `from` and `to` URL's must be valid URL's"
-"Invalid content Id: %1","Invalid content Id: %1"
-"Invalid relation type: %1","Invalid relation type: %1"
-"Could not save the page: %1","Could not save the page: %1"
-"You can't publish this content","You can't publish this content"
-"The content with the ""%1"" ID doesn't exist.","The content with the ""%1"" ID doesn't exist."
-"Could not delete the content: %1","Could not delete the content: %1"
-"Invalid file type to download: %1","Invalid file type to download: %1"
-Draft,Draft
-Autosave,Autosave
-Revision,Revision
-"Could not save the revision: %1","Could not save the revision: %1"
-"The revision with the ""%1"" ID doesn't exist.","The revision with the ""%1"" ID doesn't exist."
-"Could not delete the revision: %1","Could not delete the revision: %1"
-"Page content not found","Page content not found"
-editable_title,editable_title
-View,View
-"Delete %1","Delete %1"
-"Are you sure you want to delete a `%1`?","Are you sure you want to delete a `%1`?"
-"All Store Views","All Store Views"
 Accordion,Accordion
 "Title & Description","Title & Description"
 "Accordion Title","Accordion Title"
@@ -408,25 +325,45 @@ Danger,Danger
 "Left Border Width","Left Border Width"
 Description,Description
 "Dismiss alert","Dismiss alert"
+SoundCloud,SoundCloud
+Link,Link
+"Visual Player","Visual Player"
+"Additional Options","Additional Options"
+Autoplay,Autoplay
+"Buy Button","Buy Button"
+"Like Button","Like Button"
+"Download Button","Download Button"
+Artwork,Artwork
+"Share Button","Share Button"
+Comments,Comments
+"Play Counts","Play Counts"
+Username,Username
+"Controls Color","Controls Color"
+Banner,Banner
+Caption,Caption
+"Enter your caption","Enter your caption"
+https://your-link.com,https://your-link.com
+"Hover Animation","Hover Animation"
+"Middle Left","Middle Left"
+"Middle Center","Middle Center"
+"Middle Right","Middle Right"
+"Magento Block","Magento Block"
 Block,Block
 "Block class","Block class"
 Button,Button
+"Click here","Click here"
+Justified,Justified
 "Extra Small","Extra Small"
 Small,Small
 Medium,Medium
 Large,Large
 "Extra Large","Extra Large"
-"Click here","Click here"
-Link,Link
-https://your-link.com,https://your-link.com
-Justified,Justified
 "Icon Position","Icon Position"
 Before,Before
 After,After
-"Icon Spacing","Icon Spacing"
 "Button ID","Button ID"
 "Please make sure the ID is unique and not used elsewhere on the page this form is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces.","Please make sure the ID is unique and not used elsewhere on the page this form is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces."
-"Hover Animation","Hover Animation"
+"Icon Spacing","Icon Spacing"
 "Custom Positioning","Custom Positioning"
 Inline,Inline
 "Custom Width","Custom Width"
@@ -444,21 +381,43 @@ Plus,Plus
 Separator,Separator
 "Cool Number","Cool Number"
 Number,Number
-Heading,Heading
-"Add Your Heading Text Here","Add Your Heading Text Here"
-XL,XL
-XXL,XXL
-HTML,HTML
-"HTML Code","HTML Code"
-"Enter your code","Enter your code"
+Divider,Divider
+Curly,Curly
+Curved,Curved
+Multiple,Multiple
+Slashes,Slashes
+Squared,Squared
+Wavy,Wavy
+Arrows,Arrows
+Pluses,Pluses
+Rhombus,Rhombus
+Parallelogram,Parallelogram
+Rectangles,Rectangles
+Dots,Dots
+"Fir Tree","Fir Tree"
+"Half Rounds","Half Rounds"
+Leaves,Leaves
+Stripes,Stripes
+Squares,Squares
+Trees,Trees
+Tribal,Tribal
+X,X
+Line,Line
+"Add Element","Add Element"
+Amount,Amount
+Gap,Gap
+View,View
 Stacked,Stacked
 Framed,Framed
-Shape,Shape
-Circle,Circle
-Square,Square
 "Primary Color","Primary Color"
 "Secondary Color","Secondary Color"
 Rotate,Rotate
+HTML,HTML
+"HTML Code","HTML Code"
+"Enter your code","Enter your code"
+Shape,Shape
+Circle,Circle
+Square,Square
 "Icon Box","Icon Box"
 "This is the heading","This is the heading"
 "Vertical Alignment","Vertical Alignment"
@@ -468,11 +427,9 @@ Rotate,Rotate
 "List Item #2","List Item #2"
 "List Item #3","List Item #3"
 List,List
-Divider,Divider
 Off,Off
 On,On
 "Text Indent","Text Indent"
-Caption,Caption
 "Custom Caption","Custom Caption"
 "Enter your image caption","Enter your image caption"
 "Media File","Media File"
@@ -494,6 +451,12 @@ Rounded,Rounded
 "Icon Hover","Icon Hover"
 Spacer,Spacer
 Space,Space
+"Star Rating","Star Rating"
+Rating,Rating
+"Rating Scale","Rating Scale"
+"Unmarked Style","Unmarked Style"
+Stars,Stars
+"Unmarked Color","Unmarked Color"
 Tabs,Tabs
 "Tab Title","Tab Title"
 "Tab Content","Tab Content"
@@ -501,31 +464,27 @@ Tabs,Tabs
 "Tab #1","Tab #1"
 "Tab #2","Tab #2"
 "Navigation Width","Navigation Width"
+"Enter your text","Enter your text"
+"Add Your Text Here","Add Your Text Here"
+XL,XL
+XXL,XXL
 "Text Editor","Text Editor"
 "Drop Cap","Drop Cap"
 Columns,Columns
-Toggle,Toggle
-"Toggle Title","Toggle Title"
-"Toggle Content","Toggle Content"
-"Toggle Items","Toggle Items"
-"Toggle #1","Toggle #1"
-"Toggle #2","Toggle #2"
 Source,Source
 YouTube,YouTube
 Vimeo,Vimeo
 Dailymotion,Dailymotion
-Other,Other
+"Self Host","Self Host"
 "Enter your URL","Enter your URL"
 URL,URL
 "Video Options","Video Options"
-Autoplay,Autoplay
 Mute,Mute
 Loop,Loop
 "Player Controls","Player Controls"
 "Video Info","Video Info"
 "Modest Branding","Modest Branding"
 Logo,Logo
-"Controls Color","Controls Color"
 "Privacy Mode","Privacy Mode"
 "When you turn on privacy mode, YouTube won't store information about visitors on your website unless they play the video.","When you turn on privacy mode, YouTube won't store information about visitors on your website unless they play the video."
 "Suggested Videos","Suggested Videos"
@@ -534,7 +493,6 @@ Logo,Logo
 "Intro Title","Intro Title"
 "Intro Portrait","Intro Portrait"
 "Intro Byline","Intro Byline"
-"Download Button","Download Button"
 Poster,Poster
 "Image Overlay","Image Overlay"
 "Lazy Load","Lazy Load"
@@ -542,17 +500,96 @@ Poster,Poster
 "Aspect Ratio","Aspect Ratio"
 Shadow,Shadow
 "Content Position","Content Position"
-"Play Video","Play Video"
-"Hello World","Hello World"
+"Invalid action model: %1","Invalid action model: %1"
+"Something went wrong when processing mass action.","Something went wrong when processing mass action."
+"Content Title","Content Title"
+"Content Type","Content Type"
+"Content View","Content View"
+"To apply changes you should fill in hidden required ""%1"" field","To apply changes you should fill in hidden required ""%1"" field"
+"You deleted the content.","You deleted the content."
+"Something went wrong when deleting the content","Something went wrong when deleting the content"
+"Something went wrong when deleting content(s)","Something went wrong when deleting content(s)"
+"Something went wrong when display contents.","Something went wrong when display contents."
+"Something went wrong when display content(s)","Something went wrong when display content(s)"
+"Sorry, you need permissions to view this content.","Sorry, you need permissions to view this content."
+"Something went wrong when entering the Page Builder.","Something went wrong when entering the Page Builder."
+"Template content was empty","Template content was empty"
+"Something went wrong when exporting template.","Something went wrong when exporting template."
+". 's'",". 's'"
+Pages,Pages
+"Manage %1","Manage %1"
+"Import file must specify.","Import file must specify."
+"Import file should not empty.","Import file should not empty."
+"Something went wrong when importing template.","Something went wrong when importing template."
+Import,Import
+"You deleted %1 out of %2 content(s)","You deleted %1 out of %2 content(s)"
+"You have set %1 out of %2 content(s) to pending","You have set %1 out of %2 content(s) to pending"
+"Something went wrong when set content status","Something went wrong when set content status"
+"You have published %1 out of %2 content(s)","You have published %1 out of %2 content(s)"
+"You cleaned %1 out of %2 content(s) cache","You cleaned %1 out of %2 content(s) cache"
+"Something went wrong when creating content(s)","Something went wrong when creating content(s)"
+"Something went wrong when importing templates/samples.","Something went wrong when importing templates/samples."
+"Import Templates/Samples","Import Templates/Samples"
+"Sorry, you need permissions to save this content.","Sorry, you need permissions to save this content."
+"Invalid content type: %1","Invalid content type: %1"
+"Something went wrong when saving the content.","Something went wrong when saving the content."
+"Data content invalidated. Make sure you copy the right way.","Data content invalidated. Make sure you copy the right way."
+"You saved the content.","You saved the content."
+"Something went wrong while saving the content.","Something went wrong while saving the content."
+"( Duplicated from #%1 )","( Duplicated from #%1 )"
+"You duplicated the content.","You duplicated the content."
+"Global.css saved.","Global.css saved."
+"Something went wrong when saving Global.css","Something went wrong when saving Global.css"
+Global.css,Global.css
+"The entity must be specify","The entity must be specify"
+"Something went wrong when create the Page Builder. Please try again.","Something went wrong when create the Page Builder. Please try again."
+"Something went wrong when render content view.","Something went wrong when render content view."
+"Invalid method %1::%2","Invalid method %1::%2"
+Internal,Internal
+External,External
+"Use Origin Content","Use Origin Content"
+"Show Nothing","Show Nothing"
+"Do Nothing","Do Nothing"
+Pending,Pending
+Published,Published
+"Invalid content status: %1","Invalid content status: %1"
+"File does not exited: %1","File does not exited: %1"
+"Content Id does not specify","Content Id does not specify"
+"Could not save the page: %1","Could not save the page: %1"
+"Invalid content identifier: Same identifier with ""%1"".","Invalid content identifier: Same identifier with ""%1""."
+"You can't publish this content","You can't publish this content"
+"The content with the ID: ""%1"" doesn't exist.","The content with the ID: ""%1"" doesn't exist."
+"The content with the Identifier: ""%1"" doesn't exist.","The content with the Identifier: ""%1"" doesn't exist."
+"Could not delete the content: %1","Could not delete the content: %1"
+Draft,Draft
+Autosave,Autosave
+Revision,Revision
+"Could not save the revision: %1","Could not save the revision: %1"
+"Invalid revision status: %1","Invalid revision status: %1"
+"The revision with the ""%1"" ID doesn't exist.","The revision with the ""%1"" ID doesn't exist."
+"Could not delete the revision: %1","Could not delete the revision: %1"
+"Invalid content Id","Invalid content Id"
+"Invalid access token.","Invalid access token."
+"Something went wrong.","Something went wrong."
+"Nothing to import","Nothing to import"
+"Invalid sample model","Invalid sample model"
+Luma,Luma
+"Page Builder content's not found.","Page Builder content's not found."
+editable_title,editable_title
+Enter,Enter
+Editor,Editor
+"Delete %1","Delete %1"
+"Are you sure you want to delete a `%1`?","Are you sure you want to delete a `%1`?"
+"All Store Views","All Store Views"
+"Sample name","Sample name"
+Templates,Templates
+Actions,Actions
+"Import All","Import All"
 File,File
 "Accepted: JSON files","Accepted: JSON files"
-"How to use","How to use"
-"Add Widget with name ""Page Builder Content"" and set ""Page"" for it.","Add Widget with name ""Page Builder Content"" and set ""Page"" for it."
-"CMS Page/Static Block","CMS Page/Static Block"
-"You can paste the above block of snippet into any page in Magento 2 and set %1 for it.","You can paste the above block of snippet into any page in Magento 2 and set %1 for it."
-"Template .phtml file","Template .phtml file"
-"Open a .phtml file and insert where you want to display Page Builder Content.","Open a .phtml file and insert where you want to display Page Builder Content."
 Loading,Loading
+"Loading ...","Loading ..."
+"Save and Refresh","Save and Refresh"
 "What's new?","What's new?"
 Close,Close
 "Add New Section","Add New Section"
@@ -560,7 +597,6 @@ Close,Close
 "Drag widget here","Drag widget here"
 "Select your Structure","Select your Structure"
 "This tag has no settings.","This tag has no settings."
-Actions,Actions
 Revisions,Revisions
 "No History Yet","No History Yet"
 "Once you start working, you'll be able to redo / undo any action you make in the editor.","Once you start working, you'll be able to redo / undo any action you make in the editor."
@@ -579,11 +615,8 @@ Navigator,Navigator
 "Keyboard Shortcuts","Keyboard Shortcuts"
 Quit,Quit
 Skip,Skip
-Empty,Empty
 "Easy Navigation is Here!","Easy Navigation is Here!"
 "Once you fill your page with content, this window will give you an overview display of all the page elements. This way, you can easily move around any section, column, or widget.","Once you fill your page with content, this window will give you an overview display of all the page elements. This way, you can easily move around any section, column, or widget."
-"Thanks for using Goomento PageBuilder","Thanks for using Goomento PageBuilder"
-"Search Widget:","Search Widget:"
 Menu,Menu
 "Widgets Panel","Widgets Panel"
 Desktop,Desktop
@@ -596,7 +629,9 @@ Publish,Publish
 "Hide Panel","Hide Panel"
 "Update changes to page","Update changes to page"
 "%s are disabled","%s are disabled"
-"You can enable it from the <a href=""%s"" target=""_blank"">Goomento settings page</a>.","You can enable it from the <a href=""%s"" target=""_blank"">Goomento settings page</a>."
+"Thanks for using Goomento PageBuilder","Thanks for using Goomento PageBuilder"
+"Search Widget:","Search Widget:"
+"Search Widget...","Search Widget..."
 "Drag & Drop","Drag & Drop"
 "No Revisions Saved Yet","No Revisions Saved Yet"
 By,By
@@ -623,36 +658,25 @@ Insert,Insert
 "Drag & drop your .JSON or .zip template file","Drag & drop your .JSON or .zip template file"
 or,or
 "Select File","Select File"
-"My Libraries","My Libraries"
-Upload,Upload
-"Have a look","Have a look"
-"Please note: All unsaved changes will be lost","Please note: All unsaved changes will be lost"
-"Saving Disabled","Saving Disabled"
-"Server Error","Server Error"
+"Play Video","Play Video"
+"Edit %1","Edit %1"
+"Paste style","Paste style"
+"Reset style","Reset style"
 "Import Document Settings","Import Document Settings"
 "Do you want to also import the document settings of the template?","Do you want to also import the document settings of the template?"
 "Attention: Importing may override previous settings","Attention: Importing may override previous settings"
-Blocks,Blocks
-"My Templates","My Templates"
-"Your designs will be available for export and reuse on any page or website","Your designs will be available for export and reuse on any page or website"
-"Save your template","Save your template"
-"Delete template","Delete template"
-"An error occurred","An error occurred"
-"The following error(s) occurred while processing the request:","The following error(s) occurred while processing the request:"
-Library,Library
-"Haven’t Saved Templates Yet?","Haven’t Saved Templates Yet?"
-"This is where your templates should be. Design it. Save it. Reuse it.","This is where your templates should be. Design it. Save it. Reuse it."
-"No Results Found","No Results Found"
-"Please make sure your search is spelled correctly or try a different words.","Please make sure your search is spelled correctly or try a different words."
-"No Favorite Templates","No Favorite Templates"
-Category,Category
-"Are you sure you want to reset this gallery?","Are you sure you want to reset this gallery?"
-"Delete Gallery","Delete Gallery"
-Cancel,Cancel
+"Add %1","Add %1"
+"Duplicate  %1","Duplicate  %1"
+"Delete  %1","Delete  %1"
+"Save As Section","Save As Section"
+"Copy All Content","Copy All Content"
+"Delete All Content","Delete All Content"
 "Item #%1","Item #%1"
 "Inner section","Inner section"
 "Delete all content","Delete all content"
 "Attention: We are going to DELETE ALL CONTENT from this page. Are you sure you want to do that?","Attention: We are going to DELETE ALL CONTENT from this page. Are you sure you want to do that?"
+Cancel,Cancel
+"Server Error","Server Error"
 "Connection Lost","Connection Lost"
 "Unknown Error","Unknown Error"
 Refresh,Refresh
@@ -665,32 +689,23 @@ got_it,got_it
 "Your browser isn't compatible with all of Goomento's editing features. We recommend you switch to another browser like Chrome or Firefox.","Your browser isn't compatible with all of Goomento's editing features. We recommend you switch to another browser like Chrome or Firefox."
 "Proceed Anyway","Proceed Anyway"
 "Go back or Refresh this page if issue is persistent","Go back or Refresh this page if issue is persistent"
-"Edit %1","Edit %1"
-"Paste style","Paste style"
-"Reset style","Reset style"
-"Type here","Type here"
-"Meet Right Click","Meet Right Click"
-"Now you can access all editing actions using right click.","Now you can access all editing actions using right click."
-"Got it","Got it"
-"Duplicate  %1","Duplicate  %1"
-"Add %1","Add %1"
-"Delete  %1","Delete  %1"
-"Add New Column","Add New Column"
-"Save As Section","Save As Section"
-preview,preview
-elements,elements
-Help,Help
-"Go to","Go to"
-Shortcuts,Shortcuts
-"View page","View page"
-"Global style","Global style"
-"Default Colors","Default Colors"
-"Global settings","Global settings"
+"My Libraries","My Libraries"
+Upload,Upload
 "Saving has been disabled until you’re reconnected.","Saving has been disabled until you’re reconnected."
 "Server error","Server error"
-"Copy All Content","Copy All Content"
-"Delete All Content","Delete All Content"
-"All content","All content"
+"Your designs will be available for export and reuse on any page or website","Your designs will be available for export and reuse on any page or website"
+"Save your template","Save your template"
+"Delete template","Delete template"
+"An error occurred","An error occurred"
+"The following error(s) occurred while processing the request:","The following error(s) occurred while processing the request:"
+"My Templates","My Templates"
+Library,Library
+Category,Category
+"Haven’t Saved Templates Yet?","Haven’t Saved Templates Yet?"
+"This is where your templates should be. Design it. Save it. Reuse it.","This is where your templates should be. Design it. Save it. Reuse it."
+"No Results Found","No Results Found"
+"Please make sure your search is spelled correctly or try a different words.","Please make sure your search is spelled correctly or try a different words."
+"No Favorite Templates","No Favorite Templates"
 Added,Added
 Removed,Removed
 Edited,Edited
@@ -698,29 +713,47 @@ Moved,Moved
 "Style pasted","Style pasted"
 "Style reset","Style reset"
 "Editing started","Editing started"
+"All content","All content"
+"Add New Column","Add New Column"
+"Have a look","Have a look"
 update,update
+"Are you sure you want to reset this gallery?","Are you sure you want to reset this gallery?"
+"Delete Gallery","Delete Gallery"
+Help,Help
+"Go to","Go to"
+Shortcuts,Shortcuts
+"View page","View page"
+"Global style","Global style"
+"Default Colors","Default Colors"
+"Global settings","Global settings"
+"Please note: All unsaved changes will be lost","Please note: All unsaved changes will be lost"
+"Saving Disabled","Saving Disabled"
+elements,elements
+preview,preview
+Shortcode,Shortcode
 "Color value","Color value"
 "Select Color","Select Color"
 "Select default color","Select default color"
 Clear,Clear
 "Clear color","Clear color"
-Templates,Templates
 Sections,Sections
 "Builder Actions","Builder Actions"
 Importer,Importer
 Configuration,Configuration
 Active,Active
 "Download Image","Download Image"
-"Downloaded Folder","Downloaded Folder"
-Editor,Editor
+"Download Folder","Download Folder"
+"Is RTL","Is RTL"
 "Css Print Method","Css Print Method"
 Render,Render
 Fallback,Fallback
 "Pagebuilder Content","Pagebuilder Content"
 "Goomento Pagebuilder Content Caching","Goomento Pagebuilder Content Caching"
+"Page or Section","Page or Section"
 "Enable PageBuilder","Enable PageBuilder"
 "-- Please Select --","-- Please Select --"
 "Edit Page","Edit Page"
+Identifier,Identifier
 "Page Title","Page Title"
 "Store View","Store View"
 Data,Data
@@ -734,7 +767,6 @@ Modified,Modified
 "Edit Section","Edit Section"
 "Delete Section(s)","Delete Section(s)"
 "Edit Template","Edit Template"
-"Page in Websites","Page in Websites"
 "Add New Template","Add New Template"
 "Delete Template(s)","Delete Template(s)"
 "Are you sure you want to delete selected items?","Are you sure you want to delete selected items?"

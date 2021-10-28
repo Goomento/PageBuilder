@@ -11,10 +11,6 @@ namespace Goomento\PageBuilder\Model\Cache\Type;
 use Magento\Framework\App\Cache\Type\FrontendPool;
 use Magento\Framework\Cache\Frontend\Decorator\TagScope;
 
-/**
- * Class PageBuilder
- * @package Goomento\PageBuilder\Model\Cache\Type
- */
 class PageBuilder extends TagScope
 {
     /**

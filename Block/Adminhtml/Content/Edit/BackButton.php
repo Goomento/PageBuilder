@@ -10,10 +10,6 @@ namespace Goomento\PageBuilder\Block\Adminhtml\Content\Edit;
 
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 
-/**
- * Class BackButton
- * @package Goomento\PageBuilder\Block\Adminhtml\Content\Edit
- */
 class BackButton extends AbstractGenericButton implements ButtonProviderInterface
 {
     /**

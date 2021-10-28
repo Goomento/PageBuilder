@@ -8,27 +8,11 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Core\DynamicTags\Module as TagsModule;
+use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
 
-/**
- * Class Text
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Text extends BaseData
+class Text extends AbstractControlData
 {
-
-    /**
-     * Get text control type.
-     *
-     * Retrieve the control type, in this case `text`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'text';
-    }
+    const NAME = 'text';
 
     /**
      * Render text control output in the editor.

@@ -10,9 +10,8 @@ namespace Goomento\PageBuilder\Model;
 
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
-use Goomento\PageBuilder\Helper\StaticUtils;
-use Goomento\PageBuilder\Helper\UserHelper;
+use Goomento\PageBuilder\Helper\DataHelper;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
@@ -21,10 +20,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\User\Model\User;
 use Magento\User\Model\UserFactory;
 
-/**
- * Class Content
- * @package Goomento\PageBuilder\Model
- */
+
 class Content extends AbstractModel implements
     ContentInterface,
     IdentityInterface
@@ -72,7 +68,7 @@ class Content extends AbstractModel implements
      */
     protected $revisions = [];
 
-    private $createRevisionFlag = true;
+    private $revisionFlag = true;
 
     /**
      * @inheridoc
@@ -88,7 +84,7 @@ class Content extends AbstractModel implements
     protected function getStoreManager()
     {
         if (is_null($this->storeManager)) {
-            $this->storeManager = StaticObjectManager::get(StoreManagerInterface::class);
+            $this->storeManager = ObjectManagerHelper::get(StoreManagerInterface::class);
         }
 
         return $this->storeManager;
@@ -100,7 +96,7 @@ class Content extends AbstractModel implements
     public function getStores()
     {
         if (is_null($this->stores)) {
-            $storeIds = $this->getStoreId();
+            $storeIds = $this->getStoreIds();
             foreach ($storeIds as $storeId) {
                 $this->stores[] = $this->getStoreManager()->getStore($storeId);
             }
@@ -233,7 +229,7 @@ class Content extends AbstractModel implements
      */
     public function getElements()
     {
-        return $this->getData(self::ELEMENTS);
+        return (array) $this->getData(self::ELEMENTS);
     }
 
     /**
@@ -241,7 +237,7 @@ class Content extends AbstractModel implements
      */
     public function getSettings()
     {
-        return $this->getData(self::SETTINGS);
+        return (array) $this->getData(self::SETTINGS);
     }
 
     /**
@@ -292,18 +288,18 @@ class Content extends AbstractModel implements
     /**
      * @inheridoc
      */
-    public function setStoreId($storeIds)
+    public function setStoreIds($storeIds)
     {
         $storeIds = (array) $storeIds;
-        return $this->setData(self::STORE_ID, $storeIds);
+        return $this->setData(self::STORE_IDS, $storeIds);
     }
 
     /**
      * @inheridoc
      */
-    public function getStoreId()
+    public function getStoreIds()
     {
-        return $this->getData(self::STORE_ID);
+        return $this->getData(self::STORE_IDS);
     }
 
     /**
@@ -357,7 +353,7 @@ class Content extends AbstractModel implements
     public function getSetting($name)
     {
         $settings = $this->getSettings();
-        return StaticUtils::arrayGetValue($settings, $name);
+        return DataHelper::arrayGetValue($settings, $name);
     }
 
     /**
@@ -366,7 +362,7 @@ class Content extends AbstractModel implements
     public function setSetting($name, $value)
     {
         $settings = $this->getSettings();
-        StaticUtils::arraySetValue($settings, $name, $value);
+        DataHelper::arraySetValue($settings, $name, $value);
         return $this->setSettings($settings);
     }
 
@@ -377,7 +373,7 @@ class Content extends AbstractModel implements
     {
         if ($this->hasSetting($name)) {
             $settings = $this->getSettings();
-            StaticUtils::arrayUnsetValue($settings, $name);
+            DataHelper::arrayUnsetValue($settings, $name);
             $this->setSettings($settings);
         }
 
@@ -392,7 +388,7 @@ class Content extends AbstractModel implements
         if (is_null($this->author) && $this->getAuthorId()) {
             $this->author = false;
             /** @var UserFactory $userFactory */
-            $userFactory = StaticObjectManager::get(UserFactory::class);
+            $userFactory = ObjectManagerHelper::get(UserFactory::class);
             $this->author = $userFactory->create()->load(
                 $this->getAuthorId()
             );
@@ -419,7 +415,7 @@ class Content extends AbstractModel implements
                 return $this->getAuthor();
             } else {
                 /** @var UserFactory $userFactory */
-                $userFactory = StaticObjectManager::get(UserFactory::class);
+                $userFactory = ObjectManagerHelper::get(UserFactory::class);
                 $this->lastEditor = $userFactory->create()->load(
                     $this->getLastEditorId()
                 );
@@ -465,17 +461,51 @@ class Content extends AbstractModel implements
     /**
      * @inheritDoc
      */
-    public function setCreateRevisionFlag(bool $flag)
+    public function setRevisionFlag(bool $flag)
     {
-        $this->createRevisionFlag = $flag;
+        $this->revisionFlag = $flag;
         return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function getCreateRevisionFlag()
+    public function getRevisionFlag()
     {
-        return (bool) $this->createRevisionFlag;
+        return (bool) $this->revisionFlag;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getElementDataById(string $elementId): ?array
+    {
+        return self::findElementById($elementId, $this->getElements());
+    }
+
+    /**
+     * @param string $elementId
+     * @param array $elements
+     * @return array
+     */
+    private static function findElementById(string $elementId, array $elements)
+    {
+        $result = [];
+        if (!empty($elements)) {
+            foreach ($elements as $element) {
+                if ($element['id'] === $elementId) {
+                    $result = $element;
+                    break;
+                }
+
+                $check = self::findElementById($elementId, $element['elements']);
+                if (!empty($check)) {
+                    $result = $check;
+                    break;
+                }
+            }
+        }
+
+        return $result;
     }
 }

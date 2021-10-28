@@ -1,0 +1,52 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Builder\Widgets\StarRating;
+use Goomento\PageBuilder\Helper\DataHelper;
+use Magento\Framework\Escaper;
+
+/**
+ * @var Widget $block
+ * @var Escaper $escaper
+ * @var StarRating $widget
+ */
+$widget = $block->getWidget();
+$settings = $widget->getSettingsForDisplay();
+
+$rating_data = $widget->getRating();
+$textual_rating = $rating_data[0] . '/' . $rating_data[1];
+$icon = '';
+
+if ('star_unicode' === $settings['star_style']) {
+    $icon = '&#9733;';
+
+    if ('outline' === $settings['unmarked_star_style']) {
+        $icon = '&#9734;';
+    }
+}
+
+$widget->addRenderAttribute('icon_wrapper', [
+    'class' => 'gmt-star-rating',
+    'title' => $textual_rating,
+    'itemtype' => 'http://schema.org/Rating',
+    'itemscope' => '',
+    'itemprop' => 'reviewRating',
+]);
+
+$widget->addRenderAttribute('icon_wrapper', 'class', 'gmt-star-unmarked-' . ($settings['unmarked_star_style'] ?? ''));
+
+$schema_rating = '<span itemprop="ratingValue" class="gmt-screen-only">' . $textual_rating . '</span>';
+$stars_element = '<div ' . $widget->getRenderAttributeString('icon_wrapper') . '>' . $widget->renderStars($icon) . ' ' . $schema_rating . '</div>'; ?>
+
+<div class="gmt-star-rating__wrapper">
+    <?php if (!DataHelper::isEmpty($settings['title'])) : ?>
+        <div class="gmt-star-rating__title"><?php echo $settings['title']; ?></div>
+    <?php endif; ?>
+    <?php echo $stars_element; ?>
+</div>

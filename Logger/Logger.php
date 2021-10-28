@@ -8,10 +8,6 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Logger;
 
-/**
- * Class Logger
- * @package Goomento\PageBuilder\Logger
- */
 class Logger extends \Monolog\Logger
 {
 }

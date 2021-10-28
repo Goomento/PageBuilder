@@ -9,49 +9,14 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Model\ResourceModel;
 
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
-use Magento\Framework\EntityManager\EntityManager;
-use Magento\Framework\EntityManager\MetadataPool;
+use Goomento\PageBuilder\Helper\DataHelper;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\Framework\Model\ResourceModel\Db\Context;
 
-/**
- * Class Content
- * @package Goomento\PageBuilder\Model\ResourceModel
- */
 class Revision extends AbstractDb
 {
     /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var MetadataPool
-     */
-    protected $metadataPool;
-
-    /**
-     * @param Context $context
-     * @param EntityManager $entityManager
-     * @param MetadataPool $metadataPool
-     * @param null $connectionName
-     */
-    public function __construct(
-        Context $context,
-        EntityManager $entityManager,
-        MetadataPool $metadataPool,
-        $connectionName = null
-    ) {
-        parent::__construct($context, $connectionName);
-        $this->entityManager = $entityManager;
-        $this->metadataPool = $metadataPool;
-    }
-
-    /**
-     * Initialize resource model
-     *
-     * @return void
+     * @inheriDoc
      */
     protected function _construct()
     {
@@ -59,40 +24,44 @@ class Revision extends AbstractDb
     }
 
     /**
-     * @inheritDoc
+     * @inheriDoc
      */
-    public function getConnection()
+    protected function _afterSave(AbstractModel $object)
     {
-        return $this->metadataPool->getMetadata(RevisionInterface::class)->getEntityConnection();
-    }
-
-    /**
-     * @param AbstractModel $object
-     * @param mixed $value
-     * @param null $field
-     * @return $this|Content
-     */
-    public function load(AbstractModel $object, $value, $field = null)
-    {
-        $this->entityManager->load($object, $value);
+        parent::_afterSave($object);
+        $this->cleanRevisions($object);
         return $this;
     }
 
     /**
-     * @inheritDoc
+     * Remove revisions
      */
-    public function save(AbstractModel $object)
+    private function cleanRevisions(AbstractModel $object)
     {
-        $this->entityManager->save($object);
-        return $this;
-    }
+        $contentId = (int) $object->getData(RevisionInterface::CONTENT_ID);
+        if ($contentId) {
+            $maxRevision = DataHelper::getBuilderConfig('editor/number_of_revision') ?: 100;
+            $connection = $this->getConnection();
+            $selectCount = $connection->select()->from(
+                $this->getMainTable(),
+                'COUNT(*)'
+            )->where('content_id = ?', $contentId);
+            $count = (int) $connection->fetchOne($selectCount);
 
-    /**
-     * @inheritDoc
-     */
-    public function delete(AbstractModel $object)
-    {
-        $this->entityManager->delete($object);
-        return $this;
+            if ($count && $count > $maxRevision) {
+                $removeNumber = $count - $maxRevision;
+                $connection->deleteFromSelect(
+                    $connection->select()->from(
+                        $this->getMainTable(),
+                        'revision_id'
+                    )
+                        ->where('content_id = ?', $contentId)
+                        ->where('status = ?', 'revision')
+                        ->limit($removeNumber)
+                        ->order('content_id asc'),
+                    $this->getMainTable()
+                );
+            }
+        }
     }
 }

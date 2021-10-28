@@ -8,25 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class Hidden
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Hidden extends BaseData
+class Hidden extends AbstractControlData
 {
-
-    /**
-     * Get hidden control type.
-     *
-     * Retrieve the control type, in this case `hidden`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'hidden';
-    }
+    const NAME = 'hidden';
 
     /**
      * Render hidden control output in the editor.

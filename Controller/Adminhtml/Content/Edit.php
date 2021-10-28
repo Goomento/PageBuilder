@@ -10,13 +10,8 @@ namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Goomento\PageBuilder\Traits\TraitHttpPage;
-use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Class Edit
- * @package Goomento\PageBuilder\Controller\Adminhtml\Content
- */
 class Edit extends AbstractContent implements HttpGetActionInterface
 {
     use TraitHttpPage;

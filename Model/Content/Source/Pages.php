@@ -12,10 +12,6 @@ use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\Data\OptionSourceInterface;
 
-/**
- * Class Pages
- * @package Goomento\PageBuilder\Model\Content\Source
- */
 class Pages implements OptionSourceInterface
 {
 
@@ -42,7 +38,8 @@ class Pages implements OptionSourceInterface
     {
         $result = [];
         $pages = $this->collectionFactory->create()
-            ->addFieldToFilter('type', ['eq' => ContentInterface::TYPE_PAGE]);
+            ->addFieldToFilter(ContentInterface::TYPE, ['eq' => ContentInterface::TYPE_PAGE]);
+
         foreach ($pages->getItems() as $page) {
             $result[] = [
                 'label' => $page->getTitle(),

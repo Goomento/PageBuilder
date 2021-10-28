@@ -9,18 +9,12 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder;
 
 use Goomento\Core\SubSystemInterface;
-use Goomento\PageBuilder\Core\Common\App as CommonApp;
-use Goomento\PageBuilder\Core\Settings\Manager as SettingsManager;
-use Goomento\PageBuilder\Helper\Hooks;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
-use Goomento\PageBuilder\Helper\StaticState;
-use Goomento\PageBuilder\Helper\Theme;
+use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Helper\StateHelper;
+use Goomento\PageBuilder\Helper\ThemeHelper;
 use Magento\Framework\ObjectManagerInterface;
 
-/**
- * Class BuilderController
- * @package Goomento\PageBuilder
- */
 class PageBuilder implements SubSystemInterface
 {
     /**
@@ -67,11 +61,11 @@ class PageBuilder implements SubSystemInterface
         if (false === $this->init) {
             $this->init = true;
 
-            Hooks::doAction('pagebuilder/construct');
+            HooksHelper::doAction('pagebuilder/construct');
 
             $this->initComponents($buildSubject);
 
-            Hooks::addAction('init', function () {
+            HooksHelper::addAction('init', function () {
                 self::registerHooks();
             });
         }
@@ -82,7 +76,7 @@ class PageBuilder implements SubSystemInterface
      */
     public static function initialize()
     {
-        StaticObjectManager::get(__CLASS__)->init();
+        ObjectManagerHelper::get(__CLASS__)->init();
     }
 
     /**
@@ -90,20 +84,20 @@ class PageBuilder implements SubSystemInterface
      */
     private static function registerHooks()
     {
-        $areaCode = StaticState::getAreaCode();
+        $areaCode = StateHelper::getAreaCode();
 
         self::header();
         self::footer();
 
-        Hooks::doAction('pagebuilder/init');
-        Hooks::doAction("pagebuilder/{$areaCode}/init");
+        HooksHelper::doAction('pagebuilder/init');
+        HooksHelper::doAction("pagebuilder/{$areaCode}/init");
 
-        Hooks::doAction('pagebuilder/register_styles');
-        Hooks::doAction('pagebuilder/register_scripts');
+        HooksHelper::doAction('pagebuilder/register_styles');
+        HooksHelper::doAction('pagebuilder/register_scripts');
 
 
-        Hooks::doAction("pagebuilder/{$areaCode}/register_styles");
-        Hooks::doAction("pagebuilder/{$areaCode}/register_scripts");
+        HooksHelper::doAction("pagebuilder/{$areaCode}/register_styles");
+        HooksHelper::doAction("pagebuilder/{$areaCode}/register_scripts");
     }
 
     /**
@@ -111,17 +105,17 @@ class PageBuilder implements SubSystemInterface
      */
     private static function header()
     {
-        $areaCode = StaticState::getAreaCode();
+        $areaCode = StateHelper::getAreaCode();
 
-        Hooks::addAction('header', function () {
-            Hooks::doAction('pagebuilder/header');
+        HooksHelper::addAction('header', function () {
+            HooksHelper::doAction('pagebuilder/header');
         });
 
-        Hooks::addAction('pagebuilder/header', function () use ($areaCode) {
-            Hooks::doAction("pagebuilder/{$areaCode}/header");
+        HooksHelper::addAction('pagebuilder/header', function () use ($areaCode) {
+            HooksHelper::doAction("pagebuilder/{$areaCode}/header");
 
-            Hooks::doAction('pagebuilder/enqueue_scripts');
-            Hooks::doAction("pagebuilder/{$areaCode}/enqueue_scripts");
+            HooksHelper::doAction('pagebuilder/enqueue_scripts');
+            HooksHelper::doAction("pagebuilder/{$areaCode}/enqueue_scripts");
         });
     }
 
@@ -130,17 +124,17 @@ class PageBuilder implements SubSystemInterface
      */
     private static function footer()
     {
-        $areaCode = StaticState::getAreaCode();
+        $areaCode = StateHelper::getAreaCode();
 
-        Hooks::addAction('footer', function () {
-            Hooks::doAction('pagebuilder/footer');
+        HooksHelper::addAction('footer', function () {
+            HooksHelper::doAction('pagebuilder/footer');
         });
 
-        Hooks::addAction('pagebuilder/footer', function () use ($areaCode) {
-            Hooks::doAction("pagebuilder/{$areaCode}/footer");
+        HooksHelper::addAction('pagebuilder/footer', function () use ($areaCode) {
+            HooksHelper::doAction("pagebuilder/{$areaCode}/footer");
 
-            Hooks::doAction('pagebuilder/enqueue_scripts');
-            Hooks::doAction("pagebuilder/{$areaCode}/enqueue_scripts");
+            HooksHelper::doAction('pagebuilder/enqueue_scripts');
+            HooksHelper::doAction("pagebuilder/{$areaCode}/enqueue_scripts");
         });
     }
 
@@ -149,17 +143,11 @@ class PageBuilder implements SubSystemInterface
      */
     private function initComponents(array $buildSubject = [])
     {
-        SettingsManager::run();
-
         foreach ($this->components as $class) {
             $component = $this->objectManager->get($class);
             if ($component instanceof BuildableInterface) {
                 $component->init($buildSubject);
             }
-        }
-
-        if (true === StaticState::isAdminhtml()) {
-            $this->initCommon();
         }
 
         $this->regisDefaultHook();
@@ -171,20 +159,20 @@ class PageBuilder implements SubSystemInterface
      */
     private function regisDefaultHook()
     {
-        Hooks::addAction('pagebuilder/header', function () {
-            Theme::getStylesManager()->doItems(false);
-            Theme::getScriptsManager()->doHeadItems();
+        HooksHelper::addAction('pagebuilder/header', function () {
+            ThemeHelper::getStylesManager()->doItems(false);
+            ThemeHelper::getScriptsManager()->doHeadItems();
         }, 11);
 
-        Hooks::addAction('pagebuilder/footer', function () {
-            Theme::getStylesManager()->doItems(false);
-            Theme::getScriptsManager()->doFooterItems();
+        HooksHelper::addAction('pagebuilder/footer', function () {
+            ThemeHelper::getStylesManager()->doItems(false);
+            ThemeHelper::getScriptsManager()->doFooterItems();
         }, 11);
 
 
-        Hooks::addAction('style_loader_src',function ($src = '') {
+        HooksHelper::addAction('style_loader_src',function ($src = '') {
             if (strpos($src, 'http') === false) {
-                $src = Helper\StaticUrlBuilder::urlStaticBuilder($src);
+                $src = Helper\UrlBuilderHelper::urlStaticBuilder($src);
             }
 
             return $src;
@@ -203,17 +191,17 @@ class PageBuilder implements SubSystemInterface
         /**
          * Use `pagebuilderWidgetRegister` to register js handling which responsible for specify widget
          */
-        Theme::registerScript(
+        ThemeHelper::registerScript(
             'pagebuilderRegister',
             'Goomento_PageBuilder/js/action/pagebuilderRegister'
         );
 
-        Theme::registerScript(
+        ThemeHelper::registerScript(
             'backbone',
             'Goomento_PageBuilder/lib/backbone/backbone.min'
         );
 
-        Theme::registerScript(
+        ThemeHelper::registerScript(
             'backbone.radio',
             'Goomento_PageBuilder/lib/backbone/backbone.radio.min',
             [
@@ -221,7 +209,7 @@ class PageBuilder implements SubSystemInterface
             ]
         );
 
-        Theme::registerScript(
+        ThemeHelper::registerScript(
             'backbone.marionette',
             'Goomento_PageBuilder/lib/backbone/backbone.marionette.min',
             [
@@ -230,14 +218,14 @@ class PageBuilder implements SubSystemInterface
             ]
         );
 
-        Theme::registerStyle(
+        ThemeHelper::registerStyle(
             'fontawesome',
             'Goomento_PageBuilder/lib/font-awesome/css/all.min.css',
             [],
             '5.9.0'
         );
 
-        Theme::registerScript(
+        ThemeHelper::registerScript(
             'jquery-numerator',
             'Goomento_PageBuilder/lib/jquery-numerator/jquery-numerator.min',
             [
@@ -246,7 +234,7 @@ class PageBuilder implements SubSystemInterface
             ]
         );
 
-        Theme::registerScript(
+        ThemeHelper::registerScript(
             'swiper',
             'Goomento_PageBuilder/lib/swiper/swiper.min',
             [],
@@ -254,14 +242,6 @@ class PageBuilder implements SubSystemInterface
         );
 
         return $this;
-    }
-
-    public function initCommon()
-    {
-        /** @var CommonApp $common */
-        $common = StaticObjectManager::get(CommonApp::class);
-
-        $common->initComponents();
     }
 
     /**
@@ -291,6 +271,6 @@ class PageBuilder implements SubSystemInterface
      */
     public function __destruct()
     {
-        Hooks::doAction('pagebuilder/destruct');
+        HooksHelper::doAction('pagebuilder/destruct');
     }
 }

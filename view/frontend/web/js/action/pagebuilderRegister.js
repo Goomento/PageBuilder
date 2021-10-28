@@ -20,7 +20,7 @@ define([
          * This method will pass the parameters into callback, the parameters contains
          * {
          *     $element: {jQuery}, // Elements that bond with widget
-         *     settings: {JSON}, // Settings that set
+         *     settings: {JSON}, // AbstractSettings that set
          *     ... // The 'options' param in `widgetRegister`
          * }
          * @param callback
@@ -75,19 +75,15 @@ define([
      * Register widget js library
      *
      *
-     * @param widgetName Alias of widget, that is registered in \Goomento\PageBuilder\Helper\Theme::registerScript() action
+     * @param widgetName Alias of widget, that is registered in \Goomento\PageBuilder\Helper\ThemeHelper::registerScript() action
      *
-     * @see \Goomento\PageBuilder\Helper\Theme::registerScript()
+     * @see \Goomento\PageBuilder\Helper\ThemeHelper::registerScript()
      * @param callback The callback will be triggered when when is present in the HTML output
      * @param options Parameters of callback
      */
     let widgetRegister = function (widgetName, callback, options = {}) {
-        let defaultSkin = 'default';
 
         let widgetType = widgetName;
-        if (!widgetName.includes('.')) {
-            widgetType += '.' + defaultSkin;
-        }
 
         if (!(callback instanceof wrapper)) {
             callback = wrapper(callback, options);
@@ -104,6 +100,7 @@ define([
     }, getElementSettings = $object => {
         let cid = null,
             elementSettings = [];
+
         if ($object instanceof jQuery) {
             cid = $object.data( 'model-cid' );
         }
@@ -123,14 +120,14 @@ define([
             if ( ! settingsKeys ) {
                 settingsKeys = goomentoFrontend.config.elements.keys[ type ] = [];
 
-                jQuery.each( settings.controls, ( name, control ) => {
-                    if ( control.frontend_available ) {
+                $.each( settings.controls, (name, {frontend_available} ) => {
+                    if ( frontend_available ) {
                         settingsKeys.push( name );
                     }
                 } );
             }
 
-            jQuery.each( settings.getActiveControls(), function( controlKey ) {
+            $.each( settings.getActiveControls(), function( controlKey ) {
                 if ( -1 !== settingsKeys.indexOf( controlKey ) ) {
                     let value = attributes[ controlKey ];
 
@@ -149,7 +146,7 @@ define([
     }
 
     return {
-        'widgetRegister': widgetRegister,
-        'getElementSettings': getElementSettings
+        widgetRegister,
+        getElementSettings
     };
 });

@@ -13,16 +13,12 @@ use Goomento\PageBuilder\Api\ContentRegistryInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Controller\Adminhtml\AbstractAction;
 use Goomento\PageBuilder\Api\ContentManagementInterface;
-use Goomento\PageBuilder\Helper\StaticEncryptor;
+use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Logger\Logger;
 use Goomento\PageBuilder\Model\ContentRelation;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Class Assign
- * @package Goomento\PageBuilder\Controller\Adminhtml\Relation
- */
 class Assign extends AbstractAction
 {
     /**
@@ -94,7 +90,7 @@ class Assign extends AbstractAction
                     $backUrl = $this->contentRelation->getEntityEditableUrl($entityType, $entityId);
                     return $redirect->setUrl($this->getUrl('pagebuilder/content/editor', [
                         'content_id' => $content->getId(),
-                        'back_url' => StaticEncryptor::encrypt(
+                        'back_url' => EncryptorHelper::encrypt(
                             !empty($backUrl) ? $backUrl : $this->_redirect->getRefererUrl()
                         ),
                     ]));
@@ -116,7 +112,7 @@ class Assign extends AbstractAction
             $backUrl = $this->contentRelation->getEntityEditableUrl($entityType, $entityId);
             return $redirect->setUrl($this->getUrl('pagebuilder/content/editor', [
                 'content_id' => $content->getId(),
-                'back_url' => StaticEncryptor::encrypt(!empty($backUrl) ? $backUrl : $this->_redirect->getRefererUrl()),
+                'back_url' => EncryptorHelper::encrypt(!empty($backUrl) ? $backUrl : $this->_redirect->getRefererUrl()),
             ]));
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());

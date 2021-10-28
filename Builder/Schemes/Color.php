@@ -8,14 +8,12 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Schemes;
 
-use Goomento\PageBuilder\Helper\StaticEscaper;
+use Goomento\PageBuilder\Builder\Base\AbstractSchema;
+use Goomento\PageBuilder\Helper\EscaperHelper;
 
-/**
- * Class Color
- * @package Goomento\PageBuilder\Builder\Schemes
- */
-class Color extends Base
+class Color extends AbstractSchema
 {
+    const NAME = 'color';
 
     /**
      * 1st color scheme.
@@ -36,19 +34,6 @@ class Color extends Base
      * 4th color scheme.
      */
     const COLOR_4 = '4';
-
-    /**
-     * Get color scheme type.
-     *
-     * Retrieve the color scheme type.
-     *
-     *
-     * @return string Color scheme type.
-     */
-    public static function getType()
-    {
-        return 'color';
-    }
 
     /**
      * Get color scheme title.
@@ -141,10 +126,10 @@ class Color extends Base
 			</div>
 			<div class="gmt-panel-box-content">
 				<?php foreach ($this->_getSystemSchemesToPrint() as $scheme_name => $scheme) : ?>
-					<div class="gmt-panel-scheme-color-system-scheme" data-scheme-name="<?= StaticEscaper::escapeHtml($scheme_name); ?>">
+					<div class="gmt-panel-scheme-color-system-scheme" data-scheme-name="<?= EscaperHelper::escapeHtml($scheme_name); ?>">
 						<div class="gmt-panel-scheme-color-system-items">
 							<?php foreach ($scheme['items'] as $color_value) : ?>
-								<div class="gmt-panel-scheme-color-system-item" style="background-color: <?= StaticEscaper::escapeHtml($color_value); ?>;"></div>
+								<div class="gmt-panel-scheme-color-system-item" style="background-color: <?= EscaperHelper::escapeHtml($color_value); ?>;"></div>
 							<?php endforeach; ?>
 						</div>
 						<div class="gmt-title"><?= $scheme['title']; ?></div>
@@ -256,7 +241,7 @@ class Color extends Base
      * Retrieve the system color schemes
      *
      *
-     * @return string The system color schemes.
+     * @return array The system color schemes.
      */
     protected function _getSystemSchemesToPrint()
     {

@@ -8,27 +8,12 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Core\DynamicTags\Module as TagsModule;
+use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
 
-/**
- * Class Slider
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Slider extends BaseUnits
+class Slider extends AbstractBaseUnits
 {
 
-    /**
-     * Get slider control type.
-     *
-     * Retrieve the control type, in this case `slider`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'slider';
-    }
+    const NAME = 'slider';
 
     /**
      * Get slider control default values.
@@ -39,10 +24,10 @@ class Slider extends BaseUnits
      *
      * @return array Control default value.
      */
-    public function getDefaultValue()
+    public static function getDefaultValue()
     {
         return array_merge(
-            parent::getDefaultValue(),
+            AbstractBaseUnits::getDefaultValue(),
             [
                 'size' => '',
                 'sizes' => [],

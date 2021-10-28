@@ -18,8 +18,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
  * Interface ContentRepositoryInterface
  * For loading content from caching, use ContentRegistryInterface instead.
  * @see ContentRegistryInterface
- *
- * @package Goomento\PageBuilder\Api
  */
 interface ContentRepositoryInterface
 {
@@ -33,13 +31,25 @@ interface ContentRepositoryInterface
     public function save(ContentInterface $content);
 
     /**
-     * Retrieve page.
+     * Retrieve page by Id from database
      *
+     * @see ContentRegistryInterface::getById()
      * @param int $contentId
      * @return ContentInterface
-     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
-    public function getById($contentId);
+    public function getById(int $contentId) : ContentInterface;
+
+    /**
+     * Retrieve page by identifier from database
+     *
+     *
+     * @see ContentRegistryInterface::getByIdentifier()
+     * @param string $identifier
+     * @return ContentInterface
+     * @throws NoSuchEntityException
+     */
+    public function getByIdentifier(string $identifier) : ContentInterface;
 
     /**
      * Retrieve contents matching the specified criteria.
@@ -56,6 +66,7 @@ interface ContentRepositoryInterface
      * @param ContentInterface $page
      * @return bool true on success
      * @throws LocalizedException
+     *@see ContentRegistryInterface::invalidateContent()
      */
     public function delete(ContentInterface $page);
 
@@ -66,6 +77,7 @@ interface ContentRepositoryInterface
      * @return bool true on success
      * @throws NoSuchEntityException
      * @throws LocalizedException
+     *@see ContentRegistryInterface::invalidateContent()
      */
     public function deleteById($pageId);
 }

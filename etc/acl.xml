@@ -10,35 +10,38 @@
         <resources>
             <resource id="Magento_Backend::admin">
                 <resource id="Goomento_Core::menu">
-                    <resource id="Goomento_PageBuilder::menu" title="Page Builder" sortOrder="1" >
-                        <resource id="Goomento_PageBuilder::page" title="Pages" sortOrder="1" >
-                            <resource id="Goomento_PageBuilder::page_view" title="View" sortOrder="1" />
-                            <resource id="Goomento_PageBuilder::page_grid" title="Grid" sortOrder="2" />
-                            <resource id="Goomento_PageBuilder::page_save" title="Save" sortOrder="3" />
-                            <resource id="Goomento_PageBuilder::page_publish" title="Publish" sortOrder="4" />
-                            <resource id="Goomento_PageBuilder::page_export" title="Export" sortOrder="5" />
-                            <resource id="Goomento_PageBuilder::page_delete" title="Delete" sortOrder="6" />
+                    <resource id="Goomento_PageBuilder::menu" title="Page Builder" sortOrder="10" >
+                        <resource id="Goomento_PageBuilder::page" title="Pages" sortOrder="10" >
+                            <resource id="Goomento_PageBuilder::page_view" title="View" sortOrder="10" />
+                            <resource id="Goomento_PageBuilder::page_grid" title="Grid" sortOrder="20" />
+                            <resource id="Goomento_PageBuilder::page_design" title="Design" sortOrder="30" />
+                            <resource id="Goomento_PageBuilder::page_save" title="Save" sortOrder="40" />
+                            <resource id="Goomento_PageBuilder::page_publish" title="Publish" sortOrder="50" />
+                            <resource id="Goomento_PageBuilder::page_export" title="Export" sortOrder="60" />
+                            <resource id="Goomento_PageBuilder::page_delete" title="Delete" sortOrder="70" />
                         </resource>
-                        <resource id="Goomento_PageBuilder::template" title="Templates" sortOrder="2" >
-                            <resource id="Goomento_PageBuilder::template_view" title="View" sortOrder="1" />
-                            <resource id="Goomento_PageBuilder::template_grid" title="Grid" sortOrder="2" />
-                            <resource id="Goomento_PageBuilder::template_save" title="Save" sortOrder="3" />
-                            <resource id="Goomento_PageBuilder::template_publish" title="Publish" sortOrder="4" />
-                            <resource id="Goomento_PageBuilder::template_export" title="Export" sortOrder="5" />
-                            <resource id="Goomento_PageBuilder::template_delete" title="Delete" sortOrder="6" />
+                        <resource id="Goomento_PageBuilder::template" title="Templates" sortOrder="20" >
+                            <resource id="Goomento_PageBuilder::template_view" title="View" sortOrder="10" />
+                            <resource id="Goomento_PageBuilder::template_grid" title="Grid" sortOrder="20" />
+                            <resource id="Goomento_PageBuilder::template_design" title="Design" sortOrder="30" />
+                            <resource id="Goomento_PageBuilder::template_save" title="Save" sortOrder="40" />
+                            <resource id="Goomento_PageBuilder::template_publish" title="Publish" sortOrder="50" />
+                            <resource id="Goomento_PageBuilder::template_export" title="Export" sortOrder="60" />
+                            <resource id="Goomento_PageBuilder::template_delete" title="Delete" sortOrder="70" />
                         </resource>
-                        <resource id="Goomento_PageBuilder::section" title="Sections" sortOrder="3" >
-                            <resource id="Goomento_PageBuilder::section_view" title="View" sortOrder="1" />
-                            <resource id="Goomento_PageBuilder::section_grid" title="Grid" sortOrder="2" />
-                            <resource id="Goomento_PageBuilder::section_save" title="Save" sortOrder="3" />
-                            <resource id="Goomento_PageBuilder::section_publish" title="Publish" sortOrder="4" />
-                            <resource id="Goomento_PageBuilder::section_export" title="Export" sortOrder="5" />
-                            <resource id="Goomento_PageBuilder::section_delete" title="Delete" sortOrder="6" />
+                        <resource id="Goomento_PageBuilder::section" title="Sections" sortOrder="30" >
+                            <resource id="Goomento_PageBuilder::section_view" title="View" sortOrder="10" />
+                            <resource id="Goomento_PageBuilder::section_grid" title="Grid" sortOrder="20" />
+                            <resource id="Goomento_PageBuilder::section_design" title="Design" sortOrder="30" />
+                            <resource id="Goomento_PageBuilder::section_save" title="Save" sortOrder="40" />
+                            <resource id="Goomento_PageBuilder::section_publish" title="Publish" sortOrder="50" />
+                            <resource id="Goomento_PageBuilder::section_export" title="Export" sortOrder="60" />
+                            <resource id="Goomento_PageBuilder::section_delete" title="Delete" sortOrder="70" />
                         </resource>
-                        <resource id="Goomento_PageBuilder::import" title="Import template" sortOrder="4" />
+                        <resource id="Goomento_PageBuilder::import" title="Import template" sortOrder="40" />
 
-                        <resource id="Goomento_PageBuilder::manage" title="Management" sortOrder="5">
-                            <resource id="Goomento_PageBuilder::manage_global_css" title="Global.css" sortOrder="1" />
+                        <resource id="Goomento_PageBuilder::manage" title="Management" sortOrder="50">
+                            <resource id="Goomento_PageBuilder::manage_global_css" title="Global.css" sortOrder="10" />
                         </resource>
 
                     </resource>

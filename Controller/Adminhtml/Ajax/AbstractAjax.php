@@ -10,13 +10,9 @@ namespace Goomento\PageBuilder\Controller\Adminhtml\Ajax;
 
 use Goomento\PageBuilder\Controller\Adminhtml\AbstractAction;
 use Goomento\Core\Traits\TraitHttpAction;
-use Goomento\PageBuilder\Helper\Hooks;
+use Goomento\PageBuilder\Helper\HooksHelper;
 use Magento\Framework\App\RequestInterface;
 
-/**
- * Class AbstractAjax
- * @package Goomento\PageBuilder\Controller\Adminhtml\Ajax
- */
 abstract class AbstractAjax extends AbstractAction
 {
     use TraitHttpAction;
@@ -27,7 +23,7 @@ abstract class AbstractAjax extends AbstractAction
     public function dispatch(RequestInterface $request)
     {
         if ($request->isAjax() === true) {
-            Hooks::doAction('pagebuilder/ajax/init');
+            HooksHelper::doAction('pagebuilder/ajax/init');
             return parent::dispatch($request);
         }
 

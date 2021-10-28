@@ -1,0 +1,80 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Builder\Managers\Icons;
+use Magento\Framework\Escaper;
+
+/**
+ * @var Widget $block
+ * @var Escaper $escaper
+ */
+$widget = $block->getWidget();
+
+$settings = $widget->getSettingsForDisplay();
+
+$fallback_defaults = [
+    'fas fa-check',
+    'fas fa-times',
+    'fas fa-dot-circle-o',
+];
+
+$widget->addRenderAttribute('icon_list', 'class', 'gmt-icon-list-items');
+$widget->addRenderAttribute('list_item', 'class', 'gmt-icon-list-item');
+
+if ('inline' === $settings['view']) {
+    $widget->addRenderAttribute('icon_list', 'class', 'gmt-inline-items');
+    $widget->addRenderAttribute('list_item', 'class', 'gmt-inline-item');
+} ?>
+<ul <?= $widget->getRenderAttributeString('icon_list'); ?>>
+    <?php
+    foreach ($settings['icon_list'] as $index => $item) :
+        $repeater_setting_key = $widget->getRepeaterSettingKey('text', 'icon_list', $index);
+
+        $widget->addRenderAttribute($repeater_setting_key, 'class', 'gmt-icon-list-text');
+
+        $widget->addInlineEditingAttributes($repeater_setting_key);
+        ?>
+        <li class="gmt-icon-list-item" >
+            <?php
+            if (!empty($item['link']['url'])) {
+                $link_key = 'link_' . $index;
+
+                $widget->addRenderAttribute($link_key, 'href', $item['link']['url']);
+
+                if ($item['link']['is_external']) {
+                    $widget->addRenderAttribute($link_key, 'target', '_blank');
+                }
+
+                if ($item['link']['nofollow']) {
+                    $widget->addRenderAttribute($link_key, 'rel', 'nofollow');
+                }
+
+                echo '<a ' . $widget->getRenderAttributeString($link_key) . '>';
+            }
+
+            // add old default
+            if (! isset($item['icon'])) {
+                $item['icon'] = $fallback_defaults[$index] ?? 'fas fa-check';
+            }
+
+            if (!empty($item['icon']) || (! empty($item['selected_icon']['value']))) :
+                ?>
+                <span class="gmt-icon-list-icon">
+							<?php
+                            Icons::renderIcon($item['selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
+						</span>
+            <?php endif; ?>
+            <span <?= $widget->getRenderAttributeString($repeater_setting_key); ?>><?= $item['text']; ?></span>
+            <?php if (!empty($item['link']['url'])) : ?>
+                </a>
+            <?php endif; ?>
+        </li>
+    <?php
+    endforeach; ?>
+</ul>
