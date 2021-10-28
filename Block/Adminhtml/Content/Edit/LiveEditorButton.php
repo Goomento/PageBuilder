@@ -8,13 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Block\Adminhtml\Content\Edit;
 
-use Goomento\PageBuilder\Helper\StaticAuthorization;
+use Goomento\PageBuilder\Helper\AuthorizationHelper;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 
-/**
- * Class LiveEditorButton
- * @package Goomento\PageBuilder\Block\Adminhtml\Content\Edit
- */
 class LiveEditorButton extends AbstractGenericButton implements ButtonProviderInterface
 {
     /**
@@ -22,7 +18,7 @@ class LiveEditorButton extends AbstractGenericButton implements ButtonProviderIn
      */
     public function getButtonData()
     {
-        if (!StaticAuthorization::isCurrentUserCan($this->getContentType() . '_view')) {
+        if (!AuthorizationHelper::isCurrentUserCan($this->getContentType() . '_view')) {
             return [];
         }
 

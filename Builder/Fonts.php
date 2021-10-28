@@ -8,12 +8,8 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder;
 
-use Goomento\PageBuilder\Helper\Hooks;
+use Goomento\PageBuilder\Helper\HooksHelper;
 
-/**
- * Class Fonts
- * @package Goomento\PageBuilder\Builder
- */
 class Fonts
 {
 
@@ -73,7 +69,7 @@ class Fonts
              *
              * @param array $font_groups Font groups.
              */
-            $font_groups = Hooks::applyFilters('pagebuilder/fonts/groups', $font_groups);
+            $font_groups = HooksHelper::applyFilters('pagebuilder/fonts/groups', $font_groups);
 
             self::$font_groups = $font_groups;
         }
@@ -102,7 +98,7 @@ class Fonts
              *
              * @param array $additional_fonts Additional SagoTheme fonts.
              */
-            $additional_fonts = Hooks::applyFilters('pagebuilder/fonts/additional_fonts', $additional_fonts);
+            $additional_fonts = HooksHelper::applyFilters('pagebuilder/fonts/additional_fonts', $additional_fonts);
 
             self::$fonts = array_merge(self::getNativeFonts(), $additional_fonts);
         }

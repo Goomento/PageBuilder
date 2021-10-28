@@ -12,12 +12,7 @@ use Goomento\PageBuilder\Model\Content;
 use Magento\Backend\Block\Widget\Context;
 use Goomento\PageBuilder\Api\ContentRegistryInterface;
 use Magento\Framework\App\RequestInterface;
-use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Class AbstractDeleteButton
- * @package Goomento\PageBuilder\Block\Adminhtml\Content\Edit
- */
 abstract class AbstractGenericButton
 {
     /**

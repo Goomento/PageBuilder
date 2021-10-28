@@ -10,16 +10,12 @@ namespace Goomento\PageBuilder\Block\Adminhtml;
 
 use Magento\Backend\Block\Template;
 
-/**
- * Class LiveEditor
- * @package Goomento\PageBuilder\Block\Adminhtml
- */
 class LiveEditor extends Template
 {
     /**
      * @inheridoc
      */
-    protected $_template = 'Goomento_Pagebuilder::live-editor.phtml';
+    protected $_template = 'Goomento_Pagebuilder::live_editor.phtml';
 
     /**
      * @return string

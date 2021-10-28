@@ -13,10 +13,6 @@ use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor\CustomFilterInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 
-/**
- * Class ContentStoreFilter
- * @package Goomento\PageBuilder\Model\Api\SearchCriteria\CollectionProcessor\FilterProcessor
- */
 class ContentStoreFilter implements CustomFilterInterface
 {
     /**

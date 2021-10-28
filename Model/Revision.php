@@ -9,17 +9,13 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Model;
 
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
-use Goomento\PageBuilder\Helper\UserHelper;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Helper\AdminUser;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
 use Magento\User\Model\User;
 use Magento\User\Model\UserFactory;
 
-/**
- * Class Revision
- * @package Goomento\PageBuilder\Model
- */
 class Revision extends AbstractModel implements RevisionInterface, IdentityInterface
 {
     /**
@@ -203,13 +199,13 @@ class Revision extends AbstractModel implements RevisionInterface, IdentityInter
     }
 
     /**
-     * @return UserHelper
+     * @return AdminUser
      */
     protected function getUserHelper()
     {
         if (is_null($this->userHelper)) {
-            /** @var UserHelper userHelper */
-            $this->userHelper = StaticObjectManager::get(UserHelper::class);
+            /** @var AdminUser userHelper */
+            $this->userHelper = ObjectManagerHelper::get(AdminUser::class);
         }
 
         return $this->userHelper;
@@ -264,7 +260,7 @@ class Revision extends AbstractModel implements RevisionInterface, IdentityInter
         if (is_null($this->author) && $this->getAuthorId()) {
             $this->author = false;
             /** @var UserFactory $userFactory */
-            $userFactory = StaticObjectManager::get(UserFactory::class);
+            $userFactory = ObjectManagerHelper::get(UserFactory::class);
             try {
                 $this->author = $userFactory->create()->load(
                     $this->getAuthorId()

@@ -8,25 +8,10 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class Select2
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Select2 extends BaseData
+class Select2 extends AbstractControlData
 {
 
-    /**
-     * Get select2 control type.
-     *
-     * Retrieve the control type, in this case `select2`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'select2';
-    }
+    const NAME = 'select2';
 
     /**
      * Get select2 control default settings.

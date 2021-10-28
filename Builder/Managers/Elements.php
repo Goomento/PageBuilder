@@ -8,17 +8,13 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Managers;
 
-use Goomento\PageBuilder\Builder\Base\Element;
+use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Elements\Column;
 use Goomento\PageBuilder\Builder\Elements\Repeater;
 use Goomento\PageBuilder\Builder\Elements\Section;
-use Goomento\PageBuilder\Helper\Hooks;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
+use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
-/**
- * Class Elements
- * @package Goomento\PageBuilder\Builder\Managers
- */
 class Elements
 {
     /**
@@ -34,14 +30,14 @@ class Elements
     /**
      * @param array $element_data
      * @param array $element_args
-     * @param Element|null $element_type
-     * @return Element|mixed|null
+     * @param AbstractElement|null $element_type
+     * @return AbstractElement|mixed|null
      */
-    public function createElementInstance(array $element_data, array $element_args = [], Element $element_type = null)
+    public function createElementInstance(array $element_data, array $element_args = [], AbstractElement $element_type = null)
     {
         if (null === $element_type) {
             /** @var Widgets $widgetManager */
-            $widgetManager = StaticObjectManager::get(Widgets::class);
+            $widgetManager = ObjectManagerHelper::get(Widgets::class);
             if ('widget' === $element_data['elType']) {
                 $element_type = $widgetManager->getWidgetTypes($element_data['widgetType']);
             } else {
@@ -49,7 +45,7 @@ class Elements
             }
         }
 
-        if (! $element_type) {
+        if (!$element_type) {
             return null;
         }
 
@@ -88,16 +84,16 @@ class Elements
             $this->getCategories();
         }
 
-        if (! isset($this->categories[ $category_name ])) {
+        if (!isset($this->categories[ $category_name ])) {
             $this->categories[ $category_name ] = $category_properties;
         }
     }
 
     /**
-     * @param Element $element
+     * @param AbstractElement $element
      * @return bool
      */
-    public function registerElementType(Element $element)
+    public function registerElementType(AbstractElement $element)
     {
         $this->_element_types[ $element->getName() ] = $element;
 
@@ -110,7 +106,7 @@ class Elements
      */
     public function unregisterElementType($name)
     {
-        if (! isset($this->_element_types[ $name ])) {
+        if (!isset($this->_element_types[ $name ])) {
             return false;
         }
 
@@ -142,7 +138,7 @@ class Elements
     public function getElementTypesConfig()
     {
         $config = [];
-        /** @var Element $element */
+        /** @var AbstractElement $element */
         foreach ($this->getElementTypes() as $element) {
             $config[ $element->getName() ] = $element->getConfig();
         }
@@ -163,10 +159,10 @@ class Elements
     private function initElements()
     {
         $this->_element_types = [];
-        $this->registerElementType(StaticObjectManager::get(Section::class));
-        $this->registerElementType(StaticObjectManager::get(Column::class));
-        $this->registerElementType(StaticObjectManager::get(Repeater::class));
-        Hooks::doAction('pagebuilder/elements/elements_registered');
+        $this->registerElementType(ObjectManagerHelper::get(Section::class));
+        $this->registerElementType(ObjectManagerHelper::get(Column::class));
+        $this->registerElementType(ObjectManagerHelper::get(Repeater::class));
+        HooksHelper::doAction('pagebuilder/elements/elements_registered');
     }
 
     /**
@@ -191,6 +187,6 @@ class Elements
             ],
         ];
 
-        Hooks::doAction('pagebuilder/elements/categories_registered', $this);
+        HooksHelper::doAction('pagebuilder/elements/categories_registered', $this);
     }
 }

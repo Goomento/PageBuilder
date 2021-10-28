@@ -8,14 +8,10 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Api;
 
-/**
- * Interface ContentRegistryInterface
- * @package Goomento\PageBuilder\Api
- */
 interface ContentRegistryInterface
 {
     /**
-     * Get content by id
+     * Flexible get content by id
      * Return null if content not found
      *
      * @param int $contentId Content Id
@@ -24,11 +20,18 @@ interface ContentRegistryInterface
     public function getById(int $contentId);
 
     /**
-     * Get content by identifier
+     * Flexible get content by identifier
      * Return null if content not found
      *
      * @param string $identifier
      * @return Data\ContentInterface|null
      */
     public function getByIdentifier(string $identifier);
+
+    /**
+     * Clean content cache
+     *
+     * @param Data\ContentInterface|int $content
+     */
+    public function invalidateContent($content);
 }

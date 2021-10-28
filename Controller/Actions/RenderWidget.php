@@ -8,17 +8,12 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Controller\Actions;
 
-use Goomento\PageBuilder\Core\DocumentsManager;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
+use Goomento\PageBuilder\Builder\Managers\Documents;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\PageBuilder;
-use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\View\Result\PageFactory;
 
-/**
- * Class RenderWidget
- * @package Goomento\PageBuilder\Controller\Actions
- */
-class RenderWidget extends AbstractActions implements HttpPostActionInterface
+class RenderWidget extends AbstractActions
 {
     /**
      * Initialize the program
@@ -27,7 +22,17 @@ class RenderWidget extends AbstractActions implements HttpPostActionInterface
     private $init = false;
 
     /**
-     * @throws LocalizedException
+     * Make sure the layout is loaded, thus we can render design
+     */
+    private function renderPage()
+    {
+        ObjectManagerHelper::get(
+            PageFactory::class
+        )->create();
+    }
+
+    /**
+     * Init the Goomento Page Builder
      */
     private function init()
     {
@@ -38,14 +43,16 @@ class RenderWidget extends AbstractActions implements HttpPostActionInterface
         }
     }
 
+
     /**
      * @inheirtDoc
      */
-    protected function doAction($actionName, $actionData, $params = [])
+    public function doAction($actionData, $params = [])
     {
         $this->init();
-        $documentManager = StaticObjectManager::get(DocumentsManager::class);
-        $document = $documentManager->get($params['editor_post_id']);
+        /** @var Documents $documentManager */
+        $documentManager = ObjectManagerHelper::get(Documents::class);
+        $document = $documentManager->get($params['content_id']);
         return [
             'render' => $document->renderElement($actionData['data'])
         ];

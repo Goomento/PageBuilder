@@ -12,10 +12,6 @@ use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
-/**
- * Class MassRefresh
- * @package Goomento\PageBuilder\Controller\Adminhtml\Content
- */
 class MassRefresh extends AbstractMassAction
 {
     use TraitContent;
@@ -30,7 +26,7 @@ class MassRefresh extends AbstractMassAction
         /** @var ContentInterface $content */
         foreach ($collection->getItems() as $content) {
             if ($content && $content->getId()) {
-                $this->contentManagement->refreshContentCache($content);
+                $this->contentManagement->refreshContentAssets($content);
                 $count++;
             }
         }

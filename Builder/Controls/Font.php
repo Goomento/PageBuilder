@@ -8,25 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class Font
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Font extends BaseData
+class Font extends AbstractControlData
 {
-
-    /**
-     * Get font control type.
-     *
-     * Retrieve the control type, in this case `font`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'font';
-    }
+    const NAME = 'font';
 
     /**
      * Get font control default settings.

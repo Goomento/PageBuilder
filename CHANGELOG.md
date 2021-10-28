@@ -1,5 +1,13 @@
 # Magento 2 Goomento Page Builder
 
+## 0.2.0: Enhanced performance
+- Reallocate file structure  
+- Enhanced performance
+
+## 0.1.7: RTL Added
+- Enhanced widget renderer
+- RTL Added
+
 ## 0.1.6: Enhanced widget renderer
 - Fixed media URL issue
 - Enhanced widget renderer

@@ -12,10 +12,6 @@ use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
-/**
- * Class MassDelete
- * @package Goomento\PageBuilder\Controller\Adminhtml\Content
- */
 class MassDelete extends AbstractMassAction
 {
     use TraitContent;

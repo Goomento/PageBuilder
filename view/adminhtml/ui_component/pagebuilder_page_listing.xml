@@ -62,12 +62,12 @@
                     </filters>
                 </templates>
             </settings>
-            <filterSelect name="store_id" provider="${ $.parentName }">
+            <filterSelect name="store_ids" provider="${ $.parentName }">
                 <settings>
                     <captionValue>0</captionValue>
                     <options class="Goomento\PageBuilder\Ui\Component\Listing\Column\Content\StoreOptions"/>
                     <label translate="true">Store View</label>
-                    <dataScope>store_id</dataScope>
+                    <dataScope>store_ids</dataScope>
                     <imports>
                         <link name="visible">componentType = column, index = ${ $.index }:visible</link>
                     </imports>
@@ -145,11 +145,10 @@
                 <label translate="true">Identifier</label>
             </settings>
         </column>
-        <column name="shortcode" class="Goomento\PageBuilder\Ui\Component\Listing\Column\Content\Shortcode">
+        <column name="shortcode">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="resizeEnabled" xsi:type="boolean">true</item>
-                    <item name="resizeDefaultWidth" xsi:type="string">60</item>
+                    <item name="component" xsi:type="string">Goomento_PageBuilder/js/form/element/shortcode</item>
                 </item>
             </argument>
             <settings>
@@ -158,7 +157,7 @@
                 <dataType>text</dataType>
             </settings>
         </column>
-        <column name="store_id" class="Magento\Store\Ui\Component\Listing\Column\Store">
+        <column name="store_ids" class="Magento\Store\Ui\Component\Listing\Column\Store">
             <settings>
                 <label translate="true">Store View</label>
                 <bodyTmpl>ui/grid/cells/html</bodyTmpl>

@@ -8,27 +8,12 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Core\DynamicTags\Module as TagsModule;
+use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
 
-/**
- * Class Url
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Url extends BaseMultiple
+class Url extends AbstractBaseMultiple
 {
 
-    /**
-     * Get url control type.
-     *
-     * Retrieve the control type, in this case `url`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'url';
-    }
+    const NAME = 'url';
 
     /**
      * Get url control default values.
@@ -39,7 +24,7 @@ class Url extends BaseMultiple
      *
      * @return array Control default value.
      */
-    public function getDefaultValue()
+    public static function getDefaultValue()
     {
         return [
             'url' => '',

@@ -8,27 +8,11 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Helper\Theme;
+use Goomento\PageBuilder\Helper\ThemeHelper;
 
-/**
- * Class Color
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Color extends BaseData
+class Color extends AbstractControlData
 {
-
-    /**
-     * Get color control type.
-     *
-     * Retrieve the control type, in this case `color`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'color';
-    }
+    const NAME = 'color';
 
     /**
      * Enqueue color control scripts and styles.
@@ -39,7 +23,7 @@ class Color extends BaseData
      */
     public function enqueue()
     {
-        Theme::registerScript(
+        ThemeHelper::registerScript(
             'color-picker-alpha',
             'Goomento_PageBuilder/lib/color-picker/color-picker-alpha',
             [
@@ -47,7 +31,7 @@ class Color extends BaseData
             ]
         );
 
-        Theme::enqueueScript('color-picker-alpha');
+        ThemeHelper::enqueueScript('color-picker-alpha');
     }
 
     /**

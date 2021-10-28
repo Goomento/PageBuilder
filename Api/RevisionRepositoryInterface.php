@@ -14,10 +14,6 @@ use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 
-/**
- * Interface RevisionRepositoryInterface
- * @package Goomento\PageBuilder\Api
- */
 interface RevisionRepositoryInterface
 {
     /**
@@ -39,13 +35,15 @@ interface RevisionRepositoryInterface
     public function getById(int $revisionId);
 
     /**
-     * Retrieve page.
+     * Retrieve revisions of content.
      *
      * @param int $contentId
+     * @param null $statuses
+     * @param null $limit
      * @return RevisionSearchResultsInterface
      * @throws LocalizedException
      */
-    public function getListByContentId(int $contentId);
+    public function getListByContentId(int $contentId, $statuses = null, $limit = null);
 
     /**
      * Retrieve contents matching the specified criteria.

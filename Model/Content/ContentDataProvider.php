@@ -8,19 +8,13 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model\Content;
 
-use Goomento\PageBuilder\Model\Content;
+use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Model\ResourceModel\Content\Collection;
 use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Ui\DataProvider\Modifier\PoolInterface;
-use Magento\Framework\AuthorizationInterface;
 use Magento\Ui\DataProvider\ModifierPoolDataProvider;
 
-/**
- * Class ContentDataProvider
- * @package Goomento\PageBuilder\Model\Content
- */
 class ContentDataProvider extends ModifierPoolDataProvider
 {
     /**
@@ -39,11 +33,6 @@ class ContentDataProvider extends ModifierPoolDataProvider
     protected $loadedData;
 
     /**
-     * @var AuthorizationInterface
-     */
-    private $auth;
-
-    /**
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
@@ -52,7 +41,6 @@ class ContentDataProvider extends ModifierPoolDataProvider
      * @param array $meta
      * @param array $data
      * @param PoolInterface|null $pool
-     * @param AuthorizationInterface|null $auth
      */
     public function __construct(
         $name,
@@ -62,13 +50,11 @@ class ContentDataProvider extends ModifierPoolDataProvider
         DataPersistorInterface $dataPersistor,
         array $meta = [],
         array $data = [],
-        PoolInterface $pool = null,
-        ?AuthorizationInterface $auth = null
+        PoolInterface $pool = null
     ) {
         $this->collection = $contentCollectionFactory->create();
         $this->dataPersistor = $dataPersistor;
         parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data, $pool);
-        $this->auth = $auth ?? ObjectManager::getInstance()->get(AuthorizationInterface::class);
         $this->meta = $this->prepareMeta($this->meta);
     }
 
@@ -90,17 +76,24 @@ class ContentDataProvider extends ModifierPoolDataProvider
      */
     public function getData()
     {
-        if (is_null($this->loadedData)) {
+        if ($this->loadedData === null) {
             $this->loadedData = [];
             $items = $this->collection->getItems();
-            /** @var $content Content */
+            /** @var $content ContentInterface */
             foreach ($items as $content) {
                 $this->loadedData[$content->getId()] = $content->getData();
                 $this->loadedData[$content->getId()]['content_data'] =
-                    $content->getElements() ? base64_encode(json_encode($content->getElements())) : '';
+                    $content->getElements() ? base64_encode(
+                        \Zend_Json::encode($content->getElements())
+                    ) : '';
+
+                // Remove this for save the POST expense
+                unset($this->loadedData[$content->getId()][ContentInterface::ELEMENTS]);
+                unset($this->loadedData[$content->getId()][ContentInterface::SETTINGS]);
             }
 
             $data = $this->dataPersistor->get('pagebuilder_content');
+
             if (!empty($data)) {
                 $page = $this->collection->getNewEmptyItem();
                 $page->setData($data);

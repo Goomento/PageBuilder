@@ -8,25 +8,10 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class DeprecatedNotice
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class DeprecatedNotice extends BaseUi
+class DeprecatedNotice extends AbstractControlUi
 {
 
-    /**
-     * Get deprecated-notice control type.
-     *
-     * Retrieve the control type, in this case `deprecated_notice`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'deprecated_notice';
-    }
+    const NAME = 'deprecated_notice';
 
     /**
      * Render deprecated notice control output in the editor.
@@ -70,7 +55,7 @@ class DeprecatedNotice extends BaseUi
             'since' => '', // Plugin version widget was deprecated
             'last' => '', // Plugin version in which the widget will be removed
             'plugin' => '', // Plugin's title
-            'replacement' => '', // Widget replacement
+            'replacement' => '', // AbstractWidget replacement
         ];
     }
 }

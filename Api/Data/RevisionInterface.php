@@ -10,10 +10,6 @@ namespace Goomento\PageBuilder\Api\Data;
 
 use Magento\User\Model\User;
 
-/**
- * Interface RevisionInterface
- * @package Goomento\PageBuilder\Api\Data
- */
 interface RevisionInterface
 {
     const REVISION_ID              = 'revision_id';
@@ -23,8 +19,7 @@ interface RevisionInterface
     const CREATION_TIME            = 'creation_time';
     const AUTHOR_ID                = 'author_id';
     const STATUS                   = 'status';
-    const STATUS_PENDING           = ContentInterface::STATUS_PENDING;
-    const STATUS_PUBLISHED         = ContentInterface::STATUS_PUBLISHED;
+
     const STATUS_AUTOSAVE          = ContentInterface::STATUS_AUTOSAVE;
     const STATUS_DRAFT             = ContentInterface::STATUS_DRAFT;
     const STATUS_REVISION          = 'revision';

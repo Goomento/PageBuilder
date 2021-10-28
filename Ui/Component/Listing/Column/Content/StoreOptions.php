@@ -10,10 +10,6 @@ namespace Goomento\PageBuilder\Ui\Component\Listing\Column\Content;
 
 use Magento\Store\Ui\Component\Listing\Column\Store\Options;
 
-/**
- * Class Options
- * @package Goomento\PageBuilder\Ui\Component\Listing\Column\Cms
- */
 class StoreOptions extends Options
 {
     /**

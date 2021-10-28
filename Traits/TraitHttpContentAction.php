@@ -9,13 +9,11 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Traits;
 
 use Goomento\Core\Traits\TraitHttpAction;
-use Goomento\PageBuilder\Helper\StaticContent;
+use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\Exception\LocalizedException;
 
 /**
- * Trait TraitHttpContentAction
- * @package Goomento\PageBuilder\Traits
  * @property ContentInterface $content
  */
 trait TraitHttpContentAction
@@ -38,7 +36,9 @@ trait TraitHttpContentAction
             $contentId = $this->getRequest()->getParam('content_id');
             $contentId = (int) $contentId;
             if ($contentId !== 0) {
-                $this->content = StaticContent::get($contentId);
+                $this->content = ContentHelper::get(
+                    $contentId
+                );
             }
         }
 

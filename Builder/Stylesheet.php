@@ -8,13 +8,8 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder;
 
-/**
- * Class Stylesheet
- * @package Goomento\PageBuilder\Builder
- */
 class Stylesheet
 {
-
     /**
      * CSS Rules.
      *
@@ -41,6 +36,13 @@ class Stylesheet
      * @var array The raw CSS.
      */
     private $raw = [];
+
+    /**
+     * CSS3 variables
+     *
+     * @var array
+     */
+    private $variables = [];
 
     /**
      * Parse CSS rules.
@@ -96,14 +98,14 @@ class Stylesheet
      * Add a new device to the devices list.
      *
      *
-     * @param string $device_name      Device name.
-     * @param string $device_max_point Device maximum point.
+     * @param string $deviceName      Device name.
+     * @param string $deviceMaxPoint Device maximum point.
      *
      * @return Stylesheet The current stylesheet class instance.
      */
-    public function addDevice($device_name, $device_max_point)
+    public function addDevice($deviceName, $deviceMaxPoint)
     {
-        $this->devices[ $device_name ] = $device_max_point;
+        $this->devices[ $deviceName ] = $deviceMaxPoint;
 
         asort($this->devices);
 
@@ -111,14 +113,35 @@ class Stylesheet
     }
 
     /**
+     * Add or update CSS variable
+     *
+     * @param string $name
+     * @param string $value
+     * @param string $root
+     * @return $this
+     */
+    public function addVariable(string $name, string $value, string $root = ':root')
+    {
+        if (!isset($this->variables[$root])) {
+            $this->variables[$root] = [];
+        }
+
+        $this->variables[$root][$name] = $value;
+
+        return $this;
+    }
+
+
+
+    /**
      * Add rules.
      *
      * Add a new CSS rule to the rules list.
      *
      *
-     * @param string       $selector    CSS selector.
-     * @param array|string $style_rules Optional. Style rules. Default is `null`.
-     * @param array        $query       Optional. Media query. Default is `null`.
+     * @param string $selector CSS selector.
+     * @param null $style_rules Optional. Style rules. Default is `null`.
+     * @param array|null $query Optional. Media query. Default is `null`.
      *
      * @return Stylesheet The current stylesheet class instance.
      */
@@ -130,7 +153,7 @@ class Stylesheet
             $query_hash = $this->queryToHash($query);
         }
 
-        if (! isset($this->rules[ $query_hash ])) {
+        if (!isset($this->rules[ $query_hash ])) {
             $this->addQueryHash($query_hash);
         }
 
@@ -144,7 +167,7 @@ class Stylesheet
             return $this;
         }
 
-        if (! isset($this->rules[ $query_hash ][ $selector ])) {
+        if (!isset($this->rules[ $query_hash ][ $selector ])) {
             $this->rules[ $query_hash ][ $selector ] = [];
         }
 
@@ -182,9 +205,9 @@ class Stylesheet
      *
      * @return Stylesheet The current stylesheet class instance.
      */
-    public function addRawCss($css, $device = '')
+    public function addRawCss(string $css, string $device = '')
     {
-        if (! isset($this->raw[ $device ])) {
+        if (!isset($this->raw[ $device ])) {
             $this->raw[ $device ] = [];
         }
 
@@ -207,19 +230,19 @@ class Stylesheet
      */
     public function getRules($device = null, $selector = null, $property = null)
     {
-        if (! $device) {
+        if (!$device) {
             return $this->rules;
         }
 
         if ($property) {
-            return isset($this->rules[ $device ][ $selector ][ $property ]) ? $this->rules[ $device ][ $selector ][ $property ] : null;
+            return $this->rules[$device][$selector][$property] ?? null;
         }
 
         if ($selector) {
-            return isset($this->rules[ $device ][ $selector ]) ? $this->rules[ $device ][ $selector ] : null;
+            return $this->rules[$device][$selector] ?? null;
         }
 
-        return isset($this->rules[ $device ]) ? $this->rules[ $device ] : null;
+        return $this->rules[$device] ?? null;
     }
 
     /**
@@ -232,7 +255,15 @@ class Stylesheet
      */
     public function __toString()
     {
-        $style_text = '';
+        $styleText = '';
+
+        foreach ($this->variables as $root => $rootData) {
+            $styleText .= $root . '{';
+            foreach ($rootData as $varName => $varValue) {
+                $styleText .= $varName . ':' . $varValue . ';';
+            }
+            $styleText .= '}';
+        }
 
         foreach ($this->rules as $query_hash => $rule) {
             $device_text = self::parseRules($rule);
@@ -241,7 +272,7 @@ class Stylesheet
                 $device_text = $this->getQueryHashStyleFormat($query_hash) . '{' . $device_text . '}';
             }
 
-            $style_text .= $device_text;
+            $styleText .= $device_text;
         }
 
         foreach ($this->raw as $device_name => $raw) {
@@ -251,10 +282,10 @@ class Stylesheet
                 $raw = '@media(max-width: ' . $this->devices[ $device_name ] . 'px){' . $raw . '}';
             }
 
-            $style_text .= $raw;
+            $styleText .= $raw;
         }
 
-        return $style_text;
+        return $styleText;
     }
 
     /**
@@ -380,7 +411,7 @@ class Stylesheet
                         return $a_has_max ? 1 : -1;
                     }
 
-                    if (! $a_has_max) {
+                    if (!$a_has_max) {
                         return 0;
                     }
                 }

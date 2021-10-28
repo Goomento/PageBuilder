@@ -1,0 +1,41 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Helper\LayoutHelper;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/**
+ * @var Widget $block
+ * @var Escaper $escaper
+ */
+$widget = $block->getWidget();
+$class = $block->getSettingsForDisplay( 'class' );
+$template = $this->getSettingsForDisplay( 'template' );
+$html = '';
+if (($class && class_exists($class)) || $template) {
+    if (empty($class) || !class_exists($class)) {
+        $class = Template::class;
+    }
+
+    $args = [];
+    if (!empty($template)) {
+        $args['data'] = [
+            'template' => $template
+        ];
+    }
+    $block = LayoutHelper::createBlock($class, '', $args);
+    if ($block) {
+        $html = $block->toHtml();
+    }
+}
+?>
+<div class="gmt-block">
+    <?= /** @noEscape */ $html; ?>
+</div>

@@ -19,10 +19,6 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Framework\View\Result\PageFactory;
 
-/**
- * Class AbstractManage
- * @package Goomento\PageBuilder\Controller\Adminhtml\Manage
- */
 abstract class AbstractManage extends Action implements HttpGetActionInterface, HttpPostActionInterface
 {
     use TraitHttpExecutable;

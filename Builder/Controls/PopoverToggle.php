@@ -8,25 +8,11 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class PopoverToggle
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class PopoverToggle extends BaseData
+class PopoverToggle extends AbstractControlData
 {
 
-    /**
-     * Get popover toggle control type.
-     *
-     * Retrieve the control type, in this case `popover_toggle`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'popover_toggle';
-    }
+    const NAME = 'popover_toggle';
+
 
     /**
      * Get popover toggle control default settings.

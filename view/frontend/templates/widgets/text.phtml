@@ -1,0 +1,48 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Builder\Widgets\Text;
+
+/**
+ * @var Widget $block
+ */
+/** @var Text $widget */
+$widget = $block->getWidget();
+
+$settings = $widget->getSettingsForDisplay();
+
+if ('' === $settings['text_title']) {
+    return;
+}
+
+$widget->addRenderAttribute('title', 'class', 'gmt-text-title');
+
+if (!empty($settings['text_size'])) {
+    $widget->addRenderAttribute('title', 'class', 'gmt-size-' . $settings['text_size']);
+}
+
+$widget->addInlineEditingAttributes('title');
+
+$title = $settings['text_title'];
+
+if (!empty($settings['text_link']['url'])) {
+    $widget->addRenderAttribute('url', 'href', $settings['text_link']['url']);
+
+    if ($settings['text_link']['is_external']) {
+        $widget->addRenderAttribute('url', 'target', '_blank');
+    }
+
+    if (!empty($settings['text_link']['nofollow'])) {
+        $widget->addRenderAttribute('url', 'rel', 'nofollow');
+    }
+
+    $title = sprintf('<a %1$s>%2$s</a>', $widget->getRenderAttributeString('url'), $title);
+}
+
+printf('<%1$s %2$s>%3$s</%1$s>', $settings['text_tag'], $widget->getRenderAttributeString('title'), $title);

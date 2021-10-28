@@ -13,12 +13,6 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\Action;
 use Goomento\PageBuilder\Logger\Logger;
 
-/**
- * Class AbstractAction
- * Compatible with M2.3.x
- *
- * @package Goomento\PageBuilder\Controller
- */
 abstract class AbstractAction extends Action
 {
     /**

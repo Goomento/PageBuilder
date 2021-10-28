@@ -9,53 +9,23 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Model\ResourceModel;
 
 use Goomento\PageBuilder\Api\Data\ContentInterface;
-use Magento\Framework\DB\Select;
-use Magento\Framework\EntityManager\EntityManager;
-use Magento\Framework\EntityManager\MetadataPool;
+use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\Framework\Model\ResourceModel\Db\Context;
-use Magento\Store\Model\Store;
-/**
- * Class Content
- * @package Goomento\PageBuilder\Model\ResourceModel
- */
+
 class Content extends AbstractDb
 {
     /**
-     * @var EntityManager
+     * @inheriDoc
      */
-    protected $entityManager;
+    protected $_serializableFields = [
+        ContentInterface::SETTINGS => [null, []],
+        ContentInterface::ELEMENTS => [null, []],
+    ];
 
     /**
-     * @var MetadataPool
-     */
-    protected $metadataPool;
-
-    protected $_serializableFields = ContentInterface::SERIALIZABLE_FIELDS;
-
-    /**
-     * @param Context $context
-     * @param EntityManager $entityManager
-     * @param MetadataPool $metadataPool
-     * @param null $connectionName
-     */
-    public function __construct(
-        Context $context,
-        EntityManager $entityManager,
-        MetadataPool $metadataPool,
-        $connectionName = null
-    ) {
-        parent::__construct($context, $connectionName);
-        $this->entityManager = $entityManager;
-        $this->metadataPool = $metadataPool;
-    }
-
-    /**
-     * Initialize resource model
-     *
-     * @return void
+     * @inheriDoc
      */
     protected function _construct()
     {
@@ -63,59 +33,40 @@ class Content extends AbstractDb
     }
 
     /**
-     * @inheritDoc
+     * @inheriDoc
      */
-    public function getConnection()
+    protected function _afterLoad(AbstractModel $object)
     {
-        return $this->metadataPool->getMetadata(ContentInterface::class)->getEntityConnection();
+        parent::_afterLoad($object);
+        // Set stores Ids to object
+        $object->setData(ContentInterface::STORE_IDS, $this->lookupStoreIds((int) $object->getId()));
+        $object->setHasDataChanges(false);
     }
 
     /**
-     * @param AbstractModel $object
-     * @param mixed $value
-     * @param null $field
-     * @return $this|Content
+     * @param DataObject $object
+     * @return DataObject
      */
-    public function load(AbstractModel $object, $value, $field = null)
+    public function unserializeData(DataObject $object)
     {
-        $this->entityManager->load($object, $value);
-        $this->unserializeFields($object);
-        return $this;
-    }
-
-    /**
-     * Retrieve select object for load object data
-     *
-     * @param string $field
-     * @param mixed $value
-     * @param ContentInterface $object
-     * @return Select
-     * @throws LocalizedException
-     */
-    protected function _getLoadSelect($field, $value, $object)
-    {
-        $entityMetadata = $this->metadataPool->getMetadata(ContentInterface::class);
-        $linkField = $entityMetadata->getLinkField();
-
-        $select = parent::_getLoadSelect($field, $value, $object);
-
-        if ($object->getStoreId()) {
-            $storeIds = [
-                Store::DEFAULT_STORE_ID,
-                (int)$object->getStoreId(),
-            ];
-            $select->join(
-                ['pagebuilder_content_store' => $this->getTable('pagebuilder_content_store')],
-                $this->getMainTable() . '.' . $linkField . ' = pagebuilder_content_store.' . $linkField,
-                []
-            )
-                ->where('is_active = ?', 1)
-                ->where('pagebuilder_content_store.store_id IN (?)', $storeIds)
-                ->order('pagebuilder_content_store.store_id DESC')
-                ->limit(1);
+        foreach ($this->_serializableFields as $field => $parameters) {
+            list($serializeDefault, $unserializeDefault) = $parameters;
+            $this->_unserializeField($object, $field, $unserializeDefault);
         }
+        return $object;
+    }
 
-        return $select;
+    /**
+     * @param DataObject $object
+     * @return DataObject
+     */
+    public function serializeData(DataObject $object)
+    {
+        foreach ($this->_serializableFields as $field => $parameters) {
+            list($serializeDefault, $unserializeDefault) = $parameters;
+            $this->_serializeField($object, $field, $serializeDefault, isset($parameters[2]));
+        }
+        return $object;
     }
 
 
@@ -130,44 +81,71 @@ class Content extends AbstractDb
     {
         $connection = $this->getConnection();
 
-        $entityMetadata = $this->metadataPool->getMetadata(ContentInterface::class);
-        $linkField = $entityMetadata->getLinkField();
+        $linkField = ContentInterface::CONTENT_ID;
 
         $select = $connection->select()
-            ->from(['goomento_page_store' => $this->getTable('pagebuilder_content_store')], 'store_id')
+            ->from(['s' => $this->getTable('pagebuilder_content_store')], 'store_id')
             ->join(
-                ['goomento_page' => $this->getMainTable()],
-                'goomento_page_store.' . $linkField . ' = goomento_page.' . $linkField,
+                ['t' => $this->getMainTable()],
+                's.' . $linkField . ' = t.' . $linkField,
                 []
             )
-            ->where('goomento_page.' . $entityMetadata->getIdentifierField() . ' = :content_id');
+            ->where('t.' . $linkField . ' = :content_id');
 
         return $connection->fetchCol($select, ['content_id' => (int)$contentId]);
     }
 
     /**
-     * @inheritDoc
+     * @inheriDoc
      */
-    public function save(AbstractModel $object)
+    protected function _afterSave(AbstractModel $object)
     {
-        $hasChanged = $object->hasDataChanges();
-        $this->serializeFields($object);
-        $object->setDataChanges($hasChanged);
-
-        $this->entityManager->save($object);
-
-        $this->unserializeFields($object);
-        $object->setHasDataChanges(false);
-
+        parent::_afterSave($object);
+        $this->updateStoreIds($object);
         return $this;
     }
 
     /**
-     * @inheritDoc
+     * @param AbstractModel $object
+     * @return void
      */
-    public function delete(AbstractModel $object)
+    public function unserializeFields(\Magento\Framework\Model\AbstractModel $object)
     {
-        $this->entityManager->delete($object);
-        return $this;
+        parent::unserializeFields($object);
+    }
+
+    /**
+     * @param AbstractModel $object
+     * @throws LocalizedException
+     */
+    private function updateStoreIds(AbstractModel $object)
+    {
+        $connection = $this->getConnection();
+        $oldStores = $this->lookupStoreIds((int)$object->getId());
+        $newStores = (array) $object->getData(ContentInterface::STORE_IDS);
+        $linkField = ContentInterface::CONTENT_ID;
+
+        $table = $this->getTable('pagebuilder_content_store');
+
+        $delete = array_diff($oldStores, $newStores);
+        if ($delete) {
+            $where = [
+                $linkField . ' = ?' => (int)$object->getData($linkField),
+                'store_id IN (?)' => $delete,
+            ];
+            $connection->delete($table, $where);
+        }
+
+        $insert = array_diff($newStores, $oldStores);
+        if ($insert) {
+            $data = [];
+            foreach ($insert as $storeId) {
+                $data[] = [
+                    $linkField => (int)$object->getData($linkField),
+                    'store_id' => (int)$storeId
+                ];
+            }
+            $connection->insertMultiple($table, $data);
+        }
     }
 }
