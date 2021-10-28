@@ -1,0 +1,68 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+/**
+ * @var Template $block
+ */
+
+use Goomento\PageBuilder\Api\Data\SampleImportInterface;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Helper\RegistryHelper;
+use Goomento\PageBuilder\SampleImport\ImporterProcessor;
+use Magento\Backend\Block\Template;
+
+/** @var SampleImportInterface[] $allSamples */
+$allSamples = (array) RegistryHelper::registry('all_import_samples');
+
+/** @var ImporterProcessor $importProcessor */
+$importProcessor = ObjectManagerHelper::get(
+    ImporterProcessor::class
+);
+?>
+<div class="admin__data-grid-wrap">
+    <table class="data-grid">
+        <thead>
+        <tr>
+            <th class="data-grid-th" style="text-align: center"><?= __('Sample name') ?></th>
+            <th class="data-grid-th" style="text-align: center"><?= __('Templates') ?></th>
+            <th class="data-grid-th" style="text-align: center"><?= __('Actions') ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php if (!empty($allSamples)) : ?>
+            <?php foreach ($allSamples as $sampleName => $sample) : ?>
+                <tr data-role="row">
+                    <td style="text-align: center">
+                        <span><?= $sample->getName() ?></span>
+                    </td>
+                    <td style="padding: 0">
+                        <?php if ($sources = (array) $importProcessor->setSourceDir($sample->getSourceFiles())->getSourceFiles()) : ?>
+                            <table class="data-grid">
+                                <tbody>
+                                <?php foreach ($sources as $sourceFile) :
+                                    $fileName = basename($sourceFile);
+                                    ?>
+                                    <tr>
+                                        <td><?= $fileName ?></td>
+                                        <td style="text-align: center">
+                                            <a href="?sample=<?= $sampleName ?>&filename=<?= $fileName ?>&import=1"><?= __('Import') ?></a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        <?php endif; ?>
+                    </td>
+                    <td style="text-align: center">
+                        <a href="?sample=<?= $sampleName ?>&import=1"><?= __('Import All') ?></a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
+        </tbody>
+    </table>
+</div>

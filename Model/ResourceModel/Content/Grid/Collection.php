@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model\ResourceModel\Content\Grid;
 
+use Exception;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\Api\ExtensibleDataInterface;
 use Magento\Framework\Api\Search\SearchResultInterface;
@@ -16,66 +17,62 @@ use Goomento\PageBuilder\Model\ResourceModel\Content\Collection as ContentCollec
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Data\Collection\Db\FetchStrategyInterface;
 use Magento\Framework\Data\Collection\EntityFactoryInterface;
-use Magento\Framework\EntityManager\MetadataPool;
+use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\View\Element\UiComponent\DataProvider\Document;
-use Psr\Log\LoggerInterface;
+use Goomento\PageBuilder\Logger\Logger;
 
-/**
- * Class Collection
- * @package Goomento\PageBuilder\Model\ResourceModel\Content\Grid
- */
 class Collection extends ContentCollection implements SearchResultInterface
 {
     /**
      * @var AggregationInterface
      */
     protected $aggregations;
+    /**
+     * @var string
+     */
+    private $type;
 
     /**
      * @param EntityFactoryInterface $entityFactory
-     * @param LoggerInterface $logger
+     * @param Logger $logger
      * @param FetchStrategyInterface $fetchStrategy
      * @param ManagerInterface $eventManager
-     * @param MetadataPool $metadataPool
-     * @param mixed|null $mainTable
-     * @param string $eventPrefix
-     * @param mixed $eventObject
-     * @param mixed $resourceModel
-     * @param string $model
-     * @param null $connection
+     * @param $mainTable
+     * @param $eventPrefix
+     * @param $eventObject
+     * @param $resourceModel
      * @param AbstractDb|null $resource
+     * @param AdapterInterface|null $connection
+     * @param string $model
      * @param string $type
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         EntityFactoryInterface $entityFactory,
-        LoggerInterface $logger,
+        Logger $logger,
         FetchStrategyInterface $fetchStrategy,
         ManagerInterface $eventManager,
-        MetadataPool $metadataPool,
         $mainTable,
         $eventPrefix,
         $eventObject,
         $resourceModel,
-        $model = Document::class,
-        $connection = null,
         AbstractDb $resource = null,
-        $type = ContentInterface::TYPE_PAGE
+        AdapterInterface $connection = null,
+        string $model = Document::class,
+        string $type = ContentInterface::TYPE_PAGE
     ) {
         parent::__construct(
             $entityFactory,
             $logger,
             $fetchStrategy,
             $eventManager,
-            $metadataPool,
             $connection,
-            $resource,
-            $type
+            $resource
         );
         $this->_eventPrefix = $eventPrefix;
         $this->_eventObject = $eventObject;
+        $this->type = $type;
         $this->_init($model, $resourceModel);
         $this->setMainTable($mainTable);
     }
@@ -152,5 +149,16 @@ class Collection extends ContentCollection implements SearchResultInterface
     public function setItems(array $items = null)
     {
         return $this;
+    }
+
+    /**
+     * Perform operations before rendering filters
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected function _renderFiltersBefore()
+    {
+        $this->addFilter('type', $this->type , 'public');
     }
 }

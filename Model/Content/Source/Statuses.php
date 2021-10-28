@@ -11,10 +11,6 @@ namespace Goomento\PageBuilder\Model\Content\Source;
 use Goomento\PageBuilder\Model\Content;
 use Magento\Framework\Data\OptionSourceInterface;
 
-/**
- * Class Statuses
- * @package Goomento\PageBuilder\Model\Content\Source
- */
 class Statuses implements OptionSourceInterface
 {
 

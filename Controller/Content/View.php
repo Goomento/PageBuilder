@@ -8,16 +8,11 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Controller\Content;
 
-use Goomento\PageBuilder\Helper\Hooks;
+use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Controller\AbstractAction;
-use Goomento\PageBuilder\Helper\StaticEncryptor;
 use Goomento\PageBuilder\Traits\TraitHttpPage;
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Class Preview
- * @package Goomento\PageBuilder\Controller\Editor
- */
 class View extends AbstractAction
 {
     use TraitHttpPage;
@@ -28,41 +23,24 @@ class View extends AbstractAction
     public function execute()
     {
         try {
-            $this->validateToken();
-            Hooks::doAction('pagebuilder/content/view');
-
             $this->registry->register('pagebuilder_content', $this->getContent(true));
+            HooksHelper::doAction('pagebuilder/content/view');
             return $this->renderPage();
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage(
                 $e->getMessage()
             );
         } catch (\Exception $e) {
-            $this->logger->error($e);
             $this->messageManager->addErrorMessage(
                 __('Something went wrong when render content view.')
             );
+        } finally {
+            if (!empty($e)) {
+                $this->logger->error($e);
+            }
         }
 
         return $this->redirect404Page();
-    }
-
-    /**
-     * @return bool
-     * @throws LocalizedException
-     */
-    protected function validateToken()
-    {
-        $content = $this->getContent(true);
-        $token = $this->getRequest()->getParam(StaticEncryptor::ACCESS_TOKEN_PARAM);
-        $isValid = StaticEncryptor::isAllowed($token, $content);
-
-        if ($isValid !== true) {
-            throw new LocalizedException(
-                __('Invalid access token.')
-            );
-        }
-        return false;
     }
 
     /**
@@ -70,8 +48,12 @@ class View extends AbstractAction
      */
     protected function getPageConfig()
     {
+        $content = $this->getContent(true);
+        $layout = $content->getSetting('layout') ?: '1column';
+
         return [
             'editable_title' => '%1',
+            'handler' => 'pagebuilder_content_' . $layout,
         ];
     }
 }

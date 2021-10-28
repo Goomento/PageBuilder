@@ -11,10 +11,6 @@ namespace Goomento\PageBuilder\Helper;
 use Magento\Authorization\Model\Acl\AclRetriever;
 use Magento\Framework\App\Helper\Context;
 
-/**
- * Class Authorization
- * @package Goomento\PageBuilder\Helper
- */
 class Authorization extends AbstractHelper
 {
     /**
@@ -27,7 +23,7 @@ class Authorization extends AbstractHelper
      */
     protected $currentUserResources;
     /**
-     * @var UserHelper
+     * @var AdminUser
      */
     protected $userHelper;
 
@@ -35,12 +31,12 @@ class Authorization extends AbstractHelper
      * Authorization constructor.
      * @param Context $context
      * @param AclRetriever $aclRetriever
-     * @param UserHelper $userHelper
+     * @param AdminUser $userHelper
      */
     public function __construct(
         Context $context,
         AclRetriever $aclRetriever,
-        UserHelper $userHelper
+        AdminUser $userHelper
     ) {
         parent::__construct($context);
         $this->aclRetriever = $aclRetriever;
@@ -67,7 +63,7 @@ class Authorization extends AbstractHelper
      */
     public function isAllowed($resource)
     {
-        if (StaticUtils::isCli()) {
+        if (StateHelper::isCli()) {
             return true;
         }
         $resources = $this->getCurrentUserResources();

@@ -2,27 +2,35 @@
 /**
  * @package Goomento_PageBuilder
  * @link https://github.com/Goomento/PageBuilder
+ * @noinspection ALL
  */
 
 declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Base;
 
+use Exception;
 use Goomento\PageBuilder\Builder\Conditions;
+use Goomento\PageBuilder\Builder\Controls\AbstractControlData;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Schemes;
-use Goomento\PageBuilder\Core\Base\BaseObject;
-use Goomento\PageBuilder\Core\DynamicTags\Manager;
-use Goomento\PageBuilder\Helper\Hooks;
-use Goomento\PageBuilder\Helper\StaticEscaper;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
+use Goomento\PageBuilder\Builder\Managers\Tags;
+use Goomento\PageBuilder\Helper\DataHelper;
+use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\EscaperHelper;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
-/**
- * Class ControlsStack
- * @package Goomento\PageBuilder\Builder\Base
- */
-abstract class ControlsStack extends BaseObject
+abstract class ControlsStack extends AbstractBase
 {
+    /**
+     * Shared type
+     */
+    const TYPE = 'stack';
+
+    /**
+     * Shared name
+     */
+    const NAME = 'controls_stack';
 
     /**
      * Responsive 'desktop' device name.
@@ -49,9 +57,9 @@ abstract class ControlsStack extends BaseObject
      */
     private $id;
 
-    private $active_settings;
+    private $activeSettings;
 
-    private $parsed_active_settings;
+    private $parsedActiveSettings;
 
     /**
      * Parsed Dynamic Settings.
@@ -59,7 +67,7 @@ abstract class ControlsStack extends BaseObject
      *
      * @var null|array
      */
-    private $parsed_dynamic_settings;
+    private $parsedDynamicSettings;
 
     /**
      * Raw Data.
@@ -91,7 +99,7 @@ abstract class ControlsStack extends BaseObject
      *
      * @var null|array
      */
-    private $current_section;
+    private $currentSection;
 
     /**
      * Current tab.
@@ -101,7 +109,7 @@ abstract class ControlsStack extends BaseObject
      *
      * @var null|array
      */
-    private $current_tab;
+    private $currentTab;
 
     /**
      * Current popover.
@@ -111,7 +119,7 @@ abstract class ControlsStack extends BaseObject
      *
      * @var null|array
      */
-    private $current_popover;
+    private $currentPopover;
 
     /**
      * Injection point.
@@ -121,7 +129,7 @@ abstract class ControlsStack extends BaseObject
      *
      * @var null|array
      */
-    private $injection_point;
+    private $injectionPoint;
 
     /**
      * Data sanitized.
@@ -129,26 +137,17 @@ abstract class ControlsStack extends BaseObject
      *
      * @var bool
      */
-    private $settings_sanitized = false;
+    private $settingsSanitized = false;
 
     /**
      * @var Controls
      */
     private $controlManager;
-    /**
-     * @var mixed
-     */
-    private $tagsManager;
 
     /**
-     * Get widget name.
-     *
-     * Retrieve widget name.
-     *
-     *
-     * @return string Widget name.
+     * @var Tags
      */
-    abstract public function getName();
+    private $tagsManager;
 
     /**
      * @return string
@@ -174,20 +173,13 @@ abstract class ControlsStack extends BaseObject
         return hexdec($this->id);
     }
 
-    /**
-     * @return string
-     */
-    public static function getType()
-    {
-        return 'stack';
-    }
 
     /**
      * @return array|null
      */
     public function getCurrentSection()
     {
-        return $this->current_section;
+        return $this->currentSection;
     }
 
     /**
@@ -195,7 +187,7 @@ abstract class ControlsStack extends BaseObject
      */
     public function getCurrentTab()
     {
-        return $this->current_tab;
+        return $this->currentTab;
     }
 
     /**
@@ -231,11 +223,11 @@ abstract class ControlsStack extends BaseObject
      */
     public function getActiveControls(array $controls = null, array $settings = null)
     {
-        if (! $controls) {
+        if (!$controls) {
             $controls = $this->getControls();
         }
 
-        if (! $settings) {
+        if (!$settings) {
             $settings = $this->getControlsSettings();
         }
 
@@ -276,9 +268,9 @@ abstract class ControlsStack extends BaseObject
      *                        empty array.
      *
      * @return bool True if repeater control added, False otherwise.
-     * @throws \Exception
+     *
      */
-    public function addControl($id, array $args, $options = [])
+    public function addControl(string $id, array $args, array $options = [])
     {
         $default_options = [
             'overwrite' => false,
@@ -291,26 +283,29 @@ abstract class ControlsStack extends BaseObject
             $this->startInjection($options['position']);
         }
 
-        if ($this->injection_point) {
-            $options['index'] = $this->injection_point['index']++;
+        if ($this->injectionPoint) {
+            $options['index'] = $this->injectionPoint['index']++;
         }
 
         if (empty($args['type']) || $args['type'] !== Controls::SECTION) {
-            $target_section_args = $this->current_section;
+            $target_section_args = $this->currentSection;
 
-            $target_tab = $this->current_tab;
+            $target_tab = $this->currentTab;
 
-            if ($this->injection_point) {
-                $target_section_args = $this->injection_point['section'];
+            if ($this->injectionPoint) {
+                $target_section_args = $this->injectionPoint['section'];
 
-                if (! empty($this->injection_point['tab'])) {
-                    $target_tab = $this->injection_point['tab'];
+                if (!empty($this->injectionPoint['tab'])) {
+                    $target_tab = $this->injectionPoint['tab'];
                 }
             }
-
+            /** @var Controls  $controlsManager */
+            $controlsManager = ObjectManagerHelper::get(Controls::class);
             if (null !== $target_section_args) {
-                if (! empty($args['section']) || ! empty($args['tab'])) {
-                    throw new \Exception(sprintf('%s::%s', get_called_class(), __FUNCTION__), sprintf('Cannot redeclare control with `tab` or `section` args inside section "%s".', $id));
+                if (!empty($args['section']) || ! empty($args['tab'])) {
+                    throw new Exception(
+                        sprintf('Cannot redeclare control with `tab` or `section` args inside section "%s".', $id)
+                    );
                 }
 
                 $args = array_replace_recursive($target_section_args, $args);
@@ -318,8 +313,10 @@ abstract class ControlsStack extends BaseObject
                 if (null !== $target_tab) {
                     $args = array_replace_recursive($target_tab, $args);
                 }
-            } elseif (empty($args['section']) && (! $options['overwrite'] || !StaticObjectManager::get(Controls::class)->getControlFromStack($this->getUniqueName(), $id))) {
-                throw new \Exception(sprintf('%s::%s: Cannot add a control outside of a section (use `start_controls_section`).', get_called_class(), __FUNCTION__));
+            } elseif (empty($args['section']) && (! $options['overwrite'] || !$controlsManager->getControlFromStack($this->getUniqueName(), $id))) {
+                throw new Exception(
+                    'Cannot add a control outside of a section'
+                );
             }
         }
 
@@ -329,12 +326,12 @@ abstract class ControlsStack extends BaseObject
 
         unset($options['position']);
 
-        if ($this->current_popover && ! $this->current_popover['initialized']) {
+        if ($this->currentPopover && ! $this->currentPopover['initialized']) {
             $args['popover'] = [
                 'start' => true,
             ];
 
-            $this->current_popover['initialized'] = true;
+            $this->currentPopover['initialized'] = true;
         }
 
         return $this->controlManager->addControlToStack($this, $id, $args, $options);
@@ -345,14 +342,14 @@ abstract class ControlsStack extends BaseObject
      *
      * Unregister an existing control and remove it from the stack.
      *
-     * @param string $control_id Control ID.
+     * @param string|array $controlId Control ID.
      *
      * @return bool
      *
      */
-    public function removeControl($control_id)
+    public function removeControl($controlId)
     {
-        return $this->controlManager->removeControlFromStack($this->getUniqueName(), $control_id);
+        return $this->controlManager->removeControlFromStack($this->getUniqueName(), $controlId);
     }
 
     /**
@@ -375,7 +372,7 @@ abstract class ControlsStack extends BaseObject
     {
         $is_updated = $this->controlManager->updateControlInStack($this, $control_id, $args, $options);
 
-        if (! $is_updated) {
+        if (!$is_updated) {
             return false;
         }
 
@@ -423,19 +420,20 @@ abstract class ControlsStack extends BaseObject
      * @param array $position {
      *     The injection position.
      *
-     *     @type string $type     Injection type, either `control` or `section`.
+     * @type string $type Injection type, either `control` or `section`.
      *                            Default is `control`.
-     *     @type string $at       Where to inject. If `$type` is `control` accepts
+     * @type string $at Where to inject. If `$type` is `control` accepts
      *                            `before` and `after`. If `$type` is `section`
      *                            accepts `start` and `end`. Default values based on
      *                            the `type`.
-     *     @type string $of       Control/Section ID.
-     *     @type array  $fallback Fallback injection position. When the position is
+     * @type string $of Control/Section ID.
+     * @type array $fallback Fallback injection position. When the position is
      *                            not found it will try to fetch the fallback
      *                            position.
      * }
      *
      * @return bool|array Position info.
+     * @throws Exception
      */
     final public function getPositionInfo(array $position)
     {
@@ -444,7 +442,7 @@ abstract class ControlsStack extends BaseObject
             'at' => 'after',
         ];
 
-        if (! empty($position['type']) && 'section' === $position['type']) {
+        if (!empty($position['type']) && 'section' === $position['type']) {
             $default_position['at'] = 'end';
         }
 
@@ -454,13 +452,15 @@ abstract class ControlsStack extends BaseObject
             'control' === $position['type'] && in_array($position['at'], [ 'start', 'end' ], true) ||
             'section' === $position['type'] && in_array($position['at'], [ 'before', 'after' ], true)
         ) {
-            throw new \Exception('Invalid position arguments. Use `before` / `after` for control or `start` / `end` for section.');
+            throw new Exception(
+                'Invalid position arguments. Use `before` / `after` for control or `start` / `end` for section.'
+            );
         }
 
         $target_control_index = $this->getControlIndex($position['of']);
 
         if (false === $target_control_index) {
-            if (! empty($position['fallback'])) {
+            if (!empty($position['fallback'])) {
                 return $this->getPositionInfo($position['fallback']);
             }
 
@@ -502,7 +502,7 @@ abstract class ControlsStack extends BaseObject
             'section' => $this->getSectionArgs($section_id),
         ];
 
-        if (! empty($target_control['tabs_wrapper'])) {
+        if (!empty($target_control['tabs_wrapper'])) {
             $position_info['tab'] = [
                 'tabs_wrapper' => $target_control['tabs_wrapper'],
                 'inner_tab' => $target_control['inner_tab'],
@@ -573,7 +573,7 @@ abstract class ControlsStack extends BaseObject
         while (true) {
             $section_index++;
 
-            if (! isset($controls_keys[ $section_index ])) {
+            if (!isset($controls_keys[ $section_index ])) {
                 break;
             }
 
@@ -597,19 +597,18 @@ abstract class ControlsStack extends BaseObject
      * single, easy-to-use control.
      *
      *
-     * @param string $group_name Group control name.
+     * @param string|null $groupName Group control name.
      * @param array $args Group control arguments. Default is an empty array.
      * @param array $options Optional. Group control options. Default is an
      *                           empty array.
-     * @throws \Exception
+     * @throws Exception
      */
-    final public function addGroupControl($group_name, array $args = [], array $options = [])
+    final public function addGroupControl(?string $groupName, array $args = [], array $options = [])
     {
-        $group = $this->controlManager->getControlGroups($group_name);
-
-        if (! $group) {
-            throw new \Exception(
-                sprintf('%s::%s: Group "%s" not found.', get_called_class(), __FUNCTION__, $group_name)
+        $group = $this->controlManager->getControlGroups($groupName);
+        if (!$group) {
+            throw new Exception(
+                sprintf('Group "%s" not found.',  $groupName)
             );
         }
 
@@ -657,7 +656,7 @@ abstract class ControlsStack extends BaseObject
         foreach ($controls as $control_name => $control) {
             $control_obj = $this->controlManager->getControl($control['type']);
 
-            if (! $control_obj instanceof \Goomento\PageBuilder\Builder\Controls\BaseData) {
+            if (!$control_obj instanceof AbstractControlData) {
                 continue;
             }
 
@@ -673,7 +672,7 @@ abstract class ControlsStack extends BaseObject
                 $control['style_fields'] = $style_fields;
             }
 
-            if (! empty($control['selectors']) || ! empty($control['dynamic']) || ! empty($control['style_fields'])) {
+            if (!empty($control['selectors']) || ! empty($control['dynamic']) || ! empty($control['style_fields'])) {
                 $style_controls[ $control_name ] = $control;
             }
         }
@@ -705,6 +704,7 @@ abstract class ControlsStack extends BaseObject
      * @param array $args Responsive control arguments.
      * @param array $options Optional. Responsive control options. Default is
      *                        an empty array.
+     * @throws Exception
      */
     final public function addResponsiveControl($id, array $args, $options = [])
     {
@@ -734,14 +734,14 @@ abstract class ControlsStack extends BaseObject
             $control_args = $args;
 
             if (isset($control_args['device_args'])) {
-                if (! empty($control_args['device_args'][ $device_name ])) {
+                if (!empty($control_args['device_args'][ $device_name ])) {
                     $control_args = array_merge($control_args, $control_args['device_args'][ $device_name ]);
                 }
 
                 unset($control_args['device_args']);
             }
 
-            if (! empty($args['prefix_class'])) {
+            if (!empty($args['prefix_class'])) {
                 $device_to_replace = self::RESPONSIVE_DESKTOP === $device_name ? '' : '-' . $device_name;
 
                 $control_args['prefix_class'] = sprintf($args['prefix_class'], $device_to_replace);
@@ -750,7 +750,7 @@ abstract class ControlsStack extends BaseObject
             $control_args['responsive']['max'] = $device_name;
 
             if (isset($control_args['min_affected_device'])) {
-                if (! empty($control_args['min_affected_device'][ $device_name ])) {
+                if (!empty($control_args['min_affected_device'][ $device_name ])) {
                     $control_args['responsive']['min'] = $control_args['min_affected_device'][ $device_name ];
                 }
 
@@ -767,7 +767,7 @@ abstract class ControlsStack extends BaseObject
 
             $id_suffix = self::RESPONSIVE_DESKTOP === $device_name ? '' : '_' . $device_name;
 
-            if (! empty($options['overwrite'])) {
+            if (!empty($options['overwrite'])) {
                 $this->updateControl($id . $id_suffix, $control_args, [
                     'recursive' => ! empty($options['recursive']),
                 ]);
@@ -788,7 +788,7 @@ abstract class ControlsStack extends BaseObject
      * @param string $id Responsive control ID.
      * @param array $args Responsive control arguments.
      * @param array $options Optional. Additional options.
-     * @throws \ReflectionException
+     * @throws Exception
      */
     final public function updateResponsiveControl($id, array $args, array $options = [])
     {
@@ -851,7 +851,7 @@ abstract class ControlsStack extends BaseObject
         $controls = [];
 
         foreach ($this->getControls() as $control) {
-            if (! empty($control['frontend_available'])) {
+            if (!empty($control['frontend_available'])) {
                 $controls[] = $control['name'];
             }
         }
@@ -872,8 +872,8 @@ abstract class ControlsStack extends BaseObject
      */
     public function getPointerIndex()
     {
-        if (null !== $this->injection_point) {
-            return $this->injection_point['index'];
+        if (null !== $this->injectionPoint) {
+            return $this->injectionPoint['index'];
         }
 
         return count($this->getControls());
@@ -891,10 +891,10 @@ abstract class ControlsStack extends BaseObject
      */
     public function getData($item = null)
     {
-        if (! $this->settings_sanitized && (! $item || 'settings' === $item)) {
+        if (!$this->settingsSanitized && (! $item || 'settings' === $item)) {
             $this->data['settings'] = $this->sanitizeSettings($this->data['settings']);
 
-            $this->settings_sanitized = true;
+            $this->settingsSanitized = true;
         }
 
         return self::getItems($this->data, $item);
@@ -903,11 +903,11 @@ abstract class ControlsStack extends BaseObject
 
     public function getParsedDynamicSettings($setting = null)
     {
-        if (null === $this->parsed_dynamic_settings) {
-            $this->parsed_dynamic_settings = $this->parseDynamicSettings($this->getSettings());
+        if (null === $this->parsedDynamicSettings) {
+            $this->parsedDynamicSettings = $this->parseDynamicSettings($this->getSettings());
         }
 
-        return self::getItems($this->parsed_dynamic_settings, $setting);
+        return self::getItems($this->parsedDynamicSettings, $setting);
     }
 
     /**
@@ -923,11 +923,11 @@ abstract class ControlsStack extends BaseObject
      */
     public function getActiveSettings($settings = null, $controls = null)
     {
-        $is_first_request = ! $settings && ! $this->active_settings;
+        $is_first_request = ! $settings && ! $this->activeSettings;
 
-        if (! $settings) {
-            if ($this->active_settings) {
-                return $this->active_settings;
+        if (!$settings) {
+            if ($this->activeSettings) {
+                return $this->activeSettings;
             }
 
             $settings = $this->getControlsSettings();
@@ -937,7 +937,7 @@ abstract class ControlsStack extends BaseObject
 
         $active_settings = [];
         foreach ($settings as $setting_key => $setting) {
-            if (! isset($controls[ $setting_key ])) {
+            if (!isset($controls[ $setting_key ])) {
                 $active_settings[ $setting_key ] = $setting;
 
                 continue;
@@ -959,7 +959,7 @@ abstract class ControlsStack extends BaseObject
         }
 
         if ($is_first_request) {
-            $this->active_settings = $active_settings;
+            $this->activeSettings = $active_settings;
         }
 
         return $active_settings;
@@ -982,11 +982,11 @@ abstract class ControlsStack extends BaseObject
      */
     public function getSettingsForDisplay($setting_key = null)
     {
-        if (! $this->parsed_active_settings) {
-            $this->parsed_active_settings = $this->getActiveSettings($this->getParsedDynamicSettings(), $this->getControls());
+        if (!$this->parsedActiveSettings) {
+            $this->parsedActiveSettings = $this->getActiveSettings($this->getParsedDynamicSettings(), $this->getControls());
         }
 
-        return self::getItems($this->parsed_active_settings, $setting_key);
+        return self::getItems($this->parsedActiveSettings, $setting_key);
     }
 
     /**
@@ -1015,7 +1015,7 @@ abstract class ControlsStack extends BaseObject
             $control_name = $control['name'];
             $control_obj = $this->controlManager->getControl($control['type']);
 
-            if (! $control_obj instanceof \Goomento\PageBuilder\Builder\Controls\BaseData) {
+            if (!$control_obj instanceof AbstractControlData) {
                 continue;
             }
 
@@ -1027,14 +1027,14 @@ abstract class ControlsStack extends BaseObject
                 continue;
             }
 
-            if (empty($control['dynamic']) || ! isset($all_settings[ Manager::DYNAMIC_SETTING_KEY ][ $control_name ])) {
+            if (empty($control['dynamic']) || ! isset($all_settings[ Tags::DYNAMIC_SETTING_KEY ][ $control_name ])) {
                 continue;
             }
 
             $dynamic_settings = array_merge($control_obj->getSettings('dynamic'), $control['dynamic']);
 
-            if (! empty($dynamic_settings['active']) && ! empty($all_settings[ Manager::DYNAMIC_SETTING_KEY ][ $control_name ])) {
-                $parsed_value = $control_obj->parseTags($all_settings[ Manager::DYNAMIC_SETTING_KEY ][ $control_name ], $dynamic_settings);
+            if (!empty($dynamic_settings['active']) && ! empty($all_settings[ Tags::DYNAMIC_SETTING_KEY ][ $control_name ])) {
+                $parsed_value = $control_obj->parseTags($all_settings[ Tags::DYNAMIC_SETTING_KEY ][ $control_name ], $dynamic_settings);
 
                 $dynamic_property = ! empty($dynamic_settings['property']) ? $dynamic_settings['property'] : null;
 
@@ -1087,11 +1087,11 @@ abstract class ControlsStack extends BaseObject
      */
     public function filterControlsSettings(callable $callback, array $settings = [], array $controls = [])
     {
-        if (! $settings) {
+        if (!$settings) {
             $settings = $this->getSettings();
         }
 
-        if (! $controls) {
+        if (!$controls) {
             $controls = $this->getControls();
         }
 
@@ -1129,7 +1129,7 @@ abstract class ControlsStack extends BaseObject
             $values = $this->getSettings();
         }
 
-        if (! empty($control['conditions']) && ! Conditions::check($control['conditions'], $values)) {
+        if (!empty($control['conditions']) && !DataHelper::check($control['conditions'], $values)) {
             return false;
         }
 
@@ -1144,14 +1144,14 @@ abstract class ControlsStack extends BaseObject
             $condition_sub_key = $condition_key_parts[2];
             $is_negative_condition = ! ! $condition_key_parts[3];
 
-            if (! isset($values[ $pure_condition_key ]) || null === $values[ $pure_condition_key ]) {
+            if (!isset($values[ $pure_condition_key ]) || null === $values[ $pure_condition_key ]) {
                 return false;
             }
 
             $instance_value = $values[ $pure_condition_key ];
 
             if ($condition_sub_key && is_array($instance_value)) {
-                if (! isset($instance_value[ $condition_sub_key ])) {
+                if (!isset($instance_value[ $condition_sub_key ])) {
                     return false;
                 }
 
@@ -1188,12 +1188,11 @@ abstract class ControlsStack extends BaseObject
      *
      * This method should be used inside `_register_controls()`.
      *
-     * @param string $section_id Section ID.
+     * @param string $sectionId Section ID.
      * @param array $args Section arguments Optional.
-     * @throws \Exception
      *
      */
-    public function startControlsSection($section_id, array $args = [])
+    public function startControlsSection($sectionId, array $args = [])
     {
         $section_name = $this->getName();
 
@@ -1204,10 +1203,10 @@ abstract class ControlsStack extends BaseObject
          *
          *
          * @param ControlsStack $this       The control.
-         * @param string         $section_id Section ID.
+         * @param string         $sectionId Section ID.
          * @param array          $args       Section arguments.
          */
-        Hooks::doAction('pagebuilder/element/before_section_start', $this, $section_id, $args);
+        HooksHelper::doAction('pagebuilder/element/before_section_start', $this, $sectionId, $args);
 
         /**
          * Before section start.
@@ -1220,20 +1219,20 @@ abstract class ControlsStack extends BaseObject
          * @param ControlsStack $this The control.
          * @param array          $args Section arguments.
          */
-        Hooks::doAction("pagebuilder/element/{$section_name}/{$section_id}/before_section_start", $this, $args);
+        HooksHelper::doAction("pagebuilder/element/{$section_name}/{$sectionId}/before_section_start", $this, $args);
 
         $args['type'] = Controls::SECTION;
 
-        $this->addControl($section_id, $args);
+        $this->addControl($sectionId, $args);
 
-        if (null !== $this->current_section) {
-            exit(sprintf('Goomento: You can\'t start a section before the end of the previous section "%s".', $this->current_section['section'])); // XSS ok.
+        if (null !== $this->currentSection) {
+            exit(sprintf('Goomento: You can\'t start a section before the end of the previous section "%s".', $this->currentSection['section'])); // XSS ok.
         }
 
-        $this->current_section = $this->getSectionArgs($section_id);
+        $this->currentSection = $this->getSectionArgs($sectionId);
 
-        if ($this->injection_point) {
-            $this->injection_point['section'] = $this->current_section;
+        if ($this->injectionPoint) {
+            $this->injectionPoint['section'] = $this->currentSection;
         }
 
         /**
@@ -1243,10 +1242,10 @@ abstract class ControlsStack extends BaseObject
          *
          *
          * @param ControlsStack $this       The control.
-         * @param string         $section_id Section ID.
+         * @param string         $sectionId Section ID.
          * @param array          $args       Section arguments.
          */
-        Hooks::doAction('pagebuilder/element/after_section_start', $this, $section_id, $args);
+        HooksHelper::doAction('pagebuilder/element/after_section_start', $this, $sectionId, $args);
 
         /**
          * After section start.
@@ -1259,7 +1258,7 @@ abstract class ControlsStack extends BaseObject
          * @param ControlsStack $this The control.
          * @param array          $args Section arguments.
          */
-        Hooks::doAction("pagebuilder/element/{$section_name}/{$section_id}/after_section_start", $this, $args);
+        HooksHelper::doAction("pagebuilder/element/{$section_name}/{$sectionId}/after_section_start", $this, $args);
     }
 
     /**
@@ -1276,7 +1275,7 @@ abstract class ControlsStack extends BaseObject
         $stack_name = $this->getName();
 
         // Save the current section for the action.
-        $current_section = $this->current_section;
+        $current_section = $this->currentSection;
         $section_id = $current_section['section'];
         $args = [
             'tab' => $current_section['tab'],
@@ -1292,7 +1291,7 @@ abstract class ControlsStack extends BaseObject
          * @param string         $section_id Section ID.
          * @param array          $args       Section arguments.
          */
-        Hooks::doAction('pagebuilder/element/before_section_end', $this, $section_id, $args);
+        HooksHelper::doAction('pagebuilder/element/before_section_end', $this, $section_id, $args);
 
         /**
          * Before section end.
@@ -1305,9 +1304,9 @@ abstract class ControlsStack extends BaseObject
          * @param ControlsStack $this The control.
          * @param array          $args Section arguments.
          */
-        Hooks::doAction("pagebuilder/element/{$stack_name}/{$section_id}/before_section_end", $this, $args);
+        HooksHelper::doAction("pagebuilder/element/{$stack_name}/{$section_id}/before_section_end", $this, $args);
 
-        $this->current_section = null;
+        $this->currentSection = null;
 
         /**
          * After section end.
@@ -1319,7 +1318,7 @@ abstract class ControlsStack extends BaseObject
          * @param string         $section_id Section ID.
          * @param array          $args       Section arguments.
          */
-        Hooks::doAction('pagebuilder/element/after_section_end', $this, $section_id, $args);
+        HooksHelper::doAction('pagebuilder/element/after_section_end', $this, $section_id, $args);
 
         /**
          * After section end.
@@ -1332,7 +1331,7 @@ abstract class ControlsStack extends BaseObject
          * @param ControlsStack $this The control.
          * @param array          $args Section arguments.
          */
-        Hooks::doAction("pagebuilder/element/{$stack_name}/{$section_id}/after_section_end", $this, $args);
+        HooksHelper::doAction("pagebuilder/element/{$stack_name}/{$section_id}/after_section_end", $this, $args);
     }
 
     /**
@@ -1348,13 +1347,13 @@ abstract class ControlsStack extends BaseObject
      *
      * @param string $tabs_id Tabs ID.
      * @param array $args Tabs arguments.
-     * @throws \Exception
+     * @throws Exception
      */
     public function startControlsTabs($tabs_id, array $args = [])
     {
-        if (null !== $this->current_tab) {
-            throw new \Exception(
-                sprintf('Goomento: You can\'t start tabs before the end of the previous tabs "%s".', $this->current_tab['tabs_wrapper'])
+        if (null !== $this->currentTab) {
+            throw new Exception(
+                sprintf('You can\'t start tabs before the end of the previous tabs "%s".', $this->currentTab['tabs_wrapper'])
             );
         }
 
@@ -1362,18 +1361,18 @@ abstract class ControlsStack extends BaseObject
 
         $this->addControl($tabs_id, $args);
 
-        $this->current_tab = [
+        $this->currentTab = [
             'tabs_wrapper' => $tabs_id,
         ];
 
         foreach ([ 'condition', 'conditions' ] as $key) {
-            if (! empty($args[ $key ])) {
-                $this->current_tab[ $key ] = $args[ $key ];
+            if (!empty($args[ $key ])) {
+                $this->currentTab[ $key ] = $args[ $key ];
             }
         }
 
-        if ($this->injection_point) {
-            $this->injection_point['tab'] = $this->current_tab;
+        if ($this->injectionPoint) {
+            $this->injectionPoint['tab'] = $this->currentTab;
         }
     }
 
@@ -1388,7 +1387,7 @@ abstract class ControlsStack extends BaseObject
      */
     public function endControlsTabs()
     {
-        $this->current_tab = null;
+        $this->currentTab = null;
     }
 
     /**
@@ -1403,25 +1402,26 @@ abstract class ControlsStack extends BaseObject
      *
      *
      * @param string $tab_id Tab ID.
-     * @param array  $args   Tab arguments.
+     * @param array $args Tab arguments.
+     * @throws Exception
      */
     public function startControlsTab($tab_id, $args)
     {
-        if (! empty($this->current_tab['inner_tab'])) {
-            throw new \Exception(
-                sprintf('Goomento: You can\'t start a tab before the end of the previous tab "%s".', $this->current_tab['inner_tab'])
+        if (!empty($this->currentTab['inner_tab'])) {
+            throw new Exception(
+                sprintf('Goomento: You can\'t start a tab before the end of the previous tab "%s".', $this->currentTab['inner_tab'])
             );
         }
 
         $args['type'] = Controls::TAB;
-        $args['tabs_wrapper'] = $this->current_tab['tabs_wrapper'];
+        $args['tabs_wrapper'] = $this->currentTab['tabs_wrapper'];
 
         $this->addControl($tab_id, $args);
 
-        $this->current_tab['inner_tab'] = $tab_id;
+        $this->currentTab['inner_tab'] = $tab_id;
 
-        if ($this->injection_point) {
-            $this->injection_point['tab']['inner_tab'] = $this->current_tab['inner_tab'];
+        if ($this->injectionPoint) {
+            $this->injectionPoint['tab']['inner_tab'] = $this->currentTab['inner_tab'];
         }
     }
 
@@ -1436,7 +1436,7 @@ abstract class ControlsStack extends BaseObject
      */
     public function endControlsTab()
     {
-        unset($this->current_tab['inner_tab']);
+        unset($this->currentTab['inner_tab']);
     }
 
     /**
@@ -1451,7 +1451,7 @@ abstract class ControlsStack extends BaseObject
      */
     final public function startPopover()
     {
-        $this->current_popover = [
+        $this->currentPopover = [
             'initialized' => false,
         ];
     }
@@ -1467,7 +1467,7 @@ abstract class ControlsStack extends BaseObject
      */
     final public function endPopover()
     {
-        $this->current_popover = null;
+        $this->currentPopover = null;
 
         $last_control_key = $this->getControlKey($this->getPointerIndex() - 1);
 
@@ -1494,11 +1494,15 @@ abstract class ControlsStack extends BaseObject
     {
         ob_start();
 
-        $this->contentTemplate();
+        $template = $this->contentTemplate();
 
         $template_content = ob_get_clean();
 
-        $element_type = $this->getType();
+        if (empty($template_content) && $template) {
+            $template_content = $template;
+        }
+
+        $element_type = self::TYPE;
 
         /**
          * Template content.
@@ -1511,13 +1515,13 @@ abstract class ControlsStack extends BaseObject
          * @param string         $content_template The controls stack template in the editor.
          * @param ControlsStack $this             The controls stack.
          */
-        $template_content = Hooks::applyFilters("pagebuilder/{$element_type}/print_template", $template_content, $this);
+        $template_content = HooksHelper::applyFilters("pagebuilder/{$element_type}/print_template", $template_content, $this);
 
         if (empty($template_content)) {
             return;
         }
         ?>
-		<script type="text/html" id="tmpl-gmt-<?= StaticEscaper::escapeHtml($this->getName()); ?>-content">
+		<script type="text/html" id="tmpl-gmt-<?= EscaperHelper::escapeHtmlAttr($this->getName()); ?>-content">
 			<?php $this->printTemplateContent($template_content); ?>
 		</script>
 		<?php
@@ -1536,22 +1540,16 @@ abstract class ControlsStack extends BaseObject
      * @param array $position {
      *     The position where to start the injection.
      *
-     *     @type string $type Injection type, either `control` or `section`.
-     *                        Default is `control`.
-     *     @type string $at   Where to inject. If `$type` is `control` accepts
-     *                        `before` and `after`. If `$type` is `section`
-     *                        accepts `start` and `end`. Default values based on
-     *                        the `type`.
-     *     @type string $of   Control/Section ID.
-     * }
      */
     final public function startInjection(array $position)
     {
-        if ($this->injection_point) {
-            exit('A controls injection is already opened. Please close current injection before starting a new one (use `end_injection`).');
+        if ($this->injectionPoint) {
+            throw new \Exception(
+                'A controls injection is already opened. Please close current injection before starting a new one (use `endInjection`).'
+            );
         }
 
-        $this->injection_point = $this->getPositionInfo($position);
+        $this->injectionPoint = $this->getPositionInfo($position);
     }
 
     /**
@@ -1566,7 +1564,7 @@ abstract class ControlsStack extends BaseObject
      */
     final public function endInjection()
     {
-        $this->injection_point = null;
+        $this->injectionPoint = null;
     }
 
     /**
@@ -1581,7 +1579,7 @@ abstract class ControlsStack extends BaseObject
      */
     final public function getInjectionPoint()
     {
-        return $this->injection_point;
+        return $this->injectionPoint;
     }
 
     /**
@@ -1621,7 +1619,7 @@ abstract class ControlsStack extends BaseObject
         foreach ($this->getControls() as $control) {
             $control_obj = $this->controlManager->getControl($control['type']);
 
-            if (! $control_obj instanceof \Goomento\PageBuilder\Builder\Controls\BaseData) {
+            if (!$control_obj instanceof AbstractControlData) {
                 continue;
             }
 
@@ -1676,7 +1674,7 @@ abstract class ControlsStack extends BaseObject
      * Render element.
      *
      * Generates the final HTML on the frontend.
-     *
+     * @return string|void
      */
     protected function render()
     {
@@ -1700,7 +1698,7 @@ abstract class ControlsStack extends BaseObject
      * Render element output in the editor.
      *
      * Used to generate the live preview, using a Backbone JavaScript template.
-     *
+     * @return string|void
      */
     protected function contentTemplate()
     {
@@ -1747,7 +1745,7 @@ abstract class ControlsStack extends BaseObject
      */
     private function sanitizeSettings(array $settings, array $controls = [])
     {
-        if (! $controls) {
+        if (!$controls) {
             $controls = $this->getControls();
         }
 
@@ -1766,18 +1764,18 @@ abstract class ControlsStack extends BaseObject
                 continue;
             }
 
-            $is_dynamic = isset($settings[ Manager::DYNAMIC_SETTING_KEY ][ $control['name'] ]);
+            $is_dynamic = isset($settings[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ]);
 
-            if (! $is_dynamic) {
+            if (!$is_dynamic) {
                 continue;
             }
 
-            $value_to_check = $settings[ Manager::DYNAMIC_SETTING_KEY ][ $control['name'] ];
+            $value_to_check = $settings[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ];
 
             $tag_text_data = $this->tagsManager->tagTextToTagData($value_to_check);
 
-            if (! $this->tagsManager->getTagInfo($tag_text_data['name'])) {
-                unset($settings[ Manager::DYNAMIC_SETTING_KEY ][ $control['name'] ]);
+            if (!$this->tagsManager->getTagInfo($tag_text_data['name'])) {
+                unset($settings[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ]);
             }
         }
 
@@ -1799,7 +1797,7 @@ abstract class ControlsStack extends BaseObject
             $this->_init($data);
         }
 
-        $this->controlManager = StaticObjectManager::get(Controls::class);
-        $this->tagsManager = StaticObjectManager::get(Manager::class);
+        $this->controlManager = ObjectManagerHelper::get(Controls::class);
+        $this->tagsManager = ObjectManagerHelper::get(Tags::class);
     }
 }

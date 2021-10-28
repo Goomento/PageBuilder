@@ -13,10 +13,6 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Exception;
 
-/**
- * Class Delete
- * @package Goomento\PageBuilder\Controller\Adminhtml\Content
- */
 class Delete extends AbstractContent implements HttpPostActionInterface
 {
     use TraitContent;

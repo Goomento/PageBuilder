@@ -17,10 +17,6 @@ use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 
-/**
- * Class RefreshStyle
- * @package Goomento\PageBuilder\Model\Config\Backend
- */
 class RefreshStyle extends Value
 {
     /**
@@ -58,7 +54,7 @@ class RefreshStyle extends Value
      */
     public function afterSave()
     {
-        $this->contentManagement->refreshGlobalCache();
+        $this->contentManagement->refreshGlobalAssets();
         return parent::afterSave();
     }
 }

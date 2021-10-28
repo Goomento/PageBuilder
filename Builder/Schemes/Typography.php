@@ -8,12 +8,11 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Schemes;
 
-/**
- * Class Typography
- * @package Goomento\PageBuilder\Builder\Schemes
- */
-class Typography extends Base
+use Goomento\PageBuilder\Builder\Base\AbstractSchema;
+
+class Typography extends AbstractSchema
 {
+    const NAME = 'typography';
 
     /**
      * 1st typography scheme.
@@ -34,19 +33,6 @@ class Typography extends Base
      * 4th typography scheme.
      */
     const TYPOGRAPHY_4 = '4';
-
-    /**
-     * Get typography scheme type.
-     *
-     * Retrieve the typography scheme type.
-     *
-     *
-     * @return string Typography scheme type.
-     */
-    public static function getType()
-    {
-        return 'typography';
-    }
 
     /**
      * Get typography scheme title.

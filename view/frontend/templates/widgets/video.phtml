@@ -1,0 +1,120 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
+use Goomento\PageBuilder\Builder\Modules\Editor;
+use Goomento\PageBuilder\Builder\Embed;
+use Goomento\PageBuilder\Builder\Widgets\Video;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+
+/**
+ * @var Widget $block
+ * @var Video $widget
+ */
+$widget = $block->getWidget();
+$settings = $widget->getSettingsForDisplay();
+$settings = $widget->getSettingsForDisplay();
+
+$video_url = $settings[ $settings['video_type'] . '_url' ] ?? '';
+
+if ('other' === $settings['video_type']) {
+    $video_url = $widget->getExternalVideoUrl();
+}
+
+if (empty($video_url)) {
+    return;
+}
+
+if ('other' === $settings['video_type']) {
+    ob_start();
+
+    $widget->renderExternalVideo();
+
+    $video_html = ob_get_clean();
+} else {
+    $embed_params = $widget->getEmbedParams();
+
+    $embed_options = $widget->getEmbedOptions();
+
+    $video_html = Embed::getEmbedHtml($video_url, $embed_params, $embed_options);
+}
+
+if (empty($video_html)) {
+    echo $video_url;
+
+    return;
+}
+
+$widget->addRenderAttribute('video-wrapper', 'class', 'gmt-wrapper');
+
+if (!$settings['lightbox']) {
+    $widget->addRenderAttribute('video-wrapper', 'class', 'gmt-fit-aspect-ratio');
+}
+
+$widget->addRenderAttribute('video-wrapper', 'class', 'gmt-open-' . ($settings['lightbox'] ? 'lightbox' : 'inline')); ?>
+<div <?= $widget->getRenderAttributeString('video-wrapper'); ?>>
+    <?php
+    if (!$settings['lightbox']) {
+        echo $video_html; // XSS ok.
+    }
+
+    if ($widget->hasImageOverlay()) {
+        $widget->addRenderAttribute('image-overlay', 'class', 'gmt-custom-embed-image-overlay');
+
+        if ($settings['lightbox']) {
+            if ('other' === $settings['video_type']) {
+                $lightbox_url = $video_url;
+            } else {
+                $lightbox_url = Embed::getEmbedUrl($video_url, $embed_params, $embed_options);
+            }
+
+            $lightbox_options = [
+                'type' => 'video',
+                'videoType' => $settings['video_type'],
+                'url' => $lightbox_url,
+                'modalOptions' => [
+                    'id' => 'gmt-lightbox-' . $widget->getId(),
+                    'entranceAnimation' => $settings['lightbox_content_animation'],
+                    'entranceAnimation_tablet' => $settings['lightbox_content_animation_tablet'],
+                    'entranceAnimation_mobile' => $settings['lightbox_content_animation_mobile'],
+                    'videoAspectRatio' => $settings['aspect_ratio'],
+                ],
+            ];
+
+            if ('other' === $settings['video_type']) {
+                $lightbox_options['videoParams'] = $widget->getExternalParams();
+            }
+
+            $widget->addRenderAttribute('image-overlay', [
+                'data-gmt-open-lightbox' => 'yes',
+                'data-gmt-lightbox' => Zend_Json::encode($lightbox_options),
+            ]);
+
+            if (ObjectManagerHelper::get(Editor::class)->isEditMode()) {
+                $widget->addRenderAttribute('image-overlay', [
+                    'class' => 'gmt-clickable',
+                ]);
+            }
+        } else {
+            $widget->addRenderAttribute('image-overlay', 'style', 'background-image: url(' . $settings['image_overlay']['url'] ?? '' . ');');
+        } ?>
+        <div <?= $widget->getRenderAttributeString('image-overlay'); ?>>
+            <?php if ($settings['lightbox']) : ?>
+                <?= ImageSizeGroup::getAttachmentImageHtml($settings, 'image_overlay'); ?>
+            <?php endif; ?>
+            <?php if ('yes' === $settings['show_play_icon']) : ?>
+                <div class="gmt-custom-embed-play" role="button">
+                    <i class="far fa-play-circle"></i>
+                    <span class="gmt-screen-only"><?= __('Play Video'); ?></span>
+                </div>
+            <?php endif; ?>
+        </div>
+        <?php
+    } ?>
+</div>

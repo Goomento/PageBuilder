@@ -1,0 +1,46 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Builder\Managers\Icons;
+
+/**
+ * @var Widget $block
+ */
+$widget = $block->getWidget();
+$settings = $widget->getSettingsForDisplay();
+
+$widget->addRenderAttribute('wrapper', 'class', 'gmt-icon-wrapper');
+
+$widget->addRenderAttribute('icon-wrapper', 'class', 'gmt-icon');
+
+if (!empty($settings['icon_hover_animation'])) {
+    $widget->addRenderAttribute('icon-wrapper', 'class', 'gmt-animation-' . $settings['icon_hover_animation']);
+}
+
+$icon_tag = 'div';
+
+if (!empty($settings['icon_link']['url'])) {
+    $widget->addRenderAttribute('icon-wrapper', 'href', $settings['icon_link']['url']);
+    $icon_tag = 'a';
+
+    if (!empty($settings['icon_link']['is_external'])) {
+        $widget->addRenderAttribute('icon-wrapper', 'target', '_blank');
+    }
+
+    if ($settings['icon_link']['nofollow']) {
+        $widget->addRenderAttribute('icon-wrapper', 'rel', 'nofollow');
+    }
+}
+
+?>
+<div <?= $widget->getRenderAttributeString('wrapper'); ?>>
+    <<?= $icon_tag . ' ' . $widget->getRenderAttributeString('icon-wrapper'); ?>>
+    <?php Icons::renderIcon($settings['icon_selected_icon'], [ 'aria-hidden' => 'true' ]) ?>
+    </<?= $icon_tag; ?>>
+</div>

@@ -10,7 +10,7 @@
         <referenceContainer name="content">
             <block class="Magento\Backend\Block\Template"
                    name="pagebuilder.import-template"
-                   template="Goomento_PageBuilder::content/import-template.phtml"
+                   template="Goomento_PageBuilder::content/import_template.phtml"
                    aclResource="Goomento_PageBuilder::import"
             >
                 <block class="Magento\Framework\View\Element\FormKey" name="formkey"/>

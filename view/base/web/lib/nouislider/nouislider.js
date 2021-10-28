@@ -973,7 +973,7 @@
         // Exposed API
         var scope_Self;
 
-        // Document Nodes
+        // AbstractDocument Nodes
         var scope_Document = target.ownerDocument;
         var scope_DocumentElement = options.documentElement || scope_Document.documentElement;
         var scope_Body = scope_Document.body;

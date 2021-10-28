@@ -12,7 +12,7 @@
         <meta name="robots" content="NOINDEX,NOFOLLOW"/>
     </head>
     <body>
-        <referenceContainer name="columns.top" remove="true"/>
+        <referenceContainer name="page.main.title" remove="true"/>
         <referenceBlock name="page.bottom.container" remove="true"/>
         <referenceBlock name="before.body.end" remove="true"/>
     </body>

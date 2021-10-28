@@ -158,18 +158,4 @@
             </settings>
         </field>
     </fieldset>
-    <fieldset name="instruction">
-        <settings>
-            <label />
-        </settings>
-        <field name="how_to_use" formElement="input" sortOrder="10">
-            <settings>
-                <elementTmpl>ui/form/element/text</elementTmpl>
-                <label translate="true">How To Use</label>
-                <tooltip>
-                    <description><![CDATA[Check this content <a target="_blank" href="https://github.com/Goomento/PageBuilder/wiki/How-To-Use">Wiki page</a>]]></description>
-                </tooltip>
-            </settings>
-        </field>
-    </fieldset>
 </form>

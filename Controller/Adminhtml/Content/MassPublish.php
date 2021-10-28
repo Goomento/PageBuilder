@@ -12,10 +12,6 @@ use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
-/**
- * Class MassPublish
- * @package Goomento\PageBuilder\Controller\Adminhtml\Content
- */
 class MassPublish extends MassPending
 {
     use TraitContent;

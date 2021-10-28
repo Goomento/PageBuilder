@@ -8,14 +8,10 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Block\Adminhtml\Content\Edit;
 
-use Goomento\PageBuilder\Helper\StaticAuthorization;
+use Goomento\PageBuilder\Helper\AuthorizationHelper;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Magento\Ui\Component\Control\Container;
 
-/**
- * Class AbstractSaveButton
- * @package Goomento\PageBuilder\Block\Adminhtml\Template\Edit
- */
 abstract class AbstractSaveButton extends AbstractGenericButton implements ButtonProviderInterface
 {
     const TARGET_NAME = 'pagebuilder_template_form.pagebuilder_template_form';
@@ -24,7 +20,7 @@ abstract class AbstractSaveButton extends AbstractGenericButton implements Butto
      */
     public function getButtonData()
     {
-        if (!StaticAuthorization::isCurrentUserCan($this->getContentType() . '_save')) {
+        if (!AuthorizationHelper::isCurrentUserCan($this->getContentType() . '_save')) {
             return [];
         }
 

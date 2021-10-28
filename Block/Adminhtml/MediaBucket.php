@@ -11,13 +11,9 @@ namespace Goomento\PageBuilder\Block\Adminhtml;
 use Magento\Backend\Block\Template;
 use Magento\Framework\UrlInterface;
 
-/**
- * Class MediaBucket
- * @package Goomento\PageBuilder\Block\Adminhtml
- */
 class MediaBucket extends Template
 {
-    protected $_template = 'Goomento_PageBuilder::editor/media-bucket.phtml';
+    protected $_template = 'Goomento_PageBuilder::editor/media_bucket.phtml';
 
     /**
      * @return string

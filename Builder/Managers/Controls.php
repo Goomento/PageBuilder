@@ -9,10 +9,11 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Managers;
 
 use Exception;
+use Goomento\PageBuilder\Builder\Base\AbstractControlGroup;
 use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Animation;
-use Goomento\PageBuilder\Builder\Controls\Base;
-use Goomento\PageBuilder\Builder\Controls\BaseData;
+use Goomento\PageBuilder\Builder\Base\AbstractControl;
+use Goomento\PageBuilder\Builder\Controls\AbstractControlData;
 use Goomento\PageBuilder\Builder\Controls\BoxShadow;
 use Goomento\PageBuilder\Builder\Controls\Button;
 use Goomento\PageBuilder\Builder\Controls\Choose;
@@ -25,18 +26,19 @@ use Goomento\PageBuilder\Builder\Controls\Divider;
 use Goomento\PageBuilder\Builder\Controls\ExitAnimation;
 use Goomento\PageBuilder\Builder\Controls\Font;
 use Goomento\PageBuilder\Builder\Controls\Gallery;
-use Goomento\PageBuilder\Builder\Controls\Groups\Background;
-use Goomento\PageBuilder\Builder\Controls\Groups\Border;
-use Goomento\PageBuilder\Builder\Controls\Groups\CssFilter;
-use Goomento\PageBuilder\Builder\Controls\Groups\ImageSize;
-use Goomento\PageBuilder\Builder\Controls\Groups\Typography;
+use Goomento\PageBuilder\Builder\Controls\Groups\BackgroundGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\BorderGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\BoxShadowGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\CssFilterGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\TextShadowGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Controls\Heading;
 use Goomento\PageBuilder\Builder\Controls\Hidden;
 use Goomento\PageBuilder\Builder\Controls\HoverAnimation;
 use Goomento\PageBuilder\Builder\Controls\Icon;
 use Goomento\PageBuilder\Builder\Controls\ImageDimensions;
 use Goomento\PageBuilder\Builder\Controls\Media;
-use Goomento\PageBuilder\Builder\Controls\NestedRepeater;
 use Goomento\PageBuilder\Builder\Controls\Number;
 use Goomento\PageBuilder\Builder\Controls\PopoverToggle;
 use Goomento\PageBuilder\Builder\Controls\RawHtml;
@@ -54,19 +56,10 @@ use Goomento\PageBuilder\Builder\Controls\Textarea;
 use Goomento\PageBuilder\Builder\Controls\TextShadow;
 use Goomento\PageBuilder\Builder\Controls\Url;
 use Goomento\PageBuilder\Builder\Controls\Wysiwyg;
-use Goomento\PageBuilder\Core\DocumentsManager;
-use Goomento\PageBuilder\Core\DynamicTags\DynamicCss;
-use Goomento\PageBuilder\Core\Settings\Manager;
-use Goomento\PageBuilder\Helper\Hooks;
-use Goomento\PageBuilder\Helper\StaticLogger;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
-use Magento\Framework\Exception\NoSuchEntityException;
-use ReflectionException;
+use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\LoggerHelper;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
-/**
- * Class Controls
- * @package Goomento\PageBuilder\Builder\Managers
- */
 class Controls
 {
     const TAB_CONTENT = 'content';
@@ -75,51 +68,124 @@ class Controls
     const TAB_RESPONSIVE = 'responsive';
     const TAB_LAYOUT = 'layout';
     const TAB_SETTINGS = 'settings';
-    const TEXT = 'text';
-    const NUMBER = 'number';
-    const TEXTAREA = 'textarea';
-    const SELECT = 'select';
-    const SWITCHER = 'switcher';
-    const BUTTON = 'button';
-    const HIDDEN = 'hidden';
-    const HEADING = 'heading';
-    const RAW_HTML = 'raw_html';
-    const DEPRECATED_NOTICE = 'deprecated_notice';
-    const POPOVER_TOGGLE = 'popover_toggle';
-    const SECTION = 'section';
-    const TAB = 'tab';
-    const TABS = 'tabs';
-    const DIVIDER = 'divider';
-    const COLOR = 'color';
-    const MEDIA = 'media';
-    const SLIDER = 'slider';
-    const DIMENSIONS = 'dimensions';
-    const CHOOSE = 'choose';
-    const WYSIWYG = 'wysiwyg';
-    const CODE = 'code';
-    const FONT = 'font';
-    const IMAGE_DIMENSIONS = 'image_dimensions';
-    const URL = 'url';
-    const REPEATER = 'repeater';
-    const NESTED_REPEATER = 'nested_repeater';
-    const ICON = 'icon';
-    const ICONS = 'icons';
-    const GALLERY = 'gallery';
-    const STRUCTURE = 'structure';
-    const SELECT2 = 'select2';
+
+    /**
+     * Control types
+     */
+    const TEXT = Text::NAME;
+    const NUMBER = Number::NAME;
+    const TEXTAREA = Textarea::NAME;
+    const SELECT = Select::NAME;
+    const SWITCHER = Switcher::NAME;
+    const BUTTON = Button::NAME;
+    const HIDDEN = Hidden::NAME;
+    const HEADING = Heading::NAME;
+    const RAW_HTML = RawHtml::NAME;
+    const DEPRECATED_NOTICE = DeprecatedNotice::NAME;
+    const POPOVER_TOGGLE = PopoverToggle::NAME;
+    const SECTION = Section::NAME;
+    const TAB = Tab::NAME;
+    const TABS = Tabs::NAME;
+    const DIVIDER = Divider::NAME;
+    const COLOR = Color::NAME;
+    const MEDIA = Media::NAME;
+    const SLIDER = Slider::NAME;
+    const DIMENSIONS = Dimensions::NAME;
+    const CHOOSE = Choose::NAME;
+    const WYSIWYG = Wysiwyg::NAME;
+    const CODE = Code::NAME;
+    const FONT = Font::NAME;
+    const IMAGE_DIMENSIONS = ImageDimensions::NAME;
+    const URL = Url::NAME;
+    const REPEATER = Repeater::NAME;
+    const ICON = Icon::NAME;
+    const ICONS = \Goomento\PageBuilder\Builder\Controls\Icons::NAME;
+    const GALLERY = Gallery::NAME;
+    const STRUCTURE = Structure::NAME;
+    const SELECT2 = Select2::NAME;
 
     /**
      * Date/Time control.
      */
-    const DATE_TIME = 'date_time';
-    const BOX_SHADOW = 'box_shadow';
-    const TEXT_SHADOW = 'text_shadow';
-    const ANIMATION = 'animation';
-    const HOVER_ANIMATION = 'hover_animation';
-    const EXIT_ANIMATION = 'exit_animation';
+    const DATE_TIME = DateTime::NAME;
+
+    /**
+     * Animate control
+     */
+    const BOX_SHADOW = BoxShadow::NAME;
+    const TEXT_SHADOW = TextShadow::NAME;
+    const ANIMATION = Animation::NAME;
+    const HOVER_ANIMATION = HoverAnimation::NAME;
+    const EXIT_ANIMATION = ExitAnimation::NAME;
+
+    /**
+     * @var \Goomento\PageBuilder\Builder\Base\AbstractControl[]|null
+     */
     private $controls = null;
-    private $control_groups = [];
+
+    /**
+     * @var AbstractControlGroup[]|null
+     */
+    private $controlGroups = [];
+
+    /**
+     * @var array
+     */
     private $stacks = [];
+
+    /**
+     * @var string[]
+     */
+    private $controlTypes = [
+        Text::class,
+        Number::class,
+        Textarea::class,
+        Select::class,
+        Switcher::class,
+        Button::class,
+        Hidden::class,
+        Heading::class,
+        RawHtml::class,
+        PopoverToggle::class,
+        Section::class,
+        Tab::class,
+        Tabs::class,
+        Divider::class,
+        DeprecatedNotice::class,
+        Color::class,
+        Media::class,
+        Slider::class,
+        Dimensions::class,
+        Choose::class,
+        Wysiwyg::class,
+        Code::class,
+        Font::class,
+        ImageDimensions::class,
+        Url::class,
+        Icon::class,
+        \Goomento\PageBuilder\Builder\Controls\Icons::class,
+        Gallery::class,
+        Structure::class,
+        Select2::class,
+        DateTime::class,
+        Repeater::class,
+        BoxShadow::class,
+        TextShadow::class,
+        Animation::class,
+        HoverAnimation::class,
+        ExitAnimation::class,
+    ];
+
+    private $groupTypes = [
+        BackgroundGroup::class,
+        BorderGroup::class,
+        TypographyGroup::class,
+        ImageSizeGroup::class,
+        BoxShadowGroup::class,
+        CssFilterGroup::class,
+        TextShadowGroup::class,
+    ];
+
     private static $tabs;
 
     /**
@@ -167,69 +233,6 @@ class Controls
     }
 
     /**
-     * @return string[]
-     */
-    public static function getGroupsNames()
-    {
-        return [
-            Background::class,
-            Border::class,
-            Typography::class,
-            ImageSize::class,
-            \Goomento\PageBuilder\Builder\Controls\Groups\BoxShadow::class,
-            CssFilter::class,
-            \Goomento\PageBuilder\Builder\Controls\Groups\TextShadow::class,
-        ];
-    }
-
-    /**
-     * @return string[]
-     */
-    public static function getControlsNames()
-    {
-        return [
-            Text::class,
-            Number::class,
-            Textarea::class,
-            Select::class,
-            Switcher::class,
-            Button::class,
-            Hidden::class,
-            Heading::class,
-            RawHtml::class,
-            PopoverToggle::class,
-            Section::class,
-            Tab::class,
-            Tabs::class,
-            Divider::class,
-            DeprecatedNotice::class,
-            Color::class,
-            Media::class,
-            Slider::class,
-            Dimensions::class,
-            Choose::class,
-            Wysiwyg::class,
-            Code::class,
-            Font::class,
-            ImageDimensions::class,
-            Url::class,
-            Icon::class,
-            \Goomento\PageBuilder\Builder\Controls\Icons::class,
-            Gallery::class,
-            Structure::class,
-            Select2::class,
-            DateTime::class,
-            Repeater::class,
-            NestedRepeater::class,
-            BoxShadow::class,
-            TextShadow::class,
-            Animation::class,
-            HoverAnimation::class,
-            ExitAnimation::class,
-        ];
-    }
-
-    /**
      * Register controls.
      *
      * This method creates a list of all the supported controls by requiring the
@@ -243,42 +246,46 @@ class Controls
     private function registerControls()
     {
         $this->controls = [];
-        foreach (self::getControlsNames() as $class_name) {
-            /** @var \Goomento\PageBuilder\Builder\Controls\Base $control */
-            $control = StaticObjectManager::get($class_name);
-            $this->registerControl($control->getType(), $control);
+        foreach ($this->controlTypes as $type) {
+            if ($type::ENABLED) {
+                /** @var AbstractControl $control */
+                $control = ObjectManagerHelper::get($type);
+                $this->registerControl($control::NAME, $control);
+            }
         }
 
         // Group Controls
-        foreach (self::getGroupsNames() as $group_name) {
-            /** @var \Goomento\PageBuilder\Builder\Controls\Groups\Base $group */
-            $group = StaticObjectManager::get($group_name);
-            $this->control_groups[ $group->getType() ] = $group;
+        foreach ($this->groupTypes as $type) {
+            if ($type::ENABLED) {
+                /** @var AbstractControlGroup $group */
+                $group = ObjectManagerHelper::get($type);
+                $this->controlGroups[ $group->getName() ] = $group;
+            }
         }
 
-        Hooks::doAction('pagebuilder/controls/controls_registered', $this);
+        HooksHelper::doAction('pagebuilder/controls/controls_registered', $this);
     }
 
     /**
      * @param $control_id
-     * @param Base $control_instance
+     * @param AbstractControl $control_instance
      */
-    public function registerControl($control_id, Base $control_instance)
+    public function registerControl($control_id, AbstractControl $control_instance)
     {
         $this->controls[ $control_id ] = $control_instance;
     }
 
     /**
-     * @param $control_id
+     * @param $controlId
      * @return bool
      */
-    public function unregisterControl($control_id)
+    public function unregisterControl($controlId): bool
     {
-        if (! isset($this->controls[ $control_id ])) {
+        if (!isset($this->controls[ $controlId ])) {
             return false;
         }
 
-        unset($this->controls[ $control_id ]);
+        unset($this->controls[ $controlId ]);
 
         return true;
     }
@@ -296,14 +303,14 @@ class Controls
     }
 
     /**
-     * @param $control_id
+     * @param $controlId
      * @return false|mixed
      */
-    public function getControl($control_id)
+    public function getControl($controlId)
     {
         $controls = $this->getControls();
 
-        return $controls[$control_id] ?? false;
+        return $controls[$controlId] ?? false;
     }
 
     /**
@@ -336,11 +343,11 @@ class Controls
      */
     public function getControlGroups($id = null)
     {
-        if ($id) {
-            return isset($this->control_groups[ $id ]) ? $this->control_groups[ $id ] : null;
+        if (!empty($id)) {
+            return $this->controlGroups[$id] ?? null;
         }
 
-        return $this->control_groups;
+        return $this->controlGroups;
     }
 
     /**
@@ -350,7 +357,7 @@ class Controls
      */
     public function addGroupControl($id, $instance)
     {
-        $this->control_groups[ $id ] = $instance;
+        $this->controlGroups[ $id ] = $instance;
 
         return $instance;
     }
@@ -385,7 +392,7 @@ class Controls
      * @param array $options
      * @return bool
      */
-    public function addControlToStack(ControlsStack $element, $control_id, $control_data, $options = [])
+    public function addControlToStack(ControlsStack $element, $control_id, $control_data, array $options = [])
     {
         $default_options = [
             'overwrite' => false,
@@ -405,30 +412,32 @@ class Controls
 
         $control_type_instance = $this->getControl($control_data['type']);
 
-        if (! $control_type_instance) {
-            StaticLogger::error(sprintf('Control type "%s" not found.', $control_data['type']));
+        if (!$control_type_instance) {
+            LoggerHelper::error(
+                sprintf('AbstractControl type "%s" not found.', $control_data['type'])
+            );
             return false;
         }
 
-        if ($control_type_instance instanceof BaseData) {
-            $control_default_value = $control_type_instance->getDefaultValue();
+        if ($control_type_instance instanceof AbstractControlData) {
+            $control_default_value = $control_type_instance::getDefaultValue();
 
             if (is_array($control_default_value)) {
                 $control_data['default'] = isset($control_data['default']) ? array_merge($control_default_value, $control_data['default']) : $control_default_value;
             } else {
-                $control_data['default'] = isset($control_data['default']) ? $control_data['default'] : $control_default_value;
+                $control_data['default'] = $control_data['default'] ?? $control_default_value;
             }
         }
 
         $stack_id = $element->getUniqueName();
 
-        if (! $options['overwrite'] && isset($this->stacks[ $stack_id ]['controls'][ $control_id ])) {
+        if (!$options['overwrite'] && isset($this->stacks[ $stack_id ]['controls'][ $control_id ])) {
             return false;
         }
 
         $tabs = self::getTabs();
 
-        if (! isset($tabs[ $control_data['tab'] ])) {
+        if (!isset($tabs[ $control_data['tab'] ])) {
             $control_data['tab'] = $default_args['tab'];
         }
 
@@ -448,6 +457,10 @@ class Controls
 
         return true;
     }
+
+    /**
+     * @throws Exception
+     */
     public function removeControlFromStack($stack_id, $control_id)
     {
         if (is_array($control_id)) {
@@ -459,17 +472,28 @@ class Controls
         }
 
         if (empty($this->stacks[ $stack_id ]['controls'][ $control_id ])) {
-            return new Exception('Cannot remove not-exists control.');
+            throw new Exception(
+                'Cannot remove not-exists control.'
+            );
         }
 
         unset($this->stacks[ $stack_id ]['controls'][ $control_id ]);
 
         return true;
     }
+
+    /**
+     * @param $stack_id
+     * @param $control_id
+     * @return mixed
+     * @throws Exception
+     */
     public function getControlFromStack($stack_id, $control_id)
     {
         if (empty($this->stacks[ $stack_id ]['controls'][ $control_id ])) {
-            return new Exception('Cannot get a not-exists control.');
+            throw new Exception(
+                'Cannot get a not-exists control.'
+            );
         }
 
         return $this->stacks[ $stack_id ]['controls'][ $control_id ];
@@ -481,12 +505,13 @@ class Controls
      * @param $control_data
      * @param array $options
      * @return bool
+     * @throws Exception
      */
     public function updateControlInStack(ControlsStack $element, $control_id, $control_data, array $options = [])
     {
         $old_control_data = $this->getControlFromStack($element->getUniqueName(), $control_id);
 
-        if (! empty($options['recursive'])) {
+        if (!empty($options['recursive'])) {
             $control_data = array_replace_recursive($old_control_data, $control_data);
         } else {
             $control_data = array_merge($old_control_data, $control_data);
@@ -522,7 +547,7 @@ class Controls
     {
         $stack_id = $controls_stack->getUniqueName();
 
-        if (! isset($this->stacks[ $stack_id ])) {
+        if (!isset($this->stacks[ $stack_id ])) {
             return null;
         }
 
@@ -530,12 +555,12 @@ class Controls
     }
 
     /**
-     * @param ControlsStack $controls_stack
-     * @throws ReflectionException
+     * @param ControlsStack $controlsStack
+     * @throws Exception
      */
-    public function addCustomCssControls(ControlsStack $controls_stack)
+    public static function addExtendControls(ControlsStack $controlsStack)
     {
-        $controls_stack->startControlsSection(
+        $controlsStack->startControlsSection(
             'section_custom_css',
             [
                 'label' => __('Custom CSS'),
@@ -543,7 +568,7 @@ class Controls
             ]
         );
 
-        $controls_stack->addControl(
+        $controlsStack->addControl(
             'custom_css_title',
             [
                 'raw' => __('Add your own custom CSS here'),
@@ -551,7 +576,7 @@ class Controls
             ]
         );
 
-        $controls_stack->addControl(
+        $controlsStack->addControl(
             'custom_css',
             [
                 'type' => self::CODE,
@@ -563,7 +588,7 @@ class Controls
             ]
         );
 
-        $controls_stack->addControl(
+        $controlsStack->addControl(
             'custom_css_description',
             [
                 'raw' => 'Use "selector" to target wrapper element.',
@@ -571,7 +596,7 @@ class Controls
             ]
         );
 
-        $controls_stack->endControlsSection();
+        $controlsStack->endControlsSection();
     }
 
     /**
@@ -580,10 +605,6 @@ class Controls
      */
     public function addContentCss($post_css, $element)
     {
-        if ($post_css instanceof DynamicCss) {
-            return;
-        }
-
         $element_settings = $element->getSettings();
 
         if (empty($element_settings['custom_css'])) {
@@ -605,22 +626,25 @@ class Controls
      */
     public function addPageSettingsCss($post_css)
     {
-        /** @var DocumentsManager $documentManager */
-        $documentManager = StaticObjectManager::get(DocumentsManager::class);
+        /** @var Documents $documentManager */
+        $documentManager = ObjectManagerHelper::get(Documents::class);
         $document = $documentManager->get($post_css->getContentId());
-        $page = Manager::getSettingsManagers('page');
+        /** @var Settings $settingsManager */
+        $settingsManager = ObjectManagerHelper::get(Settings::class);
+        /** @var PageSettings $page */
+        $page = $settingsManager->getSettingsManagers(PageSettings::NAME);
         $page = $page->getSettingModel($post_css->getContentId());
-        $custom_css = $page->getSettings('custom_css');
+        $customCss = (string) $page->getSettings('custom_css');
 
-        $custom_css = trim($custom_css);
+        $customCss = trim($customCss);
 
-        if (empty($custom_css)) {
+        if (empty($customCss)) {
             return;
         }
 
-        $custom_css = str_replace('selector', $document->getCssWrapperSelector(), $custom_css);
+        $customCss = str_replace('selector', $document->getCssWrapperSelector(), $customCss);
 
-        $post_css->getStylesheet()->addRawCss($custom_css);
+        $post_css->getStylesheet()->addRawCss($customCss);
     }
 
     /**
@@ -628,7 +652,7 @@ class Controls
      */
     public function __construct()
     {
-        Hooks::addAction('pagebuilder/element/parse_css', [$this, 'addContentCss'], 10, 2);
-        Hooks::addAction('pagebuilder/css-file/content/parse', [$this, 'addPageSettingsCss']);
+        HooksHelper::addAction('pagebuilder/element/parse_css', [$this, 'addContentCss']);
+        HooksHelper::addAction('pagebuilder/css-file/content/parse', [$this, 'addPageSettingsCss']);
     }
 }

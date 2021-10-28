@@ -8,25 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class Divider
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Divider extends BaseUi
+class Divider extends AbstractControlUi
 {
-
-    /**
-     * Get divider control type.
-     *
-     * Retrieve the control type, in this case `divider`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'divider';
-    }
+    const NAME = 'divider';
 
     /**
      * Get divider control default settings.

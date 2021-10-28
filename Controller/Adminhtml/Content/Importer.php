@@ -21,10 +21,6 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Result\PageFactory;
 
-/**
- * Class Editor
- * @package Goomento\PageBuilder\Controller\Adminhtml\Content
- */
 class Importer extends AbstractAction implements HttpGetActionInterface, HttpPostActionInterface
 {
     use TraitHttpPage;
@@ -35,7 +31,7 @@ class Importer extends AbstractAction implements HttpGetActionInterface, HttpPos
     /**
      * @inheritdoc
      */
-    const ADMIN_RESOURCE = 'Goomento_PageBuilder::content_import';
+    const ADMIN_RESOURCE = 'Goomento_PageBuilder::import';
 
     /**
      * @var PageFactory
@@ -86,16 +82,18 @@ class Importer extends AbstractAction implements HttpGetActionInterface, HttpPos
             }
 
             $imported = $this->importProcessor->importOnUpload(self::FILE_NAME);
-            $linkHtml = '';
             if (!empty($imported)) {
-                $contentLinks = [];
                 foreach ($imported as $content) {
-                    $contentLinks[] = '<a target="_blank" href="' . $content['edit_url'] . '">' . $content['title'] . '</a>';
+                    $this->messageManager->addSuccess(
+                        sprintf(
+                            'Imported: %s <u><a href="%s" target="_blank">Edit</a></u> | <u><a target="_blank" href="%s">View</a></u>',
+                            $content['title'],
+                            $content['edit_url'],
+                            $content['url']
+                        )
+                    );
                 }
-                $linkHtml = __('Content(s): %1', implode(', ', $contentLinks));
             }
-
-            $this->messageManager->addSuccess(__('Imported %1 content(s) successfully.' . ' ' . $linkHtml, count($imported)));
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
         } catch (Exception $e) {
@@ -113,6 +111,8 @@ class Importer extends AbstractAction implements HttpGetActionInterface, HttpPos
      */
     protected function executeGet()
     {
+        $this->messageManager->addNotice(sprintf('For import Sample templates click %shere%s.',
+            '<a href="' . $this->getUrl('*/*/sampleImporter') . '">', '</a>'));
         return $this->renderPage();
     }
 

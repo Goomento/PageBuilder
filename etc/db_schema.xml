@@ -14,7 +14,7 @@
         <column xsi:type="varchar" name="type" nullable="false" length="100" comment="Content Type"/>
         <column xsi:type="varchar" name="identifier" nullable="false" length="255" comment="Content Identifier"/>
         <column xsi:type="text" name="content" nullable="true" comment="Content"/>
-        <column xsi:type="text" name="elements" nullable="true" comment="Content Elements"/>
+        <column xsi:type="longtext" name="elements" nullable="true" comment="Content Elements"/>
         <column xsi:type="mediumtext" name="settings" nullable="true" comment="Content Settings"/>
         <column xsi:type="int" name="author_id" unsigned="true" identity="false" padding="10" nullable="false"
                 comment="Author ID"/>
@@ -34,9 +34,6 @@
             <column name="elements"/>
             <column name="identifier"/>
         </index>
-        <constraint xsi:type="unique" referenceId="PAGEBUILDER_CONTENT_IDENTIFIER">
-            <column name="identifier"/>
-        </constraint>
     </table>
     <table name="pagebuilder_content_store" resource="default" engine="innodb" comment="Page Builder To Store Linkage Table">
         <column xsi:type="int" name="content_id" padding="11" unsigned="false" nullable="false" identity="false"
@@ -71,7 +68,7 @@
                 comment="Revision ID"/>
         <column xsi:type="int" name="content_id" padding="11" nullable="false" identity="false"
                 comment="Content ID"/>
-        <column xsi:type="text" name="elements" nullable="true" comment="Revision Elements"/>
+        <column xsi:type="longtext" name="elements" nullable="true" comment="Revision Elements"/>
         <column xsi:type="mediumtext" name="settings" nullable="true" comment="Revision Settings"/>
         <column xsi:type="int" name="author_id" unsigned="true" identity="false" padding="10" nullable="false"
                 comment="Author ID"/>

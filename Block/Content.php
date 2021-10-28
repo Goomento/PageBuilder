@@ -10,8 +10,7 @@ namespace Goomento\PageBuilder\Block;
 
 use Exception;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
-use Goomento\PageBuilder\Configuration;
-use Goomento\PageBuilder\Helper\Hooks;
+use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Logger\Logger;
 use Goomento\PageBuilder\Model\ContentRegistry;
 use Goomento\PageBuilder\Helper\Data;
@@ -21,10 +20,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Template;
 use Magento\Widget\Block\BlockInterface;
 
-/**
- * Class Content
- * @package Goomento\PageBuilder\Block
- */
 class Content extends Template implements BlockInterface
 {
     const CONTENT_ID = ContentInterface::CONTENT_ID;
@@ -228,7 +223,7 @@ class Content extends Template implements BlockInterface
      */
     protected function isContentAllowedInStore(ContentInterface $content)
     {
-        $stores = (array) $content->getStoreId();
+        $stores = (array) $content->getStoreIds();
         if (!empty($stores)) {
             $stores = array_flip($stores);
             return isset($stores[0]) || isset($stores[$this->_storeManager->getStore()->getId()]);
@@ -251,24 +246,24 @@ class Content extends Template implements BlockInterface
      * @return string
      * @throws Exception
      */
-    public function getContentHtml(?string $html = '')
+    public function getContentHtml(string $html = '')
     {
         if ($this->isValidContent()) {
             $html = (string) $html;
             try {
-                Hooks::addFilter(
+                HooksHelper::addFilter(
                     'pagebuilder/content/html',
                     [$this, 'applyDefaultFilter'],
                     self::BLOCK_CONTENT_RENDER_ORDER
                 );
 
-                $currentProcessingContentId = Hooks::applyFilters('pagebuilder/current/content_id');
+                $currentProcessingContentId = HooksHelper::applyFilters('pagebuilder/current/content_id');
 
                 if ($currentProcessingContentId) {
-                    Hooks::removeFilter('pagebuilder/current/content_id');
+                    HooksHelper::removeFilter('pagebuilder/current/content_id');
                 }
 
-                Hooks::addFilter(
+                HooksHelper::addFilter(
                     'pagebuilder/current/content_id',
                     [$this, 'getContentId'],
                     self::BLOCK_CONTENT_RENDER_ORDER
@@ -277,11 +272,11 @@ class Content extends Template implements BlockInterface
                 /**
                  * Get HTML content
                  */
-                $html = Hooks::applyFilters('pagebuilder/content/html', $html);
+                $html = HooksHelper::applyFilters('pagebuilder/content/html', $html);
 
                 if ($currentProcessingContentId) {
                     $this->currentContentId = $currentProcessingContentId;
-                    Hooks::addFilter(
+                    HooksHelper::addFilter(
                         'pagebuilder/current/content_id',
                         [$this, 'getCurrentContentId'],
                         self::BLOCK_CONTENT_RENDER_ORDER
@@ -303,6 +298,8 @@ class Content extends Template implements BlockInterface
     }
 
     /**
+     * Whether display error or not
+     *
      * @return bool
      */
     protected function isAllowedFallback()

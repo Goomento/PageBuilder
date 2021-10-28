@@ -16,10 +16,6 @@ use Magento\Framework\DataObject;
 use Magento\Framework\EntityManager\Operation\ExtensionInterface;
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Class ReadHandler
- * @package \Goomento\PageBuilder\Model\ResourceModel\Cms\Relation
- */
 class ReadHandler implements ExtensionInterface
 {
     /**
