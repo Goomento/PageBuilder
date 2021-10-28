@@ -8,25 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class Section
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Section extends BaseUi
+class Section extends AbstractControlUi
 {
-
-    /**
-     * Get section control type.
-     *
-     * Retrieve the control type, in this case `section`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'section';
-    }
+    const NAME = 'section';
 
     /**
      * Render section control output in the editor.

@@ -1145,7 +1145,7 @@
         });
       }
 
-      // Module create callback
+      // AbstractModule create callback
       if (module.create) {
         module.create.bind(instance)(moduleParams);
       }

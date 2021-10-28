@@ -8,26 +8,24 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Elements;
 
-use Goomento\PageBuilder\Builder\Base\Element;
-use Goomento\PageBuilder\Builder\Controls\Groups\Background;
-use Goomento\PageBuilder\Builder\Controls\Groups\Border;
-use Goomento\PageBuilder\Builder\Controls\Groups\BoxShadow;
-use Goomento\PageBuilder\Builder\Controls\Groups\CssFilter;
+use Goomento\PageBuilder\Builder\Base\AbstractElement;
+use Goomento\PageBuilder\Builder\Controls\Groups\BackgroundGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\BorderGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\BoxShadowGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\CssFilterGroup;
 use Goomento\PageBuilder\Builder\Embed;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Elements;
 use Goomento\PageBuilder\Builder\Managers\Schemes;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Shapes;
-use Goomento\PageBuilder\Helper\StaticEscaper;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
+use Goomento\PageBuilder\Helper\EscaperHelper;
+use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
-/**
- * Class Section
- * @package Goomento\PageBuilder\Builder\Elements
- */
-class Section extends Element
+class Section extends AbstractElement
 {
+    const NAME = 'section';
 
     /**
      * Section predefined columns presets.
@@ -45,32 +43,6 @@ class Section extends Element
      * @var array Section presets.
      */
     private static $presets = [];
-
-    /**
-     * Get element type.
-     *
-     * Retrieve the element type, in this case `section`.
-     *
-     *
-     * @return string The type.
-     */
-    public static function getType()
-    {
-        return 'section';
-    }
-
-    /**
-     * Get section name.
-     *
-     * Retrieve the section name.
-     *
-     *
-     * @return string Section name.
-     */
-    public function getName()
-    {
-        return 'section';
-    }
 
     /**
      * Get section title.
@@ -180,7 +152,7 @@ class Section extends Element
                 self::$presets[ $columns_count ][0]['preset'][] = $preset_unit;
             }
 
-            if (! empty($additional_presets[ $columns_count ])) {
+            if (!empty($additional_presets[ $columns_count ])) {
                 self::$presets[ $columns_count ] = array_merge(self::$presets[ $columns_count ], $additional_presets[ $columns_count ]);
             }
 
@@ -229,7 +201,6 @@ class Section extends Element
             ]
         );
 
-        // Element Name for the Navigator
         $this->addControl(
             '_title',
             [
@@ -438,7 +409,6 @@ class Section extends Element
                 'selectors' => [
                     '{{WRAPPER}} > .gmt-container > .gmt-row > .gmt-column > .gmt-column-wrap > .gmt-widget-wrap' => 'align-content: {{VALUE}}; align-items: {{VALUE}};',
                 ],
-                // TODO: The following line is for BC since 2.7.0
                 'prefix_class' => 'gmt-section-content-',
             ]
         );
@@ -526,7 +496,7 @@ class Section extends Element
         );
 
         $this->addGroupControl(
-            Background::getType(),
+            BackgroundGroup::NAME,
             [
                 'name' => 'background',
                 'types' => [ 'classic', 'gradient', 'video', 'slideshow' ],
@@ -548,7 +518,7 @@ class Section extends Element
         );
 
         $this->addGroupControl(
-            Background::getType(),
+            BackgroundGroup::NAME,
             [
                 'name' => 'background_hover',
                 'selector' => '{{WRAPPER}}:hover',
@@ -599,7 +569,7 @@ class Section extends Element
         );
 
         $this->addGroupControl(
-            Background::getType(),
+            BackgroundGroup::NAME,
             [
                 'name' => 'background_overlay',
                 'selector' => '{{WRAPPER}} > .gmt-background-overlay',
@@ -630,7 +600,7 @@ class Section extends Element
         );
 
         $this->addGroupControl(
-            CssFilter::getType(),
+            CssFilterGroup::NAME,
             [
                 'name' => 'css_filters',
                 'selector' => '{{WRAPPER}} .gmt-background-overlay',
@@ -670,7 +640,7 @@ class Section extends Element
         );
 
         $this->addGroupControl(
-            Background::getType(),
+            BackgroundGroup::NAME,
             [
                 'name' => 'background_overlay_hover',
                 'selector' => '{{WRAPPER}}:hover > .gmt-background-overlay',
@@ -701,7 +671,7 @@ class Section extends Element
         );
 
         $this->addGroupControl(
-            CssFilter::getType(),
+            CssFilterGroup::NAME,
             [
                 'name' => 'css_filters_hover',
                 'selector' => '{{WRAPPER}}:hover > .gmt-background-overlay',
@@ -752,7 +722,7 @@ class Section extends Element
         );
 
         $this->addGroupControl(
-            Border::getType(),
+            BorderGroup::NAME,
             [
                 'name' => 'border',
             ]
@@ -771,7 +741,7 @@ class Section extends Element
         );
 
         $this->addGroupControl(
-            BoxShadow::getType(),
+            BoxShadowGroup::NAME,
             [
                 'name' => 'box_shadow',
             ]
@@ -787,7 +757,7 @@ class Section extends Element
         );
 
         $this->addGroupControl(
-            Border::getType(),
+            BorderGroup::NAME,
             [
                 'name' => 'border_hover',
                 'selector' => '{{WRAPPER}}:hover',
@@ -807,7 +777,7 @@ class Section extends Element
         );
 
         $this->addGroupControl(
-            BoxShadow::getType(),
+            BoxShadowGroup::NAME,
             [
                 'name' => 'box_shadow_hover',
                 'selector' => '{{WRAPPER}}:hover',
@@ -1019,7 +989,7 @@ class Section extends Element
             ]
         );
 
-        if (in_array(Color::getType(), Schemes::getEnabledSchemes(), true)) {
+        if (in_array(Color::NAME, Schemes::getEnabledSchemes(), true)) {
             $this->addControl(
                 'colors_warning',
                 [
@@ -1336,7 +1306,7 @@ class Section extends Element
 
         $this->endControlsSection();
 
-        StaticObjectManager::get(Controls::class)->addCustomCssControls($this);
+        Controls::addExtendControls($this);
     }
 
     /**
@@ -1385,7 +1355,7 @@ class Section extends Element
     public function beforeRender()
     {
         $settings = $this->getSettingsForDisplay(); ?>
-		<<?= StaticEscaper::escapeHtml($this->getHtmlTag()); ?> <?php $this->printRenderAttributeString('_wrapper'); ?>>
+		<<?= EscaperHelper::escapeHtml($this->getHtmlTag()); ?> <?php $this->printRenderAttributeString('_wrapper'); ?>>
 			<?php
             if ('video' === $settings['background_background']) :
                 if ($settings['background_video_link']) :
@@ -1393,7 +1363,7 @@ class Section extends Element
 
         $this->addRenderAttribute('background-video-container', 'class', 'gmt-background-video-container');
 
-        if (! $settings['background_play_on_mobile']) {
+        if (!$settings['background_play_on_mobile']) {
             $this->addRenderAttribute('background-video-container', 'class', 'gmt-hidden-phone');
         } ?>
 					<div <?= $this->getRenderAttributeString('background-video-container'); ?>>
@@ -1428,7 +1398,7 @@ class Section extends Element
         if ($settings['shape_divider_bottom']) {
             $this->printShapeDivider('bottom');
         } ?>
-			<div class="gmt-container gmt-column-gap-<?= StaticEscaper::escapeHtml($settings['gap']); ?>">
+			<div class="gmt-container gmt-column-gap-<?= EscaperHelper::escapeHtml($settings['gap']); ?>">
 				<div class="gmt-row">
 		<?php
     }
@@ -1444,7 +1414,7 @@ class Section extends Element
         ?>
 				</div>
 			</div>
-		</<?= StaticEscaper::escapeHtml($this->getHtmlTag()); ?>>
+		</<?= EscaperHelper::escapeHtml($this->getHtmlTag()); ?>>
 		<?php
     }
 
@@ -1481,7 +1451,7 @@ class Section extends Element
     protected function _getDefaultChildType(array $element_data)
     {
         /** @var Elements $elements */
-        $elements = StaticObjectManager::get(Elements::class);
+        $elements = ObjectManagerHelper::get(Elements::class);
         return $elements->getElementTypes('column');
     }
 
@@ -1521,7 +1491,7 @@ class Section extends Element
         if (! is_file($shape_path) || ! is_readable($shape_path)) {
             return;
         } ?>
-		<div class="gmt-shape gmt-shape-<?= StaticEscaper::escapeHtml($side); ?>" data-negative="<?= var_export($negative); ?>">
+		<div class="gmt-shape gmt-shape-<?= EscaperHelper::escapeHtml($side); ?>" data-negative="<?= var_export($negative); ?>">
 			<?= file_get_contents($shape_path); ?>
 		</div>
 		<?php

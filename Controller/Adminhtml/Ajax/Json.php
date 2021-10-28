@@ -8,27 +8,23 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Controller\Adminhtml\Ajax;
 
-use Goomento\PageBuilder\Helper\Hooks;
+use Goomento\PageBuilder\Helper\HooksHelper;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 
-/**
- * Class Json
- * @package Goomento\PageBuilder\Controller\Adminhtml\Ajax
- */
-class Json extends AbstractAjax
+class Json extends AbstractAjax implements HttpPostActionInterface
 {
     /**
      * @inheritdoc
      */
     public function execute()
     {
-        $action = $this->getRequest()->getParam('action', '');
-
-        if (!empty($action)) {
-            Hooks::doAction('pagebuilder/ajax/' . $action);
-        }
+        /**
+         * Start possessing ajax request
+         */
+        HooksHelper::doAction('pagebuilder/ajax/processing');
 
         return $this->setResponseData(
-            Hooks::applyFilters('pagebuilder/ajax/response', [])
+            HooksHelper::applyFilters('pagebuilder/ajax/response', [])
         )->sendResponse();
     }
 }

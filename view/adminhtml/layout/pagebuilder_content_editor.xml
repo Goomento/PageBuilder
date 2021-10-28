@@ -10,13 +10,15 @@
         <referenceContainer name="after.body.start">
             <block class="Magento\Framework\View\Element\Template"
                    name="goomento.config-js"
-                   template="Goomento_PageBuilder::editor/config-js.phtml"/>
+                   template="Goomento_PageBuilder::editor/config_js.phtml"/>
         </referenceContainer>
         <referenceContainer name="content">
             <block class="Goomento\PageBuilder\Block\Adminhtml\LiveEditor"
                    name="pagebuilder.content"
-                   template="Goomento_PageBuilder::editor/live-editor.phtml"
-            />
+                   template="Goomento_PageBuilder::editor/live_editor.phtml"
+            >
+                <block name="pagebuilder.additionalData" class="Goomento\PageBuilder\Block\Adminhtml\MediaBucket" />
+            </block>
         </referenceContainer>
         <attribute name="class" value="gmt-editor-active"/>
         <attribute name="class" value="gmt-editor-page"/>

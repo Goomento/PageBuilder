@@ -6,26 +6,26 @@
 
 declare(strict_types=1);
 
-use Goomento\PageBuilder\Core\DocumentsManager;
-use Goomento\PageBuilder\Helper\StaticEscaper;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
+use Goomento\PageBuilder\Builder\Modules\Editor;
+use Goomento\PageBuilder\Helper\EscaperHelper;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
-/** @var DocumentsManager $documentManager */
-$documentManager = StaticObjectManager::get(DocumentsManager::class);
-$document = $documentManager->getCurrent();
+/** @var Editor $editor */
+$editor = ObjectManagerHelper::get(Editor::class);
+$document = $editor->getDocument();
 
 ?>
 <script type="text/template" id="tmpl-gmt-template-library-header-actions">
 	<div id="gmt-template-library-header-import" class="gmt-templates-modal__header__item">
-		<i class="fas fa-upload" aria-hidden="true" title="<?= StaticEscaper::escapeHtml('Import Template'); ?>"></i>
+		<i class="fas fa-upload" aria-hidden="true" title="<?= __('Import Template'); ?>"></i>
 		<span class="gmt-screen-only"><?= __( 'Import Template' ); ?></span>
 	</div>
 	<div id="gmt-template-library-header-sync" class="gmt-templates-modal__header__item">
-		<i class="fas fa-sync-alt" aria-hidden="true" title="<?= StaticEscaper::escapeHtml('Sync Library'); ?>"></i>
+		<i class="fas fa-sync-alt" aria-hidden="true" title="<?= __('Sync Library'); ?>"></i>
 		<span class="gmt-screen-only"><?= __( 'Sync Library' ); ?></span>
 	</div>
 	<div id="gmt-template-library-header-save" class="gmt-templates-modal__header__item">
-		<i class="far fa-save" aria-hidden="true" title="<?= StaticEscaper::escapeHtml('Save'); ?>"></i>
+		<i class="far fa-save" aria-hidden="true" title="<?= __('Save'); ?>"></i>
 		<span class="gmt-screen-only"><?= __( 'Save' ); ?></span>
 	</div>
 </script>
@@ -216,7 +216,7 @@ $document = $documentManager->getCurrent();
 	<div class="gmt-template-library-blank-title">{{{ title }}}</div>
 	<div class="gmt-template-library-blank-message">{{{ description }}}</div>
 	<form id="gmt-template-library-save-template-form">
-		<input type="hidden" name="post_id" value="<?= $document->getContentModel()->getId(); ?>">
+		<input type="hidden" name="content_id" value="<?= $document->getModel()->getId(); ?>">
 		<input id="gmt-template-library-save-template-name" name="title" placeholder="<?= __( 'Enter Template Name' ); ?>" required>
 		<button id="gmt-template-library-save-template-submit" class="gmt-button gmt-button-success">
 			<span class="gmt-state-icon">

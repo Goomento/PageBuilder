@@ -10,10 +10,6 @@ namespace Goomento\PageBuilder\Controller\Adminhtml;
 
 use Magento\Backend\App\Action;
 
-/**
- * Class AbstractAction
- * @package Goomento\PageBuilder\Controller\Adminhtml
- */
 abstract class AbstractAction extends Action
 {
     /**

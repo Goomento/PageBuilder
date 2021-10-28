@@ -15,10 +15,6 @@ use Magento\Backend\Model\View\Result\ForwardFactory;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Class NewAction
- * @package Goomento\PageBuilder\Controller\Adminhtml\Page
- */
 class NewAction extends Action implements HttpGetActionInterface
 {
     use TraitContent;

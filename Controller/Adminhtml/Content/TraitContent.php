@@ -5,10 +5,6 @@ namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 use Goomento\PageBuilder\Model\Content;
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Trait TraitContent
- * @package Goomento\PageBuilder\Controller\Adminhtml\Content
- */
 trait TraitContent
 {
     /**

@@ -8,52 +8,11 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model\ResourceModel;
 
-use Magento\Framework\Data\Collection\Db\FetchStrategyInterface;
-use Magento\Framework\Data\Collection\EntityFactoryInterface;
-use Magento\Framework\DB\Adapter\AdapterInterface;
-use Magento\Framework\DB\Select;
-use Magento\Framework\EntityManager\MetadataPool;
-use Magento\Framework\Event\ManagerInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection as FrameworkAbstractCollection;
+use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Store\Model\Store;
-use Magento\Store\Model\StoreManagerInterface;
-use Psr\Log\LoggerInterface;
 
-/**
- * Class AbstractCollection
- * @package Goomento\PageBuilder\Model\ResourceModel
- */
-abstract class AbstractCollection extends FrameworkAbstractCollection
+abstract class AbstractCollection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
-    /**
-     * @var MetadataPool
-     */
-    protected $metadataPool;
-
-    /**
-     * @param EntityFactoryInterface $entityFactory
-     * @param LoggerInterface $logger
-     * @param FetchStrategyInterface $fetchStrategy
-     * @param ManagerInterface $eventManager
-     * @param MetadataPool $metadataPool
-     * @param AdapterInterface|null $connection
-     * @param AbstractDb|null $resource
-     */
-    public function __construct(
-        EntityFactoryInterface $entityFactory,
-        LoggerInterface $logger,
-        FetchStrategyInterface $fetchStrategy,
-        ManagerInterface $eventManager,
-        MetadataPool $metadataPool,
-        AdapterInterface $connection = null,
-        AbstractDb $resource = null
-    ) {
-        $this->metadataPool = $metadataPool;
-        parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $connection, $resource);
-    }
-
     /**
      * Add field filter to collection
      *
@@ -106,42 +65,39 @@ abstract class AbstractCollection extends FrameworkAbstractCollection
     /**
      * Join store relation table if there is store filter
      *
-     * @param string $tableName
-     * @param string|null $linkField
      * @return void
      */
-    protected function joinStoreRelationTable($tableName, $linkField)
+    protected function joinStoreRelationTable()
     {
         if ($this->getFilter('store')) {
             $this->getSelect()->join(
-                ['store_table' => $this->getTable($tableName)],
-                'main_table.' . $linkField . ' = store_table.' . $linkField,
+                ['store_table' => $this->getTable('pagebuilder_content_store')],
+                'main_table.' . ContentInterface::CONTENT_ID . ' = store_table.' . ContentInterface::CONTENT_ID,
                 []
             )->group(
-                'main_table.' . $linkField
+                'main_table.' . ContentInterface::CONTENT_ID
             );
         }
         parent::_renderFiltersBefore();
     }
 
     /**
-     * Perform operations after collection load
+     * Add store data to collection
      *
-     * @param string $tableName
-     * @param string|null $linkField
      * @return void
-     * @throws NoSuchEntityException
      */
-    protected function performAfterLoad($tableName, $linkField)
+    protected function addStoreData()
     {
+        $linkField = ContentInterface::CONTENT_ID;
         $linkedIds = $this->getColumnValues($linkField);
         if (count($linkedIds)) {
             $connection = $this->getConnection();
             $select = $connection->select()
-                ->from(['pagebuilder_entity_store' => $this->getTable($tableName)])
-                ->where('pagebuilder_entity_store.' . $linkField . ' IN (?)', $linkedIds);
+                ->from(['store' => $this->getTable('pagebuilder_content_store')])
+                ->where('store.' . $linkField . ' IN (?)', $linkedIds);
 
             $result = $connection->fetchAll($select);
+
             if ($result) {
                 $storesData = [];
                 foreach ($result as $storeData) {
@@ -153,24 +109,12 @@ abstract class AbstractCollection extends FrameworkAbstractCollection
                     if (!isset($storesData[$linkedId])) {
                         continue;
                     }
-                    $item->setData('store_id', $storesData[$linkedId]);
+                    $data = $storesData[$linkedId] ?? [];
+                    $item->setData('store_ids', $storesData[$linkedId]);
+                    // Add store for UI component
+                    $item->setData('store_id', $data);
                 }
             }
         }
-    }
-
-    /**
-     * Get SQL for get record count
-     *
-     * Extra GROUP BY strip added.
-     *
-     * @return Select
-     */
-    public function getSelectCountSql()
-    {
-        $countSelect = parent::getSelectCountSql();
-        $countSelect->reset(Select::GROUP);
-
-        return $countSelect;
     }
 }

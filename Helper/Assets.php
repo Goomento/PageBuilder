@@ -18,10 +18,6 @@ use Magento\Framework\Filesystem\Io\File;
 use Magento\Framework\Module\Dir;
 use Magento\Store\Model\Store;
 
-/**
- * Class Assets
- * @package Goomento\PageBuilder\Helper
- */
 class Assets extends AbstractHelper
 {
     /**

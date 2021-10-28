@@ -8,16 +8,13 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Elements;
 
-use Goomento\PageBuilder\Builder\Base\Element;
+use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
-/**
- * Class Repeater
- * @package Goomento\PageBuilder\Builder\Elements
- */
-class Repeater extends Element
+class Repeater extends AbstractElement
 {
+    const NAME = 'repeater';
 
     /**
      * Repeater counter.
@@ -56,20 +53,7 @@ class Repeater extends Element
      */
     public function getName()
     {
-        return 'repeater-' . self::$counter;
-    }
-
-    /**
-     * Get repeater type.
-     *
-     * Retrieve the repeater type.
-     *
-     *
-     * @return string Repeater type.
-     */
-    public static function getType()
-    {
-        return 'repeater';
+        return self::NAME . '-' . self::$counter;
     }
 
     /**
@@ -82,12 +66,12 @@ class Repeater extends Element
      *
      * @param string $id      Repeater control ID.
      * @param array  $args    Repeater control arguments.
-     * @param array  $options Optional. Repeater control options. Default is an
+     * @param array $options Optional. Repeater control options. Default is an
      *                        empty array.
      *
      * @return bool True if repeater control added, False otherwise.
      */
-    public function addControl($id, array $args, $options = [])
+    public function addControl(string $id, array $args, array $options = [])
     {
         $current_tab = $this->getCurrentTab();
 
@@ -95,7 +79,7 @@ class Repeater extends Element
             $args = array_merge($args, $current_tab);
         }
         /** @var Controls $controlsManager */
-        $controlsManager = StaticObjectManager::get(Controls::class);
+        $controlsManager = ObjectManagerHelper::get(Controls::class);
         return $controlsManager->addControlToStack($this, $id, $args, $options);
     }
 

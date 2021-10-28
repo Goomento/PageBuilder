@@ -8,25 +8,10 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class ImageDimensions
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class ImageDimensions extends BaseMultiple
+class ImageDimensions extends AbstractBaseMultiple
 {
 
-    /**
-     * Get image dimensions control type.
-     *
-     * Retrieve the control type, in this case `image_dimensions`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'image_dimensions';
-    }
+    const NAME = 'image_dimensions';
 
     /**
      * Get image dimensions control default values.
@@ -37,7 +22,7 @@ class ImageDimensions extends BaseMultiple
      *
      * @return array Control default value.
      */
-    public function getDefaultValue()
+    public static function getDefaultValue()
     {
         return [
             'width' => '',

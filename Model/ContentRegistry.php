@@ -8,20 +8,14 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model;
 
-
 use Exception;
-use Goomento\PageBuilder\Model\ResourceModel\Content as ContentResourceModel;
-use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory as ContentCollectionFactory;
+use Goomento\PageBuilder\Api\ContentRepositoryInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterfaceFactory;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\ContentRegistryInterface;
 use Goomento\PageBuilder\Logger\Logger;
-use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 
-/**
- * Class ContentRegistry
- * @package Goomento\PageBuilder\Model
- */
 class ContentRegistry implements ContentRegistryInterface
 {
     const CACHE_KEY_IDENTIFIER_MAPPING = 'pagebuilder_identifier_mapping';
@@ -42,46 +36,34 @@ class ContentRegistry implements ContentRegistryInterface
      */
     private $contentFactory;
     /**
-     * @var ContentResourceModel
-     */
-    private $contentResourceModel;
-    /**
      * @var Content|null
      */
     private $processing;
-
-    private $allowFields = [
-        ContentInterface::CONTENT_ID,
-        ContentInterface::IDENTIFIER,
-    ];
-    /**
-     * @var ContentCollectionFactory
-     */
-    private $contentCollectionFactory;
 
     /**
      * @var array
      */
     private $identifiers;
+    /**
+     * @var ContentRepositoryInterface
+     */
+    private $contentRepository;
 
     /**
      * ContentRegistry constructor.
-     * @param ContentResourceModel $contentResourceModel
      * @param ContentInterfaceFactory $contentFactory
-     * @param ContentCollectionFactory $contentCollectionFactory
+     * @param ContentRepositoryInterface $contentRepository
      * @param Cache $cache
      * @param Logger $logger
      */
     public function __construct(
-        ContentResourceModel $contentResourceModel,
         ContentInterfaceFactory $contentFactory,
-        ContentCollectionFactory $contentCollectionFactory,
+        ContentRepositoryInterface $contentRepository,
         Cache $cache,
         Logger $logger
     ) {
-        $this->contentCollectionFactory = $contentCollectionFactory;
-        $this->contentResourceModel = $contentResourceModel;
         $this->contentFactory = $contentFactory;
+        $this->contentRepository = $contentRepository;
         $this->logger = $logger;
         $this->cache = $cache;
     }
@@ -91,7 +73,7 @@ class ContentRegistry implements ContentRegistryInterface
      */
     public function getById(int $contentId)
     {
-        return $this->getBy($contentId, ContentInterface::CONTENT_ID);
+        return $this->getBy($contentId);
     }
 
     /**
@@ -99,34 +81,36 @@ class ContentRegistry implements ContentRegistryInterface
      */
     public function getByIdentifier(string $identifier)
     {
-        return $this->getBy($identifier, ContentInterface::IDENTIFIER);
+        return $this->getBy($identifier);
     }
 
     /**
-     * @param string $field
      * @param $value
-     * @return null
-     * @throws Exception
+     * @return ContentInterface|null
      */
-    public function getBy($value, string $field)
+    public function getBy($value)
     {
         $content = null;
-        if (!empty($value) && in_array($field, $this->allowFields)) {
+        if (!empty($value)) {
+            $field = is_int($value) ? ContentInterface::CONTENT_ID : ContentInterface::IDENTIFIER;
             $actions = [
-                'getFromInstance',
-                'getFromCache',
-                'getFromRepo',
-                'saveToCache',
-                'saveToInstance',
+                [$this, 'getFromInstance'],
+                [$this, 'getFromCache'],
+                [$this, 'getFromRepo'],
+                [$this, 'saveToCache'],
+                [$this, 'saveToInstance'],
             ];
             try {
                 $this->processing = null;
                 foreach ($actions as $action) {
-                    $result = $this->{$action}($value, $field);
+                    $result = call_user_func_array($action, [$value, $field]);
                     if ($result) {
                         break;
                     }
                 }
+            } catch (\Exception $e) {
+                $this->logger->error($e);
+                throw $e;
             } finally {
                 $content = $this->processing;
                 $this->processing = null;
@@ -136,20 +120,21 @@ class ContentRegistry implements ContentRegistryInterface
     }
 
     /**
-     * @param $value
+     * @param int|string $value
      * @param $field
      * @return false Return false to allow process to continue and caching
      */
-    public function getFromRepo($value, $field)
+    private function getFromRepo($value, $field)
     {
         if (!$this->processing) {
-            if ($field === ContentInterface::CONTENT_ID) {
-                $model = $this->contentFactory->create();
-                $this->contentResourceModel->load($model, $value);
-            } else {
-                $collection = $this->contentCollectionFactory->create();
-                $collection->addFieldToFilter($field, ['eq' => $value]);
-                $model = $collection->getFirstItem();
+            try {
+                if ($field === ContentInterface::CONTENT_ID) {
+                    $model = $this->contentRepository->getById((int) $value);
+                } else {
+                    $model = $this->contentRepository->getByIdentifier((string) $value);
+                }
+            } catch (NoSuchEntityException $e) {
+                $model = null;
             }
 
             if ($model && $model->getId()) {
@@ -217,18 +202,22 @@ class ContentRegistry implements ContentRegistryInterface
     /**
      * @param $content
      */
-    public function cleanContentCache($content)
+    private function cleanContentCache($content)
     {
         $id = $content;
         if ($content instanceof ContentInterface) {
             $id = $content->getId();
         }
 
+        // Remove from instance
         if (isset($this->registry[$id])) {
             unset($this->registry[$id]);
         }
 
+        // Remove from cache
         $this->cache->remove($this->getContentCacheKey($id));
+
+        // Remove identifier
         $this->contentIdentifier(false, $id);
     }
 
@@ -238,7 +227,7 @@ class ContentRegistry implements ContentRegistryInterface
      * @param null $contentId
      * @return mixed|null
      */
-    public function contentIdentifier($identifier, $contentId = null)
+    private function contentIdentifier($identifier, $contentId = null)
     {
         $result = null;
 
@@ -269,25 +258,18 @@ class ContentRegistry implements ContentRegistryInterface
     }
 
     /**
-     * @param $id
-     * @return string
+     * @inheriDoc
      */
-    private function getContentCacheKey($id)
+    public function invalidateContent($content)
     {
-        return 'pagebuilder_content_' . (string) $id;
-    }
+        if ($content instanceof ContentInterface) {
+            $id = $content->getId();
+        } else {
+            $id = $content;
+        }
 
-    /**
-     * @param int $id
-     * @return void
-     * @throws Exception
-     */
-    public function delete(int $id)
-    {
         $this->cleanContentCache($id);
-        $this->contentResourceModel->delete(
-            $this->getById($id)
-        );
+        $this->contentIdentifier($id, null);
     }
 
     /**
@@ -321,5 +303,14 @@ class ContentRegistry implements ContentRegistryInterface
         }
 
         return false;
+    }
+
+    /**
+     * @param $id
+     * @return string
+     */
+    private function getContentCacheKey($id)
+    {
+        return 'pagebuilder_content_' . (string) $id;
     }
 }

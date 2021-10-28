@@ -1,25 +1,9 @@
 <?php
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class DateTime
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class DateTime extends BaseData
+class DateTime extends AbstractControlData
 {
-
-    /**
-     * Get date time control type.
-     *
-     * Retrieve the control type, in this case `date_time`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'date_time';
-    }
+    const NAME = 'date_time';
 
     /**
      * Get date time control default settings.

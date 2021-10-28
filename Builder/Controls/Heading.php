@@ -8,25 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class Heading
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Heading extends BaseUi
+class Heading extends AbstractControlUi
 {
-
-    /**
-     * Get heading control type.
-     *
-     * Retrieve the control type, in this case `heading`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'heading';
-    }
+    const NAME = 'heading';
 
     /**
      * Get heading control default settings.

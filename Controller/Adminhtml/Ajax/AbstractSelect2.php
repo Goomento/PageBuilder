@@ -10,10 +10,6 @@ namespace Goomento\PageBuilder\Controller\Adminhtml\Ajax;
 
 use Magento\Framework\Data\Collection\AbstractDb;
 
-/**
- * Class AbstractSelect2
- * @package Goomento\PageBuilder\Controller\Adminhtml\Ajax\Search
- */
 abstract class AbstractSelect2 extends AbstractAjax
 {
     /**

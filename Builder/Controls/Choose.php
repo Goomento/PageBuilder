@@ -8,25 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class Choose
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Choose extends BaseData
+class Choose extends AbstractControlData
 {
-
-    /**
-     * Get choose control type.
-     *
-     * Retrieve the control type, in this case `choose`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'choose';
-    }
+    const NAME = 'choose';
 
     /**
      * Render choose control output in the editor.

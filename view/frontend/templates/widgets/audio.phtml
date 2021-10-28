@@ -1,0 +1,57 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Builder\Widgets\Audio;
+use Goomento\PageBuilder\Helper\RequestHelper;
+
+/**
+ * @var Widget $block
+ * @var Audio
+ */
+$widget = $block->getWidget();
+$settings = $block->getSettingsForDisplay();
+
+if (empty($settings['audio_link'])) {
+    return;
+}
+
+$param_keys = [
+    'auto_play',
+    'buying',
+    'liking',
+    'download',
+    'sharing',
+    'show_comments',
+    'show_playcount',
+    'show_user',
+    'show_artwork',
+    'visual',
+];
+
+$url = 'https://w.soundcloud.com/player/';
+
+$params = [
+    'url' => $settings['audio_link']['url']
+];
+
+foreach ($param_keys as $param_key) {
+    $params[ $param_key ] = 'yes' === $settings[ 'audio_sc_' . $param_key ] ? 'true' : 'false';
+}
+
+$params['color'] = str_replace('#', '', $settings['audio_sc_color']);
+
+$url = RequestHelper::appendQueryStringToUrl($url, $params);
+
+?>
+<div class="gmt-soundcloud-wrapper">
+    <?= sprintf(
+        '<iframe width="100%%" scrolling="no" frameborder="no" allow="autoplay" src="%s"></iframe>',
+        $url
+    ); ?>
+</div>

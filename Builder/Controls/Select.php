@@ -5,27 +5,13 @@
  */
 
 declare(strict_types=1);
+
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class Select
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Select extends BaseData
+class Select extends AbstractControlData
 {
 
-    /**
-     * Get select control type.
-     *
-     * Retrieve the control type, in this case `select`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'select';
-    }
+    const NAME = 'select';
 
     /**
      * Get select control default settings.

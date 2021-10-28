@@ -8,30 +8,14 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Builder\TemplateLibrary\Manager;
-use Goomento\PageBuilder\Core\DynamicTags\Module as TagsModule;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
-use Goomento\PageBuilder\Helper\Theme;
+use Goomento\PageBuilder\Builder\Base\ImportInterface;
+use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
+use Goomento\PageBuilder\Helper\MediaHelper;
+use Goomento\PageBuilder\Helper\ThemeHelper;
 
-/**
- * Class Media
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Media extends BaseMultiple
+class Media extends AbstractBaseMultiple implements ImportInterface
 {
-
-    /**
-     * Get media control type.
-     *
-     * Retrieve the control type, in this case `media`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'media';
-    }
+    const NAME = 'media';
 
     /**
      * Get media control default values.
@@ -42,7 +26,7 @@ class Media extends BaseMultiple
      *
      * @return array Control default value.
      */
-    public function getDefaultValue()
+    public static function getDefaultValue()
     {
         return [
             'url' => '',
@@ -56,26 +40,23 @@ class Media extends BaseMultiple
      * SagoTheme template JSON file, and replacing the old data.
      *
      *
-     * @param array $settings Control settings
-     *
+     * @param array|null $data Control settings
+     * @param array $extraData
      * @return array Control settings.
      */
-    public function onImport($settings)
+    public function onImport($data, $extraData = [])
     {
-        if (empty($settings['url'])) {
-            return $settings;
+        if (empty($data['url'])) {
+            return $data;
         }
 
-        /** @var Manager $templateLibraryManager */
-        $templateLibraryManager = StaticObjectManager::get(Manager::class);
-
-        $newUrl = $templateLibraryManager->getImportImagesInstance()->import($settings['url']);
+        $newUrl = MediaHelper::downloadImage($data['url']);
 
         if ($newUrl) {
-            $settings['url'] = $newUrl;
+            $data['url'] = $newUrl;
         }
 
-        return $settings;
+        return $data;
     }
 
     /**
@@ -87,7 +68,7 @@ class Media extends BaseMultiple
      */
     public function enqueue()
     {
-        Theme::enqueueScript('goomento-media');
+        ThemeHelper::enqueueScript('goomento-media');
     }
 
     /**

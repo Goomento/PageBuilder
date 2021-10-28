@@ -8,29 +8,13 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Builder\TemplateLibrary\Manager;
-use Goomento\PageBuilder\Core\DynamicTags\Module as TagsModule;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
+use Goomento\PageBuilder\Builder\Base\ImportInterface;
+use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
+use Goomento\PageBuilder\Helper\MediaHelper;
 
-/**
- * Class Gallery
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Gallery extends BaseData
+class Gallery extends AbstractControlData implements ImportInterface
 {
-
-    /**
-     * Get gallery control type.
-     *
-     * Retrieve the control type, in this case `gallery`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'gallery';
-    }
+    const NAME = 'gallery';
 
     /**
      * Import gallery images.
@@ -39,22 +23,25 @@ class Gallery extends BaseData
      * SagoTheme template JSON file, and replacing the old data.
      *
      *
-     * @param array $settings Control settings
-     *
+     * @param array|null $data Control settings
+     * @param array $extraData
      * @return array Control settings.
      */
-    public function onImport($settings)
+    public function onImport($data, $extraData = [])
     {
-        foreach ($settings as &$attachment) {
+        foreach ($data as &$attachment) {
             if (empty($attachment['url'])) {
                 continue;
             }
 
-            $attachment = StaticObjectManager::get(Manager::class)->getImportImagesInstance()->import($attachment);
+            $newUrl = MediaHelper::downloadImage($attachment['url']);
+            if ($newUrl) {
+                $attachment['url'] = $newUrl;
+            }
         }
 
         // Filter out attachments that don't exist
-        return array_filter($settings);
+        return array_filter($data);
     }
 
     /**
@@ -122,7 +109,7 @@ class Gallery extends BaseData
      *
      * @return array Control default value.
      */
-    public function getDefaultValue()
+    public static function getDefaultValue()
     {
         return [];
     }

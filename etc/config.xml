@@ -7,27 +7,24 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
-        <system>
-            <pagebuilder>
-                <general>
-                    <active>1</active>
-                </general>
-                <import>
-                    <allowed_download_image>0</allowed_download_image>
-                    <downloaded_image_folder>goomento/images/imported</downloaded_image_folder>
-                </import>
-                <editor>
-                    <autosave_interval>60</autosave_interval>
-                    <number_of_revision>100</number_of_revision>
-                    <is_rtl>0</is_rtl>
-                    <render>
-                        <fallback>use_origin</fallback>
-                    </render>
-                    <style>
-                        <css_print_method>internal</css_print_method>
-                    </style>
-                </editor>
-            </pagebuilder>
-        </system>
+        <pagebuilder>
+            <general>
+                <active>1</active>
+            </general>
+            <import>
+                <allowed_download_image>0</allowed_download_image>
+                <download_folder>media/goomento/images/imported/</download_folder>
+            </import>
+            <editor>
+                <number_of_revision>100</number_of_revision>
+                <is_rtl>0</is_rtl>
+                <render>
+                    <fallback>use_origin</fallback>
+                </render>
+                <style>
+                    <css_print_method>internal</css_print_method>
+                </style>
+            </editor>
+        </pagebuilder>
     </default>
 </config>

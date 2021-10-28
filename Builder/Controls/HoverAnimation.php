@@ -8,14 +8,11 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Helper\Hooks;
+use Goomento\PageBuilder\Helper\HooksHelper;
 
-/**
- * Class HoverAnimation
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class HoverAnimation extends BaseData
+class HoverAnimation extends AbstractControlData
 {
+    const NAME = 'hover_animation';
 
     /**
      * Animations.
@@ -26,19 +23,6 @@ class HoverAnimation extends BaseData
      * @var array
      */
     private static $_animations;
-
-    /**
-     * Get hover animation control type.
-     *
-     * Retrieve the control type, in this case `hover_animation`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'hover_animation';
-    }
 
     /**
      * Get animations.
@@ -88,7 +72,7 @@ class HoverAnimation extends BaseData
              *
              * @param array $additional_animations Additional Animations array.
              */
-            $additional_animations = Hooks::applyFilters('pagebuilder/controls/hover_animations/additional_animations', $additional_animations);
+            $additional_animations = HooksHelper::applyFilters('pagebuilder/controls/hover_animations/additional_animations', $additional_animations);
             self::$_animations = array_merge(self::$_animations, $additional_animations);
         }
 

@@ -8,14 +8,10 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 
-use Goomento\PageBuilder\Helper\Hooks;
+use Goomento\PageBuilder\Helper\HooksHelper;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Class Editor
- * @package Goomento\PageBuilder\Controller\Adminhtml\Content
- */
 class Editor extends AbstractContent implements HttpGetActionInterface
 {
     use TraitContent;
@@ -42,7 +38,7 @@ class Editor extends AbstractContent implements HttpGetActionInterface
             /**
              * Start to hook the live editor.
              */
-            Hooks::doAction('pagebuilder/editor/index');
+            HooksHelper::doAction('pagebuilder/editor/index');
 
             return $resultPage;
         } catch (LocalizedException $e) {

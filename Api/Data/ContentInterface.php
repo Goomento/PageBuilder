@@ -12,17 +12,16 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\User\Model\User;
 
-/**
- * Interface ContentInterface
- * @package Goomento\PageBuilder\Api\Data
- */
 interface ContentInterface
 {
     const CONTENT_ID               = 'content_id';
     const TITLE                    = 'title';
     const TYPE                     = 'type';
+    /**
+     * @deprecated
+     */
     const STORES                   = 'stores';
-    const STORE_ID                 = 'store_id';
+    const STORE_IDS                = 'store_ids';
     const CONTENT                  = 'content';
     const ELEMENTS                 = 'elements';
     const SETTINGS                 = 'settings';
@@ -43,11 +42,6 @@ interface ContentInterface
     const TYPE_SECTION             = 'section';
 
     const CREATE_REVISION_FLAG     = 'create_revision_flag';
-
-    const SERIALIZABLE_FIELDS      = [
-        self::SETTINGS => [[], []],
-        self::ELEMENTS => [[], []],
-    ];
 
     /**
      * Get ID
@@ -86,7 +80,6 @@ interface ContentInterface
      * Set settings
      *
      * @return array
-     * @deprecated
      * @see ContentInterface::getSetting()
      */
     public function getSettings();
@@ -168,15 +161,16 @@ interface ContentInterface
      * Set stores
      *
      * @return StoreInterface[]|[]
+     * @deprecated
      */
     public function getStores();
 
     /**
      * Set store ids
      *
-     * @return array
+     * @return int[]|[]
      */
-    public function getStoreId();
+    public function getStoreIds();
 
     /**
      * Get creation time
@@ -270,10 +264,10 @@ interface ContentInterface
     /**
      * Set store ids
      *
-     * @param array $stores
+     * @param int[]|int $storeIds
      * @return ContentInterface
      */
-    public function setStoreId($stores);
+    public function setStoreIds($storeIds);
 
     /**
      * Set author Id
@@ -313,13 +307,22 @@ interface ContentInterface
     public function getRoleName(string $role);
 
     /**
+     * Allow to create revision for every saving action
      * @param bool $flag
      * @return ContentInterface
      */
-    public function setCreateRevisionFlag(bool $flag);
+    public function setRevisionFlag(bool $flag);
 
     /**
      * @return bool
      */
-    public function getCreateRevisionFlag();
+    public function getRevisionFlag();
+
+    /**
+     * Find element by id
+     *
+     * @param string $elementId
+     * @return array|null
+     */
+    public function getElementDataById(string $elementId) : ?array;
 }

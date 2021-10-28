@@ -5,27 +5,12 @@
  */
 
 declare(strict_types=1);
+
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class RawHtml
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class RawHtml extends BaseUi
+class RawHtml extends AbstractControlUi
 {
-
-    /**
-     * Get raw html control type.
-     *
-     * Retrieve the control type, in this case `raw_html`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'raw_html';
-    }
+    const NAME = 'raw_html';
 
     /**
      * Render raw html control output in the editor.

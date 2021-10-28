@@ -12,10 +12,6 @@ use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory;
 use Magento\Framework\Data\OptionSourceInterface;
 
-/**
- * Class PageList
- * @package Goomento\PageBuilder\Model\Config\Source
- */
 class PageList implements OptionSourceInterface
 {
     /**

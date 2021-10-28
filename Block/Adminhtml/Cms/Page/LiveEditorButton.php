@@ -14,10 +14,6 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 
-/**
- * Class LiveEditorButton
- * @package Goomento\PageBuilder\Block\Adminhtml\Cms\Page
- */
 class LiveEditorButton implements ButtonProviderInterface
 {
     /**

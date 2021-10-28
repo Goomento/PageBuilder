@@ -8,27 +8,12 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Core\DynamicTags\Module as TagsModule;
+use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
 
-/**
- * Class Textarea
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Textarea extends BaseData
+class Textarea extends AbstractControlData
 {
 
-    /**
-     * Get textarea control type.
-     *
-     * Retrieve the control type, in this case `textarea`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'textarea';
-    }
+    const NAME = 'textarea';
 
     /**
      * Get textarea control default settings.

@@ -10,15 +10,13 @@ namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 
 use Exception;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
-use Goomento\PageBuilder\Helper\StaticEncryptor;
+use Goomento\PageBuilder\Helper\DataHelper;
+use Goomento\PageBuilder\Helper\EncryptorHelper;
+use Goomento\PageBuilder\Helper\EscaperHelper;
 use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Class Save
- * @package Goomento\PageBuilder\Controller\Adminhtml\Content
- */
 class Save extends AbstractContent implements HttpPostActionInterface
 {
     use TraitContent;
@@ -37,7 +35,7 @@ class Save extends AbstractContent implements HttpPostActionInterface
                 $contentType = $this->getContentType();
                 $data['type'] = $contentType;
 
-                $data = $this->dataProcessor->filter($data);
+                $data = EscaperHelper::filter($data);
                 $isNewObject = !((int) $data['content_id']);
 
                 $content = $this->getContent(!$isNewObject);
@@ -74,7 +72,7 @@ class Save extends AbstractContent implements HttpPostActionInterface
                     ->setType($contentType);
 
                 if (isset($data['store_id']) && $data['store_id']) {
-                    $content->setStoreId($data['store_id']);
+                    $content->setStoreIds($data['store_id']);
                 }
 
                 if ($content->isObjectNew()) {
@@ -91,7 +89,7 @@ class Save extends AbstractContent implements HttpPostActionInterface
 
                 if (!empty($data['content_data'])) {
                     $contentData = base64_decode($data['content_data']);
-                    if ($contentData && self::isJson($contentData)) {
+                    if ($contentData && DataHelper::isJson($contentData)) {
                         $contentData = \Zend_Json::decode($contentData);
                         if ($contentData !== $content->getElements()) {
                             $content->setElements($contentData);
@@ -101,25 +99,30 @@ class Save extends AbstractContent implements HttpPostActionInterface
                             __('Data content invalidated. Make sure you copy the right way.')
                         );
                     }
+                } else {
+                    $content->setElements([]);
                 }
 
                 $identifier = isset($data['identifier']) ? trim($data['identifier']) : '';
                 if (empty($identifier)) {
-                    $identifier = $content->getType() . '-' . StaticEncryptor::uniqueString();
+                    $identifier = $content->getType() . '-' . EncryptorHelper::uniqueString();
                 }
 
                 if ($content->getIdentifier() !== $identifier) {
                     $content->setIdentifier($identifier);
                 }
 
+                $this->contentManagement->refreshContentAssets($content);
                 $content = $this->contentRepository->save($content);
-                $this->contentManagement->createRevision($content);
-                $this->contentManagement->refreshContentCache($content);
-                $this->messageManager->addSuccessMessage(__('You saved the content.'));
+
+                $this->messageManager->addSuccessMessage(
+                    __('You saved the content.')
+                );
                 return $this->processResultRedirect($content, $resultRedirect, $data);
             } catch (LocalizedException $e) {
                 $this->messageManager->addExceptionMessage($e->getPrevious() ?: $e);
             } catch (Exception $e) {
+                $this->logger->error($e);
                 $this->messageManager->addExceptionMessage($e, __('Something went wrong while saving the content.'));
             }
 
@@ -134,7 +137,7 @@ class Save extends AbstractContent implements HttpPostActionInterface
     }
 
     /**
-     * @param $model
+     * @param ContentInterface $model
      * @param $resultRedirect
      * @param $data
      * @return mixed
@@ -152,9 +155,11 @@ class Save extends AbstractContent implements HttpPostActionInterface
             $identifier = $model->getIdentifier();
             $identifiers = explode('-', $identifier);
             array_pop($identifiers);
-            $identifiers[] = StaticEncryptor::uniqueString();
-
+            $identifiers[] = EncryptorHelper::uniqueString();
             $content->setIdentifier(implode('-', $identifiers));
+            $content->setElements($model->getElements());
+            $content->setSettings($model->getSettings());
+
             $this->contentRepository->save($content);
             $this->messageManager->addSuccessMessage(__('You duplicated the content.'));
             return $resultRedirect->setPath(
@@ -166,7 +171,9 @@ class Save extends AbstractContent implements HttpPostActionInterface
                 ]
             );
         }
+
         $this->dataPersistor->clear('pagebuilder_content');
+
         if ($this->getRequest()->getParam('back')) {
             return $resultRedirect->setPath('*/*/edit', [
                 'content_id' => $model->getId(),
@@ -178,14 +185,5 @@ class Save extends AbstractContent implements HttpPostActionInterface
         return $resultRedirect->setPath('*/*/grid', [
             'type' => $model->getType()
         ]);
-    }
-
-    /**
-     * @param $string
-     * @return bool
-     */
-    protected static function isJson($string)
-    {
-        return !(json_decode($string, true) == null);
     }
 }

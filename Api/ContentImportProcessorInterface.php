@@ -10,10 +10,6 @@ namespace Goomento\PageBuilder\Api;
 
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Interface ContentImportProcessorInterface
- * @package Goomento\PageBuilder\Api
- */
 interface ContentImportProcessorInterface
 {
     /**

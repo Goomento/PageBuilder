@@ -13,10 +13,6 @@ use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\Module\ResourceInterface;
 
-/**
- * Class Version
- * @package Goomento\PageBuilder\Model\Config\Frontend
- */
 class Version extends Template implements RendererInterface
 {
     /**
