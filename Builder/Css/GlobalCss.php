@@ -111,9 +111,9 @@ class GlobalCss extends AbstractCss
                         if (!empty($control['scheme'])) {
                             $schema = $control['scheme'];
                             if (!empty($schema['key'])) {
-                                return "var(--gmt-{$schema['type']}-{$schema['value']}-{$schema['key']});";
+                                return sprintf('var(--gmt-%s-%s-%s)', $schema['type'], $schema['value'], $schema['key']);
                             } else {
-                                return "var(--gmt-{$schema['type']}-{$schema['value']});";
+                                return sprintf('var(--gmt-%s-%s)', $schema['type'], $schema['value']);
                             }
                         }
 
