@@ -11,7 +11,7 @@ namespace Goomento\PageBuilder\Builder\Managers;
 use Exception;
 use Goomento\PageBuilder\Builder\Base\AbstractSource;
 use Goomento\PageBuilder\Builder\Sources\Local;
-use Goomento\PageBuilder\Builder\Modules\Ajax as Ajax;
+use Goomento\PageBuilder\Builder\Modules\Ajax;
 use Goomento\PageBuilder\Builder\Managers\Settings as SettingsManager;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
@@ -330,7 +330,7 @@ class Sources
     public function directImportTemplate($filename = 'file')
     {
         /** @var Local $source */
-        $source = $this->getSource(Sources\Local::NAME);
+        $source = $this->getSource(Local::NAME);
 
         return $source->importTemplate($_FILES[$filename]['name'], $_FILES[$filename]['tmp_name']);
     }
@@ -360,7 +360,7 @@ class Sources
 
         fwrite($tmp_file, $file_content);
 
-        $source = $this->getSource(Sources\Local::NAME);
+        $source = $this->getSource(Local::NAME);
 
         $result = $source->importTemplate($data['fileName'], stream_get_meta_data($tmp_file)['uri']);
 

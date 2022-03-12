@@ -76,7 +76,7 @@ class TypographyGroup extends AbstractControlGroup
             'label' => __('Family'),
             'type' => Controls::FONT,
             'default' => '',
-            'selector_value' => 'font-family: "{{VALUE}}"' . $default_fonts . ';',
+            'selector_value' => 'font-family: {{VALUE}}' . $default_fonts . ';',
         ];
 
         $fields['font_size'] = [
