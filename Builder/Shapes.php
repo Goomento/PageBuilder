@@ -8,13 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder;
 
-use Goomento\PageBuilder\Helper\Hooks;
-use Goomento\PageBuilder\Helper\StaticAssets;
+use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\AssetsHelper;
 
-/**
- * Class Shapes
- * @package Goomento\PageBuilder\Builder
- */
 class Shapes
 {
 
@@ -107,7 +103,7 @@ class Shapes
             $file_name .= '-negative';
         }
 
-        return StaticAssets::getModulePath('Goomento_PageBuilder', 'view') . '/base/web/shapes/' . $file_name . '.svg';
+        return AssetsHelper::getModulePath('Goomento_PageBuilder', 'view') . '/base/web/shapes/' . $file_name . '.svg';
     }
 
     /**
@@ -227,7 +223,7 @@ class Shapes
          *
          * @param array $additional_shapes Additional SagoTheme shapes.
          */
-        return Hooks::applyFilters('pagebuilder/shapes/additional_shapes', $additional_shapes);
+        return HooksHelper::applyFilters('pagebuilder/shapes/additional_shapes', $additional_shapes);
     }
 
     /**
@@ -247,7 +243,7 @@ class Shapes
 
         $additional_shapes_config = [];
         foreach ($additional_shapes as $shape_name => $shape_settings) {
-            if (! isset($shape_settings['url'])) {
+            if (!isset($shape_settings['url'])) {
                 continue;
             }
             $additional_shapes_config[ $shape_name ] = $shape_settings['url'];

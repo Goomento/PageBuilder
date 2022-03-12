@@ -1,0 +1,55 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Helper\EscaperHelper;
+
+?>
+<script type="text/template" id="tmpl-gmt-panel-elements">
+	<div id="gmt-panel-elements-loading">
+		<i class="fa-circle-notch fas spinning"></i>
+	</div>
+	<div id="gmt-panel-elements-navigation" class="gmt-panel-navigation">
+	</div>
+	<div id="gmt-panel-elements-search-area"></div>
+	<div id="gmt-panel-elements-wrapper"></div>
+</script>
+
+<script type="text/template" id="tmpl-gmt-panel-categories">
+	<div id="gmt-panel-categories"></div>
+    <div id="gmt-panel-author" class="gmt-nerd-box">
+        <div class="gmt-nerd-box-message"><?= __( 'Thanks for using Goomento PageBuilder'); ?></div>
+        <a class="gmt-nerd-box-link"
+           target="_blank"
+           href="https://github.com/Goomento/PageBuilder">
+            <?= __('What\'s new?') ?>
+        </a>
+    </div>
+</script>
+
+<script type="text/template" id="tmpl-gmt-panel-elements-category">
+	<div class="gmt-panel-category-title">{{{ title }}}</div>
+	<div class="gmt-panel-category-items"></div>
+</script>
+
+<script type="text/template" id="tmpl-gmt-panel-element-search">
+	<label for="gmt-panel-elements-search-input" class="screen-reader-text"><?php
+        echo __( 'Search Widget:' ); ?></label>
+	<input type="search" id="gmt-panel-elements-search-input" placeholder="<?= __('Search Widget...'); ?>" autocomplete="off"/>
+	<i class="fas fa-search" aria-hidden="true"></i>
+</script>
+
+<script type="text/template" id="tmpl-gmt-element-library-element">
+	<div class="gmt-element">
+		<div class="icon">
+			<i class="{{ icon }}" aria-hidden="true"></i>
+		</div>
+		<div class="gmt-element-title-wrapper">
+			<div class="title">{{{ title }}}</div>
+		</div>
+	</div>
+</script>

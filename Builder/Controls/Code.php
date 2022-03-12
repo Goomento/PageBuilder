@@ -8,25 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class Code
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Code extends BaseData
+class Code extends AbstractControlData
 {
-
-    /**
-     * Get code control type.
-     *
-     * Retrieve the control type, in this case `code`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'code';
-    }
+    const NAME = 'code';
 
     /**
      * Get code control default settings.

@@ -5,15 +5,12 @@
  */
 
 declare(strict_types=1);
+
 namespace Goomento\PageBuilder\Builder;
 
-use Goomento\PageBuilder\Helper\Hooks;
-use Goomento\PageBuilder\Helper\StaticEscaper;
+use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\EscaperHelper;
 
-/**
- * Class Embed
- * @package Goomento\PageBuilder\Builder
- */
 class Embed
 {
 
@@ -87,7 +84,7 @@ class Embed
     {
         $video_properties = self::getVideoProperties($video_url);
 
-        if (! $video_properties) {
+        if (!$video_properties) {
             return null;
         }
 
@@ -102,7 +99,7 @@ class Embed
         } elseif ('vimeo' === $video_properties['provider']) {
             $time_text = '';
 
-            if (! empty($options['start'])) {
+            if (!empty($options['start'])) {
                 $time_text = date('H\hi\ms\s', $options['start']);
             }
 
@@ -136,10 +133,10 @@ class Embed
         ];
 
         $video_embed_url = self::getEmbedUrl($video_url, $embed_url_params, $options);
-        if (! $video_embed_url) {
+        if (!$video_embed_url) {
             return null;
         }
-        if (! $options['lazy_load']) {
+        if (!$options['lazy_load']) {
             $default_frame_attributes['src'] = $video_embed_url;
         } else {
             $default_frame_attributes['data-lazy-load'] = $video_embed_url;
@@ -150,7 +147,7 @@ class Embed
         $attributes_for_print = [];
 
         foreach ($frame_attributes as $attribute_key => $attribute_value) {
-            $attribute_value = StaticEscaper::escapeHtml($attribute_value);
+            $attribute_value = EscaperHelper::escapeHtml($attribute_value);
 
             if (is_numeric($attribute_key)) {
                 $attributes_for_print[] = $attribute_value;
@@ -163,6 +160,6 @@ class Embed
 
         $iframe_html = "<iframe $attributes_for_print></iframe>";
 
-        return Hooks::applyFilters('oembed_result', $iframe_html, $video_url, $frame_attributes);
+        return HooksHelper::applyFilters('oembed_result', $iframe_html, $video_url, $frame_attributes);
     }
 }

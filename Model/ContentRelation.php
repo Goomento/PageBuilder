@@ -1,31 +1,27 @@
 <?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model;
 
 use Exception;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
-use Goomento\PageBuilder\Helper\StaticEncryptor;
+use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Magento\Backend\Model\Url;
-use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Catalog\Api\CategoryRepositoryInterface;
-use Magento\Catalog\Model\Category;
-use Magento\Catalog\Model\Product;
 use Magento\Cms\Api\BlockRepositoryInterface;
 use Magento\Cms\Api\PageRepositoryInterface;
 use Magento\Framework\DataObject;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\ObjectManagerInterface;
 
-/**
- * Class ContentRelation
- * @package Goomento\PageBuilder\Model
- */
 class ContentRelation
 {
     const TYPE_CMS_PAGE = 'cms_page';
     const TYPE_CMS_BLOCK = 'cms_block';
-    const TYPE_CATALOG_PRODUCT = 'catalog_product';
-    const TYPE_CATALOG_CATEGORY = 'catalog_category';
     const FIELD_PAGEBUILDER_CONTENT_ID = 'pagebuilder_content_id';
     const FIELD_PAGEBUILDER_IS_ACTIVE = 'pagebuilder_is_active';
 
@@ -56,7 +52,7 @@ class ContentRelation
     }
 
     /**
-     * @return \string[][]
+     * @return string[][]
      */
     public static function mapping()
     {
@@ -70,16 +66,6 @@ class ContentRelation
                 'repository' => BlockRepositoryInterface::class,
                 'label' => 'Cms Block',
                 'pagebuilder_type' => 'section',
-            ],
-            self::TYPE_CATALOG_PRODUCT => [
-                'repository' => ProductRepositoryInterface::class,
-                'label' => 'Catalog Product',
-                'pagebuilder_type' => 'page',
-            ],
-            self::TYPE_CATALOG_CATEGORY => [
-                'repository' => CategoryRepositoryInterface::class,
-                'label' => 'Catalog Category',
-                'pagebuilder_type' => 'page',
             ],
         ];
     }
@@ -114,7 +100,7 @@ class ContentRelation
         }
 
         throw new Exception(
-            __('Invalid relation type: %1', $entityType)
+            sprintf('Invalid relation type: %s', $entityType)
         );
     }
 
@@ -127,13 +113,7 @@ class ContentRelation
     public function getEntityObject(string $entityType, int $entityId)
     {
         $repository = $this->getRepositoryByType($entityType);
-        if ($repository instanceof ProductRepositoryInterface) {
-            return $repository->getById($entityId, false, $this->getStoreId());
-        } elseif ($repository instanceof CategoryRepositoryInterface) {
-            return $repository->get($entityId, $this->getStoreId());
-        } else {
-            return $repository->getById($entityId);
-        }
+        return $repository->getById($entityId);
     }
 
     /**
@@ -171,35 +151,8 @@ class ContentRelation
                 } else {
                     $contentData['store_id'] = [0];
                 }
-                $contentData['identifier'] = $relationObject->getIdentifier() . '-' . StaticEncryptor::uniqueString();
+                $contentData['identifier'] = $relationObject->getIdentifier() . '-' . EncryptorHelper::uniqueString();
                 break;
-            case self::TYPE_CATALOG_PRODUCT:
-                /** @var Product $relationObject */
-                $contentData = [
-                    'title' => $relationData['label'] . ': SKU' . $relationObject->getSku() . ' ' . $relationObject->getName(),
-                    'type' => $relationData['pagebuilder_type'],
-                    'status' => ContentInterface::STATUS_PUBLISHED,
-                ];
-                if ($relationObject->getStoreId()) {
-                    $contentData['store_id'] = $relationObject->getStoreId();
-                } else {
-                    $contentData['store_id'] = [0];
-                }
-                $contentData['identifier'] = $relationObject->getUrlKey() . '-' . StaticEncryptor::uniqueString();
-                break;
-            case self::TYPE_CATALOG_CATEGORY:
-                /** @var Category $relationObject */
-                $contentData = [
-                    'title' => $relationData['label'] . ': #' . $relationObject->getId() . ' ' . $relationObject->getName(),
-                    'type' => $relationData['pagebuilder_type'],
-                    'status' => ContentInterface::STATUS_PUBLISHED,
-                ];
-                if ($relationObject->getStoreId()) {
-                    $contentData['store_id'] = $relationObject->getStoreId();
-                } else {
-                    $contentData['store_id'] = [0];
-                }
-                $contentData['identifier'] = $relationObject->getUrlKey() . '-' . StaticEncryptor::uniqueString();
             default:
         }
         return $contentData;
@@ -245,15 +198,11 @@ class ContentRelation
         switch ($entityType) {
             case self::TYPE_CMS_BLOCK:
             case self::TYPE_CMS_PAGE:
-            case self::TYPE_CATALOG_CATEGORY:
-            case self::TYPE_CATALOG_PRODUCT:
                 $entity = $this->getEntityObject($entityType, $entityId);
                 $entity->setData(self::FIELD_PAGEBUILDER_CONTENT_ID, $contentId);
                 $entity->setData(self::FIELD_PAGEBUILDER_IS_ACTIVE, $isActive);
-                $entity->save();
-                if (method_exists($entity, 'reindex')) {
-                    $entity->getResource()->addCommitCallback([$entity, 'reindex']);
-                }
+                $repository = $this->getRepositoryByType($entityType);
+                $repository->save($entity);
                 break;
         }
     }
@@ -293,26 +242,6 @@ class ContentRelation
             return $this->url->getUrl('cms/block/edit', [
                 'block_id' => $entityId
             ]);
-        }
-
-        if ($entityType === self::TYPE_CATALOG_PRODUCT) {
-            $params = [
-                'id' => $entityId
-            ];
-            if ($this->getStoreId()) {
-                $params['store'] = $this->getStoreId();
-            }
-            return $this->url->getUrl('catalog/product/edit', $params);
-        }
-
-        if ($entityType === self::TYPE_CATALOG_CATEGORY) {
-            $params = [
-                'id' => $entityId
-            ];
-            if ($this->getStoreId()) {
-                $params['store'] = $this->getStoreId();
-            }
-            return $this->url->getUrl('catalog/category/edit', $params);
         }
 
         return '';

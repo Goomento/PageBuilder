@@ -11,10 +11,6 @@ namespace Goomento\PageBuilder\Model;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\Store;
 
-/**
- * Class Content
- * @package Goomento\PageBuilder\Model
- */
 class Config
 {
     const CSS_UPDATED_TIME = 'css_updated_time';

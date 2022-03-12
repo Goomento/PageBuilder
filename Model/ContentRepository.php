@@ -12,7 +12,7 @@ use Goomento\PageBuilder\Api\Data;
 use Goomento\PageBuilder\Api\ContentRepositoryInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Helper\Authorization;
-use Goomento\PageBuilder\Helper\StaticEncryptor;
+use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
@@ -23,10 +23,6 @@ use Goomento\PageBuilder\Model\ResourceModel\Content as ResourceContent;
 use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory as ContentCollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
 
-/**
- * Class ContentRepository
- * @package Goomento\PageBuilder\Model
- */
 class ContentRepository implements ContentRepositoryInterface
 {
     /**
@@ -101,6 +97,7 @@ class ContentRepository implements ContentRepositoryInterface
             $this->validateContentType($content);
             $this->setStoreId($content);
             $this->setIdentifier($content);
+            $this->validateIdentifier($content);
             $this->resource->save($content);
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
@@ -109,6 +106,25 @@ class ContentRepository implements ContentRepositoryInterface
             );
         }
         return $content;
+    }
+
+    /**
+     * @param ContentInterface $content
+     * @throws LocalizedException
+     */
+    private function validateIdentifier(ContentInterface $content)
+    {
+        if ($identifier = $content->getIdentifier()) {
+            $collection = $this->contentCollectionFactory->create();
+            $collection->addFieldToFilter(ContentInterface::IDENTIFIER, $identifier);
+            /** @var ContentInterface $testedContent */
+            $testedContent = $collection->getFirstItem();
+            if ($testedContent->getId() && $testedContent->getId() != $content->getId()) {
+                throw new LocalizedException(
+                    __('Invalid content identifier: Same identifier with "%1".', $testedContent->getTitle())
+                );
+            }
+        }
     }
 
     /**
@@ -130,14 +146,14 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private function setStoreId(ContentInterface $content)
     {
-        if ($content->getStoreId() === null) {
+        if ($content->getStoreIds() === null) {
             $storeId = $this->storeManager->getStore()->getId();
             if ($storeId != 0) {
                 $storeId = [0, $storeId];
             } else {
                 $storeId = [0];
             }
-            $content->setStoreId($storeId);
+            $content->setStoreIds($storeId);
         }
     }
 
@@ -150,7 +166,7 @@ class ContentRepository implements ContentRepositoryInterface
             $content->setIdentifier(
                 implode('-',[
                     $content->getType(),
-                    StaticEncryptor::uniqueString()
+                    EncryptorHelper::uniqueString()
                 ])
             );
         }
@@ -183,14 +199,30 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function getById($contentId)
+    public function getById(int $contentId) : ContentInterface
     {
         $content = $this->contentFactory->create();
         $this->resource->load($content, $contentId);
         if (!$content->getId()) {
-            throw new NoSuchEntityException(__('The content with the "%1" ID doesn\'t exist.', $contentId));
+            throw new NoSuchEntityException(
+                __('The content with the ID: "%1" doesn\'t exist.', $contentId)
+            );
         }
-        $content->setOrigData();
+        return $content;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getByIdentifier(string $identifier): ContentInterface
+    {
+        $content = $this->contentFactory->create();
+        $this->resource->load($content, $identifier, ContentInterface::IDENTIFIER);
+        if (!$content->getId()) {
+            throw new NoSuchEntityException(
+                __('The content with the Identifier: "%1" doesn\'t exist.', $identifier)
+            );
+        }
         return $content;
     }
 

@@ -11,26 +11,19 @@ namespace Goomento\PageBuilder\Model;
 use Goomento\PageBuilder\Api\ContentManagementInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentSearchResultsInterface;
+use Goomento\PageBuilder\Api\ContentRepositoryInterface;
+use Goomento\PageBuilder\Api\RevisionRepositoryInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
-use Goomento\PageBuilder\Builder\TemplateLibrary\Sources\Local;
-use Goomento\PageBuilder\Core\Files\Css\GlobalCss;
-use Goomento\PageBuilder\Helper\Data;
-use Goomento\PageBuilder\Helper\StaticConfig;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
-use Goomento\PageBuilder\Helper\UserHelper;
+use Goomento\PageBuilder\Builder\Css\ContentCss;
+use Goomento\PageBuilder\Builder\Css\GlobalCss;
+use Goomento\PageBuilder\Builder\Sources\Local;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Helper\AdminUser;
 use Goomento\PageBuilder\PageBuilder;
 use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\FilterGroupBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Api\SortOrderBuilder;
-use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Store\Model\StoreManagerInterface;
 
-/**
- * Class ContentManagement
- * @package Goomento\PageBuilder\Model
- */
 class ContentManagement implements ContentManagementInterface
 {
     /**
@@ -38,7 +31,7 @@ class ContentManagement implements ContentManagementInterface
      */
     private $contentFactory;
     /**
-     * @var ContentRepository
+     * @var ContentRepositoryInterface
      */
     private $contentRepository;
     /**
@@ -50,25 +43,17 @@ class ContentManagement implements ContentManagementInterface
      */
     private $filterBuilder;
     /**
-     * @var UserHelper
+     * @var AdminUser
      */
     private $userHelper;
     /**
-     * @var RevisionRepository
+     * @var RevisionRepositoryInterface
      */
     private $revisionRepository;
     /**
      * @var RevisionFactory
      */
     private $revisionFactory;
-    /**
-     * @var ResourceConnection
-     */
-    private $resourceConnection;
-    /**
-     * @var ContentRegistry
-     */
-    private $contentRegistry;
     /**
      * @var Config
      */
@@ -78,26 +63,22 @@ class ContentManagement implements ContentManagementInterface
      * ContentManagement constructor.
      * @param ContentFactory $contentFactory
      * @param RevisionFactory $revisionFactory
-     * @param ContentRepository $contentRepository
-     * @param RevisionRepository $revisionRepository
-     * @param UserHelper $userHelper
+     * @param ContentRepositoryInterface $contentRepository
+     * @param RevisionRepositoryInterface $revisionRepository
+     * @param AdminUser $userHelper
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterBuilder $filterBuilder
-     * @param ResourceConnection $resourceConnection
-     * @param ContentRegistry $contentRegistry
      * @param Config $config
      */
     public function __construct(
-        ContentFactory $contentFactory,
-        RevisionFactory $revisionFactory,
-        ContentRepository $contentRepository,
-        RevisionRepository $revisionRepository,
-        UserHelper $userHelper,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
-        FilterBuilder $filterBuilder,
-        ResourceConnection $resourceConnection,
-        ContentRegistry $contentRegistry,
-        Config $config
+        ContentFactory              $contentFactory,
+        RevisionFactory             $revisionFactory,
+        ContentRepositoryInterface  $contentRepository,
+        RevisionRepositoryInterface $revisionRepository,
+        AdminUser                   $userHelper,
+        SearchCriteriaBuilder       $searchCriteriaBuilder,
+        FilterBuilder               $filterBuilder,
+        Config                      $config
     ) {
         $this->contentFactory = $contentFactory;
         $this->revisionFactory = $revisionFactory;
@@ -106,8 +87,6 @@ class ContentManagement implements ContentManagementInterface
         $this->revisionRepository = $revisionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
-        $this->resourceConnection = $resourceConnection;
-        $this->contentRegistry = $contentRegistry;
         $this->config = $config;
     }
 
@@ -139,13 +118,25 @@ class ContentManagement implements ContentManagementInterface
                 __('Content Id does not specify')
             );
         }
+
         /** @var Content $content */
+        if (!$content->hasDataChanges()) {
+            return false;
+        }
+
         $revision = $this->revisionFactory->create();
-        $revision->setContentId($content->getId());
-        $revision->setElements($content->getElements());
-        $revision->setSettings($content->getSettings());
-        $revision->setAuthorId($content->getLastEditorId() ?: $content->getAuthorId());
+
         $revision->setStatus($status);
+        $revision->setContentId($content->getId());
+        $revision->setAuthorId($content->getLastEditorId() ?: $content->getAuthorId());
+
+        if ($status === RevisionInterface::STATUS_AUTOSAVE) {
+            $revision->setElements($content->getElements());
+            $revision->setSettings($content->getSettings());
+        } else {
+            $revision->setElements($content->getOrigData(ContentInterface::ELEMENTS));
+            $revision->setSettings($content->getOrigData(ContentInterface::SETTINGS));
+        }
 
         return $this->revisionRepository->save($revision);
     }
@@ -175,30 +166,31 @@ class ContentManagement implements ContentManagementInterface
     /**
      * @inheritDoc
      */
-    public function refreshContentCache(ContentInterface $content)
+    public function refreshContentAssets(ContentInterface $content)
     {
         PageBuilder::initialize();
 
         $content->setSetting('css/' . Config::CSS_UPDATED_TIME, 0);
-        $flag = $content->getCreateRevisionFlag();
-        $content->setCreateRevisionFlag(false);
-        $content->save();
+        $flag = $content->getRevisionFlag();
+        /** @var Content $content */
+        $content->setRevisionFlag(false);
+        $this->contentRepository->save($content);
+        $content->setRevisionFlag($flag);
+        $content->setDataChanges(false);
 
-        $css = new \Goomento\PageBuilder\Core\Files\Css\ContentCss($content->getId());
+        $css = new ContentCss($content->getId());
         $css->update();
-
-        $content->setCreateRevisionFlag($flag);
     }
 
     /**
      * @inheritDoc
      */
-    public function refreshGlobalCache()
+    public function refreshGlobalAssets()
     {
         $this->config->setOption(Config::CSS_UPDATED_TIME, time());
         PageBuilder::initialize();
 
-        $globalCss = new \Goomento\PageBuilder\Core\Files\Css\GlobalCss();
+        $globalCss = new GlobalCss();
         $globalCss->update();
     }
 
@@ -232,7 +224,7 @@ class ContentManagement implements ContentManagementInterface
     public function httpContentExport(ContentInterface $content): void
     {
         /** @var Local $localSource */
-        $localSource = StaticObjectManager::get(Local::class);
-        $localSource->exportTemplate($content->getId());
+        $localSource = ObjectManagerHelper::get(Local::class);
+        $localSource->exportTemplate((int) $content->getId());
     }
 }

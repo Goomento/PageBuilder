@@ -8,25 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class Switcher
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Switcher extends BaseData
+class Switcher extends AbstractControlData
 {
-
-    /**
-     * Get switcher control type.
-     *
-     * Retrieve the control type, in this case `switcher`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'switcher';
-    }
+    const NAME = 'switcher';
 
     /**
      * Render switcher control output in the editor.

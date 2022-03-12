@@ -8,27 +8,12 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Core\DynamicTags\Module as TagsModule;
+use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
 
-/**
- * Class Number
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Number extends BaseData
+class Number extends AbstractControlData
 {
 
-    /**
-     * Get number control type.
-     *
-     * Retrieve the control type, in this case `number`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'number';
-    }
+    const NAME = 'number';
 
     /**
      * Get number control default settings.

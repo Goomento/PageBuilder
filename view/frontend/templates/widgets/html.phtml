@@ -1,0 +1,19 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Helper\EscaperHelper;
+
+/**
+ * @var Widget $block
+ */
+$widget = $block->getWidget();
+?>
+<?= EscaperHelper::escapeHtml(
+    $widget->getSettingsForDisplay('html')
+); ?>

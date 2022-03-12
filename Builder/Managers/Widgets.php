@@ -9,41 +9,37 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Managers;
 
 use Exception;
-use Goomento\PageBuilder\Builder\Base\Widget;
-use Goomento\PageBuilder\Core\Common\Modules\Ajax\Module as Ajax;
-use Goomento\PageBuilder\Core\DocumentsManager;
-use Goomento\PageBuilder\Core\Editor\Editor;
-use Goomento\PageBuilder\Helper\Hooks;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
-use Goomento\PageBuilder\Widgets\Accordion;
-use Goomento\PageBuilder\Widgets\Alert;
-use Goomento\PageBuilder\Widgets\Button;
-use Goomento\PageBuilder\Widgets\Common;
-use Goomento\PageBuilder\Widgets\Counter;
-use Goomento\PageBuilder\Widgets\Heading;
-use Goomento\PageBuilder\Widgets\Html;
-use Goomento\PageBuilder\Widgets\Icon;
-use Goomento\PageBuilder\Widgets\IconBox;
-use Goomento\PageBuilder\Widgets\IconList;
-use Goomento\PageBuilder\Widgets\Image;
-use Goomento\PageBuilder\Widgets\ImageBox;
-use Goomento\PageBuilder\Widgets\Progress;
-use Goomento\PageBuilder\Widgets\SocialIcons;
-use Goomento\PageBuilder\Widgets\Spacer;
-use Goomento\PageBuilder\Widgets\Tabs;
-use Goomento\PageBuilder\Widgets\TextEditor;
-use Goomento\PageBuilder\Widgets\Toggle;
-use Goomento\PageBuilder\Widgets\Video;
-use Goomento\PageBuilder\Widgets\Block;
-use Magento\Framework\App\Area;
-use Magento\Framework\App\State;
+use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Modules\Ajax;
+use Goomento\PageBuilder\Builder\Widgets\Accordion;
+use Goomento\PageBuilder\Builder\Widgets\Alert;
+use Goomento\PageBuilder\Builder\Widgets\Audio;
+use Goomento\PageBuilder\Builder\Widgets\Banner;
+use Goomento\PageBuilder\Builder\Widgets\Block;
+use Goomento\PageBuilder\Builder\Widgets\Button;
+use Goomento\PageBuilder\Builder\Widgets\Common;
+use Goomento\PageBuilder\Builder\Widgets\Counter;
+use Goomento\PageBuilder\Builder\Widgets\Divider;
+use Goomento\PageBuilder\Builder\Widgets\Text;
+use Goomento\PageBuilder\Builder\Widgets\Html;
+use Goomento\PageBuilder\Builder\Widgets\Icon;
+use Goomento\PageBuilder\Builder\Widgets\IconBox;
+use Goomento\PageBuilder\Builder\Widgets\IconList;
+use Goomento\PageBuilder\Builder\Widgets\Image;
+use Goomento\PageBuilder\Builder\Widgets\ImageBox;
+use Goomento\PageBuilder\Builder\Widgets\Progress;
+use Goomento\PageBuilder\Builder\Widgets\SocialIcons;
+use Goomento\PageBuilder\Builder\Widgets\Spacer;
+use Goomento\PageBuilder\Builder\Widgets\StarRating;
+use Goomento\PageBuilder\Builder\Widgets\Video;
+use Goomento\PageBuilder\Builder\Widgets\Tabs;
+use Goomento\PageBuilder\Builder\Widgets\TextEditor;
+use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Traits\ComponentsLoader;
 
-/**
- * Class Widgets
- * @package Goomento\PageBuilder\Builder\Managers
- */
 class Widgets
 {
+    use ComponentsLoader;
 
     /**
      * Widget types.
@@ -51,53 +47,42 @@ class Widgets
      * Holds the list of all the widget types.
      *
      *
-     * @var Widget[]
+     * @var AbstractWidget[]|null
      */
-    private $_widget_types = null;
+    private $components = null;
 
     /**
      * Init widgets.
      */
     private function initWidgets()
     {
-        $widgets = [
-            Common::class,
-            Heading::class,
-            Image::class,
-            TextEditor::class,
-            Spacer::class,
-            ImageBox::class,
-            Icon::class,
-            IconBox::class,
-            IconList::class,
-            Counter::class,
-            Progress::class,
-            Tabs::class,
-            Accordion::class,
-            Toggle::class,
-            SocialIcons::class,
-            Alert::class,
-            Html::class,
-            Button::class,
-            Video::class,
-            Block::class,
+        $this->components = [
+            Accordion::NAME => Accordion::class,
+            Alert::NAME => Alert::class,
+            Audio::NAME => Audio::class,
+            Banner::NAME => Banner::class,
+            Block::NAME => Block::class,
+            Button::NAME => Button::class,
+            Common::NAME => Common::class,
+            Counter::NAME => Counter::class,
+            Divider::NAME => Divider::class,
+            Text::NAME => Text::class,
+            Html::NAME => Html::class,
+            Icon::NAME => Icon::class,
+            IconBox::NAME => IconBox::class,
+            IconList::NAME => IconList::class,
+            Image::NAME => Image::class,
+            ImageBox::NAME => ImageBox::class,
+            Progress::NAME => Progress::class,
+            SocialIcons::NAME => SocialIcons::class,
+            Spacer::NAME => Spacer::class,
+            StarRating::NAME => StarRating::class,
+            Video::NAME => Video::class,
+            Tabs::NAME => Tabs::class,
+            TextEditor::NAME => TextEditor::class,
         ];
 
-        $this->_widget_types = [];
-
-        foreach ($widgets as $widget) {
-            $this->registerWidgetType($widget);
-        }
-
-        /**
-         * After widgets registered.
-         *
-         * Fires after SagoTheme widgets are registered.
-         *
-             *
-         * @param Widgets $this The widgets manager.
-         */
-        Hooks::doAction('pagebuilder/widgets/widgets_registered', $this);
+        HooksHelper::doAction('pagebuilder/widgets/widgets_registered', $this);
     }
 
     /**
@@ -106,22 +91,18 @@ class Widgets
      * Add a new widget type to the list of registered widget types.
      *
      *
-     * @param Widget|string $widget widget.
+     * @param AbstractWidget|string $widget widget.
      *
      * @return Widgets True if the widget was registered.
      */
     public function registerWidgetType($widget)
     {
-        if (is_null($this->_widget_types)) {
+        if (null === $this->components) {
             $this->initWidgets();
         }
 
-        if (is_string($widget) && class_exists($widget)) {
-            $widget = StaticObjectManager::get($widget);
-        }
-
-        if ($widget->isActive()) {
-            $this->_widget_types[ $widget->getName() ] = $widget;
+        if ($widget::ENABLED) {
+            $this->components[ $widget::NAME ] = $widget;
         }
 
         return $this;
@@ -133,17 +114,17 @@ class Widgets
      * Removes widget type from the list of registered widget types.
      *
      *
-     * @param string $name Widget name.
+     * @param string $name AbstractWidget name.
      *
      * @return bool True if the widget was unregistered, False otherwise.
      */
     public function unregisterWidgetType($name)
     {
-        if (! isset($this->_widget_types[ $name ])) {
+        if (!isset($this->components[ $name ])) {
             return false;
         }
 
-        unset($this->_widget_types[ $name ]);
+        unset($this->components[ $name ]);
 
         return true;
     }
@@ -154,21 +135,21 @@ class Widgets
      * Retrieve the registered widget types list.
      *
      *
-     * @param string $widget_name Optional. Widget name. Default is null.
+     * @param string|null $name Optional. AbstractWidget name. Default is null.
      *
-     * @return Widget|Widget[]|null Registered widget types.
+     * @return AbstractWidget|AbstractWidget[]|null Registered widget types.
      */
-    public function getWidgetTypes($widget_name = null)
+    public function getWidgetTypes(?string $name = null)
     {
-        if (is_null($this->_widget_types)) {
+        if (is_null($this->components)) {
             $this->initWidgets();
         }
 
-        if (null !== $widget_name) {
-            return $this->_widget_types[$widget_name] ?? null;
+        if (null !== $name) {
+            return $this->getComponent($name);
         }
 
-        return $this->_widget_types;
+        return $this->getComponents();
     }
 
     /**
@@ -190,6 +171,10 @@ class Widgets
         return $config;
     }
 
+    /**
+     * @param array $data
+     * @return array
+     */
     public function ajaxGetWidgetTypesControlsConfig(array $data)
     {
         $config = [];
@@ -206,37 +191,6 @@ class Widgets
         }
 
         return $config;
-    }
-
-    /**
-     * @param $request
-     * @return array
-     * @throws Exception
-     * @deprecated
-     */
-    public function ajaxRenderWidget($request)
-    {
-        /** @var DocumentsManager $documentManager */
-        $documentManager = StaticObjectManager::get(DocumentsManager::class);
-        $document = $documentManager->get($request['editor_post_id']);
-
-        /** @var Editor $editor */
-        $editor = StaticObjectManager::get(Editor::class);
-        $is_edit_mode = $editor->isEditMode();
-        $editor->setEditMode(true);
-
-        /** @var State $state */
-        $state = StaticObjectManager::get(State::class);
-
-        $render_html = $state->emulateAreaCode(Area::AREA_FRONTEND, function () use ($document, $request) {
-            return $document->renderElement($request['data']);
-        });
-
-        $editor->setEditMode($is_edit_mode);
-
-        return [
-            'render' => $render_html,
-        ];
     }
 
     /**
@@ -366,7 +320,7 @@ class Widgets
      */
     public function __construct()
     {
-        Hooks::addAction('pagebuilder/ajax/register_actions', [ $this,'registerAjaxActions' ]);
+        HooksHelper::addAction('pagebuilder/ajax/register_actions', [ $this,'registerAjaxActions' ]);
     }
 
     /**
@@ -380,7 +334,6 @@ class Widgets
      */
     public function registerAjaxActions(Ajax $ajax_manager)
     {
-        $ajax_manager->registerAjaxAction('render_widget', [ $this, 'ajaxRenderWidget' ]);
         $ajax_manager->registerAjaxAction('get_widgets_config', [ $this, 'ajaxGetWidgetTypesControlsConfig' ]);
     }
 }

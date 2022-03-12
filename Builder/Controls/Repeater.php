@@ -8,28 +8,13 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
+use Goomento\PageBuilder\Builder\Base\ImportInterface;
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
-/**
- * Class Repeater
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Repeater extends BaseData
+class Repeater extends AbstractControlData implements ImportInterface
 {
-
-    /**
-     * Get repeater control type.
-     *
-     * Retrieve the control type, in this case `repeater`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'repeater';
-    }
+    const NAME = 'repeater';
 
     /**
      * Get repeater control default value.
@@ -40,7 +25,7 @@ class Repeater extends BaseData
      *
      * @return array Control default value.
      */
-    public function getDefaultValue()
+    public static function getDefaultValue()
     {
         return [];
     }
@@ -84,13 +69,13 @@ class Repeater extends BaseData
     {
         $value = parent::getValue($control, $settings);
 
-        if (! empty($value)) {
+        if (!empty($value)) {
             foreach ($value as &$item) {
                 foreach ($control['fields'] as $field) {
-                    $control_obj = StaticObjectManager::get(Controls::class)->getControl($field['type']);
+                    $control_obj = ObjectManagerHelper::get(Controls::class)->getControl($field['type']);
 
                     // Prior to 1.5.0 the fields may contains non-data controls.
-                    if (! $control_obj instanceof \Goomento\PageBuilder\Builder\Controls\BaseData) {
+                    if (!$control_obj instanceof \Goomento\PageBuilder\Builder\Controls\AbstractControlData) {
                         continue;
                     }
 
@@ -109,29 +94,29 @@ class Repeater extends BaseData
      * template JSON file, and replacing the old data.
      *
      *
-     * @param array $settings     Control settings.
-     * @param array $control_data Optional. Control data. Default is an empty array.
+     * @param array $data     Control settings.
+     * @param array $extraData Optional. Control data. Default is an empty array.
      *
      * @return array Control settings.
      */
-    public function onImport($settings, $control_data = [])
+    public function onImport($data, $extraData = [])
     {
-        if (empty($settings) || empty($control_data['fields'])) {
-            return $settings;
+        if (empty($data) || empty($extraData['fields'])) {
+            return $data;
         }
 
         $method = 'onImport';
 
-        foreach ($settings as &$item) {
-            foreach ($control_data['fields'] as $field) {
+        foreach ($data as &$item) {
+            foreach ($extraData['fields'] as $field) {
                 if (empty($field['name']) || empty($item[ $field['name'] ])) {
                     continue;
                 }
                 /** @var Controls $controlManager */
-                $controlManager = StaticObjectManager::get(Controls::class);
+                $controlManager = ObjectManagerHelper::get(Controls::class);
                 $control_obj = $controlManager->getControl($field['type']);
 
-                if (! $control_obj) {
+                if (!$control_obj) {
                     continue;
                 }
 
@@ -141,7 +126,7 @@ class Repeater extends BaseData
             }
         }
 
-        return $settings;
+        return $data;
     }
 
     /**

@@ -8,17 +8,12 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Managers;
 
-use Goomento\PageBuilder\Builder\Utils;
 use Goomento\PageBuilder\Configuration;
-use Goomento\PageBuilder\Core\Common\Modules\Ajax\Module as Ajax;
-use Goomento\PageBuilder\Helper\Hooks;
-use Goomento\PageBuilder\Helper\StaticUrlBuilder;
-use Goomento\PageBuilder\Helper\Theme;
+use Goomento\PageBuilder\Helper\DataHelper;
+use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\UrlBuilderHelper;
+use Goomento\PageBuilder\Helper\ThemeHelper;
 
-/**
- * Class Icons
- * @package Goomento\PageBuilder\Builder\Managers
- */
 class Icons
 {
     /**
@@ -42,15 +37,15 @@ class Icons
         $shared_styles = [];
 
         foreach ($config as $type => $icon_type) {
-            if (! isset($icon_type['url'])) {
+            if (!isset($icon_type['url'])) {
                 continue;
             }
             $dependencies = [];
-            if (! empty($icon_type['enqueue'])) {
+            if (!empty($icon_type['enqueue'])) {
                 foreach ((array) $icon_type['enqueue'] as $font_css_url) {
                     if (! in_array($font_css_url, array_keys($shared_styles))) {
                         $style_handle = 'goomento-icons-shared-' . count($shared_styles);
-                        Theme::registerStyle(
+                        ThemeHelper::registerStyle(
                             $style_handle,
                             $font_css_url,
                             [],
@@ -62,7 +57,7 @@ class Icons
                 }
             }
 
-            Theme::registerStyle(
+            ThemeHelper::registerStyle(
                 'goomento-icons-' . $icon_type['name'],
                 $icon_type['url'],
                 $dependencies,
@@ -79,7 +74,7 @@ class Icons
      */
     private static function initTabs()
     {
-        self::$tabs = Hooks::applyFilters('pagebuilder/icons_manager/native', [
+        self::$tabs = HooksHelper::applyFilters('pagebuilder/icons_manager/native', [
             'fa-regular' => [
                 'name' => 'fa-regular',
                 'label' => __('Font Awesome - Regular'),
@@ -123,7 +118,7 @@ class Icons
         if (! self::$tabs) {
             self::initTabs();
         }
-        $additional_tabs = Hooks::applyFilters('pagebuilder/icons_manager/additional_tabs', []);
+        $additional_tabs = HooksHelper::applyFilters('pagebuilder/icons_manager/additional_tabs', []);
         return array_merge(self::$tabs, $additional_tabs);
     }
 
@@ -140,11 +135,11 @@ class Icons
             $is_test_mode = !!Configuration::DEBUG;
         }
         $url = 'Goomento_PageBuilder/lib/font-awesome/' . $ext_type . '/' . $filename;
-        if (! $is_test_mode && $add_suffix) {
+        if (!$is_test_mode && $add_suffix) {
             $url .= '.min';
         }
         $url .= '.' . $ext_type;
-        return StaticUrlBuilder::urlStaticBuilder($url);
+        return UrlBuilderHelper::urlStaticBuilder($url);
     }
 
     /**
@@ -187,7 +182,7 @@ class Icons
                 $attributes['class'] .= ' ' . $icon['value'];
             }
         }
-        return '<' . $tag . ' ' . Utils::renderHtmlAttributes($attributes) . '></' . $tag . '>';
+        return '<' . $tag . ' ' . DataHelper::renderHtmlAttributes($attributes) . '></' . $tag . '>';
     }
 
     /**
@@ -210,26 +205,11 @@ class Icons
         return true;
     }
 
-    public function enqueueFontawesomeCss()
-    {
-        Theme::enqueueStyle('fontawesome');
-    }
-
-    public function registerAjaxActions(Ajax $ajax)
-    {
-    }
-
     /**
      * Icons Manager constructor
      */
     public function __construct()
     {
-        Hooks::addAction('pagebuilder/editor/after_enqueue_styles', [ $this, 'enqueueFontawesomeCss' ]);
-        Hooks::addAction('pagebuilder/frontend/after_enqueue_styles', [ $this, 'enqueueFontawesomeCss' ]);
-
-        Hooks::addAction('pagebuilder/frontend/after_register_styles', [ $this, 'registerStyles' ]);
-
-        // Ajax.
-        Hooks::addAction('pagebuilder/ajax/register_actions', [ $this, 'registerAjaxActions' ]);
+        HooksHelper::addAction('pagebuilder/frontend/after_register_styles', [ $this, 'registerStyles' ]);
     }
 }

@@ -5,29 +5,14 @@
  */
 
 declare(strict_types=1);
+
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Core\DynamicTags\Module as TagsModule;
+use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
 
-/**
- * Class Wysiwyg
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Wysiwyg extends BaseData
+class Wysiwyg extends AbstractControlData
 {
-
-    /**
-     * Get wysiwyg control type.
-     *
-     * Retrieve the control type, in this case `wysiwyg`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'wysiwyg';
-    }
+    const NAME = 'wysiwyg';
 
     /**
      * Render wysiwyg control output in the editor.

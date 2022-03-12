@@ -11,23 +11,29 @@ namespace Goomento\PageBuilder;
 /**
  * Class Configuration
  * Stored config of Goomento
- *
- * @package Goomento\PageBuilder
  */
 class Configuration
 {
+    /**
+     * Set some resources as develop version (Eg: remove `.min` from URL ...)
+     */
     const DEBUG = false;
 
-    const VERSION = 1.0;
+    /**
+     * The Goomento Page Builder Version - which is set for resource version (Eg: styles, json files)
+     */
+    const VERSION = '0.2.0';
 
     /**
-     * @return array
+     * Default Breakpoints
+     * In case of has the custom breakpoints, modify this and SCSS breakpoint also
      */
-    public static function config()
-    {
-        return [
-            'DEBUG' => self::DEBUG,
-            'VERSION' => self::VERSION,
-        ];
-    }
+    const DEFAULT_BREAKPOINTS = [
+        'xs' => 0,
+        'sm' => 480,
+        'md' => 768,
+        'lg' => 1025,
+        'xl' => 1440,
+        'xxl' => 1600,
+    ];
 }

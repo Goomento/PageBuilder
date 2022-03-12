@@ -11,10 +11,6 @@ namespace Goomento\PageBuilder\Logger;
 use Magento\Framework\Logger\Handler\Base;
 use Monolog\Logger;
 
-/**
- * Class Handler
- * @package Goomento\PageBuilder\Logger
- */
 class Handler extends Base
 {
     /**

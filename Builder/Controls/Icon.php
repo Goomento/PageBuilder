@@ -8,25 +8,10 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class Icon
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Icon extends BaseData
+class Icon extends AbstractControlData
 {
 
-    /**
-     * Get icon control type.
-     *
-     * Retrieve the control type, in this case `icon`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'icon';
-    }
+    const NAME = 'icon';
 
     /**
      * Get icons control default settings.

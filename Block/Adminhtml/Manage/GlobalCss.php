@@ -11,10 +11,6 @@ use Magento\Backend\Block\Template;
 use Goomento\PageBuilder\Model\Config;
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Class GlobalCss
- * @package Goomento\PageBuilder\Block\Adminhtml\Manage
- */
 class GlobalCss extends Template
 {
     /**

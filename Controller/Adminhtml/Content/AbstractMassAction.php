@@ -11,6 +11,7 @@ namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 use Exception;
 use Goomento\PageBuilder\Api\ContentRepositoryInterface;
 use Goomento\PageBuilder\Api\ContentManagementInterface;
+use Goomento\PageBuilder\Api\ContentRegistryInterface;
 use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory;
 use Goomento\PageBuilder\Logger\Logger;
 use Magento\Backend\App\Action;
@@ -22,10 +23,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use Magento\Ui\Component\MassAction\Filter;
 
-/**
- * Class AbstractMassAction
- * @package Goomento\PageBuilder\Controller\Adminhtml\Content
- */
 abstract class AbstractMassAction extends Action implements HttpPostActionInterface
 {
     /**
@@ -51,6 +48,10 @@ abstract class AbstractMassAction extends Action implements HttpPostActionInterf
      * @var ContentManagementInterface
      */
     protected $contentManagement;
+    /**
+     * @var ContentRegistryInterface
+     */
+    protected $contentRegistry;
 
     /**
      * @param Context $context
@@ -58,6 +59,7 @@ abstract class AbstractMassAction extends Action implements HttpPostActionInterf
      * @param CollectionFactory $collectionFactory
      * @param ContentRepositoryInterface $contentRepository
      * @param ContentManagementInterface $contentManagement
+     * @param ContentRegistryInterface $contentRegistry
      * @param Logger $logger
      */
     public function __construct(
@@ -66,6 +68,7 @@ abstract class AbstractMassAction extends Action implements HttpPostActionInterf
         CollectionFactory $collectionFactory,
         ContentRepositoryInterface $contentRepository,
         ContentManagementInterface $contentManagement,
+        ContentRegistryInterface $contentRegistry,
         Logger $logger
     ) {
         parent::__construct($context);
@@ -73,6 +76,7 @@ abstract class AbstractMassAction extends Action implements HttpPostActionInterf
         $this->collectionFactory = $collectionFactory;
         $this->contentRepository = $contentRepository;
         $this->contentManagement = $contentManagement;
+        $this->contentRegistry = $contentRegistry;
         $this->logger = $logger;
     }
 

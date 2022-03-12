@@ -1,0 +1,40 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Magento\Framework\Escaper;
+
+/**
+ * @var Widget $block
+ * @var Escaper $escaper
+ */
+$widget = $block->getWidget();
+
+$settings = $block->getSettingsForDisplay();
+
+$widget->addRenderAttribute('counter', [
+    'class' => 'gmt-counter-number',
+    'data-duration' => $settings['counter_duration'],
+    'data-to-value' => $settings['counter_ending_number'],
+    'data-from-value' => $settings['counter_starting_number'],
+]);
+
+if (!empty($settings['counter_thousand_separator'])) {
+    $delimiter = empty($settings['counter_thousand_separator_char']) ? ',' : $settings['counter_thousand_separator_char'];
+    $widget->addRenderAttribute('counter', 'data-delimiter', $delimiter);
+} ?>
+<div class="gmt-counter">
+    <div class="gmt-counter-number-wrapper">
+        <span class="gmt-counter-number-prefix"><?= $settings['counter_prefix']; ?></span>
+        <span <?= $widget->getRenderAttributeString('counter'); ?>><?= $settings['counter_starting_number']; ?></span>
+        <span class="gmt-counter-number-suffix"><?= $settings['counter_suffix']; ?></span>
+    </div>
+    <?php if ($settings['counter_title']) : ?>
+        <div class="gmt-counter-title"><?= $settings['counter_title']; ?></div>
+    <?php endif; ?>
+</div>

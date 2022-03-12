@@ -11,15 +11,13 @@ namespace Goomento\PageBuilder\Helper;
 use Goomento\Core\Traits\TraitStaticInstances;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
-/**
- * Class Data
- * @package Goomento\PageBuilder\Helper
- */
 class Data extends AbstractHelper
 {
     use TraitStaticInstances;
 
-    const ACTIVE_XML_PATH = 'pagebuilder/general/active';
+    const PREFIX_XML_PATH = 'pagebuilder';
+
+    const ACTIVE_XML_PATH = self::PREFIX_XML_PATH . '/general/active';
 
     /**
      * @param $path
@@ -46,9 +44,9 @@ class Data extends AbstractHelper
      * @param null $scopeCode
      * @return mixed
      */
-    public function getPageBuilderConfig($name, string $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT, $scopeCode = null)
+    public function getBuilderConfig($name, string $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT, $scopeCode = null)
     {
-        return $this->getConfig("pagebuilder/{$name}", $scopeType, $scopeCode);
+        return $this->getConfig(sprintf('%s/%s', static::PREFIX_XML_PATH, $name), $scopeType, $scopeCode);
     }
 
     /**
@@ -56,15 +54,26 @@ class Data extends AbstractHelper
      */
     public function getAllowedDownloadImage()
     {
-        return (bool) $this->getConfig('import/allowed_download_image');
+        return (bool) $this->getBuilderConfig(
+            'import/allowed_download_image'
+        );
     }
 
     /**
+     * The download url with slash ending.
      * @return string
      */
-    public function getDownloadedImageFolder()
+    public function getDownloadFolder()
     {
-        return (string) $this->getPageBuilderConfig('import/allowed_download_image');
+        $folder = (string) $this->getBuilderConfig(
+            'import/download_folder'
+        );
+        $folder = trim($folder);
+        if ($folder) {
+            $folder = rtrim($folder, '\\/') . '/';
+        }
+
+        return $folder;
     }
 
     /**
@@ -72,7 +81,9 @@ class Data extends AbstractHelper
      */
     public function getRenderFallback()
     {
-        return (string) $this->getPageBuilderConfig('editor/style/css_print_method');
+        return (string) $this->getBuilderConfig(
+            'editor/render/fallback'
+        );
     }
 
     /**
@@ -80,11 +91,8 @@ class Data extends AbstractHelper
      */
     public function getAllowedNumberOfRevision()
     {
-        $number = $this->getPageBuilderConfig('editor/number_of_revision');
-        if (null === $number) {
-            $number = 100;
-        }
-
-        return $number;
+        return (int) $this->getBuilderConfig(
+            'editor/number_of_revision'
+        );
     }
 }

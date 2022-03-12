@@ -8,33 +8,34 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Traits;
 
-use Goomento\Core\Helper\ObjectManager;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 
-/**
- * Trait TraitHttpPage
- * @package Goomento\PageBuilder\Traits
- */
 trait TraitHttpPage
 {
+    /**
+     * @var array
+     */
+    private $defaultParams = [
+        'active_menu' => '',
+        'title' => '',
+        'editable_title' => '',
+        'handler' => '',
+        'breadcrumb' => [
+        ],
+    ];
+
     use TraitHttpContentAction;
 
     /**
      * @return Page
      * @throws LocalizedException
      */
-    protected function renderPage()
+    protected function renderPage(): Page
     {
-        $pageConfig = array_merge([
-            'active_menu' => '',
-            'title' => '',
-            'editable_title' => '',
-            'handler' => '',
-            'breadcrumb' => [
-            ],
-        ], (array) $this->getPageConfig());
+        $pageConfig = array_merge($this->defaultParams, (array) $this->getPageConfig());
 
         $resultPage = $this->createPageResult();
 
@@ -79,7 +80,7 @@ trait TraitHttpPage
     private function createPageResult()
     {
         if (!isset($this->pageFactory)) {
-            $this->pageFactory = ObjectManager::get(PageFactory::class);
+            $this->pageFactory = ObjectManagerHelper::get(PageFactory::class);
         }
 
         return $this->pageFactory->create();

@@ -8,25 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class Tabs
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Tabs extends BaseUi
+class Tabs extends AbstractControlUi
 {
-
-    /**
-     * Get tabs control type.
-     *
-     * Retrieve the control type, in this case `tabs`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'tabs';
-    }
+    const NAME = 'tabs';
 
     /**
      * Render tabs control output in the editor.

@@ -16,10 +16,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Result\PageFactory;
 use Goomento\PageBuilder\Traits\TraitHttpPage;
 
-/**
- * Class Grid
- * @package Goomento\PageBuilder\Controller\Adminhtml\Content
- */
 class Grid extends Action implements HttpGetActionInterface
 {
     use TraitHttpPage;

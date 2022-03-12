@@ -1,0 +1,78 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Builder\Managers\Icons;
+use Goomento\PageBuilder\Builder\Widgets\Button;
+
+/**
+ * @var Widget $block
+ */
+/** @var Button $widget */
+$widget = $block->getWidget();
+$settings = $widget->getSettingsForDisplay();
+$widget->addRenderAttribute('wrapper', 'class', 'gmt-button-wrapper');
+
+if (!empty($settings['button_link']['url'])) {
+    $widget->addRenderAttribute('button', 'href', $settings['button_link']['url']);
+    $widget->addRenderAttribute('button', 'class', 'gmt-button-link');
+
+    if ($settings['button_link']['is_external']) {
+        $widget->addRenderAttribute('button', 'target', '_blank');
+    }
+
+    if ($settings['button_link']['nofollow']) {
+        $widget->addRenderAttribute('button', 'rel', 'nofollow');
+    }
+}
+
+$widget->addRenderAttribute('button', 'class', 'gmt-button');
+$widget->addRenderAttribute('button', 'role', 'button');
+
+if (!empty($settings['button_css_id'])) {
+    $widget->addRenderAttribute('button', 'id', $settings['button_css_id']);
+}
+
+if (!empty($settings['button_size'])) {
+    $widget->addRenderAttribute('button', 'class', 'gmt-size-' . $settings['button_size']);
+}
+
+if ($settings['button_hover_animation']) {
+    $widget->addRenderAttribute('button', 'class', 'gmt-animation-' . $settings['button_hover_animation']);
+} ?>
+    <div <?= $widget->getRenderAttributeString('wrapper'); ?>>
+        <a <?= $widget->getRenderAttributeString('button'); ?>>
+            <?php
+
+            $widget->addRenderAttribute([
+                'content-wrapper' => [
+                    'class' => 'gmt-button-content-wrapper',
+                ],
+                'icon-align' => [
+                    'class' => [
+                        'gmt-button-icon',
+                        'gmt-align-icon-' . $settings['button_icon_align'],
+                    ],
+                ],
+                'text' => [
+                    'class' => 'gmt-button-text',
+                ],
+            ]);
+
+            $widget->addInlineEditingAttributes('text', 'none'); ?>
+            <span <?= $widget->getRenderAttributeString('content-wrapper'); ?>>
+			<?php if (!empty($settings['button_icon']) || ! empty($settings['button_selected_icon']['value'])) : ?>
+                <span <?= $widget->getRenderAttributeString('icon-align'); ?>>
+				    <?php Icons::renderIcon($settings['button_selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
+			    </span>
+            <?php endif; ?>
+			    <span <?= $widget->getRenderAttributeString('text'); ?>><?= $settings['button_text']; ?></span>
+		    </span>
+        </a>
+    </div>
+<?php
