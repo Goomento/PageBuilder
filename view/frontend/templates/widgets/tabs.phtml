@@ -1,0 +1,64 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+
+/**
+ * @var Widget $block
+ */
+$widget = $block->getWidget();
+$tabs = $widget->getSettingsForDisplay('tabs');
+
+$id_int = substr((string) $widget->getIdInt(), 0, 3); ?>
+<div class="gmt-tabs" role="tablist">
+    <div class="gmt-tabs-wrapper">
+        <?php
+        foreach ($tabs as $index => $item) :
+            $tab_count = $index + 1;
+
+            $tab_title_setting_key = $widget->getRepeaterSettingKey('tab_title', 'tabs', $index);
+
+            $widget->addRenderAttribute($tab_title_setting_key, [
+                'id' => 'gmt-tab-title-' . $id_int . $tab_count,
+                'class' => [ 'gmt-tab-title', 'gmt-tab-desktop-title' ],
+                'data-tab' => $tab_count,
+                'role' => 'tab',
+                'aria-controls' => 'gmt-tab-content-' . $id_int . $tab_count,
+            ]); ?>
+            <div <?= $widget->getRenderAttributeString($tab_title_setting_key); ?>><a href=""><?= $item['tab_title']; ?></a></div>
+        <?php endforeach; ?>
+    </div>
+    <div class="gmt-tabs-content-wrapper">
+        <?php
+        foreach ($tabs as $index => $item) :
+            $tab_count = $index + 1;
+
+            $tab_content_setting_key = $widget->getRepeaterSettingKey('tab_content', 'tabs', $index);
+
+            $tab_title_mobile_setting_key = $widget->getRepeaterSettingKey('tab_title_mobile', 'tabs', $tab_count);
+
+            $widget->addRenderAttribute($tab_content_setting_key, [
+                'id' => 'gmt-tab-content-' . $id_int . $tab_count,
+                'class' => [ 'gmt-tab-content', 'gmt-clearfix' ],
+                'data-tab' => $tab_count,
+                'role' => 'tabpanel',
+                'aria-labelledby' => 'gmt-tab-title-' . $id_int . $tab_count,
+            ]);
+
+            $widget->addRenderAttribute($tab_title_mobile_setting_key, [
+                'class' => [ 'gmt-tab-title', 'gmt-tab-mobile-title' ],
+                'data-tab' => $tab_count,
+                'role' => 'tab',
+            ]);
+
+            $widget->addInlineEditingAttributes($tab_content_setting_key, 'advanced'); ?>
+            <div <?= $widget->getRenderAttributeString($tab_title_mobile_setting_key); ?>><?= $item['tab_title']; ?></div>
+            <div <?= $widget->getRenderAttributeString($tab_content_setting_key); ?>><?= /** @noEscape  */ $item['tab_content'] ?></div>
+        <?php endforeach; ?>
+    </div>
+</div>

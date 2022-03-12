@@ -8,30 +8,46 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Managers;
 
-use Goomento\PageBuilder\Builder\Schemes\Base;
+use Goomento\PageBuilder\Builder\Base\AbstractSchema;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\ColorPicker;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
-use Goomento\PageBuilder\Core\Common\Modules\Ajax\Module as Ajax;
-use Goomento\PageBuilder\Core\Files\Css\GlobalCss;
-use Goomento\PageBuilder\Helper\Hooks;
-use Goomento\PageBuilder\Helper\StaticAuthorization;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
-use Magento\Framework\Exception\LocalizedException;
+use Goomento\PageBuilder\Builder\Modules\Ajax;
+use Goomento\PageBuilder\Builder\Css\GlobalCss;
+use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\AuthorizationHelper;
+use Goomento\PageBuilder\Traits\ComponentsLoader;
 
-/**
- * Class Schemes
- * @package Goomento\PageBuilder\Builder\Managers
- */
+
 class Schemes
 {
-    protected $_registered_schemes = [];
-    private static $_enabled_schemes;
 
-    private static $_schemes_types = [
-        'color' => 'Scheme_Color',
-        'typography' => 'Scheme_Typography',
-        'color-picker' => 'Scheme_Color_Picker',
+    use ComponentsLoader;
+
+    /**
+     * @var \Goomento\PageBuilder\Builder\Base\AbstractSchema[]
+     */
+    protected $_registered_schemes = [];
+
+    /**
+     * @var AbstractSchema[]|null
+     */
+    private static $enabledSchemes;
+
+    /**
+     *
+     * @var string[]
+     */
+    private static $schemesTypes = [
+        Color::NAME,
+        Typography::NAME,
+        ColorPicker::NAME
+    ];
+
+    protected $components = [
+        Color::NAME => Color::class,
+        Typography::NAME => Typography::class,
+        ColorPicker::NAME => ColorPicker::class,
     ];
 
     /**
@@ -40,19 +56,16 @@ class Schemes
      */
     public function unregisterScheme($id)
     {
-        if (! isset($this->_registered_schemes[ $id ])) {
-            return false;
-        }
-        unset($this->_registered_schemes[ $id ]);
-        return true;
+        return $this->removeComponent($id);
     }
 
     /**
-     * @return array
+     *
+     * @return AbstractSchema[]
      */
     public function getRegisteredSchemes()
     {
-        return $this->_registered_schemes;
+        return $this->getComponents();
     }
 
     /**
@@ -63,7 +76,7 @@ class Schemes
         $data = [];
 
         foreach ($this->getRegisteredSchemes() as $scheme) {
-            $data[ $scheme::getType() ] = [
+            $data[ $scheme::NAME ] = [
                 'title' => $scheme->getTitle(),
                 'disabled_title' => $scheme->getDisabledTitle(),
                 'items' => $scheme->getScheme(),
@@ -81,7 +94,7 @@ class Schemes
         $data = [];
 
         foreach ($this->getRegisteredSchemes() as $scheme) {
-            $data[ $scheme::getType() ] = [
+            $data[ $scheme::NAME ] = [
                 'title' => $scheme->getTitle(),
                 'items' => $scheme->getDefaultScheme(),
             ];
@@ -89,12 +102,16 @@ class Schemes
 
         return $data;
     }
+
+    /**
+     * @return array
+     */
     public function getSystemSchemes()
     {
         $data = [];
 
         foreach ($this->getRegisteredSchemes() as $scheme) {
-            $data[ $scheme::getType() ] = $scheme->getSystemSchemes();
+            $data[ $scheme::NAME ] = $scheme->getSystemSchemes();
         }
 
         return $data;
@@ -102,17 +119,11 @@ class Schemes
 
     /**
      * @param $id
-     * @return false|Base
+     * @return false|\Goomento\PageBuilder\Builder\Base\AbstractSchema
      */
     public function getScheme($id)
     {
-        $schemes = $this->getRegisteredSchemes();
-
-        if (! isset($schemes[ $id ])) {
-            return false;
-        }
-
-        return $schemes[ $id ];
+        return $this->getComponent($id);
     }
 
     /**
@@ -122,10 +133,10 @@ class Schemes
      */
     public function getSchemeValue($scheme_type, $scheme_value)
     {
-        /** @var Base $scheme */
+        /** @var \Goomento\PageBuilder\Builder\Base\AbstractSchema $scheme */
         $scheme = $this->getScheme($scheme_type);
 
-        if (! $scheme) {
+        if (!$scheme) {
             return false;
         }
 
@@ -135,32 +146,31 @@ class Schemes
     /**
      * @param $data
      * @return bool
-     * @throws LocalizedException
+     * @throws \Exception
      */
     public function ajaxApplyScheme($data)
     {
-        if (!StaticAuthorization::isCurrentUserCan('manage_global_config')) {
-            throw new LocalizedException(
-                __('Sorry, you need permissions to view this content')
+        if (!AuthorizationHelper::isCurrentUserCan('manage_global_config')) {
+            throw new \Exception(
+                'Sorry, you need permissions to view this content'
             );
         }
 
-        if (! isset($data['scheme_name'])) {
+        if (!isset($data['scheme_name'])) {
             return false;
         }
 
-        /** @var Base $scheme_obj */
+        /** @var AbstractSchema $scheme_obj */
         $scheme_obj = $this->getScheme($data['scheme_name']);
 
-        if (! $scheme_obj) {
+        if (!$scheme_obj) {
             return false;
         }
 
         $posted = json_decode($data['data'], true);
 
         $scheme_obj->saveScheme($posted);
-        /** @var GlobalCss $globalCss */
-        $globalCss = StaticObjectManager::create(GlobalCss::class);
+        $globalCss = new GlobalCss;
         $globalCss->update();
 
         return true;
@@ -178,7 +188,7 @@ class Schemes
 
     /**
      * @param Ajax $ajax
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Exception
      */
     public function registerAjaxActions(Ajax $ajax)
     {
@@ -190,34 +200,25 @@ class Schemes
      */
     public static function getEnabledSchemes()
     {
-        if (null === self::$_enabled_schemes) {
+        if (null === self::$enabledSchemes) {
             $enabled_schemes = [];
 
-            foreach (self::$_schemes_types as $schemes_type => $scheme_class) {
+            foreach (self::$schemesTypes as $schemes_type) {
                 $enabled_schemes[] = $schemes_type;
             }
-            $enabled_schemes = Hooks::applyFilters('pagebuilder/schemes/enabled_schemes', $enabled_schemes);
+            $enabled_schemes = HooksHelper::applyFilters('pagebuilder/schemes/enabled_schemes', $enabled_schemes);
 
-            self::$_enabled_schemes = $enabled_schemes;
+            self::$enabledSchemes = $enabled_schemes;
         }
-        return self::$_enabled_schemes;
+        return self::$enabledSchemes;
     }
 
-    /**
-     * Schemes constructor.
-     * @param Color $color
-     * @param Typography $typography
-     * @param ColorPicker $colorPicker
-     */
-    public function __construct(
-        Color $color,
-        Typography $typography,
-        ColorPicker $colorPicker
-    ) {
-        $this->_registered_schemes[ $color::getType() ] = $color;
-        $this->_registered_schemes[ $typography::getType() ] = $typography;
-        $this->_registered_schemes[ $colorPicker::getType() ] = $colorPicker;
 
-        Hooks::addAction('pagebuilder/ajax/register_actions', [ $this,'registerAjaxActions' ]);
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        HooksHelper::addAction('pagebuilder/ajax/register_actions', [ $this,'registerAjaxActions' ]);
     }
 }

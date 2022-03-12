@@ -9,50 +9,22 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Elements;
 
 use Goomento\PageBuilder\Builder\Base\ControlsStack;
-use Goomento\PageBuilder\Builder\Base\Element;
-use Goomento\PageBuilder\Builder\Controls\Groups\Background;
-use Goomento\PageBuilder\Builder\Controls\Groups\Border;
-use Goomento\PageBuilder\Builder\Controls\Groups\BoxShadow;
-use Goomento\PageBuilder\Builder\Controls\Groups\CssFilter;
+use Goomento\PageBuilder\Builder\Base\AbstractElement;
+use Goomento\PageBuilder\Builder\Controls\Groups\BackgroundGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\BorderGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\BoxShadowGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\CssFilterGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Elements;
 use Goomento\PageBuilder\Builder\Managers\Schemes;
 use Goomento\PageBuilder\Builder\Managers\Widgets;
 use Goomento\PageBuilder\Builder\Schemes\Color;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
-/**
- * Class Column
- * @package Goomento\PageBuilder\Builder\Elements
- */
-class Column extends Element
+class Column extends AbstractElement
 {
-
-    /**
-     * Get column name.
-     *
-     * Retrieve the column name.
-     *
-     *
-     * @return string Column name.
-     */
-    public function getName()
-    {
-        return 'column';
-    }
-
-    /**
-     * Get element type.
-     *
-     * Retrieve the element type, in this case `column`.
-     *
-     *
-     * @return string The type.
-     */
-    public static function getType()
-    {
-        return 'column';
-    }
+    const TYPE = 'column';
+    const NAME = 'column';
 
     /**
      * Get column title.
@@ -119,7 +91,7 @@ class Column extends Element
             ]
         );
 
-        // Element Name for the Navigator
+        // AbstractElement Name for the Navigator
         $this->addControl(
             '_title',
             [
@@ -177,7 +149,6 @@ class Column extends Element
                     'bottom' => 'flex-end',
                 ],
                 'selectors' => [
-                    // TODO: The following line is for BC since 2.7.0
                     '.gmt-bc-flex-widget {{WRAPPER}}.gmt-column .gmt-column-wrap' => 'align-items: {{VALUE}}',
                     // This specificity is intended to make sure column css overwrites section css on vertical alignment (content_position)
                     '{{WRAPPER}}.gmt-column.gmt-element[data-element_type="column"] > .gmt-column-wrap.gmt-element-populated > .gmt-widget-wrap' => 'align-content: {{VALUE}}; align-items: {{VALUE}};',
@@ -263,7 +234,7 @@ class Column extends Element
         );
 
         $this->addGroupControl(
-            Background::getType(),
+            BackgroundGroup::NAME,
             [
                 'name' => 'background',
                 'types' => [ 'classic', 'gradient', 'slideshow' ],
@@ -286,7 +257,7 @@ class Column extends Element
         );
 
         $this->addGroupControl(
-            Background::getType(),
+            BackgroundGroup::NAME,
             [
                 'name' => 'background_hover',
                 'selector' => '{{WRAPPER}}:hover > .gmt-element-populated',
@@ -340,7 +311,7 @@ class Column extends Element
         );
 
         $this->addGroupControl(
-            Background::getType(),
+            BackgroundGroup::NAME,
             [
                 'name' => 'background_overlay',
                 'selector' => '{{WRAPPER}} > .gmt-element-populated >  .gmt-background-overlay',
@@ -371,7 +342,7 @@ class Column extends Element
         );
 
         $this->addGroupControl(
-            CssFilter::getType(),
+            CssFilterGroup::NAME,
             [
                 'name' => 'css_filters',
                 'selector' => '{{WRAPPER}} > .gmt-element-populated >  .gmt-background-overlay',
@@ -411,7 +382,7 @@ class Column extends Element
         );
 
         $this->addGroupControl(
-            Background::getType(),
+            BackgroundGroup::NAME,
             [
                 'name' => 'background_overlay_hover',
                 'selector' => '{{WRAPPER}}:hover > .gmt-element-populated >  .gmt-background-overlay',
@@ -442,7 +413,7 @@ class Column extends Element
         );
 
         $this->addGroupControl(
-            CssFilter::getType(),
+            CssFilterGroup::NAME,
             [
                 'name' => 'css_filters_hover',
                 'selector' => '{{WRAPPER}}:hover > .gmt-element-populated >  .gmt-background-overlay',
@@ -492,7 +463,7 @@ class Column extends Element
         );
 
         $this->addGroupControl(
-            Border::getType(),
+            BorderGroup::NAME,
             [
                 'name' => 'border',
                 'selector' => '{{WRAPPER}} > .gmt-element-populated',
@@ -512,7 +483,7 @@ class Column extends Element
         );
 
         $this->addGroupControl(
-            BoxShadow::getType(),
+            BoxShadowGroup::NAME,
             [
                 'name' => 'box_shadow',
                 'selector' => '{{WRAPPER}} > .gmt-element-populated',
@@ -529,7 +500,7 @@ class Column extends Element
         );
 
         $this->addGroupControl(
-            Border::getType(),
+            BorderGroup::NAME,
             [
                 'name' => 'border_hover',
                 'selector' => '{{WRAPPER}}:hover > .gmt-element-populated',
@@ -549,7 +520,7 @@ class Column extends Element
         );
 
         $this->addGroupControl(
-            BoxShadow::getType(),
+            BoxShadowGroup::NAME,
             [
                 'name' => 'box_shadow_hover',
                 'selector' => '{{WRAPPER}}:hover > .gmt-element-populated',
@@ -609,7 +580,7 @@ class Column extends Element
             ]
         );
 
-        if (in_array(Color::getType(), Schemes::getEnabledSchemes(), true)) {
+        if (in_array(Color::NAME, Schemes::getEnabledSchemes(), true)) {
             $this->addControl(
                 'colors_warning',
                 [
@@ -775,7 +746,6 @@ class Column extends Element
             ]
         );
 
-        // TODO: Backward comparability for deprecated controls
         $this->addControl(
             'screen_sm',
             [
@@ -908,7 +878,7 @@ class Column extends Element
 
         $this->endControlsSection();
 
-        StaticObjectManager::get(Controls::class)->addCustomCssControls($this);
+        Controls::addExtendControls($this);
     }
 
     /**
@@ -1020,11 +990,11 @@ class Column extends Element
     {
         if ('section' === $element_data['elType']) {
             /** @var Elements $elements */
-            $elements = StaticObjectManager::get(Elements::class);
+            $elements = ObjectManagerHelper::get(Elements::class);
             return $elements->getElementTypes('section');
         }
         /** @var Widgets $widgets */
-        $widgets = StaticObjectManager::get(Widgets::class);
+        $widgets = ObjectManagerHelper::get(Widgets::class);
         return $widgets->getWidgetTypes($element_data['widgetType']);
     }
 

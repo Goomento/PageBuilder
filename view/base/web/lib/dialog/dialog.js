@@ -116,7 +116,7 @@
 	};
 
 	/*
-	 * Widget types constructor
+	 * AbstractWidget types constructor
 	 */
 	DialogsManager.Widget = function(widgetName) {
 

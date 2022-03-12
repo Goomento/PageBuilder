@@ -12,10 +12,6 @@ use Magento\Framework\App\Cache\StateInterface;
 use Magento\Framework\App\CacheInterface;
 use Goomento\PageBuilder\Model\Cache\Type\PageBuilder;
 
-/**
- * Class Cache
- * @package Goomento\PageBuilder\Model
- */
 class Cache
 {
     const DEFAULT_LIFE_TIME = 86400; // 01 day
@@ -46,13 +42,21 @@ class Cache
     }
 
     /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
      * @param string $identifier
      * @return mixed|string|null
      */
     public function load(string $identifier)
     {
         if (!$this->enabled) {
-            return false;
+            return null;
         }
         $data = $this->cache->load($this->getCacheKey($identifier));
         return $this->unSerializer($data);
@@ -68,7 +72,7 @@ class Cache
     public function save($data, $identifier, $tags = [self::CACHE_TAG], $lifeTime = null)
     {
         if (!$this->enabled) {
-            return false;
+            return null;
         }
 
         if (is_numeric($tags) && is_null($lifeTime)) {
@@ -86,7 +90,7 @@ class Cache
     public function remove($identifier)
     {
         if (!$this->enabled) {
-            return false;
+            return null;
         }
 
         return $this->cache->remove(
@@ -101,7 +105,7 @@ class Cache
     public function clean($tags = [self::CACHE_TAG])
     {
         if (!$this->enabled) {
-            return false;
+            return null;
         }
         return $this->cache->clean(\Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG, (array) $tags);
     }

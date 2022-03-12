@@ -8,12 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Schemes;
 
-/**
- * Class ColorPicker
- * @package Goomento\PageBuilder\Builder\Schemes
- */
 class ColorPicker extends Color
 {
+    const NAME = 'color-picker';
 
     /**
      * 5th color scheme.
@@ -34,19 +31,6 @@ class ColorPicker extends Color
      * 9th color scheme.
      */
     const COLOR_8 = '8';
-
-    /**
-     * Get color picker scheme type.
-     *
-     * Retrieve the color picker scheme type.
-     *
-     *
-     * @return string Color picker scheme type.
-     */
-    public static function getType()
-    {
-        return 'color-picker';
-    }
 
     /**
      * Get color picker scheme description.
@@ -75,7 +59,7 @@ class ColorPicker extends Color
         return array_replace(
             parent::getDefaultScheme(),
             [
-                self::COLOR_5 => '#1979c3',
+                self::COLOR_5 => '#5b95c1',
                 self::COLOR_6 => '#23a455',
                 self::COLOR_7 => '#000',
                 self::COLOR_8 => '#fff',
@@ -183,7 +167,7 @@ class ColorPicker extends Color
      * Retrieve the system color picker schemes
      *
      *
-     * @return string The system color picker schemes.
+     * @return array The system color picker schemes.
      */
     protected function _getSystemSchemesToPrint()
     {

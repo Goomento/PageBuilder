@@ -8,31 +8,26 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model;
 
-use Goomento\PageBuilder\Builder\TemplateLibrary\Manager;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
+use Goomento\PageBuilder\Builder\Managers\Sources;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Api\ContentImportProcessorInterface;
 use Magento\Framework\Exception\LocalizedException;
 
-
-/**
- * Class ContentImportProcessor
- * @package Goomento\PageBuilder\Model
- */
 class ContentImportProcessor implements ContentImportProcessorInterface
 {
     /**
-     * @var Manager|null
+     * @var Sources|null
      */
     protected $documentsManager = null;
 
     /**
-     * @return Manager|object
+     * @return Sources|object
      */
     protected function getDocumentsManager()
     {
         if (is_null($this->documentsManager)) {
-            $this->documentsManager = StaticObjectManager::get(
-                Manager::class
+            $this->documentsManager = ObjectManagerHelper::get(
+                Sources::class
             );
         }
         return $this->documentsManager;

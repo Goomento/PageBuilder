@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Ui\Component\Listing\Column\Content;
 
-use Goomento\PageBuilder\Helper\StaticAuthorization;
-use Goomento\PageBuilder\Helper\StaticUrlBuilder;
+use Goomento\PageBuilder\Helper\AuthorizationHelper;
+use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Escaper;
 use Magento\Framework\UrlInterface;
@@ -17,10 +17,6 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
 
-/**
- * Class PageActions
- * @package Goomento\PageBuilder\Ui\Component\Listing\Column\Content
- */
 class PageActions extends Column
 {
     /**
@@ -61,9 +57,9 @@ class PageActions extends Column
                 if (isset($item['content_id'])) {
                     $type = (string) $item['type'];
 
-                    if (StaticAuthorization::isCurrentUserCan($type)) {
+                    if (AuthorizationHelper::isCurrentUserCan($type)) {
 
-                        if (StaticAuthorization::isCurrentUserCan($type . '_view')) {
+                        if (AuthorizationHelper::isCurrentUserCan($type . '_view')) {
                             $item[$name]['edit'] = [
                                 'href' => $this->urlBuilder->getUrl(
                                     'pagebuilder/content/edit',
@@ -82,16 +78,16 @@ class PageActions extends Column
                                         'type' => $type,
                                     ]
                                 ),
-                                'label' => __('Page Builder')
+                                'label' => __('Editor')
                             ];
                             $item[$name]['view'] = [
-                                'href' => StaticUrlBuilder::getContentViewUrl($item['content_id']),
+                                'href' => UrlBuilderHelper::getContentViewUrl($item['content_id']),
                                 'label' => __('View'),
                                 'target' => '_blank'
                             ];
                         }
 
-                        if (StaticAuthorization::isCurrentUserCan($type . '_export') === true) {
+                        if (AuthorizationHelper::isCurrentUserCan($type . '_export') === true) {
                             $item[$name]['export'] = [
                                 'href' => $this->urlBuilder->getUrl(
                                     'pagebuilder/content/export',
@@ -104,7 +100,7 @@ class PageActions extends Column
                             ];
                         }
 
-                        if (StaticAuthorization::isCurrentUserCan($type . '_delete') === true) {
+                        if (AuthorizationHelper::isCurrentUserCan($type . '_delete') === true) {
                             $title = $this->getEscaper()->escapeHtml($item['title']);
                             $item[$name]['delete'] = [
                                 'href' => $this->urlBuilder->getUrl(

@@ -6,12 +6,12 @@
 
 declare(strict_types=1);
 
-use Goomento\PageBuilder\Builder\Controls\Groups\Typography;
+use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Fonts;
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Core\Responsive\Responsive;
-use Goomento\PageBuilder\Helper\StaticEscaper;
-use Goomento\PageBuilder\Helper\StaticObjectManager;
+use Goomento\PageBuilder\Configuration;
+use Goomento\PageBuilder\Helper\EscaperHelper;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 ?>
 <script type="text/template" id="tmpl-gmt-panel">
@@ -48,31 +48,31 @@ use Goomento\PageBuilder\Helper\StaticObjectManager;
 
 <script type="text/template" id="tmpl-gmt-panel-header">
 	<div id="gmt-panel-header-menu-button" class="gmt-header-button">
-		<i class="gmt-icon fa fa-bars tooltip-target" aria-hidden="true" data-tooltip="<?= StaticEscaper::escapeHtml('Menu'); ?>"></i>
+		<i class="gmt-icon fa fa-bars tooltip-target" aria-hidden="true" data-tooltip="<?= __('Menu'); ?>"></i>
 		<span class="gmt-screen-only"><?= __( 'Menu' ); ?></span>
 	</div>
 	<div id="gmt-panel-header-title"></div>
 	<div id="gmt-panel-header-add-button" class="gmt-header-button">
-		<i class="gmt-icon goomento-logo-white tooltip-target" aria-hidden="true" data-tooltip="<?= StaticEscaper::escapeHtml('Widgets Panel'); ?>"></i>
+		<i class="gmt-icon goomento-logo-white tooltip-target" aria-hidden="true" data-tooltip="<?= __('Widgets Panel'); ?>"></i>
 		<span class="gmt-screen-only"><?= __( 'Widgets Panel' ); ?></span>
 	</div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-footer-content">
-	<div id="gmt-panel-footer-settings" class="gmt-panel-footer-tool gmt-leave-open tooltip-target" data-tooltip="<?= StaticEscaper::escapeHtml('Settings'); ?>">
+	<div id="gmt-panel-footer-settings" class="gmt-panel-footer-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('Settings'); ?>">
 		<i class="fas fa-cog" aria-hidden="true"></i>
-		<span class="gmt-screen-only"><?php printf( __( '%s Settings' ), '' ); ?></span>
+		<span class="gmt-screen-only"><?php printf( '%s Settings', '' ); ?></span>
 	</div>
-	<div id="gmt-panel-footer-navigator" class="gmt-panel-footer-tool tooltip-target" data-tooltip="<?= StaticEscaper::escapeHtml('Navigator'); ?>">
+	<div id="gmt-panel-footer-navigator" class="gmt-panel-footer-tool tooltip-target" data-tooltip="<?= __('Navigator') ?>">
 		<i class="fas fa-location-arrow" aria-hidden="true"></i>
 		<span class="gmt-screen-only"><?= __( 'Navigator' ); ?></span>
 	</div>
-	<div id="gmt-panel-footer-history" class="gmt-panel-footer-tool gmt-leave-open tooltip-target" data-tooltip="<?= StaticEscaper::escapeHtml('History'); ?>">
+	<div id="gmt-panel-footer-history" class="gmt-panel-footer-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('History'); ?>">
 		<i class="fas fa-history" aria-hidden="true"></i>
 		<span class="gmt-screen-only"><?= __( 'History' ); ?></span>
 	</div>
 	<div id="gmt-panel-footer-responsive" class="gmt-panel-footer-tool gmt-toggle-state">
-		<i class="fas fa-desktop tooltip-target" aria-hidden="true" data-tooltip="<?= StaticEscaper::escapeHtml('Responsive Mode'); ?>"></i>
+		<i class="fas fa-desktop tooltip-target" aria-hidden="true" data-tooltip="<?= __('Responsive Mode'); ?>"></i>
 		<span class="gmt-screen-only">
 			<?= __( 'Responsive Mode' ); ?>
 		</span>
@@ -86,7 +86,7 @@ use Goomento\PageBuilder\Helper\StaticObjectManager;
 				<div class="gmt-panel-footer-sub-menu-item" data-device-mode="tablet">
 					<i class="gmt-icon fa fa-tablet" aria-hidden="true"></i>
 					<span class="gmt-title"><?= __( 'Tablet' ); ?></span>
-					<?php $breakpoints = Responsive::getBreakpoints(); ?>
+					<?php $breakpoints = Configuration::DEFAULT_BREAKPOINTS ?>
 					<span class="gmt-description"><?= __( 'Preview for %1', $breakpoints['md'] . 'px'); ?></span>
 				</div>
 				<div class="gmt-panel-footer-sub-menu-item" data-device-mode="mobile">
@@ -97,7 +97,7 @@ use Goomento\PageBuilder\Helper\StaticObjectManager;
 			</div>
 		</div>
 	</div>
-	<div id="gmt-panel-footer-saver-preview" class="gmt-panel-footer-tool tooltip-target" data-tooltip="<?= StaticEscaper::escapeHtml('Preview Changes'); ?>">
+	<div id="gmt-panel-footer-saver-preview" class="gmt-panel-footer-tool tooltip-target" data-tooltip="<?= __('Preview Changes'); ?>">
 		<span id="gmt-panel-footer-saver-preview-label">
 			<i class="fas fa-eye" aria-hidden="true"></i>
 			<span class="gmt-screen-only"><?= __( 'Preview Changes' ); ?></span>
@@ -114,7 +114,7 @@ use Goomento\PageBuilder\Helper\StaticObjectManager;
 		</button>
 	</div>
 	<div id="gmt-panel-footer-saver-options" class="gmt-panel-footer-tool gmt-toggle-state">
-		<button id="gmt-panel-saver-button-save-options" class="gmt-button gmt-button-success tooltip-target gmt-disabled" data-tooltip="<?= StaticEscaper::escapeHtml('Save Options'); ?>">
+		<button id="gmt-panel-saver-button-save-options" class="gmt-button gmt-button-success tooltip-target gmt-disabled" data-tooltip="<?= __('Save Options'); ?>">
 			<i class="fas fa-caret-up" aria-hidden="true"></i>
 			<span class="gmt-screen-only"><?= __( 'Save Options' ); ?></span>
 		</button>
@@ -140,7 +140,7 @@ use Goomento\PageBuilder\Helper\StaticObjectManager;
 <script type="text/template" id="tmpl-gmt-mode-switcher-content">
 	<input id="gmt-mode-switcher-preview-input" type="checkbox">
 	<label for="gmt-mode-switcher-preview-input" id="gmt-mode-switcher-preview">
-		<i class="gmt-icon" aria-hidden="true" title="<?= StaticEscaper::escapeHtml('Hide Panel'); ?>"></i>
+		<i class="gmt-icon" aria-hidden="true" title="<?= __('Hide Panel'); ?>"></i>
 		<span class="gmt-screen-only"><?= __( 'Hide Panel' ); ?></span>
 	</label>
 </script>
@@ -172,7 +172,7 @@ use Goomento\PageBuilder\Helper\StaticObjectManager;
 <script type="text/template" id="tmpl-gmt-panel-schemes-disabled">
 	<i class="gmt-nerd-box-icon fas fa-glasses" aria-hidden="true"></i>
 	<div class="gmt-nerd-box-title">{{{ '<?= __( "%s are disabled" ); ?>'.replace( '%s', disabledTitle ) }}}</div>
-	<div class="gmt-nerd-box-message"><?php printf( __( 'You can enable it from the <a href="%s" target="_blank">Goomento settings page</a>.' ), '' ); ?></div>
+	<div class="gmt-nerd-box-message">You can enable it from the <a href="%s" target="_blank">Goomento settings page.</a></div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-scheme-color-item">
@@ -191,9 +191,9 @@ use Goomento\PageBuilder\Helper\StaticObjectManager;
 	</div>
 	<div class="gmt-panel-scheme-typography-items gmt-panel-box-content">
 		<?php
-		$scheme_fields_keys = Typography::getSchemeFieldsKeys();
+		$scheme_fields_keys = TypographyGroup::getSchemeFieldsKeys();
 
-		$typography_group = StaticObjectManager::get(Controls::class)->getControlGroups( 'typography' );
+		$typography_group = ObjectManagerHelper::get(Controls::class)->getControlGroups( 'typography' );
 		$typography_fields = $typography_group->getFields();
 
 		$scheme_fields = array_intersect_key( $typography_fields, array_flip( $scheme_fields_keys ) );
@@ -204,24 +204,24 @@ use Goomento\PageBuilder\Helper\StaticObjectManager;
 				<div class="gmt-panel-scheme-item-title gmt-control-title"><?= $option['label']; ?></div>
 				<div class="gmt-panel-scheme-typography-item-value">
 					<?php if ( 'select' === $option['type'] ) : ?>
-						<select name="<?= StaticEscaper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field">
+						<select name="<?= EscaperHelper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field">
 							<?php foreach ( $option['options'] as $field_key => $field_value ) : ?>
-								<option value="<?= StaticEscaper::escapeHtml($field_key); ?>"><?= $field_value; ?></option>
+								<option value="<?= EscaperHelper::escapeHtml($field_key); ?>"><?= $field_value; ?></option>
 							<?php endforeach; ?>
 						</select>
 					<?php elseif ( 'font' === $option['type'] ) : ?>
-						<select name="<?= StaticEscaper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field">
+						<select name="<?= EscaperHelper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field">
 							<option value=""><?= __( 'Default' ); ?></option>
 							<?php foreach ( Fonts::getFontGroups() as $group_type => $group_label ) : ?>
-								<optgroup label="<?= StaticEscaper::escapeHtml($group_label); ?>">
+								<optgroup label="<?= EscaperHelper::escapeHtml($group_label); ?>">
 									<?php foreach ( Fonts::getFontsByGroups( [ $group_type ] ) as $font_title => $font_type ) : ?>
-										<option value="<?= StaticEscaper::escapeHtml($font_title); ?>"><?= $font_title; ?></option>
+										<option value="<?= EscaperHelper::escapeHtml($font_title); ?>"><?= $font_title; ?></option>
 									<?php endforeach; ?>
 								</optgroup>
 							<?php endforeach; ?>
 						</select>
 					<?php elseif ( 'text' === $option['type'] ) : ?>
-						<input name="<?= StaticEscaper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field" />
+						<input name="<?= EscaperHelper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field" />
 					<?php endif; ?>
 				</div>
 			</div>

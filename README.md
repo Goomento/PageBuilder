@@ -1,4 +1,4 @@
-![Goomento Page Builder - Drag and Drop](https://i.imgur.com/pR0pLoA.png)
+![Goomento Page Builder - Drag and Drop](https://i.imgur.com/spx4d9u.png)
 
 # Goomento **Page Builder**, a free drag and drop toolkit that supports to create custom pages, landing pages, blocks and store designs without writing a line of code
 
@@ -18,13 +18,6 @@ php bin/magento module:enable Goomento_PageBuilder
 php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy
 ```
-For more functionalities (Eg: Slider, Banner, Audio, Products ...), check this out 
-**[Goomento BuilderWidgets](https://github.com/Goomento/BuilderWidgets)** or run this command to install in short:
-
-```
-composer require goomento/module-builder-widgets
-```
-
 ## 2. Configuration
 
 To display Goomento Page Builder content on storefront, enable module in
@@ -48,12 +41,12 @@ Change to **Yes** to enable module on storefront.
 
 ## 4. Design concept
 
-#### Goomento Page Builder will overwrite the main content of these Magento entities:
+#### 4.1 Goomento Page Builder will overwrite the main content of these Magento entities:
 
 - Cms Page
 - Cms Block
-- Catalog Product
-- Catalog Category
+
+#### 4.2 Goomento is using [Font Awesome Free 5.9.0](https://fontawesome.com/) for Icon displaying.
 
 ## 5. How to use
 
@@ -65,8 +58,6 @@ Check this [Wiki page](https://github.com/Goomento/PageBuilder/wiki/How-To-Use) 
 
 - Widget (The piece of your page, Eg: Image, Text, Banner, Video, Audio ...)
 - Control (The place where you define data type and behavior, Eg: Image selector, Text input field ...)
-
-Check this [Wiki page](https://github.com/Goomento/PageBuilder/wiki/Personalize) for more detail
 
 ## 7. Troubleshoot
 
@@ -96,7 +87,9 @@ Something else? Contact us: [store.goomento@gmail.com](mailto:store.goomento@gma
 
 ## 8. Version compatible
 
-Magento: 2.3.x, 2.4.x
+magento Community Edition (CE): 2.3.x, 2.4.x
+
+Magento Enterprise Edition (EE): 2.3.x, 2.4.x
 
 ## 9. Changelog
 

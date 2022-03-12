@@ -8,16 +8,11 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Controller\Adminhtml\Manage;
 
-
 use Exception;
 use Goomento\PageBuilder\Model\Config;
 use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Class GlobalCss
- * @package Goomento\PageBuilder\Controller\Adminhtml\Manage
- */
 class GlobalCss extends AbstractManage
 {
     /**
@@ -38,7 +33,7 @@ class GlobalCss extends AbstractManage
                 $this->config->setOption(Config::CUSTOM_CSS, $data['custom_css']);
             }
 
-            $this->contentManagement->refreshGlobalCache();
+            $this->contentManagement->refreshGlobalAssets();
 
             $this->messageManager->addSuccessMessage(__('Global.css saved.'));
         } catch (LocalizedException $e) {

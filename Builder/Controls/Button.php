@@ -8,25 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-/**
- * Class Button
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Button extends BaseUi
+class Button extends AbstractControlUi
 {
-
-    /**
-     * Get button control type.
-     *
-     * Retrieve the control type, in this case `button`.
-     *
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'button';
-    }
+    const NAME = 'button';
 
     /**
      * Get button control default settings.

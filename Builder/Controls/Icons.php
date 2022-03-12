@@ -8,26 +8,12 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Core\DynamicTags\Module as TagsModule;
+use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
 
-/**
- * Class Icons
- * @package Goomento\PageBuilder\Builder\Controls
- */
-class Icons extends BaseMultiple
+class Icons extends AbstractBaseMultiple
 {
 
-    /**
-     * Get media control type.
-     *
-     * Retrieve the control type, in this case `media`.
-     *
-     * @return string Control type.
-     */
-    public function getType()
-    {
-        return 'icons';
-    }
+    const NAME = 'icons';
 
     /**
      * Get Icons control default values.
@@ -37,7 +23,7 @@ class Icons extends BaseMultiple
      *
      * @return array Control default value.
      */
-    public function getDefaultValue()
+    public static function getDefaultValue()
     {
         return [
             'value'   => '',

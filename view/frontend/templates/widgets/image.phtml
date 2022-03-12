@@ -1,0 +1,75 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
+use Goomento\PageBuilder\Builder\Modules\Editor;
+use Goomento\PageBuilder\Builder\Widgets\Image;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Magento\Framework\Escaper;
+
+/**
+ * @var Widget $block
+ * @var Escaper $escaper
+ * @var Image $widget
+ */
+$widget = $block->getWidget();
+
+$settings = $widget->getSettingsForDisplay();
+if (empty($settings['image']['url'])) {
+    return;
+}
+
+$has_caption = $widget->hasCaption($settings);
+
+$widget->addRenderAttribute('wrapper', 'class', 'gmt-image');
+
+if (!empty($settings['shape'])) {
+    $widget->addRenderAttribute('wrapper', 'class', 'gmt-image-shape-' . $settings['shape']);
+}
+
+$link = $widget->getLinkUrl($settings);
+
+if ($link) {
+    $widget->addRenderAttribute('link', [
+        'href' => $link['url'],
+        'data-gmt-open-lightbox' => $settings['open_lightbox'],
+    ]);
+
+    if (ObjectManagerHelper::get(Editor::class)->isEditMode()) {
+        $widget->addRenderAttribute('link', [
+            'class' => 'gmt-clickable',
+        ]);
+    }
+
+    if (!empty($link['is_external'])) {
+        $widget->addRenderAttribute('link', 'target', '_blank');
+    }
+
+    if (!empty($link['nofollow'])) {
+        $widget->addRenderAttribute('link', 'rel', 'nofollow');
+    }
+} ?>
+<div <?= $widget->getRenderAttributeString('wrapper'); ?>>
+    <?php if ($has_caption) : ?>
+    <figure class="gmt-caption">
+        <?php endif; ?>
+        <?php if ($link) : ?>
+        <a <?= $widget->getRenderAttributeString('link'); ?>>
+            <?php endif; ?>
+            <?= ImageSizeGroup::getAttachmentImageHtml($settings); ?>
+            <?php if ($link) : ?>
+        </a>
+    <?php endif; ?>
+        <?php if ($has_caption) : ?>
+            <figcaption class="widget-image-caption image-caption-text"><?= $widget->getCaption($settings); ?></figcaption>
+        <?php endif; ?>
+        <?php if ($has_caption) : ?>
+    </figure>
+<?php endif; ?>
+</div>

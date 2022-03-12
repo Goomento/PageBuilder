@@ -14,10 +14,6 @@ use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
 use Goomento\PageBuilder\Model\ContentRelation;
 
-/**
- * Class PageBuilder
- * @package Goomento\PageBuilder\Ui\Component\Listing\Column\Cms
- */
 class PageBuilder extends Column
 {
 

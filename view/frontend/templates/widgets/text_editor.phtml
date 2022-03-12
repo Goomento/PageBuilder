@@ -1,0 +1,20 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+
+/**
+ * @var Widget $block
+ */
+$widget = $block->getWidget();
+$html = $widget->getSettingsForDisplay('text-editor_editor');
+
+$widget->addRenderAttribute('editor', 'class', [ 'gmt-text-editor', 'gmt-clearfix' ]);
+
+$widget->addInlineEditingAttributes('editor', 'advanced'); ?>
+<div <?= $widget->getRenderAttributeString('editor'); ?>><?= /** @noEscape */ $html; ?></div>

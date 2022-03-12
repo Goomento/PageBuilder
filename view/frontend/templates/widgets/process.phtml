@@ -1,0 +1,60 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Helper\DataHelper;
+use Magento\Framework\Escaper;
+
+/**
+ * @var Widget $block
+ * @var Escaper $escaper
+ */
+$widget = $block->getWidget();
+$settings = $widget->getSettingsForDisplay();
+
+$progress_percentage = is_numeric($settings['progress_percent']['size']) ? $settings['progress_percent']['size'] : '0';
+if (100 < $progress_percentage) {
+    $progress_percentage = 100;
+}
+
+$widget->addRenderAttribute('wrapper', [
+    'class' => 'gmt-progress-wrapper',
+    'role' => 'progressbar',
+    'aria-valuemin' => '0',
+    'aria-valuemax' => '100',
+    'aria-valuenow' => $progress_percentage,
+    'aria-valuetext' => $settings['progress_inner_text'],
+]);
+
+if (!empty($settings['progress_type'])) {
+    $widget->addRenderAttribute('wrapper', 'class', 'progress-' . $settings['progress_type']);
+}
+
+$widget->addRenderAttribute('progress-bar', [
+    'class' => 'gmt-progress-bar',
+    'data-max' => $progress_percentage,
+]);
+
+$widget->addRenderAttribute('inner_text', [
+    'class' => 'gmt-progress-text',
+]);
+
+$widget->addInlineEditingAttributes('inner_text');
+
+if (!DataHelper::isEmpty($settings['progress_title'])) { ?>
+    <span class="gmt-title"><?= $settings['progress_title']; ?></span>
+<?php } ?>
+
+<div <?= $widget->getRenderAttributeString('wrapper'); ?>>
+    <div <?= $widget->getRenderAttributeString('progress-bar'); ?>>
+        <span <?= $widget->getRenderAttributeString('inner_text'); ?>><?= $settings['progress_inner_text']; ?></span>
+        <?php if ('hide' !== $settings['progress_display_percentage']) { ?>
+            <span class="gmt-progress-percentage"><?= $progress_percentage; ?>%</span>
+        <?php } ?>
+    </div>
+</div>

@@ -12,10 +12,6 @@ use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\Data\OptionSourceInterface;
 
-/**
- * Class Sections
- * @package Goomento\PageBuilder\Model\Content\Source
- */
 class Sections implements OptionSourceInterface
 {
     /**

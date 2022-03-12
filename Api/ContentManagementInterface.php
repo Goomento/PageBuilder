@@ -10,14 +10,10 @@ namespace Goomento\PageBuilder\Api;
 
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Interface ContentManagementInterface
- * @package Goomento\PageBuilder\Api
- */
 interface ContentManagementInterface
 {
     /**
-     * @return Data\RevisionInterface
+     * @return Data\RevisionInterface|null
      * @throws LocalizedException
      */
     public function createRevision(Data\ContentInterface $content, $status = Data\RevisionInterface::STATUS_REVISION);
@@ -40,10 +36,10 @@ interface ContentManagementInterface
      * @param Data\ContentInterface $content
      * @return mixed
      */
-    public function refreshContentCache(Data\ContentInterface $content);
+    public function refreshContentAssets(Data\ContentInterface $content);
 
     /**
      * @return mixed
      */
-    public function refreshGlobalCache();
+    public function refreshGlobalAssets();
 }

@@ -8,10 +8,6 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder;
 
-/**
- * Interface BuildableInterface
- * @package Goomento\PageBuilder
- */
 interface BuildableInterface
 {
     /**

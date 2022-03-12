@@ -13,10 +13,6 @@ use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * Class AbstractExport
- * @package Goomento\PageBuilder\Controller\Adminhtml\Content
- */
 class Export extends AbstractContent implements HttpGetActionInterface
 {
     use TraitContent;

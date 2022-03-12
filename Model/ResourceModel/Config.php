@@ -8,14 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model\ResourceModel;
 
-
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
-/**
- * Class Config
- * @package Goomento\PageBuilder\Model\ResourceModel
- */
 class Config extends AbstractDb
 {
     /**

@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
 declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model;
@@ -13,14 +18,11 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Api\SortOrderBuilder;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 
-/**
- * Class RevisionRepository
- * @package Goomento\PageBuilder\Model
- */
 class RevisionRepository implements RevisionRepositoryInterface
 {
     /**
@@ -86,6 +88,7 @@ class RevisionRepository implements RevisionRepositoryInterface
     public function save(RevisionInterface $revision)
     {
         try {
+            $this->validateStatus($revision);
             $this->resource->save($revision);
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
@@ -94,6 +97,19 @@ class RevisionRepository implements RevisionRepositoryInterface
             );
         }
         return $revision;
+    }
+
+    /**
+     * @param RevisionInterface $revision
+     * @throws LocalizedException
+     */
+    private function validateStatus(RevisionInterface $revision)
+    {
+        if (!isset(Revision::getAvailableStatuses()[$revision->getStatus()])) {
+            throw new LocalizedException(
+                __('Invalid revision status: %1', $revision->getStatus())
+            );
+        }
     }
 
     /**
@@ -114,14 +130,21 @@ class RevisionRepository implements RevisionRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function getListByContentId(int $contentId)
+    public function getListByContentId(int $contentId, $statuses = null, $limit = null)
     {
         $this->searchCriteriaBuilder->addFilter(RevisionInterface::CONTENT_ID, $contentId);
+        $statuses = (array) $statuses;
+        if (!empty($statuses)) {
+            $this->searchCriteriaBuilder->addFilter(RevisionInterface::STATUS, ['in' => $statuses]);
+        }
         $sortOrder = $this->sortOrderBuilder->setField(RevisionInterface::REVISION_ID)->setDirection(
             SortOrder::SORT_DESC
         )->create();
         $this->searchCriteriaBuilder->setSortOrders([$sortOrder]);
         $searchCriteria = $this->searchCriteriaBuilder->create();
+        if (is_int($limit)) {
+            $searchCriteria->setPageSize($limit);
+        }
         return $this->getList($searchCriteria);
     }
 

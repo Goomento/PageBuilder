@@ -8,10 +8,6 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Block\Editor;
 
-/**
- * Class View
- * @package Goomento\PageBuilder\Block\Editor
- */
 class View extends Preview
 {
 }

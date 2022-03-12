@@ -9,12 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Block\Editor;
 
 use Goomento\PageBuilder\Block\Content;
-use Goomento\PageBuilder\Helper\StaticContent;
 
-/**
- * Class Preview
- * @package Goomento\PageBuilder\Block\Editor
- */
 class Preview extends Content
 {
     /**
