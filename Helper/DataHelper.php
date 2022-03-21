@@ -180,6 +180,7 @@ class DataHelper
     /**
      * @param $control_value
      * @return bool
+     * @deprecated
      */
     public static function isEmpty($control_value)
     {

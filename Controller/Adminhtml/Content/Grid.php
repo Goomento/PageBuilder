@@ -94,10 +94,6 @@ class Grid extends Action implements HttpGetActionInterface
         return [
             'active_menu' => 'Goomento_PageBuilder::' . $this->getContentType(),
             'title' => $type,
-            'breadcrumb' => [
-                [__('Pages'), $type],
-                [__('Manage %1', $type), __('Manage %1', $type)]
-            ],
             'handler' => $this->getContentLayoutName('grid')
         ];
     }

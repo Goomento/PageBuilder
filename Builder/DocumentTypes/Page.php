@@ -46,6 +46,15 @@ class Page extends AbstractDocumentType
             ],
         ]);
 
+        $page->addControl(
+            'layout_warning',
+            [
+                'type' => Controls::RAW_HTML,
+                'raw' => __('Note: The following layout only use for Preview purpose. For CMS content, use Magento layout instead.'),
+                'content_classes' => 'gmt-panel-alert gmt-panel-alert-warning',
+            ]
+        );
+
         $page->endInjection();
     }
 

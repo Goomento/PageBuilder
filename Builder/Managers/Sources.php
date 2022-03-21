@@ -336,6 +336,14 @@ class Sources
     }
 
     /**
+     * @return Local
+     */
+    public function getLocalSource() : Local
+    {
+        return $this->getSource(Local::NAME);
+    }
+
+    /**
      * Import template.
      *
      * Import template from a file.

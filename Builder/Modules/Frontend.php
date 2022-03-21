@@ -8,13 +8,10 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Modules;
 
-use Goomento\PageBuilder\Builder\Modules\Editor;
 use Goomento\PageBuilder\Builder\Fonts;
-use Goomento\PageBuilder\Builder\Preview;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Base\AbstractApp;
-use Goomento\PageBuilder\Builder\Managers\Documents;
-use Goomento\PageBuilder\Builder\Css\ContentCss as PostCss;
+use Goomento\PageBuilder\Builder\Css\ContentCss;
 use Goomento\PageBuilder\Builder\Css\GlobalCss;
 use Goomento\PageBuilder\Builder\Managers\Settings as SettingsManager;
 use Goomento\PageBuilder\Helper\HooksHelper;
@@ -24,8 +21,6 @@ use Goomento\PageBuilder\Helper\RequestHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
-use Goomento\PageBuilder\PageBuilder;
-use Magento\Framework\Exception\LocalizedException;
 
 class Frontend extends AbstractApp
 {
@@ -33,6 +28,8 @@ class Frontend extends AbstractApp
      * The priority of the content filter.
      */
     const THE_CONTENT_FILTER_PRIORITY = 9;
+
+    const NAME = 'frontend';
 
     /**
      * Fonts to enqueue
@@ -80,19 +77,6 @@ class Frontend extends AbstractApp
     }
 
     /**
-     * Get module name.
-     *
-     * Retrieve the module name.
-     *
-     *
-     * @return string AbstractModule name.
-     */
-    public function getName()
-    {
-        return 'frontend';
-    }
-
-    /**
      * Init.
      *
      * Initialize SagoTheme front end. Hooks the needed actions to run SagoTheme
@@ -114,20 +98,9 @@ class Frontend extends AbstractApp
 
         HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [ $this, 'enqueueStyles' ]);
 
-        HooksHelper::addAction('pagebuilder/frontend/footer', [ $this, 'printFontsLinks' ], 7);
+        // Add Global Fonts to Header & Footer
+        HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [ $this, 'printFontsLinks' ]);
         HooksHelper::addAction('pagebuilder/frontend/footer', [ $this, 'footer' ]);
-    }
-
-    /**
-     * @param string|array $class
-     */
-    public function addBodyClass($class)
-    {
-        if (is_array($class)) {
-            $this->body_classes = array_merge($this->body_classes, $class);
-        } else {
-            $this->body_classes[] = $class;
-        }
     }
 
     /**
@@ -623,9 +596,7 @@ class Frontend extends AbstractApp
      */
     public function getBuilderContent(int $contentId, $with_css = false)
     {
-        /** @var Documents $documentsManager */
-        $documentsManager = ObjectManagerHelper::get(Documents::class);
-        $document = $documentsManager->get($contentId);
+        $document = ObjectManagerHelper::getDocumentsManager()->get($contentId);
 
         $data = $document->getElementsData();
 
@@ -644,8 +615,7 @@ class Frontend extends AbstractApp
             return '';
         }
 
-        /** @var PostCss $css_file */
-        $css_file = ObjectManagerHelper::create(PostCss::class, ['contentId' => $document->getModel()->getId()]);
+        $css_file = new ContentCss($document->getModel()->getId());
 
         ob_start();
 
@@ -699,9 +669,7 @@ class Frontend extends AbstractApp
             ],
         ];
 
-        /** @var SettingsManager $settingsManager */
-        $settingsManager = ObjectManagerHelper::get(SettingsManager::class);
-        $settings['settings'] = $settingsManager->getSettingsFrontendConfig();
+        $settings['settings'] = ObjectManagerHelper::getSettingsManager()->getSettingsFrontendConfig();
 
         $empty_object = (object) [];
 

@@ -16,6 +16,7 @@ use Magento\Framework\View\LayoutInterface;
 /**
  * @see LayoutInterface::createBlock()
  * @method static BlockInterface createBlock($type, $name = '', array $arguments = [])
+ * @method static BlockInterface|false getBlock(string $name)
  */
 class LayoutHelper
 {

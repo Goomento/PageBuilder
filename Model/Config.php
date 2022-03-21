@@ -8,34 +8,40 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model;
 
+use Goomento\PageBuilder\Api\ConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Store\Model\Store;
 
-class Config
+class Config implements ConfigInterface
 {
     const CSS_UPDATED_TIME = 'css_updated_time';
-    const CUSTOM_CSS = 'custom_css';
-    const DEFAULT_STORE_ID = Store::DEFAULT_STORE_ID;
 
-    const CACHE_KEY = 'config_data';
+    const CUSTOM_CSS = 'custom_css';
+
+    const CACHE_KEY = 'pagebuilder_config_data';
 
     /**
-     * @var bool
+     * @var array
      */
     private $dataChanged = [];
 
+    /**
+     * @deprecated
+     * @var bool
+     */
     protected $loaded = false;
+
     /**
      * @var ResourceModel\Config
      */
     private $configResource;
 
     /**
-     * Eg: [path => [storeId => value]]
+     * Eg: [$store_id => [ $path => $value]]
      *
      * @var array
      */
-    private $config = [];
+    private $config = null;
+
     /**
      * @var Cache
      */
@@ -59,23 +65,24 @@ class Config
     }
 
     /**
-     * @throws LocalizedException
+     * Load all configs
      */
     private function loadAll()
     {
-        if ($this->loaded === false) {
-            $this->loaded = true;
+        if ($this->config === null) {
+            $this->config = [];
             $configs = $this->cache->load(self::CACHE_KEY);
-            if ($configs) {
+            if ($configs !== null) {
                 $this->config = $configs;
             } else {
                 $configs = $this->configResource->fetchAll();
                 if (!empty($configs)) {
                     foreach ($configs as $configData) {
                         $value = $configData['value'];
-                        $this->_setValue($configData['path'], $value, (int) $configData['store_id']);
-                        $this->dataChanged = false;
+                        $this->setConfigData($configData['path'], $value, (int) $configData['store_id']);
                     }
+
+                    $this->dataChanged = [];
                 }
             }
         }
@@ -87,76 +94,67 @@ class Config
      * @param int $storeId
      * @return $this
      */
-    private function _setValue($path, $value, int $storeId = self::DEFAULT_STORE_ID)
+    private function setConfigData($path, $value, int $storeId = self::DEFAULT_STORE_ID)
     {
-        if (!isset($this->config[$path])) {
-            $this->config[$path] = [];
+        if (!isset($this->config[$storeId])) {
+            $this->config[$storeId] = [];
         }
-        $originValue = $this->config[$path][$storeId] ?? null;
-        if ($originValue !== $value) {
-            if (!isset($this->dataChanged[$path])) {
-                $this->dataChanged[$path] = [];
+
+        if (!isset($this->config[$storeId][$path]) ||
+            (isset($this->config[$storeId][$path]) && $this->config[$storeId][$path] !== $value)) {
+            if (!isset($this->dataChanged[$storeId])) {
+                $this->dataChanged[$storeId] = [];
             }
-            $this->dataChanged[$path][$storeId] = $value;
+            $this->dataChanged[$storeId][$path] = $value;
+
+            $this->config[$storeId][$path] = $value;
         }
-        $this->config[$path][$storeId] = $value;
+
         return $this;
     }
 
 
     /**
-     * @param $path
-     * @param int $storeId
-     * @return mixed|null
-     * @throws LocalizedException
+     * @inheritDoc
      */
-    public function getValue($path,int $storeId = self::DEFAULT_STORE_ID)
+    public function getValue($path, int $storeId = self::DEFAULT_STORE_ID)
     {
         $this->loadAll();
-        $valueData = $this->config[$path] ?? [];
+        $storeData = $this->config[$storeId] ?? [];
         $value = null;
-        if (isset($valueData[$storeId])) {
-            $value = $valueData[$storeId];
-        } elseif ($storeId !== self::DEFAULT_STORE_ID && isset($valueData[self::DEFAULT_STORE_ID])) {
-            $value = $valueData[self::DEFAULT_STORE_ID];
+        if (isset($storeData[$path])) {
+            $value = $storeData[$path];
+        } elseif ($storeId !== self::DEFAULT_STORE_ID && isset($this->config[self::DEFAULT_STORE_ID][$path])) {
+            $value = $this->config[self::DEFAULT_STORE_ID][$path];
         }
         return $value;
     }
 
     /**
-     * @param $path
-     * @param $value
-     * @param int $storeId
-     * @return Config
-     * @throws LocalizedException
+     * @inheritDoc
      */
-    public function setValue($path, $value, int $storeId = self::DEFAULT_STORE_ID)
+    public function setValue($path, $value = null, int $storeId = self::DEFAULT_STORE_ID)
     {
-        $this->_setValue($path, $value, (int) $storeId);
+        $this->loadAll();
+        if (is_array($path)) {
+            foreach ($path as $key => $valueData) {
+                $this->setConfigData($key, $valueData, $storeId);
+            }
+        } else {
+            $this->setConfigData($path, $value, $storeId);
+        }
+
         $this->save();
         return $this;
     }
 
     /**
-     * @param $path
-     * @param int $storeId
-     * @return Config
-     * @throws LocalizedException
+     * @inheritDoc
      */
     public function deleteValue($path, int $storeId = self::DEFAULT_STORE_ID)
     {
-        if (isset($this->config[$path][$storeId])) {
-            unset($this->config[$path][$storeId]);
-        }
-
-        if (!isset($this->dataChanged[$path])) {
-            $this->dataChanged[$path] = [];
-        }
-
-        $this->dataChanged[$path][$storeId] = null;
-
-        $this->save();
-
+        $this->loadAll();
+        $this->setValue($path, null);
         return $this;
     }
 
@@ -166,9 +164,13 @@ class Config
      */
     public function save()
     {
-        if ($this->dataChanged) {
-            foreach ($this->dataChanged as $path => $storeValue) {
-                foreach ($storeValue as $storeId => $value) {
+        $this->loadAll();
+        if (!empty($this->dataChanged)) {
+            $changedData = $this->dataChanged;
+            $this->dataChanged = [];
+
+            foreach ($changedData as $storeId => $storeConfig) {
+                foreach ($storeConfig as $path => $value) {
                     if ($value === null) {
                         $this->configResource->deleteConfig($path, $storeId);
                     } else {
@@ -176,7 +178,7 @@ class Config
                     }
                 }
             }
-            $this->dataChanged = [];
+
             $this->saveToCache();
         }
 
@@ -184,48 +186,11 @@ class Config
     }
 
     /**
-     * @param $path
-     * @param null $default
-     * @param int $storeId
-     * @return mixed|null
-     * @throws LocalizedException
-     */
-    public function getOption($path, $default = null, $storeId = 0)
-    {
-        $value = $this->getValue("option_{$path}", $storeId);
-        return $value === null ? $default : $value;
-    }
-
-    /**
-     * @param $path
-     * @param mixed $value
-     * @return $this
-     * @throws LocalizedException
-     */
-    public function setOption($path, $value)
-    {
-        return $this->setValue("option_{$path}", $value);
-    }
-
-    /**
-     * @param $path
-     * @param int $storeId
-     * @return $this
-     * @throws LocalizedException
-     */
-    public function delOption($path, $storeId = 0)
-    {
-        return $this->deleteValue("option_{$path}", $storeId);
-    }
-
-    /**
      * Save configs to cache
      */
     private function saveToCache()
     {
-        if (!empty($this->config)) {
-            $this->cache->save($this->config, self::CACHE_KEY);
-        }
+        $this->cache->save((array) $this->config, self::CACHE_KEY);
     }
 
     /**
@@ -234,11 +199,11 @@ class Config
      * @param   string $method
      * @param   array $args
      * @return  mixed
-     * @throws LocalizedException
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public function __call($method, $args)
     {
-        $storeId = $args[0] ?? self::DEFAULT_STORE_ID;
+        $storeId = (int) $args[0] ?? self::DEFAULT_STORE_ID;
         switch (substr($method, 0, 3)) {
             case 'get':
                 $key = $this->underscore(substr($method, 3));

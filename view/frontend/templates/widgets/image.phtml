@@ -8,40 +8,46 @@ declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
 use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
-use Goomento\PageBuilder\Builder\Modules\Editor;
 use Goomento\PageBuilder\Builder\Widgets\Image;
-use Goomento\PageBuilder\Helper\ObjectManagerHelper;
-use Magento\Framework\Escaper;
+use Goomento\PageBuilder\Helper\StateHelper;
 
 /**
  * @var Widget $block
- * @var Escaper $escaper
  * @var Image $widget
  */
 $widget = $block->getWidget();
-
 $settings = $widget->getSettingsForDisplay();
-if (empty($settings['image']['url'])) {
+
+if (empty($settings['image_image']['url'])) {
     return;
 }
 
-$has_caption = $widget->hasCaption($settings);
+$caption = $settings['image_caption_source'] === 'custom' ? $settings['image_caption'] : '';
+$has_caption = !!$caption;
 
 $widget->addRenderAttribute('wrapper', 'class', 'gmt-image');
 
-if (!empty($settings['shape'])) {
-    $widget->addRenderAttribute('wrapper', 'class', 'gmt-image-shape-' . $settings['shape']);
+if (!empty($settings['image_shape'])) {
+    $widget->addRenderAttribute('wrapper', 'class', 'gmt-image-shape-' . $settings['image_shape']);
 }
 
-$link = $widget->getLinkUrl($settings);
+if ('none' === $settings['image_link_to']) {
+    $link = false;
+} elseif ('custom' === $settings['image_link_to']) {
+    $link = $settings['image_link'];
+} else {
+    $link = [
+        'url' => $settings['image_image']['url']
+    ];
+}
 
 if ($link) {
     $widget->addRenderAttribute('link', [
         'href' => $link['url'],
-        'data-gmt-open-lightbox' => $settings['open_lightbox'],
+        'data-gmt-open-lightbox' => $settings['image_open_lightbox'],
     ]);
 
-    if (ObjectManagerHelper::get(Editor::class)->isEditMode()) {
+    if (StateHelper::isEditorMode()) {
         $widget->addRenderAttribute('link', [
             'class' => 'gmt-clickable',
         ]);
@@ -57,19 +63,21 @@ if ($link) {
 } ?>
 <div <?= $widget->getRenderAttributeString('wrapper'); ?>>
     <?php if ($has_caption) : ?>
-    <figure class="gmt-caption">
-        <?php endif; ?>
-        <?php if ($link) : ?>
-        <a <?= $widget->getRenderAttributeString('link'); ?>>
-            <?php endif; ?>
-            <?= ImageSizeGroup::getAttachmentImageHtml($settings); ?>
-            <?php if ($link) : ?>
-        </a>
+        <figure class="gmt-caption">
     <?php endif; ?>
-        <?php if ($has_caption) : ?>
-            <figcaption class="widget-image-caption image-caption-text"><?= $widget->getCaption($settings); ?></figcaption>
+        <?php if ($link) : ?>
+            <a <?= $widget->getRenderAttributeString('link'); ?>>
+                <?php endif; ?>
+                <?= ImageSizeGroup::getAttachmentImageHtml($settings, 'image_image'); ?>
+                <?php if ($link) : ?>
+            </a>
         <?php endif; ?>
         <?php if ($has_caption) : ?>
-    </figure>
-<?php endif; ?>
+            <figcaption class="widget-image-caption image-caption-text">
+                <?= $settings['image_caption_source'] === 'custom' ? $settings['image_caption'] : ''; ?>
+            </figcaption>
+        <?php endif; ?>
+    <?php if ($has_caption) : ?>
+        </figure>
+    <?php endif; ?>
 </div>

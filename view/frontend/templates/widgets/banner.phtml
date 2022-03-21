@@ -8,10 +8,10 @@ declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
 use Goomento\PageBuilder\Helper\DataHelper;
-use Magento\Framework\Escaper;
+use Goomento\PageBuilder\Helper\EscaperHelper;
+
 /**
  * @var Widget $block
- * @var Escaper $escaper
  */
 $widget = $block->getWidget();
 
@@ -58,7 +58,7 @@ if (!empty($settings['banner_image']['url'])) :
 
                     $widget->addInlineEditingAttributes('caption');
                     ?>
-                    <div <?= $widget->getRenderAttributeString('caption') ?>><?= $escaper->escapeHtml($settings['banner_caption']) ?></div>
+                    <div <?= $widget->getRenderAttributeString('caption') ?>><?= EscaperHelper::escapeHtml($settings['banner_caption']) ?></div>
                 <?php  endif; ?>
             </div>
         <?php endif;  ?>

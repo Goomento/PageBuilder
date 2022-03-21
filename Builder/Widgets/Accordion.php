@@ -36,7 +36,7 @@ class Accordion extends AbstractWidget
      */
     public function getIcon()
     {
-        return 'far fa-arrow-alt-circle-right';
+        return 'fas fa-caret-square-right';
     }
 
     /**

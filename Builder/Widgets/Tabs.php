@@ -39,7 +39,7 @@ class Tabs extends AbstractWidget
      */
     public function getIcon()
     {
-        return 'far fa-folder';
+        return 'far fa-caret-square-down';
     }
 
     /**

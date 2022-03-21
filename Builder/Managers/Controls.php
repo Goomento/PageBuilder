@@ -119,7 +119,7 @@ class Controls
     const EXIT_ANIMATION = ExitAnimation::NAME;
 
     /**
-     * @var \Goomento\PageBuilder\Builder\Base\AbstractControl[]|null
+     * @var AbstractControl[]|null
      */
     private $controls = null;
 

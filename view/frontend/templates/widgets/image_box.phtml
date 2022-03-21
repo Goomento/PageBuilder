@@ -9,78 +9,79 @@ declare(strict_types=1);
 use Goomento\PageBuilder\Block\View\Element\Widget;
 use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
 use Goomento\PageBuilder\Helper\DataHelper;
-use Magento\Framework\Escaper;
 
 /**
  * @var Widget $block
- * @var Escaper $escaper
  */
 $widget = $block->getWidget();
-
 $settings = $widget->getSettingsForDisplay();
-
 $has_content = !DataHelper::isEmpty($settings['title_text']) || !DataHelper::isEmpty($settings['description_text']);
-
-$html = '<div class="gmt-image-box-wrapper">';
-
-if (!empty($settings['link']['url'])) {
-    $widget->addRenderAttribute('link', 'href', $settings['link']['url']);
-
-    if ($settings['link']['is_external']) {
-        $widget->addRenderAttribute('link', 'target', '_blank');
-    }
-
-    if (!empty($settings['link']['nofollow'])) {
-        $widget->addRenderAttribute('link', 'rel', 'nofollow');
-    }
-}
-
-if (!empty($settings['image']['url'])) {
-    $widget->addRenderAttribute('image', 'src', $settings['image']['url']);
-    $widget->addRenderAttribute('image', 'alt', '');
-    $widget->addRenderAttribute('image', 'title', '');
-
-    if ($settings['hover_animation']) {
-        $widget->addRenderAttribute('image', 'class', 'gmt-animation-' . $settings['hover_animation']);
-    }
-
-    $image_html = ImageSizeGroup::getAttachmentImageHtml($settings);
-
+?>
+<div class="gmt-image-box-wrapper">
+    <?php
     if (!empty($settings['link']['url'])) {
-        $image_html = '<a ' . $widget->getRenderAttributeString('link') . '>' . $image_html . '</a>';
-    }
+        $widget->addRenderAttribute('link', 'href', $settings['link']['url']);
 
-    $html .= '<figure class="gmt-image-box-img">' . $image_html . '</figure>';
-}
-
-if ($has_content) {
-    $html .= '<div class="gmt-image-box-content">';
-
-    if (!DataHelper::isEmpty($settings['title_text'])) {
-        $widget->addRenderAttribute('title_text', 'class', 'gmt-image-box-title');
-
-        $widget->addInlineEditingAttributes('title_text', 'none');
-
-        $title_html = $settings['title_text'];
-
-        if (!empty($settings['link']['url'])) {
-            $title_html = '<a ' . $widget->getRenderAttributeString('link') . '>' . $title_html . '</a>';
+        if ($settings['link']['is_external']) {
+            $widget->addRenderAttribute('link', 'target', '_blank');
         }
 
-        $html .= sprintf('<%1$s %2$s>%3$s</%1$s>', $settings['title_size'], $widget->getRenderAttributeString('title_text'), $title_html);
+        if (!empty($settings['link']['nofollow'])) {
+            $widget->addRenderAttribute('link', 'rel', 'nofollow');
+        }
     }
 
-    if (!DataHelper::isEmpty($settings['description_text'])) {
-        $widget->addRenderAttribute('description_text', 'class', 'gmt-image-box-description');
+    if (!empty($settings['image']['url'])) {
+        $widget->addRenderAttribute('image', 'src', $settings['image']['url']);
+        $widget->addRenderAttribute('image', 'alt', '');
+        $widget->addRenderAttribute('image', 'title', '');
 
-        $widget->addInlineEditingAttributes('description_text');
+        if ($settings['hover_animation']) {
+            $widget->addRenderAttribute('image', 'class', 'gmt-animation-' . $settings['hover_animation']);
+        }
 
-        $html .= sprintf('<p %1$s>%2$s</p>', $widget->getRenderAttributeString('description_text'), $settings['description_text']);
+        $image_html = ImageSizeGroup::getAttachmentImageHtml($settings);
+
+        if (!empty($settings['link']['url'])) {
+            $image_html = '<a ' . $widget->getRenderAttributeString('link') . '>' . $image_html . '</a>';
+        }
+        ?>
+        <figure class="gmt-image-box-img">' . <?= $image_html ?> . '</figure>
+        <?php
     }
 
-    $html .= '</div>';
-}
+    if ($has_content) : ?>
+        <div class="gmt-image-box-content">
+            <?php
+            if (!DataHelper::isEmpty($settings['title_text'])) :
+                $widget->addRenderAttribute('title_text', 'class', 'gmt-image-box-title');
 
-$html .= '</div>';
+                $widget->addInlineEditingAttributes('title_text', 'none');
 
-echo $html;
+                $title_html = $settings['title_text'];
+
+                if (!empty($settings['link']['url'])) {
+                    $title_html = '<a ' . $widget->getRenderAttributeString('link') . '>' . $title_html . '</a>';
+                }
+
+                ?>
+                <<?= $settings['title_size'] ?> <?= $widget->getRenderAttributeString('title_text') ?>>
+                    <?= $title_html ?>
+                </<?= $settings['title_size'] ?>>
+                <?php
+            endif;
+
+            if (!DataHelper::isEmpty($settings['description_text'])) :
+                $widget->addRenderAttribute('description_text', 'class', 'gmt-image-box-description');
+
+                $widget->addInlineEditingAttributes('description_text');
+
+                ?>
+                <p <?= $widget->getRenderAttributeString('description_text') ?>>
+                    <?= /** @noEscape */ $settings['description_text'] ?>
+                </p>
+            <?php endif ?>
+        </div>
+    <?php endif; ?>
+</div>
+

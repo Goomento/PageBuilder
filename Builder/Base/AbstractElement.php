@@ -170,21 +170,6 @@ abstract class AbstractElement extends ControlsStack
     }
 
     /**
-     * @deprecated 2.6.0
-     */
-    final public static function addEditTool()
-    {
-    }
-
-    /**
-     * @deprecated 2.6.0
-     */
-    final public static function isEditButtonsEnabled()
-    {
-        return ConfigHelper::getOption('edit_buttons');
-    }
-
-    /**
      * Get default child type.
      *
      * Retrieve the default child type based on element data.
@@ -520,7 +505,7 @@ abstract class AbstractElement extends ControlsStack
      */
     public function printElement()
     {
-        $element_type = $this->getType();
+        $element_type = $this->getName();
 
         /**
          * Before frontend element render.

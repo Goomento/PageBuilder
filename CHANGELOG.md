@@ -1,5 +1,9 @@
 # Magento 2 Goomento Page Builder
 
+## 0.2.1: Fixed minor bugs
+- Fixed minor bugs
+- Added editor column controls
+
 ## 0.2.0: Enhanced performance
 - Reallocate file structure  
 - Enhanced performance

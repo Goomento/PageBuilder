@@ -9,7 +9,7 @@ namespace Goomento\PageBuilder\Block\Adminhtml\Manage;
 use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Backend\Block\Template;
 use Goomento\PageBuilder\Model\Config;
-use Magento\Framework\Exception\LocalizedException;
+use Goomento\PageBuilder\Api\ConfigInterface;
 
 class GlobalCss extends Template
 {
@@ -17,21 +17,22 @@ class GlobalCss extends Template
      * @var DataPersistorInterface
      */
     private $dataPersistor;
+
     /**
-     * @var Config
+     * @var ConfigInterface
      */
     private $config;
 
     /**
      * @param Template\Context $context
      * @param DataPersistorInterface $dataPersistor
-     * @param Config $config
+     * @param ConfigInterface $config
      * @param array $data
      */
     public function __construct(
         Template\Context $context,
         DataPersistorInterface $dataPersistor,
-        Config $config,
+        ConfigInterface $config,
         array $data = []
     )
     {
@@ -42,7 +43,6 @@ class GlobalCss extends Template
 
     /**
      * @return string
-     * @throws LocalizedException
      */
     public function getCustomCss()
     {
@@ -51,6 +51,6 @@ class GlobalCss extends Template
             return $css;
         }
 
-        return (string) $this->config->getOption(Config::CUSTOM_CSS);
+        return (string) $this->config->getValue(Config::CUSTOM_CSS);
     }
 }

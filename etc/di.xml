@@ -16,6 +16,7 @@
     <preference for="Goomento\PageBuilder\Api\ContentImportProcessorInterface" type="Goomento\PageBuilder\Model\ContentImportProcessor" />
     <preference for="Goomento\PageBuilder\Api\ContentRegistryInterface" type="Goomento\PageBuilder\Model\ContentRegistry" />
     <preference for="Goomento\PageBuilder\Api\SampleImporterInterface" type="Goomento\PageBuilder\SampleImport\ImporterProcessor" />
+    <preference for="Goomento\PageBuilder\Api\ConfigInterface" type="Goomento\PageBuilder\Model\Config" />
 
     <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
         <arguments>

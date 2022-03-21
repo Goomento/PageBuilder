@@ -28,9 +28,9 @@ class GlobalCss extends AbstractManage
         try {
             $data = $this->getRequest()->getPostValue();
             $data = (new \Zend_Filter_Input([], [], $data))->getUnescaped();
-            if (isset($data[Config::CUSTOM_CSS]) && $data[Config::CUSTOM_CSS] !== $this->config->getOption(Config::CUSTOM_CSS)) {
+            if (isset($data[Config::CUSTOM_CSS]) && $data[Config::CUSTOM_CSS] !== $this->config->getValue(Config::CUSTOM_CSS)) {
                 $this->dataPersistor->set(Config::CUSTOM_CSS, $data['custom_css']);
-                $this->config->setOption(Config::CUSTOM_CSS, $data['custom_css']);
+                $this->config->setValue(Config::CUSTOM_CSS, $data['custom_css']);
             }
 
             $this->contentManagement->refreshGlobalAssets();

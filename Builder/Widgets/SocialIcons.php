@@ -13,7 +13,6 @@ use Goomento\PageBuilder\Builder\Controls\Groups\BorderGroup;
 use Goomento\PageBuilder\Builder\Elements\Repeater;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Helper\DataHelper;
-use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 class SocialIcons extends AbstractWidget
 {
@@ -65,8 +64,8 @@ class SocialIcons extends AbstractWidget
                 'label' => __('Social Icons'),
             ]
         );
-        /** @var Repeater $repeater */
-        $repeater = ObjectManagerHelper::create(Repeater::class);
+
+        $repeater = new Repeater;
 
         $repeater->addControl(
             'social_icon',

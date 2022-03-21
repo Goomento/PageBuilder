@@ -24,7 +24,7 @@
                 <label translate="true">Enable PageBuilder</label>
                 <dataScope>pagebuilder_is_active</dataScope>
                 <tooltip>
-                    <description>Display PageBuilder content instead.</description>
+                    <description>Display Page Builder content instead of current content.</description>
                 </tooltip>
             </settings>
             <formElements>

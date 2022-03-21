@@ -10,7 +10,7 @@ define([
         '       <div class="modal-widget" style="background: #333;color: #fff;padding: 5px;">' +
         '           <code class="modal-content-widget">{{widget type=&quot;PageBuilderRenderer&quot; identifier=&quot;%identifier&quot;}}</code>' +
         '       </div>' +
-        '       <small><i>Copy then paste code above to Magento editor.</i></small>' +
+        '       <small><i>Copy then paste code above to CMS/Content editor.</i></small>' +
         '       <hr />' +
         '       <div class="modal-xml" style="background: #333;color: #fff;padding: 5px;">' +
         '           <code class="modal-content-widget">' +
@@ -21,12 +21,12 @@ define([
         '               &lt;/block&gt;<br />' +
         '           </code>' +
         '       </div>' +
-        '       <small><i>Copy then paste code above to xml configuration.</i></small>' +
+        '       <small><i>Copy then paste code above to <strong>xml</strong> configuration, then replace the <strong>unique-block-name</strong></i></small>' +
         '       <hr />' +
         '       <div class="modal-phtml" style="background: #333;color: #fff;padding: 5px;">' +
         '           <code class="modal-content-widget"> &lt;?= $block-&gt;getLayout()-&gt;getBlock(\'PageBuilderRenderer\')-&gt;setIdentifier(\'%identifier\')-&gt;toHtml(); ?&gt;</code>' +
         '       </div>' +
-        '       <small><i>Copy then paste code above to .phtml or .php file.</i></small>' +
+        '       <small><i>Copy then paste code above to <strong>.phtml</strong> or <strong>.php</strong> file.</i></small>' +
         '   </div>' +
         '</div>';
 
