@@ -1076,6 +1076,50 @@ class Section extends AbstractElement
 
         $this->endControlsSection();
 
+        // Section Identify
+        $this->startControlsSection(
+            'section_identify',
+            [
+                'label' => __('Identify'),
+                'tab' => Controls::TAB_ADVANCED,
+            ]
+        );
+
+        $this->addControl(
+            '_element_id',
+            [
+                'label' => __('CSS ID'),
+                'type' => Controls::TEXT,
+                'default' => '',
+                'dynamic' => [
+                    'active' => true,
+                ],
+                'title' => __('Add your custom id WITHOUT the Pound key. e.g: my-id'),
+                'description' => __('Please make sure the ID is unique and not used elsewhere on the page this element is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces.'),
+                'label_block' => false,
+                'style_transfer' => false,
+                'classes' => 'gmt-control-direction-ltr',
+            ]
+        );
+
+        $this->addControl(
+            'css_classes',
+            [
+                'label' => __('CSS Classes'),
+                'type' => Controls::TEXT,
+                'default' => '',
+                'dynamic' => [
+                    'active' => true,
+                ],
+                'prefix_class' => '',
+                'title' => __('Add your custom class WITHOUT the dot. e.g: my-class'),
+                'label_block' => false,
+                'classes' => 'gmt-control-direction-ltr',
+            ]
+        );
+
+        $this->endControlsSection();
+
         // Section Advanced
         $this->startControlsSection(
             'section_advanced',
@@ -1126,38 +1170,6 @@ class Section extends AbstractElement
                     '{{WRAPPER}}' => 'z-index: {{VALUE}};',
                 ],
                 'label_block' => false,
-            ]
-        );
-
-        $this->addControl(
-            '_element_id',
-            [
-                'label' => __('CSS ID'),
-                'type' => Controls::TEXT,
-                'default' => '',
-                'dynamic' => [
-                    'active' => true,
-                ],
-                'title' => __('Add your custom id WITHOUT the Pound key. e.g: my-id'),
-                'label_block' => false,
-                'style_transfer' => false,
-                'classes' => 'gmt-control-direction-ltr',
-            ]
-        );
-
-        $this->addControl(
-            'css_classes',
-            [
-                'label' => __('CSS Classes'),
-                'type' => Controls::TEXT,
-                'default' => '',
-                'dynamic' => [
-                    'active' => true,
-                ],
-                'prefix_class' => '',
-                'title' => __('Add your custom class WITHOUT the dot. e.g: my-class'),
-                'label_block' => false,
-                'classes' => 'gmt-control-direction-ltr',
             ]
         );
 

@@ -362,7 +362,7 @@ Large,Large
 Before,Before
 After,After
 "Button ID","Button ID"
-"Please make sure the ID is unique and not used elsewhere on the page this form is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces.","Please make sure the ID is unique and not used elsewhere on the page this form is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces."
+"Please make sure the ID is unique and not used elsewhere on the page this element is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces.","Please make sure the ID is unique and not used elsewhere on the page this form is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces."
 "Icon Spacing","Icon Spacing"
 "Custom Positioning","Custom Positioning"
 Inline,Inline

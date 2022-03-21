@@ -15,6 +15,7 @@
     </argument>
     <settings>
         <buttons>
+            <button name="view" class="\Goomento\PageBuilder\Block\Adminhtml\Content\Edit\ViewButton"/>
             <button name="save" class="\Goomento\PageBuilder\Block\Adminhtml\Page\Edit\SaveButton"/>
             <button name="delete" class="\Goomento\PageBuilder\Block\Adminhtml\Content\Edit\DeleteButton"/>
             <button name="live_editor" class="\Goomento\PageBuilder\Block\Adminhtml\Content\Edit\LiveEditorButton"/>

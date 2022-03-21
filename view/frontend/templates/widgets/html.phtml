@@ -14,6 +14,4 @@ use Goomento\PageBuilder\Helper\EscaperHelper;
  */
 $widget = $block->getWidget();
 ?>
-<?= EscaperHelper::escapeHtml(
-    $widget->getSettingsForDisplay('html')
-); ?>
+<?= /** @noEscape */ $widget->getSettingsForDisplay('html'); ?>

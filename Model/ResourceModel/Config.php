@@ -64,23 +64,24 @@ class Config extends AbstractDb
     }
 
     /**
-     * @param null $storeId
+     * @param int|null $storeId
      * @return array
      * @throws LocalizedException
      */
-    public function fetchAll($storeId = null)
+    public function fetchAll(?int $storeId = null)
     {
         $connection = $this->getConnection();
         $select = $connection->select()->from(
             $this->getMainTable()
         );
 
-        if (is_int($storeId)) {
+        if ($storeId) {
             $select->where(
                 'store_id = ?',
                 $storeId
             );
         }
+
         $result = $connection->fetchAll($select);
         if (!empty($result)) {
             foreach ($result as &$row) {

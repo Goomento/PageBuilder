@@ -10,16 +10,11 @@ namespace Goomento\PageBuilder\Builder\Modules;
 
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Builder\Managers\Elements;
 use Goomento\PageBuilder\Builder\Managers\Icons;
 use Goomento\PageBuilder\Builder\Managers\Schemes;
-use Goomento\PageBuilder\Builder\Managers\Widgets;
 use Goomento\PageBuilder\Builder\Shapes;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Base\AbstractDocument;
-use Goomento\PageBuilder\Builder\Managers\Documents;
-use Goomento\PageBuilder\Builder\Managers\Tags;
-use Goomento\PageBuilder\Builder\Managers\Settings as SettingsManager;
 use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
@@ -98,10 +93,8 @@ class Editor
     public function getDocument()
     {
         if ($this->document === null) {
-            /** @var Documents $documentManager */
-            $documentManager = ObjectManagerHelper::get(Documents::class);
-            /** @var AbstractDocument $document */
-            $this->document = $documentManager->get($this->getContentId());
+            $this->document = ObjectManagerHelper::getDocumentsManager()
+                ->get($this->getContentId());
         }
 
         return $this->document;
@@ -270,45 +263,32 @@ class Editor
 
         $editor_data = $document->getElementsRawData();
 
-        $page_title_selector = ConfigHelper::getOption('page_title_selector');
+        $page_title_selector = ConfigHelper::getValue('page_title_selector');
 
         if (empty($page_title_selector)) {
             $page_title_selector = 'h1.entry-title';
         }
-
-        /** @var Schemes $schemeManager */
-        $schemeManager = ObjectManagerHelper::get(Schemes::class);
-        /** @var Controls $controlsManager */
-        $controlsManager = ObjectManagerHelper::get(Controls::class);
-        /** @var Elements $elementsManager */
-        $elementsManager = ObjectManagerHelper::get(Elements::class);
-        /** @var Widgets $widgetsManager */
-        $widgetsManager = ObjectManagerHelper::get(Widgets::class);
-        /** @var Schemes $schemasManager */
-        $schemasManager = ObjectManagerHelper::get(Schemes::class);
-        /** @var SettingsManager $settingManager */
-        $settingManager = ObjectManagerHelper::get(SettingsManager::class);
 
         $config = [
             'version' => Configuration::VERSION,
             'data' => $editor_data,
             'document' => $document->getConfig(),
             'current_revision_id' => null,
-            'autosave_interval' => ConfigHelper::getOption('autosave_interval') ?: 60,
-            'tabs' => $controlsManager->getTabs(),
-            'controls' => $controlsManager->getControlsData(),
-            'elements' => $elementsManager->getElementTypesConfig(),
-            'widgets' => $widgetsManager->getWidgetTypesConfig(),
+            'autosave_interval' => ConfigHelper::getValue('autosave_interval') ?: 60,
+            'tabs' => ObjectManagerHelper::getControlsManager()->getTabs(),
+            'controls' => ObjectManagerHelper::getControlsManager()->getControlsData(),
+            'elements' => ObjectManagerHelper::getElementsManager()->getElementTypesConfig(),
+            'widgets' => ObjectManagerHelper::getWidgetsManager()->getWidgetTypesConfig(),
             'schemes' => [
-                'items' => $schemeManager->getRegisteredSchemesData(),
+                'items' => ObjectManagerHelper::getSchemasManager()->getRegisteredSchemesData(),
                 'enabled_schemes' => Schemes::getEnabledSchemes(),
             ],
             'icons' => [
                 'libraries' => Icons::getIconManagerTabsConfig(),
             ],
-            'default_schemes' => $schemeManager->getSchemesDefaults(),
-            'settings' => $settingManager->getSettingsManagersConfig(),
-            'system_schemes' => $schemasManager->getSystemSchemes(),
+            'default_schemes' => ObjectManagerHelper::getSchemasManager()->getSchemesDefaults(),
+            'settings' => ObjectManagerHelper::getSettingsManager()->getSettingsManagersConfig(),
+            'system_schemes' => ObjectManagerHelper::getSchemasManager()->getSystemSchemes(),
             'goomento_editor' => $this->getEditorConfig(),
             'tinymce_pre_init' => $this->getTinyMCEPreInit(),
             'additional_shapes' => Shapes::getAdditionalShapesForConfig(),
@@ -327,13 +307,12 @@ class Editor
                     'delete' => AuthorizationHelper::isCurrentUserCan(
                         $document->getModel()->getRoleName('delete')),
                 ],
-                'is_administrator' => true,
+                'is_administrator' => AuthorizationHelper::isCurrentUserCan('config'),
             ],
             'rich_editing_enabled' => true,
             'page_title_selector' => $page_title_selector,
-            'inlineEditing' => ObjectManagerHelper::get(Widgets::class)->getInlineEditingConfig(),
-            'dynamicTags' => ObjectManagerHelper::get(Tags::class)->getConfig(),
-            'editButtons' => ConfigHelper::getOption('edit_buttons'),
+            'inlineEditing' => ObjectManagerHelper::getWidgetsManager()->getInlineEditingConfig(),
+            'dynamicTags' => ObjectManagerHelper::getTagsManager()->getConfig(),
         ];
 
         DataHelper::printJsConfig('goomento-editor', 'goomentoConfig', $config);
@@ -490,13 +469,11 @@ EDITOR_WAPPER;
      */
     public function editorFooterTrigger()
     {
-        ObjectManagerHelper::get(Controls::class)->renderControls();
-        ObjectManagerHelper::get(Widgets::class)->renderWidgetsContent();
-        ObjectManagerHelper::get(Elements::class)->renderElementsContent();
-
-        ObjectManagerHelper::get(Schemes::class)->printSchemesTemplates();
-
-        ObjectManagerHelper::get(Tags::class)->printTemplates();
+        ObjectManagerHelper::getControlsManager()->renderControls();
+        ObjectManagerHelper::getWidgetsManager()->renderWidgetsContent();
+        ObjectManagerHelper::getElementsManager()->renderElementsContent();
+        ObjectManagerHelper::getSchemasManager()->printSchemesTemplates();
+        ObjectManagerHelper::getTagsManager()->printTemplates();
 
         $this->initEditorTemplates();
 

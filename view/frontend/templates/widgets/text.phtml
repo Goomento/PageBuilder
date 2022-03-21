@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
 use Goomento\PageBuilder\Builder\Widgets\Text;
+use Goomento\PageBuilder\Helper\EscaperHelper;
 
 /**
  * @var Widget $block
@@ -29,7 +30,7 @@ if (!empty($settings['text_size'])) {
 
 $widget->addInlineEditingAttributes('title');
 
-$title = $settings['text_title'];
+$title = EscaperHelper::escapeHtml($settings['text_title']);
 
 if (!empty($settings['text_link']['url'])) {
     $widget->addRenderAttribute('url', 'href', $settings['text_link']['url']);
@@ -44,5 +45,7 @@ if (!empty($settings['text_link']['url'])) {
 
     $title = sprintf('<a %1$s>%2$s</a>', $widget->getRenderAttributeString('url'), $title);
 }
-
-printf('<%1$s %2$s>%3$s</%1$s>', $settings['text_tag'], $widget->getRenderAttributeString('title'), $title);
+?>
+<<?= $settings['text_tag'] ?> <?= $widget->getRenderAttributeString('title') ?>>
+    <?= /** @noEscape */ $title ?>
+</<?= $settings['text_tag'] ?>>

@@ -73,10 +73,7 @@ class Edit extends AbstractContent implements HttpGetActionInterface
         return [
             'active_menu' => 'Goomento_PageBuilder::' . $this->getContentType(),
             'editable_title' => "Edit {$type} `%1`",
-            'title' => 'New ' .$type ,
-            'breadcrumb' => [
-                [$type, $type],
-            ],
+            'title' => 'New ' . $type,
             'handler' => $this->getContentLayoutName('edit')
         ];
     }

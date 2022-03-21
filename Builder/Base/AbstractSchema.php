@@ -75,12 +75,12 @@ abstract class AbstractSchema extends AbstractEntity
      */
     public function getSchemeValue()
     {
-        $scheme_value = ConfigHelper::getOption('scheme_' . static::NAME);
+        $scheme_value = ConfigHelper::getValue('scheme_' . static::NAME);
 
         if (empty($scheme_value)) {
             $scheme_value = $this->getDefaultScheme();
 
-            ConfigHelper::setOption('scheme_' . static::NAME, $scheme_value);
+            ConfigHelper::setValue('scheme_' . static::NAME, $scheme_value);
         }
 
         return $scheme_value;
@@ -98,7 +98,7 @@ abstract class AbstractSchema extends AbstractEntity
     public function saveScheme(array $posted)
     {
         $scheme_value = $this->getSchemeValue();
-        ConfigHelper::setOption('scheme_' . static::NAME,
+        ConfigHelper::setValue('scheme_' . static::NAME,
             array_replace($scheme_value, array_intersect_key($posted, $scheme_value)));
     }
 

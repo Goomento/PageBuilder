@@ -61,8 +61,6 @@ class PageBuilder implements SubSystemInterface
         if (false === $this->init) {
             $this->init = true;
 
-            HooksHelper::doAction('pagebuilder/construct');
-
             $this->initComponents($buildSubject);
 
             HooksHelper::addAction('init', function () {
@@ -132,9 +130,6 @@ class PageBuilder implements SubSystemInterface
 
         HooksHelper::addAction('pagebuilder/footer', function () use ($areaCode) {
             HooksHelper::doAction("pagebuilder/{$areaCode}/footer");
-
-            HooksHelper::doAction('pagebuilder/enqueue_scripts');
-            HooksHelper::doAction("pagebuilder/{$areaCode}/enqueue_scripts");
         });
     }
 
@@ -264,13 +259,5 @@ class PageBuilder implements SubSystemInterface
         }
 
         return $scopes;
-    }
-
-    /**
-     * Destruct
-     */
-    public function __destruct()
-    {
-        HooksHelper::doAction('pagebuilder/destruct');
     }
 }

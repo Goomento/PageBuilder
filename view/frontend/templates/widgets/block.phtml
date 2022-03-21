@@ -8,16 +8,14 @@ declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
 use Goomento\PageBuilder\Helper\LayoutHelper;
-use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 
 /**
  * @var Widget $block
- * @var Escaper $escaper
  */
 $widget = $block->getWidget();
 $class = $block->getSettingsForDisplay( 'class' );
-$template = $this->getSettingsForDisplay( 'template' );
+$template = $block->getSettingsForDisplay( 'template' );
 $html = '';
 if (($class && class_exists($class)) || $template) {
     if (empty($class) || !class_exists($class)) {

@@ -204,7 +204,7 @@ abstract class AbstractFile extends AbstractEntity
      */
     protected function loadMeta()
     {
-        return ConfigHelper::getOption(static::META_KEY);
+        return ConfigHelper::getValue(static::META_KEY);
     }
 
     /**
@@ -217,7 +217,7 @@ abstract class AbstractFile extends AbstractEntity
      */
     protected function updateMeta($meta)
     {
-        ConfigHelper::setOption(static::META_KEY, $meta);
+        ConfigHelper::setValue(static::META_KEY, $meta);
     }
 
     /**
@@ -228,7 +228,7 @@ abstract class AbstractFile extends AbstractEntity
      */
     protected function deleteMeta()
     {
-        ConfigHelper::delOption(static::META_KEY);
+        ConfigHelper::deleteValue(static::META_KEY);
     }
 
     /**

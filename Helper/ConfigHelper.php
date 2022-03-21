@@ -13,13 +13,10 @@ use Goomento\Core\Traits\TraitStaticInstances;
 use Goomento\PageBuilder\Model\Config;
 
 /**
- * @see Config::getOption()
- * @method static getOption($name, $default = null, $storeId = 0)
- * @method static setOption($path, $storeId = 0)
- * @method static delOption($path, $storeId = 0)
+ * @see Config::getValue()
  * @method static getValue($path, $storeId = 0)
  * @method static setValue($path, $value, $storeId = 0)
- * @method static deleteValue($path, $value, $storeId = 0)
+ * @method static deleteValue($path, $storeId = 0)
  */
 class ConfigHelper
 {

@@ -76,10 +76,10 @@ class GeneralSettings extends BaseManager
         foreach ($model_controls as $tab_name => $sections) {
             foreach ($sections as $section_name => $section_data) {
                 foreach ($section_data['controls'] as $control_name => $control_data) {
-                    $saved_setting = ConfigHelper::getOption($control_name, null);
+                    $saved_setting = ConfigHelper::getValue($control_name);
 
                     if (null !== $saved_setting) {
-                        $settings[ $control_name ] = ConfigHelper::getOption($control_name);
+                        $settings[ $control_name ] = ConfigHelper::getValue($control_name);
                     }
                 }
             }
@@ -121,12 +121,10 @@ class GeneralSettings extends BaseManager
             foreach ($sections as $section_name => $section_data) {
                 foreach ($section_data['controls'] as $control_name => $control_data) {
                     if (isset($settings[ $control_name ])) {
-                        $one_list_control_name = str_replace('goomento_', '', $control_name);
-
-                        $one_list_settings[ $one_list_control_name ] = $settings[ $control_name ];
-                        ConfigHelper::setOption($control_name, $settings[$control_name]);
+                        $one_list_settings[ $control_name ] = $settings[ $control_name ];
+                        ConfigHelper::setValue($control_name, $settings[$control_name]);
                     } else {
-                        ConfigHelper::delOption($control_name);
+                        ConfigHelper::deleteValue($control_name);
                     }
                 }
             }
@@ -134,9 +132,9 @@ class GeneralSettings extends BaseManager
 
         // Save all settings in one list for a future usage
         if (!empty($one_list_settings)) {
-            ConfigHelper::setOption(self::META_KEY, $one_list_settings);
+            ConfigHelper::setValue(self::META_KEY, $one_list_settings);
         } else {
-            ConfigHelper::delOption(self::META_KEY);
+            ConfigHelper::deleteValue(self::META_KEY);
         }
     }
 

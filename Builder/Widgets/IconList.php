@@ -14,7 +14,6 @@ use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
 use Goomento\PageBuilder\Helper\DataHelper;
-use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 class IconList extends AbstractWidget
 {
@@ -95,7 +94,7 @@ class IconList extends AbstractWidget
             ]
         );
 
-        $repeater = ObjectManagerHelper::create(Repeater::class);
+        $repeater = new Repeater;
 
         $repeater->addControl(
             'text',

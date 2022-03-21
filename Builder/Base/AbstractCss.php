@@ -544,7 +544,7 @@ abstract class AbstractCss extends AbstractFile
         if (!$time) {
             return true;
         }
-        $css_updated_time = ConfigHelper::getOption('css_updated_time', 0);
+        $css_updated_time = ConfigHelper::getValue('css_updated_time');
         if ($css_updated_time && $css_updated_time > $time) {
             return true;
         }

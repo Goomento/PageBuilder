@@ -41,6 +41,7 @@
                         <resource id="Goomento_PageBuilder::import" title="Import template" sortOrder="40" />
 
                         <resource id="Goomento_PageBuilder::manage" title="Management" sortOrder="50">
+                            <resource id="Goomento_PageBuilder::config" title="Configuration" sortOrder="5" />
                             <resource id="Goomento_PageBuilder::manage_global_css" title="Global.css" sortOrder="10" />
                         </resource>
 

@@ -14,9 +14,9 @@ use Goomento\PageBuilder\Api\Data\ContentSearchResultsInterface;
 use Goomento\PageBuilder\Api\ContentRepositoryInterface;
 use Goomento\PageBuilder\Api\RevisionRepositoryInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
+use Goomento\PageBuilder\Api\ConfigInterface;
 use Goomento\PageBuilder\Builder\Css\ContentCss;
 use Goomento\PageBuilder\Builder\Css\GlobalCss;
-use Goomento\PageBuilder\Builder\Sources\Local;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\AdminUser;
 use Goomento\PageBuilder\PageBuilder;
@@ -68,17 +68,17 @@ class ContentManagement implements ContentManagementInterface
      * @param AdminUser $userHelper
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterBuilder $filterBuilder
-     * @param Config $config
+     * @param ConfigInterface $config
      */
     public function __construct(
-        ContentFactory              $contentFactory,
-        RevisionFactory             $revisionFactory,
-        ContentRepositoryInterface  $contentRepository,
+        ContentFactory $contentFactory,
+        RevisionFactory $revisionFactory,
+        ContentRepositoryInterface $contentRepository,
         RevisionRepositoryInterface $revisionRepository,
-        AdminUser                   $userHelper,
-        SearchCriteriaBuilder       $searchCriteriaBuilder,
-        FilterBuilder               $filterBuilder,
-        Config                      $config
+        AdminUser $userHelper,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        FilterBuilder $filterBuilder,
+        ConfigInterface $config
     ) {
         $this->contentFactory = $contentFactory;
         $this->revisionFactory = $revisionFactory;
@@ -187,7 +187,7 @@ class ContentManagement implements ContentManagementInterface
      */
     public function refreshGlobalAssets()
     {
-        $this->config->setOption(Config::CSS_UPDATED_TIME, time());
+        $this->config->setValue(Config::CSS_UPDATED_TIME, time());
         PageBuilder::initialize();
 
         $globalCss = new GlobalCss();
@@ -223,8 +223,8 @@ class ContentManagement implements ContentManagementInterface
      */
     public function httpContentExport(ContentInterface $content): void
     {
-        /** @var Local $localSource */
-        $localSource = ObjectManagerHelper::get(Local::class);
-        $localSource->exportTemplate((int) $content->getId());
+        ObjectManagerHelper::getSourcesManager()
+            ->getLocalSource()
+            ->exportTemplate((int) $content->getId());
     }
 }

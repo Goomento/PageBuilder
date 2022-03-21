@@ -87,9 +87,9 @@ Something else? Contact us: [store.goomento@gmail.com](mailto:store.goomento@gma
 
 ## 8. Version compatible
 
-magento Community Edition (CE): 2.3.x, 2.4.x
+magento Community Edition (CE): 2.3.x, 2.4.0 - 2.4.3
 
-Magento Enterprise Edition (EE): 2.3.x, 2.4.x
+Magento Enterprise Edition (EE): 2.3.x, 2.4.0 - 2.4.3
 
 ## 9. Changelog
 

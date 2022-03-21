@@ -46,20 +46,23 @@ class Cache
      */
     public function isEnabled()
     {
-        return $this->enabled;
+        return (bool) $this->enabled;
     }
 
     /**
+     * Will return NULL if identifier did not exist
+     * The data will be un-serialize automatically
+     *
      * @param string $identifier
-     * @return mixed|string|null
+     * @return array|string|null
      */
     public function load(string $identifier)
     {
-        if (!$this->enabled) {
+        if (!$this->isEnabled()) {
             return null;
         }
         $data = $this->cache->load($this->getCacheKey($identifier));
-        return $this->unSerializer($data);
+        return $data !== false ? $this->unSerializer($data) : null;
     }
 
     /**
@@ -71,7 +74,7 @@ class Cache
      */
     public function save($data, $identifier, $tags = [self::CACHE_TAG], $lifeTime = null)
     {
-        if (!$this->enabled) {
+        if (!$this->isEnabled()) {
             return null;
         }
 
@@ -89,7 +92,7 @@ class Cache
      */
     public function remove($identifier)
     {
-        if (!$this->enabled) {
+        if (!$this->isEnabled()) {
             return null;
         }
 
@@ -104,9 +107,10 @@ class Cache
      */
     public function clean($tags = [self::CACHE_TAG])
     {
-        if (!$this->enabled) {
+        if (!$this->isEnabled()) {
             return null;
         }
+
         return $this->cache->clean(\Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG, (array) $tags);
     }
 
