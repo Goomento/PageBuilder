@@ -12,7 +12,7 @@ _This module is inspired by Elementor for WordPress let say Elementor for Magent
 
 Run the following command in Magento 2 root folder:
 
-```
+```bash
 composer require goomento/module-page-builder
 php bin/magento module:enable Goomento_PageBuilder
 php bin/magento setup:upgrade
@@ -20,14 +20,23 @@ php bin/magento setup:static-content:deploy
 ```
 ## 2. Configuration
 
-To display Goomento Page Builder content on storefront, enable module in
+2.1 To display Goomento Page Builder content on storefront, enable module in
 
     Stores > Settings > Configuration > Goomento > Page Builder > General > Active
 
 Change to **Yes** to enable module on storefront.
 
+2.2 Import Sample templates
+
+From Magento Admin menu, open
+
+    Goomento > Builder Actions > Importer > Import Sample templates
+
+Choose template, then Import it.
+
 ## 3. Features
 
+- Easy to install, setup and use by Non-developer and Developer
 - Drag and Drop visual editor
 - Section, Pages, Templates control
 - Import, Export content
@@ -37,29 +46,24 @@ Change to **Yes** to enable module on storefront.
 - Widgets hub management
 - Adaptability in any store
 - High speed optimize
+- Responsive layout
 - Add custom CSS
 
 ## 4. Design concept
 
-#### 4.1 Goomento Page Builder will overwrite the main content of these Magento entities:
+4.1 Goomento Page Builder will overwrite the main content of these Magento entities:
 
 - Cms Page
 - Cms Block
+- Default text Editor by Magento, Eg: Wysiwyg, Magento Page Builder (In develop)
 
-#### 4.2 Goomento is using [Font Awesome Free 5.9.0](https://fontawesome.com/) for Icon displaying.
+4.2 Goomento Page Builder is using [Font Awesome Free 5.9.0](https://fontawesome.com/) for Icon displaying.
 
-## 5. How to use
+## 5. Document and User Guide
 
-Check this [Wiki page](https://github.com/Goomento/PageBuilder/wiki/How-To-Use) for use
+See [Repository for Document and Module Sample](https://github.com/Goomento/DocBuilder).
 
-## 6. Personalize
-
-**Goomento Page Builder** was designed to be extendable easily, including: 
-
-- Widget (The piece of your page, Eg: Image, Text, Banner, Video, Audio ...)
-- Control (The place where you define data type and behavior, Eg: Image selector, Text input field ...)
-
-## 7. Troubleshoot
+## 6. Troubleshoot
 
 **The Page Builder did not display on storefront**
 
@@ -83,25 +87,25 @@ Goomento stored CSS files in `pub/media/goomento/css`, those files responsible f
 choose `Internal` - Will use inline CSS instead
 - Flush/ Clean Magento Cache
 
-Something else? Contact us: [store.goomento@gmail.com](mailto:store.goomento@gmail.com)
+Something else? [Open an issue](#9-open-an-issue-and-contribution)
 
-## 8. Version compatible
+## 7. Version compatible
 
 magento Community Edition (CE): 2.3.x, 2.4.0 - 2.4.3
 
 Magento Enterprise Edition (EE): 2.3.x, 2.4.0 - 2.4.3
 
-## 9. Changelog
+## 8. Changelog
 
 What's news? See here [CHANGELOG.md](https://github.com/Goomento/PageBuilder/blob/master/CHANGELOG.md).
 
-## 10. Open an issue and Contribution
+## 9. Open an issue and Contribution
 
 Feel free to Open an Issue, Fork and Create Pull Request (PR) on GitHub
 
 For opening an issue, click [here](https://github.com/Goomento/PageBuilder/issues/new).
 
-## 11. Screenshots
+## 10. Screenshots
 
 ![Goomento Page Builder Interface](https://i.imgur.com/hiRyX5Y.gif)
 One click to use

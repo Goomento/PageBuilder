@@ -189,7 +189,7 @@ class Button extends AbstractWidget
         $widget->addControl(
             $prefix . 'button_css_id',
             $args + [
-                'label' => __('Button ID'),
+                'label' => __('Button CSS ID'),
                 'type' => Controls::TEXT,
                 'dynamic' => [
                     'active' => true,

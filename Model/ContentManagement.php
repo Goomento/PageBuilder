@@ -58,6 +58,10 @@ class ContentManagement implements ContentManagementInterface
      * @var Config
      */
     private $config;
+    /**
+     * @var Cache
+     */
+    private $cache;
 
     /**
      * ContentManagement constructor.
@@ -69,6 +73,7 @@ class ContentManagement implements ContentManagementInterface
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterBuilder $filterBuilder
      * @param ConfigInterface $config
+     * @param Cache $cache
      */
     public function __construct(
         ContentFactory $contentFactory,
@@ -78,7 +83,8 @@ class ContentManagement implements ContentManagementInterface
         AdminUser $userHelper,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         FilterBuilder $filterBuilder,
-        ConfigInterface $config
+        ConfigInterface $config,
+        Cache $cache
     ) {
         $this->contentFactory = $contentFactory;
         $this->revisionFactory = $revisionFactory;
@@ -88,6 +94,7 @@ class ContentManagement implements ContentManagementInterface
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
         $this->config = $config;
+        $this->cache = $cache;
     }
 
     /**
@@ -195,12 +202,64 @@ class ContentManagement implements ContentManagementInterface
     }
 
     /**
-     * @param string $from
-     * @param string $to
-     * @param null $content
+     * @inheritDoc
      */
-    public function replaceUrls(string $from, string $to, $content = null)
+    public function replaceUrls(string $find, string $replace, $content = null)
     {
+        $find = trim($find);
+        $replace = trim($replace);
+
+        if ($find === $replace) {
+            throw new LocalizedException(
+                __('The URL to find and URL to replace must be different')
+            );
+        }
+
+        $isValidUrls = (filter_var($find, FILTER_VALIDATE_URL) && filter_var($replace, FILTER_VALIDATE_URL));
+        if (!$isValidUrls) {
+            throw new LocalizedException(
+                __('The URL to find and URL to replace must be valid URL\'s')
+            );
+        }
+
+        $contentResource = $this->contentFactory->create()->getResource();
+        $connection = $contentResource->getConnection();
+        $table = $contentResource->getMainTable();
+
+        $bind = [
+            ContentInterface::ELEMENTS =>  new \Zend_Db_Expr(
+                'REPLACE(' . $connection->quoteIdentifier(ContentInterface::ELEMENTS) . ',' . $connection->quote(
+                    str_replace('/', '\/', $find)
+                ) . ', ' . $connection->quote(
+                    str_replace('/', '\/', $replace)
+                ) . ')'
+            ),
+            ContentInterface::SETTINGS =>  new \Zend_Db_Expr(
+                'REPLACE(' . $connection->quoteIdentifier(ContentInterface::SETTINGS) . ',' . $connection->quote(
+                    str_replace('/', '\/', $find)
+                ) . ', ' . $connection->quote(
+                    str_replace('/', '\/', $replace)
+                ) . ')'
+            ),
+        ];
+        $where = [];
+        if ($content) {
+            if ($content instanceof ContentInterface) {
+                $where[ContentInterface::CONTENT_ID] = $content->getId();
+            } else {
+                $where[ContentInterface::CONTENT_ID] = (int) $content;
+            }
+        }
+
+        $count = (int) $connection->update(
+            $table,
+            $bind,
+            $where
+        );
+
+        if ($count) {
+            $this->cache->invalid();
+        }
     }
 
     /**

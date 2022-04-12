@@ -776,6 +776,19 @@ class Column extends AbstractElement
             ]
         );
 
+        $this->addResponsiveControl(
+            'order',
+            [
+                'label' => __('Order'),
+                'type' => Controls::NUMBER,
+                'min' => 0,
+                'selectors' => [
+                    '{{WRAPPER}}' => 'order: {{VALUE}};',
+                ],
+                'label_block' => false,
+            ]
+        );
+
         $this->endControlsSection();
 
         $this->startControlsSection(

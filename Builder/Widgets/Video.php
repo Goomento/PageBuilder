@@ -122,7 +122,7 @@ class Video extends AbstractWidget
                         TagsModule::URL_CATEGORY,
                     ],
                 ],
-                'placeholder' => __('Enter your URL') . ' (Vimeo)',
+                'placeholder' => __('Enter your URL (Vimeo)'),
                 'default' => 'https://vimeo.com/242163982',
                 'label_block' => true,
                 'condition' => [

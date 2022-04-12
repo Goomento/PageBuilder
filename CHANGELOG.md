@@ -1,5 +1,12 @@
 # Magento 2 Goomento Page Builder
 
+## 0.2.2: Added document and user guide
+- Added document in repo https://github.com/Goomento/DocBuilder
+- Added column order
+- Added Product List widget
+- Added Tabs to manage Settings
+- Added URL replacement
+
 ## 0.2.1: Fixed minor bugs
 - Fixed minor bugs
 - Added editor column controls

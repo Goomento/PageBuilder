@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Goomento_PageBuilder::css/tabs.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Goomento\PageBuilder\Block\Adminhtml\Manage\Tabs"
+                   name="pagebuilder.manage_tabs"
+                   template="Goomento_PageBuilder::manage/tabs.phtml"
+                   aclResource="Goomento_PageBuilder::manage"
+            >
+                <block class="Goomento\PageBuilder\Block\Adminhtml\Manage\Tab"
+                       name="pagebuilder.tabs.replace_urls"
+                       template="Goomento_PageBuilder::manage/tabs/replace_urls.phtml"
+                       aclResource="Goomento_PageBuilder::manage_replace_urls"
+                >
+                    <arguments>
+                        <argument name="title" xsi:type="string" translate="true">Replace URLs</argument>
+                        <argument name="url" xsi:type="string" />
+                        <argument name="post_url" xsi:type="string">pagebuilder/manage/replaceUrls</argument>
+                        <argument name="description" xsi:type="string" translate="true">Replace the old URLs of element such as Image, Link ... to the new one.</argument>
+                        <argument name="button_label" xsi:type="string" translate="true">Replace</argument>
+                    </arguments>
+                </block>
+                <block class="Goomento\PageBuilder\Block\Adminhtml\Manage\GlobalCss"
+                       name="pagebuilder.tabs.global_css"
+                       template="Goomento_PageBuilder::manage/tabs/globalcss.phtml"
+                       aclResource="Goomento_PageBuilder::manage_global_css"
+                >
+                    <arguments>
+                        <argument name="title" xsi:type="string" translate="true">Global Css</argument>
+                        <argument name="url" xsi:type="string" />
+                        <argument name="post_url" xsi:type="string">pagebuilder/manage/globalCss</argument>
+                        <argument name="button_label" xsi:type="string" translate="true">Save and Refresh</argument>
+                    </arguments>
+                </block>
+                <block class="Magento\Framework\View\Element\FormKey" name="formkey"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

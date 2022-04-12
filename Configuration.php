@@ -22,7 +22,7 @@ class Configuration
     /**
      * The Goomento Page Builder Version - which is set for resource version (Eg: styles, json files)
      */
-    const VERSION = '0.2.1';
+    const VERSION = '0.2.2';
 
     /**
      * Default Breakpoints

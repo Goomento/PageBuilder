@@ -370,6 +370,22 @@ class DataHelper
     }
 
     /**
+     * @param string $str
+     * @param $separator
+     * @return array
+     */
+    public static function extractStr(string $str, $separator = ',') : array
+    {
+        $data = explode($separator, $str);
+        if (!empty($data)) {
+            $data = array_map('trim', $data);
+            $data = array_filter($data);
+        }
+
+        return $data;
+    }
+
+    /**
      * @inheritDoc
      */
     static protected function getStaticInstance()

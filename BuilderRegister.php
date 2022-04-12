@@ -53,7 +53,7 @@ class BuilderRegister implements BuildableInterface
      *
      * @see Widgets::registerWidgetType()
      */
-    public function registerWidgets(Widgets $widgetManager)
+    public function registerWidgets(Widgets $widgetsManager)
     {
     }
 
