@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="pagebuilder_catalog_product_list"/>
+    <body>
+        <referenceBlock name="head.additional">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="pagebuilder.head.fonts"
+                   template="Goomento_PageBuilder::head.phtml" />
+        </referenceBlock>
+        <block class="PageBuilderRenderer" name="PageBuilderRenderer" />
+    </body>
+</page>

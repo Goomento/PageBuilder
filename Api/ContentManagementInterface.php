@@ -8,11 +8,14 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Api;
 
+use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\Exception\LocalizedException;
 
 interface ContentManagementInterface
 {
     /**
+     * Quick create Page Builder Revision
+     *
      * @return Data\RevisionInterface|null
      * @throws LocalizedException
      */
@@ -26,6 +29,8 @@ interface ContentManagementInterface
     public function httpContentExport(Data\ContentInterface $content) : void;
 
     /**
+     * Quick create Page Builder Content
+     *
      * @param array $data
      * @return Data\ContentInterface
      * @throws LocalizedException
@@ -33,13 +38,27 @@ interface ContentManagementInterface
     public function createContent(array $data) : Data\ContentInterface;
 
     /**
+     * Update the Content CSS to the newest state
+     *
      * @param Data\ContentInterface $content
-     * @return mixed
+     * @return void
      */
     public function refreshContentAssets(Data\ContentInterface $content);
 
     /**
-     * @return mixed
+     * Update the Global CSS to the newest state
+     *
+     * @return void
      */
     public function refreshGlobalAssets();
+
+    /**
+     * Replace Urls of contents
+     *
+     * @param string $find
+     * @param string $replace
+     * @param ContentInterface|int|null $content
+     * @return void
+     */
+    public function replaceUrls(string $find, string $replace, $content = null);
 }

@@ -173,17 +173,12 @@ class Elements
         $this->categories = [
             'basic' => [
                 'title' => __('Basic'),
-                'icon' => 'fas fa-font',
             ],
             'general' => [
                 'title' => __('General'),
-                'icon' => 'fas fa-font',
             ],
-            'extension' => [
-                'title' => __('Extension'),
-            ],
-            'theme' => [
-                'title' => __('Theme'),
+            'products' => [
+                'title' => __('Products'),
             ],
         ];
 

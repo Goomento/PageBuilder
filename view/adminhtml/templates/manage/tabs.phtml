@@ -1,0 +1,61 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+/**
+ * @var $block Tabs
+ */
+
+use Goomento\PageBuilder\Block\Adminhtml\Manage\Tabs;
+$tabs = $block->getTabs();
+?>
+<div class="admin__fieldset-wrapper-content pagebuilder-tabs">
+    <div class="data items tabs"
+         data-mage-init='{"mage/tabs": {"openedState": "active", "animate": {"duration": 100}, "active": 0, "disabledState": "disabled"}}'>
+        <?php foreach ($block->getTabs() as $index => $tab) : ?>
+        <div class="item title <?php if ($index === 0) : ?> active <?php endif; ?>" data-role="collapsible">
+            <a class="switch" data-toggle="trigger"
+                <?php if ($url = $tab->getTabUrl()) : ?>
+                    href="<?= $block->escapeUrl($url) ?>"
+                <?php else: ?>
+                    href="#<?= $tab->getNameInLayout() ?>"
+                <?php endif; ?>
+            >
+                <?= $tab->getTabTitle() ?>
+            </a>
+        </div>
+        <div id="<?= $tab->getNameInLayout() ?>" class="item content"
+             <?php if ($index !== 0) : ?>
+             style="display: none"
+             <?php endif; ?>
+             data-role="content">
+            <?php if ($postUrl = $tab->getTabPostUrl()) : ?>
+                <form method="POST"
+                      action="<?= $block->escapeUrl($postUrl) ?>"
+                      enctype="multipart/form-data"
+                      data-mage-init='{"validation": {}}'>
+            <?php endif; ?>
+                    <div class="tab-wrapper">
+                        <?php if ($description = $tab->getTabDescription()) : ?>
+                        <div class="tab-description">
+                            <em><?= $block->escapeHtml($description) ?></em>
+                        </div>
+                            <br>
+                        <?php endif; ?>
+                        <?= /** @noEscape */ $tab->toHtml() ?>
+                    </div>
+            <?php if ($postUrl) : ?>
+            <?= /** @noEscape */ $block->getChildHtml('formkey') ?>
+                    <br />
+                    <button type="submit">
+                        <?= $tab->getButtonLabel() ?>
+                    </button>
+                </form>
+            <?php endif; ?>
+        </div>
+        <?php endforeach; ?>
+    </div>
+</div>

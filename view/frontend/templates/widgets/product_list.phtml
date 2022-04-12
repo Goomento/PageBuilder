@@ -1,0 +1,60 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Block\Widgets\Product\ListProduct;
+use Goomento\PageBuilder\Helper\LayoutHelper;
+use Goomento\PageBuilder\Builder\Widgets\ProductList;
+use Goomento\PageBuilder\Helper\DataHelper;
+
+/**
+ * @var Widget $block
+ * @var ProductList $widget
+ */
+$widget = $block->getWidget();
+$settings = $block->getSettingsForDisplay();
+$category = $settings['product-list_category'];
+$product = $settings['product-list_product'];
+$categoryIds = DataHelper::extractStr($category);
+$productSkus = DataHelper::extractStr($product);
+
+if (!empty($categoryIds) || !empty($productSkus)) :
+    ?>
+    <div class="gmt-product-list-wrapper">
+        <div class="gmt-product-list-inner">
+            <?php
+            if ($productSkus || $categoryIds) :
+                if (!empty($settings['product-list_products_per_row'])) {
+                    $widget->addRenderAttribute('item', 'class', 'gmt-col-' . $settings['product-list_products_per_row']);
+                } else {
+                    $widget->addRenderAttribute('item', 'class', 'gmt-col-100');
+                }
+                if (!empty($settings['product-list_products_per_row_mobile'])) {
+                    $widget->addRenderAttribute('item', 'class', 'gmt-xs-' . $settings['product-list_products_per_row_mobile']);
+                }
+                if (!empty($settings['product-list_products_per_row_tablet'])) {
+                    $widget->addRenderAttribute('item', 'class', 'gmt-md-' . $settings['product-list_products_per_row_tablet']);
+                }
+
+                $widget->addRenderAttribute('item', 'class', 'gmt-column gmt-product-list-items-item');
+                $widget->addRenderAttribute('items', 'class', 'gmt-row');
+
+                /** @var ListProduct $blockList */
+                $blockList = LayoutHelper::getBlock('pagebuilder.products.list');
+                $blockList->setProductsPerPage($settings['product-list_products_per_page'])
+                    ->setProductSkus($productSkus)
+                    ->setCategoryIds($categoryIds)
+                    ->setWidget($widget)
+                    ->setMode($settings['product-list_mode'] ?: 'grid');
+                ?>
+                <?= /** @noEscape */ $blockList->toHtml() ?>
+            <?php endif; ?>
+        </div>
+    </div>
+<?php endif; ?>
+

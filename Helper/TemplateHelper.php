@@ -17,7 +17,7 @@ class TemplateHelper
     use TraitStaticInstances;
 
     /**
-     * @param $template
+     * @param string|array|object $template Template or Class renderer
      * @param array $params
      * @return string
      */
@@ -38,16 +38,16 @@ class TemplateHelper
 
     /**
      * @param WidgetBase $widget
-     * @param $templatePath
      * @param array $params
      * @return string
      */
-    public static function getWidgetHtml(WidgetBase $widget, $templatePath, array $params = []): string
+    public static function getWidgetHtml(WidgetBase $widget, array $params = []): string
     {
         $params = array_merge($params, [
-            'template' => $templatePath,
+            'template' => $widget->getTemplate(),
             'widget' => $widget
         ]);
-        return self::getHtml(Widget::class, $params);
+        $rendeder = $widget->getRenderer();
+        return self::getHtml(!empty($rendeder) ? $rendeder : Widget::class, $params);
     }
 }

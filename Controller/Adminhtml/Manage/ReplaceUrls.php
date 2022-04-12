@@ -8,18 +8,17 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Controller\Adminhtml\Manage;
 
-use Exception;
 use Goomento\PageBuilder\Helper\EscaperHelper;
-use Goomento\PageBuilder\Model\Config;
 use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\Exception\LocalizedException;
+use Exception;
 
-class GlobalCss extends AbstractManage
+class ReplaceUrls extends AbstractManage
 {
     /**
      * @inheritdoc
      */
-    const ADMIN_RESOURCE = 'Goomento_PageBuilder::manage_global_css';
+    const ADMIN_RESOURCE = 'Goomento_PageBuilder::manage_replace_urls';
 
     /**
      * @inheritdoc
@@ -29,19 +28,13 @@ class GlobalCss extends AbstractManage
         try {
             $data = $this->getRequest()->getPostValue();
             $data = EscaperHelper::filter($data);
-            if (isset($data[Config::CUSTOM_CSS]) && $data[Config::CUSTOM_CSS] !== $this->config->getValue(Config::CUSTOM_CSS)) {
-                $this->dataPersistor->set(Config::CUSTOM_CSS, $data['custom_css']);
-                $this->config->setValue(Config::CUSTOM_CSS, $data['custom_css']);
-            }
-
-            $this->contentManagement->refreshGlobalAssets();
-
-            $this->messageManager->addSuccessMessage(__('Global.css saved.'));
+            $this->contentManagement->replaceUrls($data['from'], $data['to']);
+            $this->messageManager->addSuccessMessage(__('Replaced URLs successfully.'));
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
         } catch (Exception $e) {
             $this->logger->error($e);
-            $this->messageManager->addErrorMessage(__('Something went wrong when saving Global.css'));
+            $this->messageManager->addErrorMessage(__('Something went wrong when replacing URLs'));
         }
 
         /** @var Redirect $resultRedirect */

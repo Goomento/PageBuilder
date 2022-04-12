@@ -6,32 +6,17 @@
 
 declare(strict_types=1);
 /**
- * @var $block \Goomento\PageBuilder\Block\Adminhtml\Manage\GlobalCss
+ * @var $block GlobalCss
  */
 
+use Goomento\PageBuilder\Block\Adminhtml\Manage\GlobalCss;
 use Goomento\PageBuilder\Helper\EscaperHelper;
-
 ?>
-
-<form action=""
-      method="POST"
-      id="custom_css_form">
-    <?= $block->getChildHtml('formkey')?>
-    <label for="custom_css" />
+<div>
+    <label for="custom_css"></label>
     <textarea style="display: none" name="custom_css" id="custom_css"><?= EscaperHelper::escapeHtml($block->getCustomCss()) ?></textarea>
-    <div id="gmt-editor">
-        <?= __('Loading ...') ?>
-    </div>
-    <br />
-    <button type="submit"><?= __('Save and Refresh') ?></button>
-</form>
-<style>
-    #gmt-editor.loaded {
-        box-shadow: 2px 2px 5px 2px #e6e6e6;
-        font-size: 15px;
-        border-radius: 3px;
-    }
-</style>
+    <div id="global_css_editor"><?= __('Loading ...') ?></div>
+</div>
 <script>
     require([
         'jquery',
@@ -40,7 +25,7 @@ use Goomento\PageBuilder\Helper\EscaperHelper;
         '!domReady'
     ], function ($) {
         let $customCss = $('#custom_css'),
-            $editor = $('#gmt-editor'),
+            $editor = $('#global_css_editor'),
             editor,
             windowVariableExisted = function (name, callback) {
                 if (window[name]) {
@@ -55,7 +40,7 @@ use Goomento\PageBuilder\Helper\EscaperHelper;
                 }
             },
             loadEditor = function (ace) {
-                editor = ace.edit( 'gmt-editor' );
+                editor = ace.edit( 'global_css_editor' );
 
                 editor.setOptions( {
                     mode: 'ace/mode/css',

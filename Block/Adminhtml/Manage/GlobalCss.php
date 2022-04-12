@@ -3,6 +3,7 @@
  * @package Goomento_PageBuilder
  * @link https://github.com/Goomento/PageBuilder
  */
+declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Block\Adminhtml\Manage;
 
@@ -11,7 +12,7 @@ use Magento\Backend\Block\Template;
 use Goomento\PageBuilder\Model\Config;
 use Goomento\PageBuilder\Api\ConfigInterface;
 
-class GlobalCss extends Template
+class GlobalCss extends Tab
 {
     /**
      * @var DataPersistorInterface

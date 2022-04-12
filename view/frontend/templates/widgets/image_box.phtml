@@ -46,7 +46,7 @@ $has_content = !DataHelper::isEmpty($settings['title_text']) || !DataHelper::isE
             $image_html = '<a ' . $widget->getRenderAttributeString('link') . '>' . $image_html . '</a>';
         }
         ?>
-        <figure class="gmt-image-box-img">' . <?= $image_html ?> . '</figure>
+        <figure class="gmt-image-box-img"><?= $image_html ?></figure>
         <?php
     }
 

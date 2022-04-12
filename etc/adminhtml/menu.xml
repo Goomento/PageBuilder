@@ -53,14 +53,14 @@
              parent="Goomento_Core::menu"
              resource="Goomento_PageBuilder::action"/>
 
-        <add id="Goomento_PageBuilder::manage_global_css"
-             title="Global.css"
+        <add id="Goomento_PageBuilder::manage"
+             title="Management"
              module="Goomento_PageBuilder"
              translate="title"
              sortOrder="5"
-             action="pagebuilder/manage/globalCss"
+             action="pagebuilder/manage/tabs"
              parent="Goomento_PageBuilder::action"
-             resource="Goomento_PageBuilder::manage_global_css"/>
+             resource="Goomento_PageBuilder::manage"/>
 
         <add id="Goomento_PageBuilder::import"
              title="Importer"

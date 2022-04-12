@@ -38,6 +38,13 @@ abstract class AbstractWidget extends AbstractElement
     protected $template = '';
 
     /**
+     * Name of class for widget rendering
+     *
+     * @var string
+     */
+    protected $renderer = '';
+
+    /**
      * Widget base constructor.
      *
      * Initializing the widget base class.
@@ -95,13 +102,36 @@ abstract class AbstractWidget extends AbstractElement
         return $this->template;
     }
 
+
+    /**
+     * Set renderer class for this element
+     *
+     * @param string|object $renderer
+     * @return $this
+     */
+    public function setRenderer($renderer)
+    {
+        $this->renderer = $renderer;
+        return $this;
+    }
+
+    /**
+     * Get renderer class for this element
+     *
+     * @return string
+     */
+    public function getRenderer()
+    {
+        return $this->renderer;
+    }
+
     /**
      * @inheriDoc
      */
     protected function render()
     {
-        if ($template = $this->getTemplate()) {
-            return TemplateHelper::getWidgetHtml($this, $template);
+        if ($this->getTemplate()) {
+            return TemplateHelper::getWidgetHtml($this);
         }
     }
 

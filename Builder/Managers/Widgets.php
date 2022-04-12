@@ -34,6 +34,7 @@ use Goomento\PageBuilder\Builder\Widgets\StarRating;
 use Goomento\PageBuilder\Builder\Widgets\Video;
 use Goomento\PageBuilder\Builder\Widgets\Tabs;
 use Goomento\PageBuilder\Builder\Widgets\TextEditor;
+use Goomento\PageBuilder\Builder\Widgets\ProductList;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Traits\ComponentsLoader;
 
@@ -80,6 +81,7 @@ class Widgets
             Video::NAME => Video::class,
             Tabs::NAME => Tabs::class,
             TextEditor::NAME => TextEditor::class,
+            ProductList::NAME => ProductList::class,
         ];
 
         HooksHelper::doAction('pagebuilder/widgets/widgets_registered', $this);

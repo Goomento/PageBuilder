@@ -1,0 +1,51 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+/**
+ * @var $block Tab
+ */
+
+use Goomento\PageBuilder\Block\Adminhtml\Manage\Tab;
+?>
+<div class="admin__fieldset-wrapper-content">
+    <div class="admin__fieldset">
+        <div class="admin__field _required">
+            <div class="admin__field-label">
+                <label for="from">
+                    <span>
+                        <?= __('Find') ?>
+                    </span>
+                </label>
+            </div>
+            <div class="admin__field-control">
+                <input id="from" placeholder="Eg: https://old-site.com/"
+                       required name="from"
+                       class="admin__control-text required-entry"
+                       type="text"
+                       maxlength="255" />
+            </div>
+        </div>
+        <div class="admin__field _required">
+            <div class="admin__field-label">
+                <label for="to">
+                    <span>
+                        <?= __('Replace') ?>
+                    </span>
+                </label>
+            </div>
+            <div class="admin__field-control">
+                <input id="to"
+                       required
+                       name="to"
+                       placeholder="Eg: https://new-site.com/"
+                       class="admin__control-text required-entry"
+                       type="text"
+                       maxlength="255" />
+            </div>
+        </div>
+    </div>
+</div>
