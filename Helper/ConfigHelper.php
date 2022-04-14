@@ -15,6 +15,7 @@ use Goomento\PageBuilder\Model\Config;
 /**
  * @see Config::getValue()
  * @method static getValue($path, $storeId = 0)
+ * @method static getCustomCss($storeId = 0) Get Custom CSS
  * @method static setValue($path, $value, $storeId = 0)
  * @method static deleteValue($path, $storeId = 0)
  */

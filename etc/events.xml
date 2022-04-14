@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="pagebuilder_content_save_after">
+        <observer name="pagebuilder.process_url_rewrite_saving" instance="Goomento\PageBuilder\Observer\ProcessUrlRewriteSavingObserver" />
+    </event>
+</config>

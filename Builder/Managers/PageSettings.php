@@ -82,6 +82,10 @@ class PageSettings extends AbstractSettingsManager
             $model->setData('status', $data['status']);
         }
 
+        if (isset($data['is_active'])) {
+            $model->setIsActive((bool) $data['is_active']);
+        }
+
         return $this;
     }
 
@@ -193,6 +197,7 @@ class PageSettings extends AbstractSettingsManager
             'title',
             'status',
             'content_id',
+            'is_active',
         ];
     }
 

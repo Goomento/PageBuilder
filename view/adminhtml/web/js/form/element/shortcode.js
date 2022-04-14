@@ -52,8 +52,7 @@ define([
         _getModal: function () {
             let html = shortcodeHtml.replaceAll('%identifier', this.identifier);
             if (this.$modal === null) {
-                let $modal = $('<div />');
-                this.$modal = $modal;
+                this.$modal = $('<div />');
                 modal(this.modalOptions, this.$modal);
             }
 

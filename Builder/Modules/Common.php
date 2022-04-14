@@ -57,7 +57,7 @@ class Common extends AbstractApp
      */
     public function registerScripts()
     {
-        $min_suffix = DataHelper::isScriptDebug() ? '' : '.min';
+        $min_suffix = Configuration::DEBUG ? '' : '.min';
 
         ThemeHelper::registerScript(
             'goomento-common-modules',

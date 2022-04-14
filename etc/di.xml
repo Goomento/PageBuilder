@@ -18,26 +18,6 @@
     <preference for="Goomento\PageBuilder\Api\SampleImporterInterface" type="Goomento\PageBuilder\SampleImport\ImporterProcessor" />
     <preference for="Goomento\PageBuilder\Api\ConfigInterface" type="Goomento\PageBuilder\Model\Config" />
 
-    <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
-        <arguments>
-            <argument name="extensionActions" xsi:type="array">
-                <item name="Magento\Cms\Api\Data\PageInterface" xsi:type="array">
-                    <item name="read" xsi:type="array">
-                        <item name="pageBuilderReader" xsi:type="string">
-                            Goomento\PageBuilder\Model\ResourceModel\Cms\Relation\ReadHandler
-                        </item>
-                    </item>
-                </item>
-                <item name="Magento\Cms\Api\Data\BlockInterface" xsi:type="array">
-                    <item name="read" xsi:type="array">
-                        <item name="pageBuilderReader" xsi:type="string">
-                            Goomento\PageBuilder\Model\ResourceModel\Cms\Relation\ReadHandler
-                        </item>
-                    </item>
-                </item>
-            </argument>
-        </arguments>
-    </type>
     <type name="Magento\Framework\EntityManager\MetadataPool">
         <arguments>
             <argument name="metadata" xsi:type="array">
@@ -227,6 +207,7 @@
     <type name="Goomento\PageBuilder\PageBuilder">
         <arguments>
             <argument name="components" xsi:type="array">
+                <item name="pagebuilder" xsi:type="string">Goomento\PageBuilder\EntryPoint</item>
                 <item name="controls-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Controls</item>
                 <item name="schemes-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Schemes</item>
                 <item name="elements-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Elements</item>
@@ -252,6 +233,13 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Sitemap\Model\ItemProvider\Composite">
+        <arguments>
+            <argument name="itemProviders" xsi:type="array">
+                <item name="pagebuilderProvider" xsi:type="object">Goomento\PageBuilder\Model\ItemProvider\PageBuilder</item>
+            </argument>
+        </arguments>
+    </type>
     <type name="Goomento\PageBuilder\SampleImport\SampleImport">
         <arguments>
             <argument name="samples" xsi:type="array">
@@ -274,6 +262,12 @@
     </type>
     <type name="Goomento\PageBuilder\Model\ResourceModel\Content">
         <plugin name="invalidateContentCache" type="Goomento\PageBuilder\Plugin\PageBuilder\Model\ResourceModel\Content" />
+    </type>
+    <type name="Magento\Framework\Controller\ResultInterface">
+        <plugin name="pagebuilder.modify_response"
+                type="Goomento\PageBuilder\Plugin\Framework\Controller\ResultInterface\ModifyResponse"
+                sortOrder="0"/>
+        <plugin name="result-builtin-cache" sortOrder="1"/>
     </type>
 </config>
 

@@ -203,7 +203,7 @@ class Config implements ConfigInterface
      */
     public function __call($method, $args)
     {
-        $storeId = (int) $args[0] ?? self::DEFAULT_STORE_ID;
+        $storeId = $args[0] ?? self::DEFAULT_STORE_ID;
         switch (substr($method, 0, 3)) {
             case 'get':
                 $key = $this->underscore(substr($method, 3));

@@ -20,7 +20,6 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\User\Model\User;
 use Magento\User\Model\UserFactory;
 
-
 class Content extends AbstractModel implements
     ContentInterface,
     IdentityInterface
@@ -91,21 +90,6 @@ class Content extends AbstractModel implements
     }
 
     /**
-     * @inheridoc
-     */
-    public function getStores()
-    {
-        if (is_null($this->stores)) {
-            $storeIds = $this->getStoreIds();
-            foreach ($storeIds as $storeId) {
-                $this->stores[] = $this->getStoreManager()->getStore($storeId);
-            }
-        }
-
-        return $this->stores;
-    }
-
-    /**
      * @return array
      */
     public static function getAvailableStatuses()
@@ -163,14 +147,6 @@ class Content extends AbstractModel implements
     /**
      * @inheridoc
      */
-    public function getContent()
-    {
-        return $this->getData(self::CONTENT);
-    }
-
-    /**
-     * @inheridoc
-     */
     public function getCreationTime()
     {
         return $this->getData(self::CREATION_TIME);
@@ -198,14 +174,6 @@ class Content extends AbstractModel implements
     public function setTitle($title)
     {
         return $this->setData(self::TITLE, $title);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setContent($content)
-    {
-        return $this->setData(self::CONTENT, $content);
     }
 
     /**
@@ -276,15 +244,6 @@ class Content extends AbstractModel implements
         }
         return $this->setData(self::TYPE, $type);
     }
-
-    /**
-     * @inheridoc
-     */
-    public function setStores($stores)
-    {
-        return $this->setData(self::STORES, $stores);
-    }
-
     /**
      * @inheridoc
      */
@@ -507,5 +466,69 @@ class Content extends AbstractModel implements
         }
 
         return $result;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setIsActive(bool $active)
+    {
+        return $this->setData(self::IS_ACTIVE, (int) $active);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getIsActive(): bool
+    {
+        return (bool) $this->getData(self::IS_ACTIVE);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMetaTitle(string $meta)
+    {
+        return $this->setData(self::META_TITLE, $meta);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMetaTitle(): string
+    {
+        return (string) $this->getData(self::META_TITLE);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMetaKeywords(string $meta)
+    {
+        return $this->setData(self::META_KEYWORDS, $meta);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMetaKeywords(): string
+    {
+        return (string) $this->getData(self::META_KEYWORDS);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setMetaDescription(string $meta)
+    {
+        return $this->setData(self::META_DESCRIPTION, $meta);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMetaDescription(): string
+    {
+        return (string) $this->getData(self::META_DESCRIPTION);
     }
 }

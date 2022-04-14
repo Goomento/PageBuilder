@@ -15,11 +15,14 @@
                 <allowed_download_image>0</allowed_download_image>
                 <download_folder>media/goomento/images/imported/</download_folder>
             </import>
+            <builder_assistance>
+                <active>1</active>
+            </builder_assistance>
             <editor>
                 <number_of_revision>100</number_of_revision>
                 <is_rtl>0</is_rtl>
                 <render>
-                    <fallback>use_origin</fallback>
+                    <fallback>empty</fallback>
                 </render>
                 <style>
                     <css_print_method>internal</css_print_method>

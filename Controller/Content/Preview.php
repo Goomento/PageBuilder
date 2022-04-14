@@ -11,6 +11,10 @@ namespace Goomento\PageBuilder\Controller\Content;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Magento\Framework\Exception\LocalizedException;
 
+/**
+ * For Editor Preview purpose, therefore, there is no content should be rendered
+ * This page will not be cached
+ */
 class Preview extends View
 {
     /**
@@ -46,11 +50,11 @@ class Preview extends View
      */
     protected function getPageConfig()
     {
-        $layout = $this->getRequest()->getParam('layout', '1column');
+        $layout = $this->getRequest()->getParam('layout', 'pagebuilder_content_1column');
 
         return [
             'editable_title' => 'Preview: %1',
-            'handler' => 'pagebuilder_content_' . $layout,
+            'handler' => $layout,
         ];
     }
 }

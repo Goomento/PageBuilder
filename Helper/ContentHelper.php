@@ -13,6 +13,9 @@ use Goomento\Core\Traits\TraitStaticInstances;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Api\Data\RevisionSearchResultsInterface;
+use Goomento\PageBuilder\Builder\Elements\Column;
+use Goomento\PageBuilder\Builder\Elements\Section;
+use Goomento\PageBuilder\Builder\Widgets\TextEditor;
 
 /**
  * @see \Goomento\PageBuilder\Helper\Content
@@ -34,6 +37,52 @@ class ContentHelper
     static protected function getStaticInstance()
     {
         return Content::class;
+    }
+
+    /**
+     * @param ContentInterface $content
+     * @return string
+     */
+    public static function getContentLabel(ContentInterface $content) : string
+    {
+        return ucfirst($content->getType()) . ' - ' . $content->getTitle() . ' ( ID: ' . $content->getId() . ' )';
+    }
+
+    /**
+     * Create Content with HTML
+     *
+     * @param string $html
+     * @param array $data
+     * @return ContentInterface
+     */
+    public static function createContentWithHtml(string $html, array $data = []) : ContentInterface
+    {
+        $data['elements'] = [[
+            'id' => EncryptorHelper::uniqueString(7),
+            'isInner' => false,
+            'elType' => Section::NAME,
+            'settings' => [],
+            'elements' => [[
+                'id' => EncryptorHelper::uniqueString(7),
+                'isInner' => false,
+                'elType' => Column::NAME,
+                'settings' => [
+                    '_column_size' => 100
+                ],
+                'elements' => [[
+                    'id' => EncryptorHelper::uniqueString(7),
+                    'isInner' => false,
+                    'elType' => TextEditor::TYPE,
+                    'widgetType' => TextEditor::NAME,
+                    'elements' => [],
+                    'settings' => [
+                        TextEditor::NAME . '_editor' => /** @noEscape */ $html
+                    ],
+                ]]
+            ]],
+        ]];
+
+        return self::create($data);
     }
 
 

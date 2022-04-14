@@ -204,18 +204,111 @@ class Button extends AbstractWidget
     }
 
     /**
-     * Share of button styling
+     * Share button label styling
      *
      * @param AbstractWidget $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @throws \Exception
+     * @return void
      */
-    public static function registerButtonStyle(
+    public static function registerButtonBodyStyle(
         AbstractWidget $widget,
         string         $prefix = self::NAME . '_',
-        array          $args = [],
-        string         $cssTarget = '.gmt-button'
+        string         $cssTarget = '.gmt-button',
+        array          $args = []
+    )
+    {
+        $widget->addGroupControl(
+            BorderGroup::NAME,
+            $args + [
+                'name' => $prefix . 'border',
+                'selector' => '{{WRAPPER}} ' . $cssTarget,
+                'separator' => 'before',
+            ]
+        );
+
+        $widget->addControl(
+            $prefix . 'border_radius',
+            $args + [
+                'label' => __('Border Radius'),
+                'type' => Controls::DIMENSIONS,
+                'size_units' => [ 'px', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $widget->addGroupControl(
+            BoxShadowGroup::NAME,
+            $args + [
+                'name' => $prefix . 'box_shadow',
+                'selector' => '{{WRAPPER}} ' . $cssTarget,
+            ]
+        );
+
+        $widget->addResponsiveControl(
+            $prefix . 'text_padding',
+            $args + [
+                'label' => __('Padding'),
+                'type' => Controls::DIMENSIONS,
+                'size_units' => [ 'px', 'em', '%' ],
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+                'separator' => 'before',
+            ]
+        );
+    }
+
+    /**
+     * Share button icon styling
+     *
+     * @param AbstractWidget $widget
+     * @param string $prefix
+     * @param array $args
+     * @param string $cssTarget
+     * @return void
+     */
+    public static function registerButtonIconStyle(
+        AbstractWidget $widget,
+        string         $prefix = self::NAME . '_',
+        string         $cssTarget = '.gmt-button',
+        array          $args = []
+    )
+    {
+        $widget->addControl(
+            $prefix . 'icon_indent',
+            $args + [
+                'label' => __('Icon Spacing'),
+                'type' => Controls::SLIDER,
+                'range' => [
+                    'px' => [
+                        'max' => 50,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget . ' .gmt-align-icon-right' => 'margin-left: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget . ' .gmt-align-icon-left' => 'margin-right: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+    }
+
+    /**
+     * Share button label styling
+     *
+     * @param AbstractWidget $widget
+     * @param string $prefix
+     * @param array $args
+     * @param string $cssTarget
+     * @return void
+     */
+    public static function registerButtonLabelStyle(
+        AbstractWidget $widget,
+        string         $prefix = self::NAME . '_',
+        string         $cssTarget = '.gmt-button',
+        array          $args = []
     )
     {
         $widget->addGroupControl(
@@ -235,7 +328,7 @@ class Button extends AbstractWidget
             ]
         );
 
-        $widget->startControlsTabs('tabs_button_style');
+        $widget->startControlsTabs($prefix . 'tabs_button_style');
 
         $widget->startControlsTab(
             $prefix . 'tab_button_normal',
@@ -327,65 +420,27 @@ class Button extends AbstractWidget
         $widget->endControlsTab();
 
         $widget->endControlsTabs();
+    }
 
-        $widget->addGroupControl(
-            BorderGroup::NAME,
-            $args + [
-                'name' => $prefix . 'border',
-                'selector' => '{{WRAPPER}} ' . $cssTarget,
-                'separator' => 'before',
-            ]
-        );
 
-        $widget->addControl(
-            $prefix . 'border_radius',
-            $args + [
-                'label' => __('Border Radius'),
-                'type' => Controls::DIMENSIONS,
-                'size_units' => [ 'px', '%' ],
-                'selectors' => [
-                    '{{WRAPPER}} ' . $cssTarget => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
-        );
-
-        $widget->addGroupControl(
-            BoxShadowGroup::NAME,
-            $args + [
-                'name' => $prefix . 'box_shadow',
-                'selector' => '{{WRAPPER}} ' . $cssTarget,
-            ]
-        );
-
-        $widget->addResponsiveControl(
-            $prefix . 'text_padding',
-            $args + [
-                'label' => __('Padding'),
-                'type' => Controls::DIMENSIONS,
-                'size_units' => [ 'px', 'em', '%' ],
-                'selectors' => [
-                    '{{WRAPPER}} ' . $cssTarget => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-                'separator' => 'before',
-            ]
-        );
-
-        $widget->addControl(
-            $prefix . 'icon_indent',
-            $args + [
-                'label' => __('Icon Spacing'),
-                'type' => Controls::SLIDER,
-                'range' => [
-                    'px' => [
-                        'max' => 50,
-                    ],
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} ' . $cssTarget . ' .gmt-align-icon-right' => 'margin-left: {{SIZE}}{{UNIT}};',
-                    '{{WRAPPER}} ' . $cssTarget . ' .gmt-align-icon-left' => 'margin-right: {{SIZE}}{{UNIT}};',
-                ],
-            ]
-        );
+    /**
+     * Share of button styling
+     *
+     * @param AbstractWidget $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @throws \Exception
+     */
+    public static function registerButtonStyle(
+        AbstractWidget $widget,
+        string         $prefix = self::NAME . '_',
+        string         $cssTarget = '.gmt-button',
+        array          $args = []
+    )
+    {
+        self::registerButtonLabelStyle($widget, $prefix, $cssTarget, $args);
+        self::registerButtonBodyStyle($widget, $prefix, $cssTarget, $args);
+        self::registerButtonIconStyle($widget, $prefix, $cssTarget, $args);
     }
 
     /**

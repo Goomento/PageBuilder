@@ -13,6 +13,10 @@ use Goomento\PageBuilder\Controller\AbstractAction;
 use Goomento\PageBuilder\Traits\TraitHttpPage;
 use Magento\Framework\Exception\LocalizedException;
 
+/**
+ * For Admin Preview purpose, therefore, there is all content will be rendered
+ * This page will not be cached
+ */
 class View extends AbstractAction
 {
     use TraitHttpPage;
@@ -49,11 +53,11 @@ class View extends AbstractAction
     protected function getPageConfig()
     {
         $content = $this->getContent(true);
-        $layout = $content->getSetting('layout') ?: '1column';
+        $layout = $content->getSetting('layout') ?: 'pagebuilder_content_1column';
 
         return [
             'editable_title' => '%1',
-            'handler' => 'pagebuilder_content_' . $layout,
+            'handler' => $layout,
         ];
     }
 }

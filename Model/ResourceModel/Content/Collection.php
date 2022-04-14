@@ -62,15 +62,26 @@ class Collection extends AbstractCollection
      * Add filter by store
      *
      * @param int|array|Store $store
-     * @param bool $withAdmin
+     * @param bool $withGlobalStore
      * @return $this
      */
-    public function addStoreFilter($store, $withAdmin = true)
+    public function addStoreFilter($store, $withGlobalStore = true)
     {
         if (!$this->getFlag('store_filter_added')) {
-            $this->performAddStoreFilter($store, $withAdmin);
+            $this->performAddStoreFilter($store, $withGlobalStore);
             $this->setFlag('store_filter_added', true);
         }
         return $this;
+    }
+
+    /**
+     * Perform operations before rendering filters
+     *
+     * @return void
+     */
+    protected function _renderFiltersBefore()
+    {
+        $this->joinStoreRelationTable();
+        parent::_renderFiltersBefore();
     }
 }

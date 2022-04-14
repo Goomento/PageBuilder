@@ -33,19 +33,19 @@ abstract class AbstractCollection extends \Magento\Framework\Model\ResourceModel
      * Add filter by store
      *
      * @param int|array|Store $store
-     * @param bool $withAdmin
+     * @param bool $withGlobalStore
      * @return $this
      */
-    abstract public function addStoreFilter($store, $withAdmin = true);
+    abstract public function addStoreFilter($store, $withGlobalStore = true);
 
     /**
      * Perform adding filter by store
      *
      * @param int|array|Store $store
-     * @param bool $withAdmin
+     * @param bool $withGlobalStore
      * @return void
      */
-    protected function performAddStoreFilter($store, $withAdmin = true)
+    protected function performAddStoreFilter($store, $withGlobalStore = true)
     {
         if ($store instanceof Store) {
             $store = [$store->getId()];
@@ -55,11 +55,11 @@ abstract class AbstractCollection extends \Magento\Framework\Model\ResourceModel
             $store = [$store];
         }
 
-        if ($withAdmin) {
+        if ($withGlobalStore) {
             $store[] = Store::DEFAULT_STORE_ID;
         }
 
-        $this->addFilter('store', ['in' => $store], 'public');
+        $this->addFilter('store_id', ['in' => $store], 'public');
     }
 
     /**
@@ -69,7 +69,7 @@ abstract class AbstractCollection extends \Magento\Framework\Model\ResourceModel
      */
     protected function joinStoreRelationTable()
     {
-        if ($this->getFilter('store')) {
+        if ($this->getFilter('store_id')) {
             $this->getSelect()->join(
                 ['store_table' => $this->getTable('pagebuilder_content_store')],
                 'main_table.' . ContentInterface::CONTENT_ID . ' = store_table.' . ContentInterface::CONTENT_ID,
@@ -78,7 +78,6 @@ abstract class AbstractCollection extends \Magento\Framework\Model\ResourceModel
                 'main_table.' . ContentInterface::CONTENT_ID
             );
         }
-        parent::_renderFiltersBefore();
     }
 
     /**
@@ -93,8 +92,8 @@ abstract class AbstractCollection extends \Magento\Framework\Model\ResourceModel
         if (count($linkedIds)) {
             $connection = $this->getConnection();
             $select = $connection->select()
-                ->from(['store' => $this->getTable('pagebuilder_content_store')])
-                ->where('store.' . $linkField . ' IN (?)', $linkedIds);
+                ->from(['store_table' => $this->getTable('pagebuilder_content_store')])
+                ->where('store_table.' . $linkField . ' IN (?)', $linkedIds);
 
             $result = $connection->fetchAll($select);
 

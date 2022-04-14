@@ -1,5 +1,12 @@
 # Magento 2 Goomento Page Builder
 
+## 0.2.3: Added Builder Assistance & Landing Page
+- Fixed minor bugs
+- Enhanced CSS/JS loading
+- Added Builder Assistance
+- Removed Page Builder selection On CMS Page & CMS Block, use Builder Assistance Instead
+- Added Landing Page
+
 ## 0.2.2: Added document and user guide
 - Added document in repo https://github.com/Goomento/DocBuilder
 - Added column order

@@ -16,7 +16,6 @@ use Goomento\PageBuilder\Builder\Managers\Elements;
 use Goomento\PageBuilder\Builder\Managers\PageSettings;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Css\ContentCss;
-use Goomento\PageBuilder\Builder\Managers\Settings as SettingsManager;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
@@ -40,12 +39,12 @@ abstract class AbstractDocument extends ControlsStack
      */
     protected $contentId;
 
-
+    /**
+     * @return mixed
+     */
     protected static function getEditorPanelCategories()
     {
-        /** @var Elements $elementsManager */
-        $elementsManager = ObjectManagerHelper::get(Elements::class);
-        return $elementsManager->getCategories();
+        return ObjectManagerHelper::getElementsManager()->getCategories();
     }
 
     /**
@@ -199,8 +198,7 @@ abstract class AbstractDocument extends ControlsStack
 
     protected function _getInitialConfig()
     {
-        /** @var AbstractSettingsManager $settingManager */
-        $settingManager = ObjectManagerHelper::get(SettingsManager::class);
+        $settingManager = ObjectManagerHelper::getSettingsManager();
         $settings = $settingManager->getSettingsManagersConfig();
         return [
             'id' => $this->getModelId(),
@@ -271,12 +269,15 @@ abstract class AbstractDocument extends ControlsStack
         );
 
         $this->addControl(
-            'status',
+            'is_active',
             [
-                'label' => __('Status'),
+                'label' => __('Enabled'),
                 'type' => Controls::SELECT,
-                'default' => $this->getModel()->getStatus(),
-                'options' => Content::getAvailableStatuses(),
+                'default' => (int) $this->getModel()->getIsActive(),
+                'options' => [
+                    '1' => __('Enabled'),
+                    '0' => __('Disabled'),
+                ],
             ]
         );
 
@@ -491,21 +492,28 @@ abstract class AbstractDocument extends ControlsStack
      */
     public function getPermalink()
     {
-        return UrlBuilderHelper::getContentViewUrl($this->getModel());
+        return $this->getModel()->getStatus() === ContentInterface::STATUS_PUBLISHED
+            ? UrlBuilderHelper::getPublishedContentUrl($this->getModel())
+            : UrlBuilderHelper::getContentViewUrl($this->getModel());
     }
 
-
+    /**
+     * @param $with_css
+     * @return string
+     */
     public function getContent($with_css = false)
     {
         /** @var Frontend $frontend */
         $frontend = ObjectManagerHelper::get(Frontend::class);
-        return $frontend->getBuilderContent($this->getMainContent()->getId(), $with_css);
+        return $frontend->getBuilderContent($this->getModel()->getId(), $with_css);
     }
 
-
+    /**
+     * @return void
+     */
     public function delete()
     {
-        ContentHelper::delete($this->getMainContent()->getId());
+        ContentHelper::delete($this->getModel()->getId());
     }
 
     /**
@@ -620,7 +628,7 @@ abstract class AbstractDocument extends ControlsStack
         $content = $this->getModel();
 
         $user = $content->getLastEditorUser();
-        $display_name = $user ? $user->getName() : 'Automatic';
+        $display_name = $user ? $user->getName() : __('Automatic');
 
         return __('Updated %1', DataHelper::timeElapsedString($content->getUpdateTime()), $display_name);
     }
@@ -665,9 +673,7 @@ abstract class AbstractDocument extends ControlsStack
      */
     protected function saveSettings($settings)
     {
-        /** @var AbstractSettingsManager $settingsManager */
-        $settingsManager = ObjectManagerHelper::get(SettingsManager::class);
-        /** @var PageSettings $pageSettingsManager */
+        $settingsManager = ObjectManagerHelper::getSettingsManager();
         $pageSettingsManager = $settingsManager->getSettingsManagers(PageSettings::NAME);
         $pageSettingsManager
             ->beforeSaveSettings($settings, $this->getModel()->getId())

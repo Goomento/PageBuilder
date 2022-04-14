@@ -26,8 +26,8 @@ class ViewButton extends AbstractGenericButton implements ButtonProviderInterfac
         $data = [];
         if ($this->getContentId()) {
             $data = [
-                'label' => __('View'),
-                'class' => 'view',
+                'label' => __('Preview'),
+                'class' => 'preview',
                 'on_click' => sprintf("window.open('%s', '_blank').focus();", $this->getViewUrl()),
                 'sort_order' => 5,
             ];

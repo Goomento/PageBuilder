@@ -1,14 +1,15 @@
 ![Goomento Page Builder - Drag and Drop](https://i.imgur.com/spx4d9u.png)
 
-# Goomento **Page Builder**, a free drag and drop toolkit that supports to create custom pages, landing pages, blocks and store designs without writing a line of code
+# Goomento - **The Magento Page Builder Extension**, a free drag and drop toolkit that supports to create custom pages, landing pages, blocks and store designs without writing a line of code
 
-**Goomento Page Builder** is a *Free Magento 2 Page Builder Extension*, allows you to set up your own website in any industry easily by simple dragging and dropping manipulation. Notably, it can reuse your previous templates and sections to customize and redesign with your new creativity. All this process has an absence of coding involvement and configures instantly.
+**Goomento** is a *Free Magento Page Builder Extension*, allows you to set up your own website in any industry 
+easily by simple dragging and dropping manipulation. Notably, it can reuse your previous 
+templates and sections to customize and redesign with your new creativity. 
+All this process has an absence of coding involvement and configures instantly.
 
-_This module is inspired by Elementor for WordPress let say Elementor for Magento, precisely, It's Goomento for Magento_
+## 1. How to install & upgrade Goomento
 
-## 1. How to install Magento 2 Goomento Page Builder
-
-### Install via composer (recommend)
+### Install via composer 
 
 Run the following command in Magento 2 root folder:
 
@@ -18,9 +19,18 @@ php bin/magento module:enable Goomento_PageBuilder
 php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy
 ```
+
+### Upgrade via composer
+
+```bash
+composer update goomento/module-page-builder
+php bin/magento setup:upgrade
+php bin/magento setup:static-content:deploy
+```
+
 ## 2. Configuration
 
-2.1 To display Goomento Page Builder content on storefront, enable module in
+2.1 To display Goomento content on storefront, enable module in
 
     Stores > Settings > Configuration > Goomento > Page Builder > General > Active
 
@@ -36,7 +46,9 @@ Choose template, then Import it.
 
 ## 3. Features
 
-- Easy to install, setup and use by Non-developer and Developer
+Functionalities:
+
+- Easy to install, setup and use by both non-tech & tech guys
 - Drag and Drop visual editor
 - Section, Pages, Templates control
 - Import, Export content
@@ -51,13 +63,9 @@ Choose template, then Import it.
 
 ## 4. Design concept
 
-4.1 Goomento Page Builder will overwrite the main content of these Magento entities:
+Goomento is using the WYSIWYG Magento Widget to display the content of Page Builder
 
-- Cms Page
-- Cms Block
-- Default text Editor by Magento, Eg: Wysiwyg, Magento Page Builder (In develop)
-
-4.2 Goomento Page Builder is using [Font Awesome Free 5.9.0](https://fontawesome.com/) for Icon displaying.
+Goomento is using [Font Awesome Free 5.9.0](https://fontawesome.com/) for Icon displaying.
 
 ## 5. Document and User Guide
 
@@ -68,8 +76,7 @@ See [Repository for Document and Module Sample](https://github.com/Goomento/DocB
 **The Page Builder did not display on storefront**
 
 - Make sure that Goomento Page Builder module was enabled, click [here](https://github.com/Goomento/PageBuilder#2-configuration)
-- Make sure Page Builder status is `Published` and `Store view` is matching with current storefront
-- For Magento entity, (Eg: Product, Category ...) make sure `Page Builder Content` was selected and `Active` turned to `Yes`
+- Make sure Page Builder was `Enabled` and `Store view` is matching with current storefront
 - Flush/ Clean Magento Cache
 
 **Visual editor did not load**
@@ -107,14 +114,14 @@ For opening an issue, click [here](https://github.com/Goomento/PageBuilder/issue
 
 ## 10. Screenshots
 
-![Goomento Page Builder Interface](https://i.imgur.com/hiRyX5Y.gif)
+![Goomento - The Page Builder Interface](https://i.imgur.com/hiRyX5Y.gif)
 One click to use
 
-![Goomento Page Builder History Management](https://i.imgur.com/cpxv7Kn.gif)
+![Goomento - The Page Builder History Management](https://i.imgur.com/cpxv7Kn.gif)
 History/ Revision Management
 
-![Goomento Page Builder Editing](https://i.imgur.com/rj10Ncs.gif)
+![Goomento - The Page Builder Editing](https://i.imgur.com/rj10Ncs.gif)
 Easy to use
 
-![Goomento Page Builder Responsive](https://i.imgur.com/abT8OtO.gif)
+![Goomento - The Page Builder Responsive](https://i.imgur.com/abT8OtO.gif)
 Responsive control

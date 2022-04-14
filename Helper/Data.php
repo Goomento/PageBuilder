@@ -60,6 +60,16 @@ class Data extends AbstractHelper
     }
 
     /**
+     * @return bool
+     */
+    public function isBuilderAssistanceActive()
+    {
+        return (bool) $this->getBuilderConfig(
+            'builder_assistance/active'
+        );
+    }
+
+    /**
      * The download url with slash ending.
      * @return string
      */

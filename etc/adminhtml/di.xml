@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Ui\Component\Form\Element\Wysiwyg">
+        <plugin name="pagebuilder.builder_assistance"
+                type="Goomento\PageBuilder\Plugin\Ui\Component\Form\Element\Wysiwyg\BuilderAssistance" />
+    </type>
+    <type name="Magezon\Builder\Ui\Component\Form\Element\Builder">
+        <plugin name="pagebuilder.builder_assistance"
+                type="Goomento\PageBuilder\Plugin\Ui\Component\Form\Element\Wysiwyg\BuilderAssistance" />
+    </type>
+    <type name="Magento\Store\Model\ResourceModel\Store">
+        <plugin name="pagebuilder.update_url_rewrites_after_store_save" type="Goomento\PageBuilder\Plugin\Store\Model\ResourceModel\Store"/>
+    </type>
+</config>

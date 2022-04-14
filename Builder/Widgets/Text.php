@@ -136,6 +136,8 @@ class Text extends AbstractWidget
                     'div' => 'div',
                     'span' => 'span',
                     'p' => 'p',
+                    'code' => 'code',
+                    'pre' => 'pre',
                 ],
                 'default' => 'h2',
             ]
@@ -199,7 +201,7 @@ class Text extends AbstractWidget
     {
         $widget->addResponsiveControl(
             $prefix . 'align',
-            [
+            $args + [
                 'label' => __('Alignment'),
                 'type' => Controls::CHOOSE,
                 'options' => [
@@ -227,7 +229,7 @@ class Text extends AbstractWidget
             ]
         );
 
-        self::registerSimpleTextStyle($widget);
+        self::registerSimpleTextStyle($widget, $prefix, $cssTarget, $args);
 
         $widget->addGroupControl(
             TextShadowGroup::NAME,
@@ -259,8 +261,7 @@ class Text extends AbstractWidget
                 ],
                 'selectors' => [
                     '{{WRAPPER}} ' . $cssTarget => 'mix-blend-mode: {{VALUE}}',
-                ],
-                'separator' => 'none',
+                ]
             ]
         );
     }
