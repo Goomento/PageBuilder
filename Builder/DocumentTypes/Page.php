@@ -10,6 +10,7 @@ namespace Goomento\PageBuilder\Builder\DocumentTypes;
 
 use Goomento\PageBuilder\Builder\Base\AbstractDocumentType;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Model\Content;
 
 class Page extends AbstractDocumentType
 {
@@ -19,17 +20,17 @@ class Page extends AbstractDocumentType
     protected function registerControls()
     {
         parent::registerControls();
-        self::registerTemplateControl($this);
+        self::registerStatusControl($this);
     }
 
     /**
      * @param AbstractDocumentType $page
      * @throws \Exception
      */
-    public static function registerTemplateControl(AbstractDocumentType $page)
+    public static function registerStatusControl(AbstractDocumentType $page)
     {
         $page->startInjection([
-            'of' => 'status',
+            'of' => 'is_active',
             'fallback' => [
                 'of' => 'title',
             ],
@@ -38,20 +39,21 @@ class Page extends AbstractDocumentType
         $page->addControl('layout', [
             'label' => __('Layout'),
             'type' => Controls::SELECT,
-            'default' => '1column',
+            'default' => $page->getModel()->getSetting('layout'),
             'options' => [
-                '1column' => __('1-Column'),
-                'fullwidth' => __('Full width'),
-                'empty' => __('Empty'),
+                'pagebuilder_content_1column' => __('1-Column'),
+                'pagebuilder_content_fullwidth' => __('Full width'),
+                'pagebuilder_content_empty' => __('Empty'),
             ],
         ]);
 
         $page->addControl(
-            'layout_warning',
+            'status',
             [
-                'type' => Controls::RAW_HTML,
-                'raw' => __('Note: The following layout only use for Preview purpose. For CMS content, use Magento layout instead.'),
-                'content_classes' => 'gmt-panel-alert gmt-panel-alert-warning',
+                'label' => __('Status'),
+                'type' => Controls::SELECT,
+                'default' => $page->getModel()->getStatus(),
+                'options' => Content::getAvailableStatuses(),
             ]
         );
 

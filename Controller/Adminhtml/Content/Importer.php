@@ -82,6 +82,7 @@ class Importer extends AbstractAction implements HttpGetActionInterface, HttpPos
             }
 
             $imported = $this->importProcessor->importOnUpload(self::FILE_NAME);
+
             if (!empty($imported)) {
                 foreach ($imported as $content) {
                     $this->messageManager->addSuccess(

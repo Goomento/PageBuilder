@@ -71,7 +71,8 @@ class Block extends AbstractWidget
     /**
      * @inheritDoc
      */
-	protected function registerControls() {
+	protected function registerControls()
+    {
 		$this->startControlsSection(
 			'section_block',
 			[

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Ui\Component\Listing\Column\Content;
 
+use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Magento\Framework\App\ObjectManager;
@@ -58,44 +59,35 @@ class PageActions extends Column
                     $type = (string) $item['type'];
 
                     if (AuthorizationHelper::isCurrentUserCan($type)) {
-
-                        if (AuthorizationHelper::isCurrentUserCan($type . '_view')) {
+                        if (AuthorizationHelper::isCurrentUserCan($type . '_save')) {
                             $item[$name]['edit'] = [
-                                'href' => $this->urlBuilder->getUrl(
-                                    'pagebuilder/content/edit',
-                                    [
-                                        'content_id' => $item['content_id'],
-                                        'type' => $type,
-                                    ]
-                                ),
+                                'href' => UrlBuilderHelper::getContentEditUrl($item['content_id']),
                                 'label' => __('Edit')
                             ];
                             $item[$name]['editor'] = [
-                                'href' => $this->urlBuilder->getUrl(
-                                    'pagebuilder/content/editor',
-                                    [
-                                        'content_id' => $item['content_id'],
-                                        'type' => $type,
-                                    ]
-                                ),
+                                'href' => UrlBuilderHelper::getLiveEditorUrl($item['content_id']),
                                 'label' => __('Editor')
                             ];
-                            $item[$name]['view'] = [
+                        }
+                        if (AuthorizationHelper::isCurrentUserCan($type . '_view')) {
+                            $item[$name]['preview'] = [
                                 'href' => UrlBuilderHelper::getContentViewUrl($item['content_id']),
-                                'label' => __('View'),
+                                'label' => __('Preview'),
                                 'target' => '_blank'
                             ];
+
+                            if ($item['status'] === ContentInterface::STATUS_PUBLISHED) {
+                                $item[$name]['view'] = [
+                                    'href' => UrlBuilderHelper::getPublishedContentUrl($item['content_id']),
+                                    'label' => __('View'),
+                                    'target' => '_blank'
+                                ];
+                            }
                         }
 
                         if (AuthorizationHelper::isCurrentUserCan($type . '_export') === true) {
                             $item[$name]['export'] = [
-                                'href' => $this->urlBuilder->getUrl(
-                                    'pagebuilder/content/export',
-                                    [
-                                        'content_id' => $item['content_id'],
-                                        'type' => $type,
-                                    ]
-                                ),
+                                'href' => UrlBuilderHelper::getContentExportUrl($item['content_id']),
                                 'label' => __('Export')
                             ];
                         }
@@ -103,13 +95,7 @@ class PageActions extends Column
                         if (AuthorizationHelper::isCurrentUserCan($type . '_delete') === true) {
                             $title = $this->getEscaper()->escapeHtml($item['title']);
                             $item[$name]['delete'] = [
-                                'href' => $this->urlBuilder->getUrl(
-                                    'pagebuilder/content/delete',
-                                    [
-                                        'content_id' => $item['content_id'],
-                                        'type' => $item['type'],
-                                    ]
-                                ),
+                                'href' => UrlBuilderHelper::getContentDeleteUrl($item['content_id']),
                                 'label' => __('Delete'),
                                 'confirm' => [
                                     'title' => __('Delete %1', $title),

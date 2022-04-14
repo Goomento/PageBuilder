@@ -9,7 +9,7 @@
     <body>
         <referenceContainer name="after.body.start">
             <block class="Magento\Framework\View\Element\Template"
-                   name="goomento.config-js"
+                   name="pagebuilder.config-js"
                    template="Goomento_PageBuilder::editor/config_js.phtml"/>
         </referenceContainer>
         <referenceContainer name="content">

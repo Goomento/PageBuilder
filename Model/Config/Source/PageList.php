@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Model\Config\Source;
 
 use Goomento\PageBuilder\Api\Data\ContentInterface;
+use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory;
 use Magento\Framework\Data\OptionSourceInterface;
 
@@ -40,29 +41,19 @@ class PageList implements OptionSourceInterface
     {
         if (null === $this->options) {
             $collection = $this->collectionFactory->create();
-            $collection->addFieldToFilter('type', [
+            $collection->addFieldToFilter(ContentInterface::TYPE, [
                 'in' => [ContentInterface::TYPE_SECTION, ContentInterface::TYPE_PAGE]
             ]);
-            $collection->addFieldToFilter('status', ['eq' => ContentInterface::STATUS_PUBLISHED]);
             $this->options = [];
             /** @var ContentInterface $content */
             foreach ($collection->getItems() as $content) {
                 $this->options[] = [
                     'value' => $content->getIdentifier(),
-                    'label' => $this->getLabel($content),
+                    'label' => ContentHelper::getContentLabel($content),
                 ];
             }
         }
 
         return $this->options;
-    }
-
-    /**
-     * @param $content
-     * @return string
-     */
-    private function getLabel($content)
-    {
-        return ucfirst($content->getType()) . ' ' . $content->getTitle() . ' ( ID: ' . $content->getId() . ' )';
     }
 }

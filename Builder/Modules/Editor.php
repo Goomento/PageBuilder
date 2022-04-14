@@ -263,12 +263,6 @@ class Editor
 
         $editor_data = $document->getElementsRawData();
 
-        $page_title_selector = ConfigHelper::getValue('page_title_selector');
-
-        if (empty($page_title_selector)) {
-            $page_title_selector = 'h1.entry-title';
-        }
-
         $config = [
             'version' => Configuration::VERSION,
             'data' => $editor_data,
@@ -285,6 +279,9 @@ class Editor
             ],
             'icons' => [
                 'libraries' => Icons::getIconManagerTabsConfig(),
+            ],
+            'styles' => [
+                'global_css' => (string) ConfigHelper::getCustomCss(),
             ],
             'default_schemes' => ObjectManagerHelper::getSchemasManager()->getSchemesDefaults(),
             'settings' => ObjectManagerHelper::getSettingsManager()->getSettingsManagersConfig(),
@@ -310,7 +307,6 @@ class Editor
                 'is_administrator' => AuthorizationHelper::isCurrentUserCan('config'),
             ],
             'rich_editing_enabled' => true,
-            'page_title_selector' => $page_title_selector,
             'inlineEditing' => ObjectManagerHelper::getWidgetsManager()->getInlineEditingConfig(),
             'dynamicTags' => ObjectManagerHelper::getTagsManager()->getConfig(),
         ];
@@ -415,6 +411,11 @@ class Editor
         HooksHelper::doAction('pagebuilder/editor/after_enqueue_styles');
     }
 
+    /**
+     * For TinyMCE setting up
+     *
+     * @return string[]
+     */
     private function getTinyMCEPreInit()
     {
         return [

@@ -15,7 +15,8 @@
     </argument>
     <settings>
         <buttons>
-            <button name="view" class="\Goomento\PageBuilder\Block\Adminhtml\Content\Edit\ViewButton"/>
+            <button name="view" class="\Goomento\PageBuilder\Block\Adminhtml\Page\Edit\ViewButton"/>
+            <button name="preview" class="\Goomento\PageBuilder\Block\Adminhtml\Content\Edit\ViewButton"/>
             <button name="save" class="\Goomento\PageBuilder\Block\Adminhtml\Page\Edit\SaveButton"/>
             <button name="delete" class="\Goomento\PageBuilder\Block\Adminhtml\Content\Edit\DeleteButton"/>
             <button name="live_editor" class="\Goomento\PageBuilder\Block\Adminhtml\Content\Edit\LiveEditorButton"/>
@@ -60,6 +61,30 @@
                 <visible>false</visible>
                 <dataScope>content_id</dataScope>
             </settings>
+        </field>
+        <field name="is_active" sortOrder="10" formElement="checkbox">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">page</item>
+                    <item name="default" xsi:type="string">1</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Enable</label>
+                <dataScope>is_active</dataScope>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <valueMap>
+                            <map name="false" xsi:type="string">0</map>
+                            <map name="true" xsi:type="string">1</map>
+                        </valueMap>
+                        <prefer>toggle</prefer>
+                    </settings>
+                </checkbox>
+            </formElements>
         </field>
         <field name="status" sortOrder="10" formElement="checkbox">
             <argument name="data" xsi:type="array">
@@ -156,6 +181,48 @@
                 <label translate="true">Content Data</label>
                 <dataScope>content_data</dataScope>
                 <notice><![CDATA[You can copy or paste data to update content]]></notice>
+            </settings>
+        </field>
+    </fieldset>
+    <fieldset name="search_engine_optimisation">
+        <settings>
+            <collapsible>true</collapsible>
+            <label translate="true">Search Engine Optimization</label>
+        </settings>
+        <field name="meta_title" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">page</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Meta Title</label>
+                <dataScope>meta_title</dataScope>
+            </settings>
+        </field>
+        <field name="meta_keywords" formElement="textarea">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">page</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Meta Keywords</label>
+                <dataScope>meta_keywords</dataScope>
+            </settings>
+        </field>
+        <field name="meta_description" formElement="textarea">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">page</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Meta Description</label>
+                <dataScope>meta_description</dataScope>
             </settings>
         </field>
     </fieldset>

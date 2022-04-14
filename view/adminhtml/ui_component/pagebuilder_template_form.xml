@@ -61,24 +61,24 @@
                 <dataScope>content_id</dataScope>
             </settings>
         </field>
-        <field name="status" sortOrder="10" formElement="checkbox">
+        <field name="is_active" sortOrder="10" formElement="checkbox">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="source" xsi:type="string">template</item>
-                    <item name="default" xsi:type="string">publish</item>
+                    <item name="default" xsi:type="string">1</item>
                 </item>
             </argument>
             <settings>
                 <dataType>text</dataType>
-                <label translate="true">Publish</label>
-                <dataScope>status</dataScope>
+                <label translate="true">Enable</label>
+                <dataScope>is_active</dataScope>
             </settings>
             <formElements>
                 <checkbox>
                     <settings>
                         <valueMap>
-                            <map name="false" xsi:type="string">pending</map>
-                            <map name="true" xsi:type="string">publish</map>
+                            <map name="false" xsi:type="string">0</map>
+                            <map name="true" xsi:type="string">1</map>
                         </valueMap>
                         <prefer>toggle</prefer>
                     </settings>

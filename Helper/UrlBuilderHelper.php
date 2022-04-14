@@ -69,6 +69,17 @@ class UrlBuilderHelper
      */
     public static function getFrontendUrl(string $routePath = null, array $routeParams = null)
     {
+        $storeId = 0;
+        if (isset($routeParams['store_id'])) {
+            $storeId = (int) $routeParams['store_id'];
+            unset($routeParams['store_id']);
+        }
+        if ($storeId !== 0) {
+            self::getFrontendUrlBuilder()->setScope($storeId);
+            $routeParams['_current'] = false;
+            $routeParams['_nosid'] = true;
+        }
+
         return self::getFrontendUrlBuilder()->getUrl($routePath, $routeParams);
     }
 
@@ -110,6 +121,25 @@ class UrlBuilderHelper
      * @param ContentInterface|int $content
      * @return string
      */
+    public static function getPublishedContentUrl($content)
+    {
+        if (!($content instanceof ContentInterface)) {
+            $content = ContentHelper::get((int) $content);
+        }
+        $storeIds = $content->getStoreIds();
+        $storeId = 0;
+        if (!empty($storeIds) && !in_array(0, $storeIds)) {
+            $storeId = $storeIds[0];
+        }
+        return self::getFrontendUrl($content->getIdentifier(), [
+            'store_id' => $storeId
+        ]);
+    }
+
+    /**
+     * @param ContentInterface|int $content
+     * @return string
+     */
     public static function getContentExportUrl($content)
     {
         if ($content instanceof ContentInterface) {
@@ -121,12 +151,46 @@ class UrlBuilderHelper
     }
 
     /**
-     * @param ContentInterface $content
+     * @param ContentInterface|int $content
      * @return string
      */
-    public static function getContentEditUrl(ContentInterface $content)
+    public static function getContentEditUrl($content)
     {
+        if (!($content instanceof ContentInterface)) {
+            $content = ContentHelper::get((int) $content);
+        }
         return self::getUrl('pagebuilder/content/edit', [
+            'content_id' => $content->getId(),
+            'type' => $content->getType()
+        ]);
+    }
+
+    /**
+     * @param ContentInterface|int $content
+     * @return string
+     */
+    public static function getContentDeleteUrl($content)
+    {
+        if ($content instanceof ContentInterface) {
+            $content = $content->getId();
+        }
+        return self::getUrl('pagebuilder/content/delete', [
+            'content_id' => $content,
+        ]);
+    }
+
+    /**
+     * Get Live Editor Url
+     *
+     * @param ContentInterface|int $content
+     * @return string
+     */
+    public static function getLiveEditorUrl($content)
+    {
+        if (!($content instanceof ContentInterface)) {
+            $content = ContentHelper::get((int) $content);
+        }
+        return self::getUrl('pagebuilder/content/editor', [
             'content_id' => $content->getId(),
             'type' => $content->getType()
         ]);

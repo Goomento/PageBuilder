@@ -194,9 +194,9 @@ class ContentManagement implements ContentManagementInterface
      */
     public function refreshGlobalAssets()
     {
-        $this->config->setValue(Config::CSS_UPDATED_TIME, time());
         PageBuilder::initialize();
 
+        $this->config->setValue(Config::CSS_UPDATED_TIME, time());
         $globalCss = new GlobalCss();
         $globalCss->update();
     }
@@ -282,6 +282,8 @@ class ContentManagement implements ContentManagementInterface
      */
     public function httpContentExport(ContentInterface $content): void
     {
+        PageBuilder::initialize();
+
         ObjectManagerHelper::getSourcesManager()
             ->getLocalSource()
             ->exportTemplate((int) $content->getId());

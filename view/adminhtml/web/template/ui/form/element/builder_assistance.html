@@ -1,0 +1,63 @@
+<!--
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+-->
+<div class="builder-assistance" data-bind="blockLoader: isLoading">
+    <div class="builder-assistance-action">
+        <div class="builder-assistance-buttons">
+            <button data-bind="text: toggleBtnLabel, click: onClickAssistanceBtn,
+                css: { 'builder-assistance-btn-highlight goomento-logo-white': !isActiveBuilderAssistance() }" class="builder-assistance-btn goomento-logo-grey"></button>
+            <button data-bind="text: wysiwygBtnLabel, click: onClickWysiwygBtn, visible: !isActiveBuilderAssistance()"
+                    class="builder-assistance-btn"></button>
+        </div>
+        <div class="builder-assistance-action-wrapper" data-bind="visible: isActiveBuilderAssistance">
+            <div class="builder-assistance-messages builder-assistance-field">
+                <div class="builder-assistance-message" data-bind="text: message"></div>
+            </div>
+            <div class="builder-assistance-actions">
+                <div class="builder-assistance-field" data-bind="visible: showSelectBox && availableContentIds().length > 1">
+                    <select id="builder-assistance-contents" class="admin__control-select builder-assistance-btn" data-bind="
+                        options: availableContentIds, value: selectedContentId, optionsText: 'label',
+                        optionsValue: 'value', event:{ change: onSelected }
+                        "></select>
+                    <span data-bind="i18n: 'Change Page Builder'"></span>
+                </div>
+                <div class="builder-assistance-field" data-bind="visible: showMigrateBtn">
+                    <button id="builder-assistance-migrate-btn" class="builder-assistance-btn"
+                        data-bind="click: onClickMigrateBtn, i18n: 'Migrate Now'"></button>
+                </div>
+                <div class="builder-assistance-field" data-bind="visible: showCreateBtn">
+                    <button id="builder-assistance-create-btn" class="builder-assistance-btn"
+                        data-bind="click: onClickCreateBtn, i18n: 'Create New'"></button>
+                    </div>
+                <div class="builder-assistance-field" data-bind="visible: showEditBtn">
+                    <button id="builder-assistance-edit-btn" class="builder-assistance-btn"
+                        data-bind="click: onClickEditBtn, i18n: 'Open Editor'"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="builder-assistance-editor" data-bind="visible: !isActiveBuilderAssistance()">
+        <div class="builder-assistance-wysiwyg" data-bind="visible: showWysiwyg">
+            <div data-bind="html: wysiwygEditor"></div>
+        </div>
+        <div class="builder-assistance-textarea" data-bind="visible: !showWysiwyg()">
+            <textarea class="admin__control-textarea" data-bind="
+                value: value,
+                valueUpdate: valueUpdate,
+                hasFocus: focused,
+                attr: {
+                    cols: cols,
+                    rows: rows,
+                    name: inputName,
+                    'aria-describedby': noticeId,
+                    placeholder: placeholder,
+                    id: uid,
+                    disabled: disabled
+                }"></textarea>
+        </div>
+    </div>
+</div>
+

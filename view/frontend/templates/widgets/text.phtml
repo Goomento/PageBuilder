@@ -16,9 +16,11 @@ use Goomento\PageBuilder\Helper\EscaperHelper;
 /** @var Text $widget */
 $widget = $block->getWidget();
 
-$settings = $widget->getSettingsForDisplay();
+$settings = $block->getSettingsForDisplay();
 
-if ('' === $settings['text_title']) {
+$title = /** @noEscape */ trim($settings['text_title']);
+
+if ('' === $title) {
     return;
 }
 
@@ -29,8 +31,6 @@ if (!empty($settings['text_size'])) {
 }
 
 $widget->addInlineEditingAttributes('title');
-
-$title = EscaperHelper::escapeHtml($settings['text_title']);
 
 if (!empty($settings['text_link']['url'])) {
     $widget->addRenderAttribute('url', 'href', $settings['text_link']['url']);
@@ -46,6 +46,4 @@ if (!empty($settings['text_link']['url'])) {
     $title = sprintf('<a %1$s>%2$s</a>', $widget->getRenderAttributeString('url'), $title);
 }
 ?>
-<<?= $settings['text_tag'] ?> <?= $widget->getRenderAttributeString('title') ?>>
-    <?= /** @noEscape */ $title ?>
-</<?= $settings['text_tag'] ?>>
+<<?= $settings['text_tag'] ?> <?= $widget->getRenderAttributeString('title') ?>><?= /** @noEscape */ $title ?></<?= $settings['text_tag'] ?>>

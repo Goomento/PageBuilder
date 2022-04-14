@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\DocumentTypes;
 
-class Template extends Page
+class Template extends Section
 {
     /**
      * @inheritDoc

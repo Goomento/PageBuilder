@@ -13,7 +13,6 @@
         <column xsi:type="varchar" name="title" nullable="true" length="255" comment="Content Title"/>
         <column xsi:type="varchar" name="type" nullable="false" length="100" comment="Content Type"/>
         <column xsi:type="varchar" name="identifier" nullable="false" length="255" comment="Content Identifier"/>
-        <column xsi:type="text" name="content" nullable="true" comment="Content"/>
         <column xsi:type="longtext" name="elements" nullable="true" comment="Content Elements"/>
         <column xsi:type="mediumtext" name="settings" nullable="true" comment="Content Settings"/>
         <column xsi:type="int" name="author_id" unsigned="true" identity="false" padding="10" nullable="false"
@@ -21,6 +20,11 @@
         <column xsi:type="varchar" name="status" length="64" nullable="false" default="draft" comment="Content Status"/>
         <column xsi:type="int" name="last_editor_id" unsigned="true" identity="false" padding="10" nullable="false"
                 comment="Last Editor ID"/>
+        <column xsi:type="smallint" name="is_active" padding="6" unsigned="false" nullable="false" identity="false"
+                default="1" comment="Is Page Active"/>
+        <column xsi:type="text" name="meta_keywords" nullable="true" comment="Page Meta Keywords"/>
+        <column xsi:type="text" name="meta_description" nullable="true" comment="Page Meta Description"/>
+        <column xsi:type="varchar" name="meta_title" nullable="true" length="255" comment="Page Meta Title"/>
         <column xsi:type="timestamp" name="creation_time" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Content Creation Time"/>
         <column xsi:type="timestamp" name="update_time" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
@@ -28,11 +32,11 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="content_id"/>
         </constraint>
-        <index referenceId="PAGEBUILDER_CONTENT_TITLE_CONTENT_ELEMENTS_IDENTIFIER_FONTS" indexType="fulltext">
+        <index referenceId="PAGEBUILDER_TITLE_ELEMENTS_IDENTIFIER_STATUS" indexType="fulltext">
             <column name="title"/>
-            <column name="content"/>
             <column name="elements"/>
             <column name="identifier"/>
+            <column name="status"/>
         </index>
     </table>
     <table name="pagebuilder_content_store" resource="default" engine="innodb" comment="Page Builder To Store Linkage Table">
@@ -91,18 +95,6 @@
         <index referenceId="PAGEBUILDER_CONTENT_REVISION_CONTENT_ID" indexType="btree">
             <column name="content_id"/>
         </index>
-    </table>
-    <table name="cms_page" resource="default" engine="innodb" comment="CMS Page Table">
-        <column xsi:type="smallint" name="pagebuilder_is_active" unsigned="false" nullable="true" identity="false"
-                default="0" comment="Is Page Builder Active"/>
-        <column xsi:type="int" name="pagebuilder_content_id" padding="11" unsigned="false" nullable="true" identity="false"
-                comment="PageBuilder Content ID"/>
-    </table>
-    <table name="cms_block" resource="default" engine="innodb" comment="CMS Block Table">
-        <column xsi:type="smallint" name="pagebuilder_is_active" unsigned="false" nullable="true" identity="false"
-                default="0" comment="Is Page Builder Active"/>
-        <column xsi:type="int" name="pagebuilder_content_id" padding="11" unsigned="false" nullable="true" identity="false"
-                comment="PageBuilder Content ID"/>
     </table>
     <table name="pagebuilder_config_data" resource="default" engine="innodb" comment="PageBuilder Config Data">
         <column xsi:type="int" name="config_id" unsigned="true" nullable="false" identity="true"

@@ -67,9 +67,8 @@ class Save extends AbstractContent implements HttpPostActionInterface
                     return $resultRedirect->setPath('*/*/edit', ['page_id' => $content->getId(), '_current' => true]);
                 }
 
-                $content
-                    ->setStatus($data['status'])
-                    ->setType($contentType);
+                $content->setType($contentType);
+                $content->setIsActive((bool) $data['is_active']);
 
                 if (isset($data['store_id']) && $data['store_id']) {
                     $content->setStoreIds($data['store_id']);
@@ -112,6 +111,8 @@ class Save extends AbstractContent implements HttpPostActionInterface
                     $content->setIdentifier($identifier);
                 }
 
+                $this->proceedContent($content, $data);
+
                 $this->contentManagement->refreshContentAssets($content);
                 $content = $this->contentRepository->save($content);
 
@@ -137,6 +138,69 @@ class Save extends AbstractContent implements HttpPostActionInterface
     }
 
     /**
+     * Proceed content data
+     *
+     * @param ContentInterface $content
+     * @param $data
+     * @return void
+     */
+    protected function proceedContent(ContentInterface $content, $data)
+    {
+        switch ($content->getType()) {
+            case ContentInterface::TYPE_PAGE:
+                $this->proceedPageContent($content, $data);
+                break;
+            case ContentInterface::TYPE_TEMPLATE:
+                $this->proceedTemplateContent($content, $data);
+                break;
+            default:
+                $this->proceedSectionContent($content, $data);
+                break;
+        }
+    }
+
+
+    /**
+     * Proceed the Content type Page
+     *
+     * @param ContentInterface $content
+     * @param $data
+     */
+    private function proceedPageContent(ContentInterface $content, $data)
+    {
+        if (!empty($data['status'])) {
+            $content->setStatus($data['status']);
+        } else {
+            $content->setStatus(ContentInterface::STATUS_PENDING);
+        }
+        $content->setMetaTitle($data[ContentInterface::META_TITLE]);
+        $content->setMetaDescription($data[ContentInterface::META_DESCRIPTION]);
+        $content->setMetaKeywords($data[ContentInterface::META_KEYWORDS]);
+    }
+
+    /**
+     * Proceed the Content type Section
+     *
+     * @param ContentInterface $content
+     * @param $data
+     */
+    private function proceedSectionContent(ContentInterface $content, $data)
+    {
+        $this->proceedTemplateContent($content, $data);
+    }
+
+    /**
+     * Proceed the Content type Template
+     *
+     * @param ContentInterface $content
+     * @param $data
+     */
+    private function proceedTemplateContent(ContentInterface $content, $data)
+    {
+        $content->setStatus(ContentInterface::STATUS_PENDING);
+    }
+
+    /**
      * @param ContentInterface $model
      * @param $resultRedirect
      * @param $data
@@ -149,16 +213,14 @@ class Save extends AbstractContent implements HttpPostActionInterface
             $content = $this->contentFactory->create(['data' => $data]);
             $content->setId(null);
             $title = $content->getTitle();
-            $title .= ' ' .  __('( Duplicated from #%1 )', $model->getId());
+            $title .= ' ' .  __('(Duplicated)');
+
             $content->setTitle($title);
-            $content->setStatus(ContentInterface::STATUS_PENDING);
-            $identifier = $model->getIdentifier();
-            $identifiers = explode('-', $identifier);
-            array_pop($identifiers);
-            $identifiers[] = EncryptorHelper::uniqueString();
-            $content->setIdentifier(implode('-', $identifiers));
+            $content->setIdentifier('');
             $content->setElements($model->getElements());
             $content->setSettings($model->getSettings());
+            $this->proceedContent($content, $data);
+            $content->setStatus(ContentInterface::STATUS_PENDING);
 
             $this->contentRepository->save($content);
             $this->messageManager->addSuccessMessage(__('You duplicated the content.'));

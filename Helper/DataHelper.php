@@ -263,21 +263,6 @@ class DataHelper
     }
 
     /**
-     * Is script debug.
-     *
-     * Whether script debug is enabled or not.
-     *
-     * Use Configuration::DEBUG instead
-     *
-     * @return bool True if it's a script debug is active, false otherwise.
-     * @deprecated
-     */
-    public static function isScriptDebug()
-    {
-        return Configuration::DEBUG;
-    }
-
-    /**
      * Compare conditions.
      *
      * Whether the two values comply the comparison operator.

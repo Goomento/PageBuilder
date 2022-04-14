@@ -11,6 +11,7 @@ namespace Goomento\PageBuilder\Block;
 use Exception;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\ThemeHelper;
 use Goomento\PageBuilder\Logger\Logger;
 use Goomento\PageBuilder\Model\ContentRegistry;
 use Goomento\PageBuilder\Helper\Data;
@@ -24,7 +25,6 @@ class Content extends Template implements BlockInterface
 {
     const CONTENT_ID = ContentInterface::CONTENT_ID;
     const IDENTIFIER = ContentInterface::IDENTIFIER;
-    const ORIGIN = 'origin';
 
     const BLOCK_CONTENT_KEY = 'pagebuilder_content_html';
     const BLOCK_CONTENT_RENDER_ORDER = 2021;
@@ -105,23 +105,6 @@ class Content extends Template implements BlockInterface
             $html = $this->filterProvider->getPageFilter()->filter($html);
         }
         return $html;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrigin()
-    {
-        return (string) $this->getData(self::ORIGIN);
-    }
-
-    /**
-     * @param string $content
-     * @return Content
-     */
-    public function setOrigin($content = '')
-    {
-        return $this->setData(self::ORIGIN, $content);
     }
 
     /**
@@ -207,7 +190,7 @@ class Content extends Template implements BlockInterface
             $this->validated = false;
             if ($content = $this->getContent()) {
                 $this->setContentId($content->getId());
-                if ($content->isPublished() && $this->isContentAllowedInStore($content)) {
+                if ($content->getIsActive() && $this->isContentInStore($content)) {
                     $this->validated = true;
                 }
             }
@@ -221,12 +204,11 @@ class Content extends Template implements BlockInterface
      * @return bool
      * @throws NoSuchEntityException
      */
-    protected function isContentAllowedInStore(ContentInterface $content)
+    protected function isContentInStore(ContentInterface $content)
     {
-        $stores = (array) $content->getStoreIds();
-        if (!empty($stores)) {
-            $stores = array_flip($stores);
-            return isset($stores[0]) || isset($stores[$this->_storeManager->getStore()->getId()]);
+        $storeIds = $content->getStoreIds();
+        if (!empty($storeIds)) {
+            return in_array(0, $storeIds) || in_array($this->_storeManager->getStore()->getId(), $storeIds);
         }
 
         return false;
@@ -248,8 +230,8 @@ class Content extends Template implements BlockInterface
      */
     public function getContentHtml(string $html = '')
     {
+        $html = (string) $html;
         if ($this->isValidContent()) {
-            $html = (string) $html;
             try {
                 HooksHelper::addFilter(
                     'pagebuilder/content/html',
@@ -268,6 +250,8 @@ class Content extends Template implements BlockInterface
                     [$this, 'getContentId'],
                     self::BLOCK_CONTENT_RENDER_ORDER
                 );
+
+                ThemeHelper::registerContentToPage($this->getContent());
 
                 /**
                  * Get HTML content
@@ -290,8 +274,6 @@ class Content extends Template implements BlockInterface
                     throw $e;
                 }
             }
-        } else {
-            $html = $this->getOrigin();
         }
 
         return $html;
@@ -314,9 +296,6 @@ class Content extends Template implements BlockInterface
     {
         $fallback = $this->dataHelper->getRenderFallback();
         switch ($fallback) {
-            case 'use_origin':
-                $html = $this->getOrigin();
-                    break;
             case 'empty':
             default:
                 $html = '';
@@ -348,11 +327,6 @@ class Content extends Template implements BlockInterface
             $this->html = parent::toHtml();
         }
         return $this->html;
-    }
-
-    public function __invoke()
-    {
-        echo 1;
     }
 
     /**

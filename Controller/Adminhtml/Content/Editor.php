@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 
 use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\ThemeHelper;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Exception\LocalizedException;
 
@@ -35,6 +36,7 @@ class Editor extends AbstractContent implements HttpGetActionInterface
                 $content->getTitle()
             );
 
+            ThemeHelper::registerContentToPage($content);
             /**
              * Start to hook the live editor.
              */

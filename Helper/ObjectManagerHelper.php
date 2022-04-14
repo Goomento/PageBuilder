@@ -16,6 +16,7 @@ use Goomento\PageBuilder\Builder\Managers\Widgets;
 use Goomento\PageBuilder\Builder\Managers\Settings;
 use Goomento\PageBuilder\Builder\Managers\Documents;
 use Goomento\PageBuilder\Builder\Managers\Sources;
+use Magento\Store\Model\StoreManager;
 
 /**
  * Stored the Classes in use to save expense
@@ -86,6 +87,14 @@ class ObjectManagerHelper extends \Goomento\Core\Helper\ObjectManagerHelper
     public static function getTagsManager() : Tags
     {
         return self::getSubject(Tags::class);
+    }
+
+    /**
+     * @return StoreManager
+     */
+    public static function getStoresManager() : StoreManager
+    {
+        return self::getSubject(StoreManager::class);
     }
 
     /**

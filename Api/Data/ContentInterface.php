@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Api\Data;
 
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Store\Api\Data\StoreInterface;
 use Magento\User\Model\User;
 
 interface ContentInterface
@@ -17,12 +16,8 @@ interface ContentInterface
     const CONTENT_ID               = 'content_id';
     const TITLE                    = 'title';
     const TYPE                     = 'type';
-    /**
-     * @deprecated
-     */
-    const STORES                   = 'stores';
+
     const STORE_IDS                = 'store_ids';
-    const CONTENT                  = 'content';
     const ELEMENTS                 = 'elements';
     const SETTINGS                 = 'settings';
     const IDENTIFIER               = 'identifier';
@@ -37,11 +32,17 @@ interface ContentInterface
     const STATUS_AUTOSAVE          = 'autosave';
     const STATUS_DRAFT             = 'draft';
 
+    const IS_ACTIVE                = 'is_active';
+    const ENABLED                  = 1;
+    const DISABLED                 = 0;
+
     const TYPE_PAGE                = 'page';
     const TYPE_TEMPLATE            = 'template';
     const TYPE_SECTION             = 'section';
 
-    const CREATE_REVISION_FLAG     = 'create_revision_flag';
+    const META_TITLE               = 'meta_title';
+    const META_KEYWORDS            = 'meta_keywords';
+    const META_DESCRIPTION         = 'meta_description';
 
     /**
      * Get ID
@@ -61,13 +62,6 @@ interface ContentInterface
      * @return string|null
      */
     public function getTitle();
-
-    /**
-     * Get content
-     *
-     * @return string|null
-     */
-    public function getContent();
 
     /**
      * Get elements
@@ -158,14 +152,6 @@ interface ContentInterface
     public function getLastEditorUser();
 
     /**
-     * Set stores
-     *
-     * @return StoreInterface[]|[]
-     * @deprecated
-     */
-    public function getStores();
-
-    /**
      * Set store ids
      *
      * @return int[]|[]
@@ -201,14 +187,6 @@ interface ContentInterface
      * @return ContentInterface
      */
     public function setTitle($title);
-
-    /**
-     * Set content
-     *
-     * @param string $content
-     * @return ContentInterface
-     */
-    public function setContent($content);
 
     /**
      * Set creation time
@@ -252,14 +230,6 @@ interface ContentInterface
      * @throws LocalizedException
      */
     public function setType($type);
-
-    /**
-     * Set elements
-     *
-     * @param array $stores
-     * @return ContentInterface
-     */
-    public function setStores($stores);
 
     /**
      * Set store ids
@@ -325,4 +295,48 @@ interface ContentInterface
      * @return array|null
      */
     public function getElementDataById(string $elementId) : ?array;
+
+    /**
+     * @param bool $active
+     * @return ContentInterface
+     */
+    public function setIsActive(bool $active);
+
+    /**
+     * @return bool
+     */
+    public function getIsActive() : bool;
+
+    /**
+     * @param string $meta
+     * @return ContentInterface
+     */
+    public function setMetaTitle(string $meta);
+
+    /**
+     * @return string
+     */
+    public function getMetaTitle() : string;
+
+    /**
+     * @param string $meta
+     * @return ContentInterface
+     */
+    public function setMetaKeywords(string $meta);
+
+    /**
+     * @return string
+     */
+    public function getMetaKeywords() : string;
+
+    /**
+     * @param string $meta
+     * @return ContentInterface
+     */
+    public function setMetaDescription(string $meta);
+
+    /**
+     * @return string
+     */
+    public function getMetaDescription() : string;
 }

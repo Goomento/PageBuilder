@@ -19,10 +19,6 @@ class RenderFallback implements OptionSourceInterface
     {
         return [
             [
-                'value' => 'use_origin',
-                'label' => __('Use Origin Content'),
-            ],
-            [
                 'value' => 'empty',
                 'label' => __('Show Nothing'),
             ],

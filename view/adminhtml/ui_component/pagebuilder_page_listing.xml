@@ -164,6 +164,14 @@
                 <sortable>false</sortable>
             </settings>
         </column>
+        <column name="is_active" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Magento\Cms\Model\Block\Source\IsActive"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Enabled</label>
+            </settings>
+        </column>
         <column name="status" component="Magento_Ui/js/grid/columns/select">
             <settings>
                 <options class="Goomento\PageBuilder\Model\Content\Source\Statuses"/>
