@@ -9,11 +9,12 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Plugin\Framework\Controller\ResultInterface;
 
 use Exception;
-use Goomento\PageBuilder\Helper\StateHelper;
+use Goomento\PageBuilder\Helper\Data;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 use Goomento\PageBuilder\Model\Response\HtmlModifier;
 use Goomento\PageBuilder\Logger\Logger;
 use Magento\Framework\App\Response\Http as ResponseHttp;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 
 class ModifyResponse
@@ -26,17 +27,24 @@ class ModifyResponse
      * @var Logger
      */
     private $logger;
+    /**
+     * @var Data
+     */
+    private $dataHelper;
 
     /**
      * @param HtmlModifier $htmlModifier
+     * @param Data $dataHelper
      * @param Logger $logger
      */
     public function __construct(
         HtmlModifier $htmlModifier,
+        Data $dataHelper,
         Logger $logger
     )
     {
         $this->htmlModifier = $htmlModifier;
+        $this->dataHelper = $dataHelper;
         $this->logger = $logger;
     }
 
@@ -48,10 +56,10 @@ class ModifyResponse
      * @param ResponseHttp $response
      * @return mixed
      */
-    public function afterRenderResult(ResultInterface $subject, ResultInterface $result, ResponseHttp $response)
+    public function afterRenderResult(ResultInterface $subject, ResultInterface $result, ResponseInterface $response)
     {
         try {
-            if (ThemeHelper::hasContentOnPage()) {
+            if ($this->dataHelper->addResourceGlobally() || ThemeHelper::hasContentOnPage()) {
                 $body = $response->getBody();
                 if (!empty($body)) {
                     $html = $this->htmlModifier->modify($body);
@@ -60,9 +68,11 @@ class ModifyResponse
                     }
                 }
             }
-            return $result;
+
         } catch (Exception $e) {
             $this->logger->error($e);
         }
+
+        return $result;
     }
 }

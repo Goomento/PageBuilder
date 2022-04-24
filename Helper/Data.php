@@ -105,4 +105,14 @@ class Data extends AbstractHelper
             'editor/number_of_revision'
         );
     }
+    /**
+     * Should add resources globally
+     * @return bool
+     */
+    public function addResourceGlobally()
+    {
+        return (bool) $this->getBuilderConfig(
+            'editor/resources_globally'
+        );
+    }
 }

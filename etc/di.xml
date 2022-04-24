@@ -236,7 +236,7 @@
     <type name="Magento\Sitemap\Model\ItemProvider\Composite">
         <arguments>
             <argument name="itemProviders" xsi:type="array">
-                <item name="pagebuilderProvider" xsi:type="object">Goomento\PageBuilder\Model\ItemProvider\PageBuilder</item>
+                <item name="pagebuilderProvider" xsi:type="object">Goomento\PageBuilder\Model\ItemProvider\PageBuilderSitemap</item>
             </argument>
         </arguments>
     </type>

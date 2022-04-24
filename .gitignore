@@ -22,11 +22,10 @@ Thumbs.db
 *.zip
 .sass-cache
 build
-# Css
-view/frontend/web/css/*.css
-!view/frontend/web/css/*.min.css
-view/base/web/css/*.css
-!view/base/web/css/*.min.css
-view/adminhtml/web/css/*.css
-!view/adminhtml/web/css/*.min.css
+!view/base/web/build
+view/base/web/build/*.css
+!view/base/web/build/*.min.css
+view/base/web/build/*.js
+!view/base/web/build/*.min.js
+Developer.php
 

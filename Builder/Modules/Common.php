@@ -18,6 +18,9 @@ use Goomento\PageBuilder\Helper\TemplateHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 
+/**
+ * Places anywhere for essential packages
+ */
 class Common extends AbstractApp
 {
     /**
@@ -32,9 +35,8 @@ class Common extends AbstractApp
     public function __construct()
     {
         HooksHelper::addAction('pagebuilder/init', [$this, 'initComponents']);
-        HooksHelper::addAction('pagebuilder/editor/before_enqueue_scripts', [ $this, 'registerScripts' ]);
-        HooksHelper::addAction('pagebuilder/editor/before_enqueue_styles', [ $this, 'registerStyles' ]);
-        HooksHelper::addAction('pagebuilder/footer', [ $this, 'registerStyles' ]);
+        HooksHelper::addAction('pagebuilder/editor/before_enqueue_scripts', [ $this, 'registerScriptsEditorBefore']);
+        HooksHelper::addAction('pagebuilder/header', [ $this, 'registerStyles' ]);
         HooksHelper::addAction('pagebuilder/editor/footer', [ $this, 'printTemplates' ]);
     }
 
@@ -55,52 +57,32 @@ class Common extends AbstractApp
      * Register common scripts.
      *
      */
-    public function registerScripts()
+    public function registerScriptsEditorBefore()
     {
-        $min_suffix = Configuration::DEBUG ? '' : '.min';
+        $minSuffix = Configuration::debug() ? '' : '.min';
 
         ThemeHelper::registerScript(
             'goomento-common-modules',
-            'Goomento_PageBuilder/js/common-modules' . $min_suffix,
+            'Goomento_PageBuilder/build/common-modules' . $minSuffix,
             [
                 'jquery',
                 'jquery/ui',
                 'backbone',
                 'backbone.radio',
                 'backbone.marionette',
-            ],
-            '',
-            true
+            ]
         );
 
         ThemeHelper::registerScript(
-            'imagesloaded',
-            'Goomento_PageBuilder/lib/imagesloaded/imagesloaded' . $min_suffix,
-            [],
-            '4.1.0'
-        );
-
-        ThemeHelper::registerScript(
-            'goomento-dialog',
-            'Goomento_PageBuilder/lib/dialog/dialog' . $min_suffix,
-            [
-                'jquery/ui',
-            ],
-            '4.7.3'
-        );
-
-        ThemeHelper::enqueueScript(
             'goomento-common',
-            'Goomento_PageBuilder/js/common' . $min_suffix,
+            'Goomento_PageBuilder/build/common' . $minSuffix,
             [
                 'goomento-common-modules',
                 'goomento-dialog',
-            ],
-            null,
-            true
+            ]
         );
 
-        $this->printConfig();
+        $this->printConfig('goomento-editor');
     }
 
     /**
@@ -111,13 +93,13 @@ class Common extends AbstractApp
      */
     public function registerStyles()
     {
-        $min_suffix = Configuration::DEBUG ? '' : '.min';
+        $min_suffix = Configuration::debug() ? '' : '.min';
 
         ThemeHelper::enqueueStyle(
             'goomento-common',
-            'Goomento_PageBuilder::css/common' . $min_suffix . '.css',
+            'Goomento_PageBuilder/build/common' . $min_suffix . '.css',
             [],
-            Configuration::VERSION
+            Configuration::version()
         );
     }
 
@@ -142,7 +124,7 @@ class Common extends AbstractApp
     protected function getInitSettings()
     {
         return [
-            'version' => Configuration::VERSION,
+            'version' => Configuration::version(),
             'isRTL' => DataHelper::isRtl(),
             'activeModules' => array_keys($this->getComponents()),
             'urls' => [

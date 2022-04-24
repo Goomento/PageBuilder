@@ -12,7 +12,6 @@ use Goomento\PageBuilder\Helper\DataHelper;
 
 abstract class AbstractApp extends AbstractModule
 {
-
     /**
      * Print config.
      *

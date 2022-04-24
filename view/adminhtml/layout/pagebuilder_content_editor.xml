@@ -7,11 +7,6 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceContainer name="after.body.start">
-            <block class="Magento\Framework\View\Element\Template"
-                   name="pagebuilder.config-js"
-                   template="Goomento_PageBuilder::editor/config_js.phtml"/>
-        </referenceContainer>
         <referenceContainer name="content">
             <block class="Goomento\PageBuilder\Block\Adminhtml\LiveEditor"
                    name="pagebuilder.content"

@@ -1,0 +1,112 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+
+/**
+ * @var Widget $block
+ */
+$widget = $block->getWidget();
+$settings = $block->getSettingsForDisplay();
+$banners = $settings['banner_list'] ?? [];
+
+if (count($banners)) :
+    ?>
+    <div class="gmt-banner-slider-wrapper swiper-container">
+        <div class="gmt-banner-carousel swiper-wrapper">
+            <?php
+            foreach ($banners as $index => $banner) :
+                $hasContent = !empty($banner['banner_caption']);
+                ?>
+                <div class="gmt-banner-slider-item swiper-slide">
+                    <div class="gmt-banner-wrapper">
+                        <?php
+                        if (!empty($banner['banner_link']['url'])) {
+                            $widget->addRenderAttribute('link' . $index, 'href', $banner['banner_link']['url']);
+
+                            if ($banner['banner_link']['is_external']) {
+                                $widget->addRenderAttribute('link' . $index, 'target', '_blank');
+                            }
+
+                            if (!empty($banner['banner_link']['nofollow'])) {
+                                $widget->addRenderAttribute('link' . $index, 'rel', 'nofollow');
+                            }
+                        }
+
+                        if (!empty($banner['banner_image']['url'])) :
+                            $widget->addRenderAttribute('image' . $index, 'src', $banner['banner_image']['url']);
+                            $widget->addRenderAttribute('image' . $index, 'alt', '');
+                            $widget->addRenderAttribute('image' . $index, 'title', '');
+                            $widget->addRenderAttribute('image' . $index, 'class', 'swiper-slide-image');
+
+                            if ($settings['banner-slider_thumbnail_size'] === 'custom') {
+                                $widget->addRenderAttribute('image' . $index, 'width',
+                                    $settings['banner-slider_thumbnail_custom_dimension']['width']);
+                                $widget->addRenderAttribute('image' . $index, 'height',
+                                    $settings['banner-slider_thumbnail_custom_dimension']['height']);
+                            }
+
+                            if (!empty($settings['hover_animation'])) {
+                                $widget->addRenderAttribute('image' . $index, 'class', 'gmt-animation-' . $settings['hover_animation']);
+                            }
+
+                            $image_html = '<img ' . $widget->getRenderAttributeString('image' . $index) . '/>';
+
+                            if (!empty($banner['link']['url'])) {
+                                $image_html = '<a ' . $widget->getRenderAttributeString('link' . $index) . '>' . $image_html . '</a>';
+                            }
+                            ?>
+                            <figure class="gmt-banner-img">
+                                <?= /** @noEscape */ $image_html ?>
+                            </figure>
+                            <?php
+                        endif;
+
+                        if ($hasContent) :
+                            $widget->addRenderAttribute('box-content' . $index, 'class', 'gmt-banner-content');
+                            $widget->addRenderAttribute('box-content' . $index, 'class', 'gmt-banner-content-position-' . ($settings['banner-slider_caption_position'] ?? ''));
+
+                            ?>
+                            <div <?= /** @noEscape  */ $widget->getRenderAttributeString('box-content' . $index) ?>>
+                                <?php
+                                $widget->addRenderAttribute('caption' . $index, 'class', 'gmt-banner-description');
+                                $widget->addInlineEditingAttributes('caption' . $index);
+                                ?>
+                                <div <?= $widget->getRenderAttributeString('caption' . $index) ?>>
+                                    <?= $banner['banner_caption'] ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php
+        if (count($banners) > 1) :
+            if (in_array($settings['navigation'], [ 'dots', 'both' ])) : ?>
+                <div class="swiper-pagination"></div>
+            <?php
+            endif;
+            if (in_array($settings['navigation'], [ 'arrows', 'both' ])) :
+                ?>
+                <div class="gmt-swiper-button gmt-swiper-button-prev">
+                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    <span class="gmt-screen-only"><?= __('Previous') ?></span>
+                </div>
+                <div class="gmt-swiper-button gmt-swiper-button-next">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    <span class="gmt-screen-only"><?= __('Next') ?></span>
+                </div>
+            <?php
+            endif;
+        endif;
+        ?>
+    </div>
+<?php endif; ?>
+
+

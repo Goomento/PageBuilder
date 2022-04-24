@@ -1,0 +1,36 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Helper\EscaperHelper;
+
+/**
+ * @var Widget $block
+ */
+$widget = $block->getWidget();
+$settings = $block->getSettingsForDisplay();
+
+if (empty($settings['address'])) {
+    return;
+}
+
+if (0 === (int) $settings['zoom']['size']) {
+    $settings['zoom']['size'] = 10;
+}
+
+?>
+<div class="gmt-custom-embed">
+    <?php
+    printf(
+        '<iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=%s&amp;t=m&amp;z=%d&amp;output=embed&amp;iwloc=near" aria-label="%s"></iframe>',
+        rawurlencode($settings['address']),
+        (int) $settings['zoom']['size'],
+        EscaperHelper::escapeHtml($settings['address'])
+    );
+    ?>
+</div>

@@ -1,0 +1,105 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+declare(strict_types=1);
+
+use Goomento\Core\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Block\Product\ListProduct;
+use Goomento\PageBuilder\Builder\Managers\Icons;
+use Magento\Framework\App\Action\Action;
+use Magento\Catalog\Model\Product;
+
+/**
+ * @var Widget $block
+ */
+$widget = $block->getWidget();
+$settings = $block->getSettingsForDisplay();
+
+$productSku = $settings['addcart-button_product'] ?: null;
+$postParams = [];
+if (trim((string) $productSku)) {
+    /** @var ProductRepositoryInterface $productRepository */
+    $productRepository = ObjectManagerHelper::create(ProductRepositoryInterface::class);
+    try {
+        /** @var Product $product */
+        $product = $productRepository->get(trim($productSku));
+    } catch (\Exception $e) {
+    }
+
+    if (isset($product) && $product->getId()) {
+        /** @var ListProduct $listBlock */
+        $listBlock = ObjectManagerHelper::get(ListProduct::class);
+        $postParams = $listBlock->getAddToCartPostParams($product);
+    }
+}
+
+if (!empty($postParams)) :
+    $widget->addRenderAttribute('wrapper', 'class', 'gmt-addcart-button-wrapper');
+    $widget->addRenderAttribute('button', 'class', 'gmt-button gmt-addcart-button-button');
+    $widget->addRenderAttribute('button', 'role', 'button');
+    $widget->addRenderAttribute('button', 'type', 'submit');
+
+    if (! empty($settings['addcart-button_css_id'])) {
+        $widget->addRenderAttribute('button', 'id', $settings['addcart-button_css_id']);
+    }
+
+    if (! empty($settings['addcart-button_size'])) {
+        $widget->addRenderAttribute('button', 'class', 'gmt-size-' . $settings['addcart-button_size']);
+    }
+    if ($settings['addcart-button_hover_animation']) {
+        $widget->addRenderAttribute('button', 'class', 'gmt-animation-' . $settings['addcart-button_hover_animation']);
+    }
+    ?>
+    <div <?= $widget->getRenderAttributeString('wrapper'); ?>>
+        <form data-product-sku="<?= $block->escapeHtmlAttr($product->getSku()) ?>" action="<?= $postParams['action'] ?>" data-role="tocart-form" method="post" >
+            <input type="hidden"
+                   name="product"
+                   value="<?= /* @noEscape */ $postParams['data']['product'] ?>">
+            <input type="hidden" name="<?= /* @noEscape */ Action::PARAM_NAME_URL_ENCODED ?>"
+                   value="<?= /* @noEscape */ $postParams['data'][Action::PARAM_NAME_URL_ENCODED] ?>">
+            <?= $block->getBlockHtml('formkey') ?>
+            <button <?= $widget->getRenderAttributeString('button'); ?>>
+                <?php
+                $widget->addRenderAttribute([
+                    'content-wrapper' => [
+                        'class' => 'gmt-button-content-wrapper',
+                    ],
+                    'icon-align' => [
+                        'class' => [
+                            'gmt-button-icon',
+                            'gmt-align-icon-' . $settings['addcart-button_icon_align'],
+                        ],
+                    ],
+                    'text' => [
+                        'class' => 'gmt-button-text',
+                    ],
+                ]);
+                $widget->addInlineEditingAttributes('text', 'none'); ?>
+                <?php if (!empty($settings['addcart-button_icon']) || ! empty($settings['addcart-button_selected_icon']['value'])) : ?>
+                    <em <?= $widget->getRenderAttributeString('icon-align'); ?>>
+                        <?php Icons::renderIcon($settings['addcart-button_selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
+                    </em>
+                <?php endif; ?>
+                <span <?= $widget->getRenderAttributeString('content-wrapper'); ?>>
+                    <span <?= $widget->getRenderAttributeString('text'); ?>><?= /** @noEscape */ $settings['addcart-button_text']; ?></span>
+                </span>
+            </button>
+        </form>
+        <script type="text/x-magento-init">
+        {
+            "[data-role=tocart-form]": {
+                "catalogAddToCart": {
+                    "product_sku": "<?= $block->escapeJs($product->getSku()) ?>",
+                    "addToCartButtonTextDefault": "<?= /** @noEscape */ $settings['addcart-button_text']; ?>",
+                    "addToCartButtonSelector": ".gmt-addcart-button-button"
+                }
+            }
+        }
+        </script>
+    </div>
+<?php
+endif;

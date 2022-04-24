@@ -15,7 +15,8 @@ use Goomento\PageBuilder\Builder\Widgets\Button;
  */
 /** @var Button $widget */
 $widget = $block->getWidget();
-$settings = $widget->getSettingsForDisplay();
+$settings = $block->getSettingsForDisplay();
+
 $widget->addRenderAttribute('wrapper', 'class', 'gmt-button-wrapper');
 
 if (!empty($settings['button_link']['url'])) {

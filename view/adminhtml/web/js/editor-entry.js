@@ -6,7 +6,7 @@
 define([
     'underscore',
     'jquery',
-    'goomento-editor-engine',
+    'Goomento_PageBuilder/js/moduleResolver',
     'swiper',
     'nprogress',
     'perfect-scrollbar',
@@ -15,12 +15,13 @@ define([
 ], function (
     _,
     $,
-    App,
+    moduleResolver,
     Swiper,
     NProgress,
     PerfectScrollbar,
     noUiSlider
 ) {
+
     (function (w, objects) {
         for (let ob in objects) {
             w[ob] = w[ob] ||  objects[ob];
@@ -32,11 +33,12 @@ define([
         'Swiper': Swiper,
     });
 
-    window.goomento = new App;
-
-    setTimeout(() => {
-        window.goomento.start();
-    }, 500);
-
-    return window.goomento;
+    moduleResolver(function () {
+        moduleResolver.resolveJquery(function () {
+            require(['goomento-editor-engine'], function (App) {
+                window.goomento = new App;
+                goomento.start();
+            });
+        });
+    });
 });

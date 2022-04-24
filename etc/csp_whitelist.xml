@@ -22,5 +22,10 @@
                 <value id="cdnjs.cloudflare.com" type="host">https://cdnjs.cloudflare.com/</value>
             </values>
         </policy>
+        <policy id="frame-src">
+            <values>
+                <value id="maps.google.com" type="host">https://maps.google.com/</value>
+            </values>
+        </policy>
     </policies>
 </csp_whitelist>

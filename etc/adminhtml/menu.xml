@@ -22,7 +22,7 @@
              parent="Goomento_Core::menu"
              resource="Goomento_PageBuilder::menu"/>
         <add id="Goomento_PageBuilder::page"
-             title="Pages (Landing Page)"
+             title="Pages - Landing Pages"
              module="Goomento_PageBuilder"
              translate="title"
              sortOrder="10"

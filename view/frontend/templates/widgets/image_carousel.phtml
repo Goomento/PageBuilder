@@ -1,0 +1,126 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Helper\EscaperHelper;
+use Goomento\PageBuilder\Helper\StateHelper;
+
+/**
+ * @var Widget $block
+ */
+$widget = $block->getWidget();
+$settings = $block->getSettingsForDisplay();
+
+if (empty($settings['image-carousel_carousel'])) {
+    return;
+}
+
+$slides = [];
+
+foreach ($settings['image-carousel_carousel'] as $index => $attachment) {
+    $image_url = $attachment['url'];
+
+    $image_html = '<img class="swiper-slide-image" src="' . EscaperHelper::escapeHtml($image_url) . '" alt="" />';
+
+    $link_tag = '';
+
+    $link = [];
+
+    if ('custom' === $settings['image-carousel_link_to']) {
+        if (!empty($settings['image-carousel_link']['url'])) {
+            $link = $settings['image-carousel_link'];
+        }
+    } elseif ('none' !== $settings['image-carousel_link_to']) {
+        $link['url'] = $attachment['url'];
+    }
+
+    if (!empty($link)) {
+
+        $link_key = 'link_' . $index;
+        $widget->addRenderAttribute($link_key, [
+            'href' => $link['url'],
+            'data-gmt-open-lightbox' => $settings['image-carousel_open_lightbox'],
+            'data-gmt-lightbox-slideshow' => $widget->getId(),
+            'data-gmt-lightbox-index' => $index,
+        ]);
+
+        if (StateHelper::isEditorMode()) {
+            $widget->addRenderAttribute($link_key, [
+                'class' => 'gmt-clickable',
+            ]);
+        }
+
+        if (! empty($link['is_external'])) {
+            $widget->addRenderAttribute($link_key, 'target', '_blank');
+        }
+
+        if (! empty($link['nofollow'])) {
+            $widget->addRenderAttribute($link_key, 'rel', 'nofollow');
+        }
+
+        $link_tag = '<a ' . $widget->getRenderAttributeString($link_key) . '>';
+    }
+
+    $slide_html = '<div class="swiper-slide">' . $link_tag . '<figure class="swiper-slide-inner">' . $image_html;
+
+
+    $slide_html .= '</figure>';
+
+    if ($link) {
+        $slide_html .= '</a>';
+    }
+
+    $slide_html .= '</div>';
+
+    $slides[] = $slide_html;
+}
+
+if (!empty($slides)) :
+    $widget->addRenderAttribute('_wrapper', 'class', 'gmt-invisible');
+
+    $widget->addRenderAttribute([
+        'carousel' => [
+            'class' => 'gmt-image-carousel swiper-wrapper',
+        ],
+        'carousel-wrapper' => [
+            'class' => 'gmt-image-carousel-wrapper swiper-container',
+            'dir' => $settings['direction'],
+        ],
+    ]);
+
+    $show_dots = (in_array($settings['navigation'], [ 'dots', 'both' ]));
+    $show_arrows = (in_array($settings['navigation'], [ 'arrows', 'both' ]));
+
+    if ('yes' === $settings['image-carousel_image_stretch']) {
+        $widget->addRenderAttribute('carousel', 'class', 'swiper-image-stretch');
+    }
+
+    $slides_count = count($settings['image-carousel_carousel']); ?>
+    <div <?php echo $widget->getRenderAttributeString('carousel-wrapper'); ?>>
+        <div <?php echo $widget->getRenderAttributeString('carousel'); ?>>
+            <?php echo implode('', $slides); ?>
+        </div>
+        <?php if (1 < $slides_count) : ?>
+            <?php if ($show_dots) : ?>
+                <div class="swiper-pagination"></div>
+            <?php endif; ?>
+            <?php if ($show_arrows) : ?>
+                <div class="gmt-swiper-button gmt-swiper-button-prev">
+                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    <span class="gmt-screen-only"><?php __('Previous'); ?></span>
+                </div>
+                <div class="gmt-swiper-button gmt-swiper-button-next">
+                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    <span class="gmt-screen-only"><?php __('Next'); ?></span>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+<?php
+endif;
+

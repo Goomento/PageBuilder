@@ -109,7 +109,7 @@ class Actions extends AbstractAction implements HttpPostActionInterface
                 $this->logger->error($e);
                 $results[$actionId]['success'] = false;
                 $results[$actionId]['code'] = 520;
-                if (Configuration::DEBUG) {
+                if (Configuration::debug()) {
                     $results[$actionId]['message'] = $e->getMessage();
                 }
             }

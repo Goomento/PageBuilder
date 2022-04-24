@@ -138,7 +138,6 @@ abstract class AbstractElement extends ControlsStack
     {
         foreach ($this->getScriptDepends() as $script) {
             ThemeHelper::enqueueScript($script);
-            ThemeHelper::addDeps($script, 'goomento-frontend');
         }
     }
 
@@ -553,9 +552,9 @@ abstract class AbstractElement extends ControlsStack
             echo $content;
             $this->afterRender();
 
-            $this->enqueueScripts();
-            $this->enqueueStyles();
+            HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$this, 'enqueue']);
         }
+
 
         /**
          * After frontend element render.
@@ -578,6 +577,18 @@ abstract class AbstractElement extends ControlsStack
          * @param AbstractElement $this The element.
          */
         HooksHelper::doAction('pagebuilder/frontend/after_render', $this);
+    }
+
+    /**
+     * Adding JS/CSS onto the HTML output
+     * This will be running under hook
+     *
+     * @return void
+     */
+    public function enqueue()
+    {
+        $this->enqueueScripts();
+        $this->enqueueStyles();
     }
 
     /**
