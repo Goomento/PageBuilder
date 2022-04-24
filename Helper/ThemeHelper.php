@@ -52,4 +52,26 @@ class ThemeHelper extends \Goomento\Core\Helper\ThemeHelper
     {
         return !empty(self::$contents);
     }
+
+    /**
+     * Trigger all hooks for header
+     *
+     * @return void
+     */
+    public static function doHeader()
+    {
+        self::getStylesManager()->doItems();
+        self::getScriptsManager()->doHeadItems();
+    }
+
+    /**
+     * Trigger all hooks for header
+     *
+     * @return void
+     */
+    public static function doFooter()
+    {
+        self::getStylesManager()->doItems();
+        self::getScriptsManager()->doFooterItems();
+    }
 }

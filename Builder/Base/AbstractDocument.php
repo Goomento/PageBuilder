@@ -557,7 +557,7 @@ abstract class AbstractDocument extends ControlsStack
     public function saveVersion()
     {
         // Save per revision.
-        $this->updateMeta('version', Configuration::VERSION);
+        $this->updateMeta('version', Configuration::version());
 
         /**
          * Document version save.

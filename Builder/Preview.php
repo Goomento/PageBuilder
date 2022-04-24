@@ -16,13 +16,11 @@ use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\RegistryHelper;
-use Goomento\PageBuilder\Helper\RequestHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 
 class Preview
 {
-
     /**
      * @var int
      */
@@ -40,11 +38,8 @@ class Preview
         $model = RegistryHelper::registry('current_preview_content');
         $this->contentId = $model ? $model->getId() : 0;
 
-        HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', function () {
-            $this->enqueueScripts();
-            $this->enqueueStyles();
-        });
-
+        HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$this, 'enqueueScripts']);
+        HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$this, 'enqueueStyles']);
         HooksHelper::addFilter('pagebuilder/content/html', [ $this,'builderWrapper' ], 999999);
 
         HooksHelper::addAction('pagebuilder/frontend/footer', [ $this, 'footer']);
@@ -95,30 +90,23 @@ class Preview
     /**
      * Enqueue Styles
      */
-    private function enqueueStyles()
+    public function enqueueStyles()
     {
         ObjectManagerHelper::get(Frontend::class)->enqueueStyles();
 
         ObjectManagerHelper::get(Widgets::class)->enqueueWidgetsStyles();
 
-        $suffix = Configuration::DEBUG ? '' : '.min';
+        $suffix = Configuration::debug() ? '' : '.min';
 
         $direction_suffix = DataHelper::isRtl() ? '-rtl' : '';
 
         ThemeHelper::registerStyle(
-            'goomento-select2',
-            'Goomento_PageBuilder::lib/e-select2/css/e-select2' . $suffix . '.css',
-            [],
-            '4.0.6-rc.1'
-        );
-
-        ThemeHelper::registerStyle(
             'editor-preview',
-            'Goomento_PageBuilder::css/editor-preview' . $direction_suffix . $suffix . '.css',
+            'Goomento_PageBuilder/build/editor-preview' . $direction_suffix . $suffix . '.css',
             [
                 'goomento-select2',
             ],
-            Configuration::VERSION
+            Configuration::version()
         );
 
         ThemeHelper::enqueueStyle('editor-preview');
@@ -135,7 +123,7 @@ class Preview
     /**
      *
      */
-    private function enqueueScripts()
+    public function enqueueScripts()
     {
         /** @var Frontend $frontend */
         $frontend = ObjectManagerHelper::get(Frontend::class);
@@ -144,14 +132,11 @@ class Preview
         /** @var Widgets $widgetManager */
         $widgetManager = ObjectManagerHelper::get(Widgets::class);
         $widgetManager->enqueueWidgetsScripts();
-        $suffix = Configuration::DEBUG ? '' : '.min';
+        $suffix = Configuration::debug() ? '' : '.min';
 
         ThemeHelper::enqueueScript(
             'goomento-inline-editor',
-            'Goomento_PageBuilder/lib/inline-editor/js/inline-editor' . $suffix,
-            [],
-            Configuration::VERSION,
-            true
+            'Goomento_PageBuilder/lib/inline-editor/js/inline-editor' . $suffix
         );
 
         /**

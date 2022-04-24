@@ -15,14 +15,25 @@ namespace Goomento\PageBuilder;
 class Configuration
 {
     /**
-     * Set some resources as develop version (Eg: remove `.min` from URL ...)
+     * Get current version
+     *
+     * @return string
      */
-    const DEBUG = false;
+    public static function version()
+    {
+        return (string) Developer::getVar(Developer::VERSION);
+    }
 
     /**
-     * The Goomento Page Builder Version - which is set for resource version (Eg: styles, json files)
+     * Is Debugging
+     * Set some resources as develop version (Eg: remove `.min` from URL ...)
+     *
+     * @return bool
      */
-    const VERSION = '0.2.3';
+    public static function debug()
+    {
+        return (bool) Developer::getVar(Developer::DEBUG);
+    }
 
     /**
      * Default Breakpoints

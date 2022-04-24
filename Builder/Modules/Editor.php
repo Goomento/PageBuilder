@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Modules;
 
 use Goomento\PageBuilder\Api\Data\ContentInterface;
-use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Icons;
 use Goomento\PageBuilder\Builder\Managers\Schemes;
 use Goomento\PageBuilder\Builder\Shapes;
@@ -24,7 +23,6 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\RequestHelper;
 use Goomento\PageBuilder\Helper\TemplateHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
-use Magento\Framework\Exception\LocalizedException;
 
 class Editor
 {
@@ -101,126 +99,24 @@ class Editor
     }
 
     /**
-     * @throws LocalizedException
      */
     public function enqueueScripts()
     {
-        $suffix = Configuration::DEBUG ? '' : '.min';
-
-        ThemeHelper::registerScript(
-            'nouislider',
-            'Goomento_PageBuilder/lib/nouislider/nouislider.min',
-            [],
-            '13.0.0'
-        );
+        $suffix = Configuration::debug() ? '' : '.min';
 
         ThemeHelper::registerScript(
             'goomento-editor-modules',
-            'Goomento_PageBuilder/js/editor-modules' . $suffix,
-            [
-                'goomento-common-modules',
-            ]
-        );
-
-        ThemeHelper::registerScript(
-            'goomento-waypoints',
-            'Goomento_PageBuilder/lib/waypoints/waypoints-for-editor' . $suffix,
-            [],
-            '4.0.2'
-        );
-
-        ThemeHelper::registerScript(
-            'perfect-scrollbar',
-            'Goomento_PageBuilder/lib/perfect-scrollbar/js/perfect-scrollbar' . $suffix,
-            [],
-            '1.4.0'
-        );
-
-        ThemeHelper::registerScript(
-            'jquery-easing',
-            'Goomento_PageBuilder/lib/jquery-easing/jquery-easing' . $suffix,
-            ['jquery'],
-            '1.3.2'
-        );
-
-        ThemeHelper::registerScript(
-            'nprogress',
-            'Goomento_PageBuilder/lib/nprogress/nprogress' . $suffix,
-            [],
-            '0.2.0'
-        );
-
-        ThemeHelper::registerScript(
-            'tipsy',
-            'Goomento_PageBuilder/lib/tipsy/tipsy' . $suffix,
-            [],
-            '1.0.0'
-        );
-
-        ThemeHelper::registerScript(
-            'jquery-goomento-select2',
-            'Goomento_PageBuilder/lib/e-select2/js/e-select2.full' . $suffix,
-            ['jquery'],
-            '4.0.6-rc.1'
-        );
-
-        ThemeHelper::registerScript(
-            'flatpickr',
-            'Goomento_PageBuilder/lib/flatpickr/flatpickr' . $suffix,
-            [],
-            '1.12.0'
-        );
-
-        ThemeHelper::registerScript(
-            'ace',
-            'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace',
-            [],
-            '1.2.5'
-        );
-
-        ThemeHelper::registerScript(
-            'ace-language-tools',
-            'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ext-language_tools',
-            [
-                'ace',
-            ],
-            '1.2.5'
-        );
-
-        ThemeHelper::registerScript(
-            'jquery-hover-intent',
-            'Goomento_PageBuilder/lib/jquery-hover-intent/jquery-hover-intent' . $suffix,
-            ['jquery'],
-            '1.0.0'
-        );
-
-        ThemeHelper::registerScript(
-            'iris',
-            'Goomento_PageBuilder/lib/color-picker/iris.min',
-            [
-                'jquery',
-                'jquery/ui',
-            ]
-        );
-
-        ThemeHelper::registerScript(
-            'wysiwygAdapter',
-            'wysiwygAdapter',
-            []
-        );
-
-        ThemeHelper::registerScript(
-            'mage/translate',
-            'mage/translate',
-            ['jquery']
+            'Goomento_PageBuilder/build/editor-modules' . $suffix,
+            ['goomento-common-modules']
         );
 
         ThemeHelper::registerScript(
             'goomento-editor-engine',
-            'Goomento_PageBuilder/js/editor' . $suffix,
+            'Goomento_PageBuilder/build/editor' . $suffix,
             [
                 'underscore',
                 'jquery',
+                'mage/translate',
                 'jquery/ui',
                 'backbone',
                 'backbone.radio',
@@ -245,10 +141,7 @@ class Editor
 
         ThemeHelper::registerScript(
             'goomento-editor',
-            'Goomento_PageBuilder/js/editor-entry',
-            [],
-            null,
-            true
+            'Goomento_PageBuilder/js/editor-entry'
         );
 
         /**
@@ -261,11 +154,9 @@ class Editor
 
         $document = $this->getDocument();
 
-        $editor_data = $document->getElementsRawData();
-
         $config = [
-            'version' => Configuration::VERSION,
-            'data' => $editor_data,
+            'version' => Configuration::version(),
+            'data' => $document->getElementsRawData(),
             'document' => $document->getConfig(),
             'current_revision_id' => null,
             'autosave_interval' => ConfigHelper::getValue('autosave_interval') ?: 60,
@@ -315,7 +206,15 @@ class Editor
 
         ThemeHelper::enqueueScript('goomento-editor');
 
-        ObjectManagerHelper::get(Controls::class)->enqueueControlScripts();
+        $html = <<<HTML
+    require(['Goomento_PageBuilder/js/moduleResolver'], function (moduleResolver) {
+        moduleResolver.resolveJquery(() => {});
+    });
+HTML;
+
+        ThemeHelper::inlineScript('goomento-editor', $html, 'before');
+
+        ObjectManagerHelper::getControlsManager()->enqueueControlScripts();
 
         /**
          * After editor enqueue scripts.
@@ -342,55 +241,13 @@ class Editor
          */
         HooksHelper::doAction('pagebuilder/editor/before_enqueue_styles');
 
-        $suffix = Configuration::DEBUG ? '' : '.min';
+        $suffix = Configuration::debug() ? '' : '.min';
 
-        $direction_suffix = DataHelper::isRtl() ? '-rtl' : '';
-
-        ThemeHelper::registerStyle(
-            'font-awesome',
-            'Goomento_PageBuilder/lib/font-awesome/css/font-awesome' . $suffix . '.css',
-            [],
-            '4.7.0'
-        );
-
-        ThemeHelper::registerStyle(
-            'gmt-select2',
-            'Goomento_PageBuilder/lib/e-select2/css/e-select2' . $suffix . '.css',
-            [],
-            '4.0.6-rc.1'
-        );
-
-        ThemeHelper::registerStyle(
-            'google-font-roboto',
-            'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700',
-            [],
-            ''
-        );
-
-        ThemeHelper::registerStyle(
-            'google-font-inter',
-            'https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap',
-            [],
-            ''
-        );
-
-        ThemeHelper::registerStyle(
-            'flatpickr',
-            'Goomento_PageBuilder/lib/flatpickr/flatpickr' . $suffix . '.css',
-            [],
-            '1.12.0'
-        );
-
-        ThemeHelper::registerStyle(
-            'goomento-select2',
-            'Goomento_PageBuilder/lib/e-select2/css/e-select2' . $suffix . '.css'
-        );
-
-        ThemeHelper::enqueueStyle('fontawesome');
+        $directionSuffix = DataHelper::isRtl() ? '-rtl' : '';
 
         ThemeHelper::registerStyle(
             'goomento-editor',
-            'Goomento_PageBuilder/css/editor' . $direction_suffix . $suffix . '.css',
+            'Goomento_PageBuilder/build/editor' . $directionSuffix . $suffix . '.css',
             [
                 'goomento-common',
                 'goomento-select2',

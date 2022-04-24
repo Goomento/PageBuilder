@@ -9,7 +9,7 @@
  * Licensed under the GPLv2 license.
  *
  */
-require(['jquery', 'mage/translate', 'iris','jquery/ui'], function ($, $t) {
+require(['jquery', 'mage/translate'], function ($, $t) {
     let undef = undefined;
 
     // Variable for some backgrounds ( grid )

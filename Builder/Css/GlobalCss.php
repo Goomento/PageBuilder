@@ -148,8 +148,7 @@ class GlobalCss extends AbstractCss
         parent::enqueue();
         /** @var Frontend $frontend */
         $frontend = ObjectManagerHelper::get(Frontend::class);
-        /** @var Schemes $schemeManager */
-        $schemeManager = ObjectManagerHelper::get(Schemes::class);
+        $schemeManager = ObjectManagerHelper::getSchemasManager();
         /** @var Typography $typography */
         $typography = $schemeManager->getScheme(Typography::NAME);
         $schemeValues = $typography->getSchemeValue();

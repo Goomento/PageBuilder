@@ -20,7 +20,7 @@ class RenderFallback implements OptionSourceInterface
         return [
             [
                 'value' => 'empty',
-                'label' => __('Show Nothing'),
+                'label' => __('Show Empty'),
             ],
             [
                 'value' => 'nothing',

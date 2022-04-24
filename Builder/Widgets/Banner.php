@@ -11,7 +11,9 @@ namespace Goomento\PageBuilder\Builder\Widgets;
 use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
 use Goomento\PageBuilder\Builder\Controls\Groups\CssFilterGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Builder\Schemes\Typography;
 use Goomento\PageBuilder\Helper\DataHelper;
 
 class Banner extends AbstractWidget
@@ -42,6 +44,14 @@ class Banner extends AbstractWidget
     public function getStyleDepends()
     {
         return ['goomento-widgets'];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCategories()
+    {
+        return ['basic'];
     }
 
     /**
@@ -204,9 +214,22 @@ class Banner extends AbstractWidget
      * @param array $args
      * @return void
      */
-    public static function registerCaptionStyle(AbstractElement $widget, string $prefix = self::NAME . '_',
-                                                string          $cssTarget = '.gmt-banner-content', array $args = [])
+    public static function registerCaptionStyle(
+        AbstractElement $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-banner-content',
+        array $args = []
+    )
     {
+        $widget->addGroupControl(
+            TypographyGroup::NAME,
+            [
+                'name' => $prefix . 'caption_typography',
+                'selector' => '{{WRAPPER}} ' . $cssTarget,
+                'scheme' => Typography::TYPOGRAPHY_3,
+            ]
+        );
+
         $widget->addResponsiveControl(
             $prefix . 'caption_position',
             $args + [

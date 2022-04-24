@@ -132,7 +132,7 @@ class Icons
     {
         static $is_test_mode = null;
         if (null === $is_test_mode) {
-            $is_test_mode = !!Configuration::DEBUG;
+            $is_test_mode = !!Configuration::debug();
         }
         $url = 'Goomento_PageBuilder/lib/font-awesome/' . $ext_type . '/' . $filename;
         if (!$is_test_mode && $add_suffix) {

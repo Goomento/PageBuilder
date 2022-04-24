@@ -162,7 +162,7 @@ class Ajax extends AbstractModule
                 }
             } catch (\Exception $e) {
                 LoggerHelper::error($e);
-                if (Configuration::DEBUG) {
+                if (Configuration::debug()) {
                     $this->addResponseData(false, $e->getMessage(), $e->getCode());
                 } else {
                     $this->addResponseData(false, __('Something went wrong. Please try again later.'), 502);

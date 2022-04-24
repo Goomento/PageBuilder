@@ -456,6 +456,184 @@ class Section extends AbstractElement
 
         $this->endControlsSection();
 
+        // Popup Section
+        $this->startControlsSection(
+            'section_popup_section',
+            [
+                'label' => __('Popup'),
+                'tab' => Controls::TAB_LAYOUT,
+            ]
+        );
+
+        $this->addControl(
+            'popup_enabled',
+            [
+                'label' => __('Enabled'),
+                'type' => Controls::SWITCHER,
+                'default' => '',
+                'prefix_class' => 'gmt-section-popup-',
+                'description' => __('Enable this section will hide section on storefront. Use "Call to Action" widget to show this popup.'),
+                'frontend_available' => true,
+                'return_value' => 'ok',
+            ]
+        );
+
+        $this->addControl(
+            'popup_note',
+            [
+                'type' => Controls::RAW_HTML,
+                'raw' => __('Note: CSS ID must be placed in tab Advanced > Identify > CSS ID. .'),
+                'content_classes' => 'gmt-panel-alert gmt-panel-alert-warning',
+                'condition' => [
+                    'popup_enabled' => 'ok'
+                ]
+            ]
+        );
+
+        $this->addControl(
+            'popup_title',
+            [
+                'label' => __('Title'),
+                'type' => Controls::TEXT,
+                'frontend_available' => true,
+                'default' => __('Popup Title'),
+                'condition' => [
+                    'popup_enabled' => 'ok'
+                ]
+            ]
+        );
+
+        $this->addControl(
+            'popup_buttons',
+            [
+                'label' => __('Buttons'),
+                'type' => Controls::SELECT,
+                'default' => 'close',
+                'options' => [
+                    'none' => __('None'),
+                    'close' => __('Close Button'),
+                    'confirm' => __('Confirm Button'),
+                    'both' => __('Both'),
+                ],
+                'condition' => [
+                    'popup_enabled' => 'ok'
+                ]
+            ]
+        );
+
+        $this->addControl(
+            'popup_close_button',
+            [
+                'separator' => 'before',
+                'label' => __('Close Button'),
+                'type' => Controls::HEADING,
+                'condition' => [
+                    'popup_buttons' => ['close', 'both'],
+                    'popup_enabled' => 'ok',
+                ]
+            ]
+        );
+
+        $this->addControl(
+            'popup_close_button_text',
+            [
+                'label' => __('Label'),
+                'type' => Controls::TEXT,
+                'frontend_available' => true,
+                'dynamic' => [
+                    'active' => true,
+                ],
+                'default' => __('Close'),
+                'placeholder' => __('Close'),
+                'condition' => [
+                    'popup_buttons' => ['close', 'both'],
+                    'popup_enabled' => 'ok',
+                ]
+            ]
+        );
+
+        $this->addControl(
+            'popup_close_button_css_classes',
+            [
+                'label' => __('CSS Classes'),
+                'type' => Controls::TEXT,
+                'default' => '',
+                'prefix_class' => '',
+                'title' => __('Add your custom class WITHOUT the dot. e.g: my-class'),
+                'frontend_available' => true,
+                'condition' => [
+                    'popup_buttons' => ['close', 'both'],
+                    'popup_enabled' => 'ok',
+                ]
+            ]
+        );
+
+        $this->addControl(
+            'section_popup_confirm_button',
+            [
+                'separator' => 'before',
+                'label' => __('Confirm Button'),
+                'type' => Controls::HEADING,
+                'condition' => [
+                    'popup_buttons' => ['confirm', 'both'],
+                    'popup_enabled' => 'ok',
+                ]
+            ]
+        );
+
+        $this->addControl(
+            'popup_confirm_button_text',
+            [
+                'label' => __('Text'),
+                'type' => Controls::TEXT,
+                'frontend_available' => true,
+                'dynamic' => [
+                    'active' => true,
+                ],
+                'default' => __('Confirm'),
+                'placeholder' => __('Confirm'),
+                'condition' => [
+                    'popup_buttons' => ['confirm', 'both'],
+                    'popup_enabled' => 'ok',
+                ]
+            ]
+        );
+
+        $this->addControl(
+            'popup_confirm_button_link',
+            [
+                'label' => __('Link'),
+                'type' => Controls::URL,
+                'frontend_available' => true,
+                'dynamic' => [
+                    'active' => true,
+                ],
+                'placeholder' => __('https://your-link.com'),
+                'condition' => [
+                    'popup_buttons' => ['confirm', 'both'],
+                    'popup_enabled' => 'ok',
+                ]
+            ]
+        );
+
+        $this->addControl(
+            'popup_confirm_button_css_classes',
+            [
+                'label' => __('CSS Classes'),
+                'type' => Controls::TEXT,
+                'default' => '',
+                'frontend_available' => true,
+                'prefix_class' => '',
+                'title' => __('Add your custom class WITHOUT the dot. e.g: my-class'),
+                'condition' => [
+                    'popup_buttons' => ['confirm', 'both'],
+                    'popup_enabled' => 'ok',
+                ]
+            ]
+        );
+
+        $this->endControlsSection();
+
         // Section Structure
         $this->startControlsSection(
             'section_structure',

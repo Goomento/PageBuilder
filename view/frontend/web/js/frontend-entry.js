@@ -4,32 +4,26 @@
  */
 
 define([
-    'underscore',
-    'jquery',
     'swiper',
-    'goomento-frontend-engine',
-    'goomento-dialog',
+    'Goomento_PageBuilder/js/moduleResolver',
+    'domReady!'
 ], function (
-    _,
-    $,
     Swiper,
-    Frontend
+    moduleResolver
 ) {
-    window.goomentoFrontend = new Frontend();
-
-    (function (w, objects) {
-        for (let ob in objects) {
-            w[ob] = w[ob] ||  objects[ob];
-        }
-    })(window, {
-        'Swiper': Swiper,
+    moduleResolver(function () {
+        (function (w, objects) {
+            for (let ob in objects) {
+                w[ob] = w[ob] ||  objects[ob];
+            }
+        })(window, {
+            'Swiper': Swiper,
+        });
+        require(['goomento-frontend-engine'], function (Frontend) {
+            window.goomentoFrontend = new Frontend();
+            if ( ! goomentoFrontend.isEditMode() ) {
+                goomentoFrontend.init();
+            }
+        });
     });
-
-    if ( ! goomentoFrontend.isEditMode() ) {
-        // window.addEventListener('load', function () {
-            goomentoFrontend.init();
-        // });
-    }
-
-    return window.goomentoFrontend;
 });

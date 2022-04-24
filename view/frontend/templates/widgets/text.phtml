@@ -18,7 +18,7 @@ $widget = $block->getWidget();
 
 $settings = $block->getSettingsForDisplay();
 
-$title = /** @noEscape */ trim($settings['text_title']);
+$title = /** @noEscape */ trim((string) $settings['text_title']);
 
 if ('' === $title) {
     return;

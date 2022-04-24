@@ -11,30 +11,7 @@ namespace Goomento\PageBuilder\Builder\Managers;
 use Exception;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
 use Goomento\PageBuilder\Builder\Modules\Ajax;
-use Goomento\PageBuilder\Builder\Widgets\Accordion;
-use Goomento\PageBuilder\Builder\Widgets\Alert;
-use Goomento\PageBuilder\Builder\Widgets\Audio;
-use Goomento\PageBuilder\Builder\Widgets\Banner;
-use Goomento\PageBuilder\Builder\Widgets\Block;
-use Goomento\PageBuilder\Builder\Widgets\Button;
 use Goomento\PageBuilder\Builder\Widgets\Common;
-use Goomento\PageBuilder\Builder\Widgets\Counter;
-use Goomento\PageBuilder\Builder\Widgets\Divider;
-use Goomento\PageBuilder\Builder\Widgets\Text;
-use Goomento\PageBuilder\Builder\Widgets\Html;
-use Goomento\PageBuilder\Builder\Widgets\Icon;
-use Goomento\PageBuilder\Builder\Widgets\IconBox;
-use Goomento\PageBuilder\Builder\Widgets\IconList;
-use Goomento\PageBuilder\Builder\Widgets\Image;
-use Goomento\PageBuilder\Builder\Widgets\ImageBox;
-use Goomento\PageBuilder\Builder\Widgets\Progress;
-use Goomento\PageBuilder\Builder\Widgets\SocialIcons;
-use Goomento\PageBuilder\Builder\Widgets\Spacer;
-use Goomento\PageBuilder\Builder\Widgets\StarRating;
-use Goomento\PageBuilder\Builder\Widgets\Video;
-use Goomento\PageBuilder\Builder\Widgets\Tabs;
-use Goomento\PageBuilder\Builder\Widgets\TextEditor;
-use Goomento\PageBuilder\Builder\Widgets\ProductList;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Traits\ComponentsLoader;
 
@@ -58,30 +35,7 @@ class Widgets
     private function initWidgets()
     {
         $this->components = [
-            Accordion::NAME => Accordion::class,
-            Alert::NAME => Alert::class,
-            Audio::NAME => Audio::class,
-            Banner::NAME => Banner::class,
-            Block::NAME => Block::class,
-            Button::NAME => Button::class,
             Common::NAME => Common::class,
-            Counter::NAME => Counter::class,
-            Divider::NAME => Divider::class,
-            Text::NAME => Text::class,
-            Html::NAME => Html::class,
-            Icon::NAME => Icon::class,
-            IconBox::NAME => IconBox::class,
-            IconList::NAME => IconList::class,
-            Image::NAME => Image::class,
-            ImageBox::NAME => ImageBox::class,
-            Progress::NAME => Progress::class,
-            SocialIcons::NAME => SocialIcons::class,
-            Spacer::NAME => Spacer::class,
-            StarRating::NAME => StarRating::class,
-            Video::NAME => Video::class,
-            Tabs::NAME => Tabs::class,
-            TextEditor::NAME => TextEditor::class,
-            ProductList::NAME => ProductList::class,
         ];
 
         HooksHelper::doAction('pagebuilder/widgets/widgets_registered', $this);

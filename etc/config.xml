@@ -21,6 +21,7 @@
             <editor>
                 <number_of_revision>100</number_of_revision>
                 <is_rtl>0</is_rtl>
+                <resources_globally>0</resources_globally>
                 <render>
                     <fallback>empty</fallback>
                 </render>

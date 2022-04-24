@@ -26,9 +26,9 @@ class Footer implements ModifierInterface
         if (!empty($data)) {
             ob_start();
             HooksHelper::doAction('footer');
-            $header = ob_get_clean();
-            if (!empty($header)) {
-                $data = str_replace('</body>', $header . '</body>', $data);
+            $footer = ob_get_clean();
+            if (!empty($footer) && preg_match('/<\/body[^>]*?>/i', $data, $matches)) {
+                $data = str_replace($matches[0], $footer . $matches[0], $data);
             }
         }
 

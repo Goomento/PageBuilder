@@ -85,40 +85,39 @@ class PageBuilder implements SubSystemInterface
     {
         $areaCode = StateHelper::getAreaCode();
 
+        // HEADER
         HooksHelper::addAction('header', function () {
             HooksHelper::doAction('pagebuilder/header');
-
-            ThemeHelper::getStylesManager()->doItems(false);
-            ThemeHelper::getScriptsManager()->doHeadItems();
         });
 
         HooksHelper::addAction('pagebuilder/header', function () use ($areaCode) {
+            HooksHelper::doAction('pagebuilder/register_styles');
+            HooksHelper::doAction('pagebuilder/register_scripts');
+            HooksHelper::doAction("pagebuilder/{$areaCode}/register_styles");
+            HooksHelper::doAction("pagebuilder/{$areaCode}/register_scripts");
+
             HooksHelper::doAction("pagebuilder/{$areaCode}/header");
 
             HooksHelper::doAction('pagebuilder/enqueue_scripts');
             HooksHelper::doAction("pagebuilder/{$areaCode}/enqueue_scripts");
+
+            ThemeHelper::doHeader();
         });
 
+        // FOOTER
         HooksHelper::addAction('footer', function () {
             HooksHelper::doAction('pagebuilder/footer');
-
-            ThemeHelper::getStylesManager()->doItems(false);
-            ThemeHelper::getScriptsManager()->doFooterItems();
         });
 
         HooksHelper::addAction('pagebuilder/footer', function () use ($areaCode) {
             HooksHelper::doAction("pagebuilder/{$areaCode}/footer");
+
+            ThemeHelper::doFooter();
         });
 
+        // DEFAULT
         HooksHelper::doAction('pagebuilder/init');
         HooksHelper::doAction("pagebuilder/{$areaCode}/init");
-
-        HooksHelper::doAction('pagebuilder/register_styles');
-        HooksHelper::doAction('pagebuilder/register_scripts');
-
-        HooksHelper::doAction("pagebuilder/{$areaCode}/register_styles");
-        HooksHelper::doAction("pagebuilder/{$areaCode}/register_scripts");
-
 
         HooksHelper::addFilter('pagebuilder/frontend/body_class', [ThemeHelper::class, 'getBodyClass']);
 

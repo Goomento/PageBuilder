@@ -7,57 +7,56 @@ define([
     'jquery'
 ], function ($) {
 
-    let
-        /**
-         * Regis widget
-         * @param widgetType
-         * @param callback
-         */
-        addAction = function (widgetType, callback) {
-            goomentoFrontend.hooks.addAction( 'frontend/element_ready/' + widgetType,  callback);
-        },
-        /**
-         * This method will pass the parameters into callback, the parameters contains
-         * {
-         *     $element: {jQuery}, // Elements that bond with widget
-         *     settings: {JSON}, // AbstractSettings that set
-         *     ... // The 'options' param in `widgetRegister`
-         * }
-         * @param callback
-         * @param options
-         * @returns {(function(*=): void)|*}
-         */
-        wrapper = function (callback, options) {
-            return function ($element) {
-                options.$element = $element;
-                options.settings = getElementSettings($element);
-                goomentoFrontend.elementsHandler.addHandler( callback, options);
-            }
-        },
-        /**
-         *
-         * @type {*[]}
-         */
-        handlerRegistered = [],
-        goomentoInitialized = false,
-        widgetTriggers = [],
-        saveWidgetTrigger = function ($element, $context) {
-            let type = $element.attr( 'data-widget_type' ),
-                elementId = $element.attr( 'data-id' );
+    /**
+     * Regis widget
+     * @param widgetType
+     * @param callback
+     */
+    let addAction = function (widgetType, callback) {
+        goomentoFrontend.hooks.addAction( 'frontend/element_ready/' + widgetType,  callback);
+    },
+    /**
+     * This method will pass the parameters into callback, the parameters contains
+     * {
+     *     $element: {jQuery}, // Elements that bond with widget
+     *     settings: {JSON}, // AbstractSettings that set
+     *     ... // The 'options' param in `widgetRegister`
+     * }
+     * @param callback
+     * @param options
+     * @returns {(function(*=): void)|*}
+     */
+    wrapper = function (callback, options) {
+        return function ($element) {
+            options.$element = $element;
+            options.settings = widgetRegister.getElementSettings($element);
+            goomentoFrontend.elementsHandler.addHandler( callback, options);
+        }
+    },
+    /**
+     *
+     * @type {*[]}
+     */
+    handlerRegistered = [],
+    goomentoInitialized = false,
+    widgetTriggers = [],
+    saveWidgetTrigger = function ($element, $context) {
+        let type = $element.attr( 'data-widget_type' ),
+            elementId = $element.attr( 'data-id' );
 
-            if (type && !widgetTriggers.includes(type)) {
-                widgetTriggers[type] = [];
-            }
+        if (type && !widgetTriggers.includes(type)) {
+            widgetTriggers[type] = [];
+        }
 
-            widgetTriggers[type][elementId] = $element;
-        },
-        triggerSavedWidget = function (widgetType, callback) {
-            if (widgetTriggers[widgetType]) {
-                for (let elementId in widgetTriggers[widgetType]) {
-                    callback(widgetTriggers[widgetType][elementId]);
-                }
+        widgetTriggers[type][elementId] = $element;
+    },
+    triggerSavedWidget = function (widgetType, callback) {
+        if (widgetTriggers[widgetType]) {
+            for (let elementId in widgetTriggers[widgetType]) {
+                callback(widgetTriggers[widgetType][elementId]);
             }
-        };
+        }
+    };
 
     $( window ).on( 'pagebuilder/frontend/init', () => {
         goomentoInitialized = true;
@@ -97,13 +96,29 @@ define([
         } else {
             triggerSavedWidget(widgetType, callback);
         }
-    }, getElementSettings = $object => {
-        let cid = null,
-            elementSettings = [];
+    }
 
-        if ($object instanceof jQuery) {
-            cid = $object.data( 'model-cid' );
+    /**
+     * Fix for incompatible with old JS
+     *
+     * @type {widgetRegister}
+     */
+    widgetRegister.widgetRegister = widgetRegister;
+
+    /**
+     * Get settings of element
+     * @param $object
+     * @return {*}
+     */
+    widgetRegister.getElementSettings = function($object) {
+        let cid = null,
+            elementSettings = {};
+
+        if (!$object instanceof jQuery) {
+            $object = $($object)
         }
+
+        cid = $object.data( 'model-cid' );
 
         if (cid) {
             const settings = goomentoFrontend.config.elements.data[ cid ],
@@ -145,8 +160,32 @@ define([
         return elementSettings;
     }
 
-    return {
-        widgetRegister,
-        getElementSettings
-    };
+    /**
+     * Manual run trigger on element - which is call JS of widget
+     *
+     * @param $scope
+     */
+    widgetRegister.runReadyTrigger = function ($scope) {
+        let callback = function () {
+            if (!($scope instanceof jQuery)) {
+                $scope = $($scope)
+            }
+
+            let $elements = $scope.find('.gmt-element');
+
+            $elements.each(function (i, element) {
+                goomentoFrontend.elementsHandler.runReadyTrigger(element);
+            });
+        }.bind(this)
+
+        if (typeof goomentoFrontend === "undefined") {
+            $( window ).on( 'pagebuilder/frontend/init', function () {
+                goomentoFrontend.on('components:init', callback);
+            });
+        } else {
+            callback();
+        }
+    }
+
+    return widgetRegister;
 });

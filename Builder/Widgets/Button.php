@@ -187,7 +187,7 @@ class Button extends AbstractWidget
         );
 
         $widget->addControl(
-            $prefix . 'button_css_id',
+            $prefix . 'css_id',
             $args + [
                 'label' => __('Button CSS ID'),
                 'type' => Controls::TEXT,

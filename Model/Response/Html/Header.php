@@ -24,12 +24,11 @@ class Header implements ModifierInterface
     {
         $data = (string) $data;
         if (!empty($data)) {
-            $areaCode = StateHelper::getAreaCode();
             ob_start();
             HooksHelper::doAction('header');
             $header = ob_get_clean();
-            if (!empty($header)) {
-                $data = str_replace('</head>', $header . '</head>', $data);
+            if (!empty($header) && preg_match('/<\/head[^>]*?>/i', $data, $matches)) {
+                $data = str_replace($matches[0], $header . $matches[0], $data);
             }
         }
 

@@ -94,13 +94,22 @@ Goomento stored CSS files in `pub/media/goomento/css`, those files responsible f
 choose `Internal` - Will use inline CSS instead
 - Flush/ Clean Magento Cache
 
+**The following modules are outdated ...**
+
+From the Goomento version `0.2.4`, Goomento is using the composer.json to manage the version, then you might run this command
+in the `MySQL server` to solve this (if using lower version)
+
+```sql
+DELETE FROM `setup_module` WHERE `setup_module`.`module` LIKE 'Goomento_%'
+```
+
 Something else? [Open an issue](#9-open-an-issue-and-contribution)
 
 ## 7. Version compatible
 
-magento Community Edition (CE): 2.3.x, 2.4.0 - 2.4.3
+Magento Community Edition (CE): 2.3.x, 2.4.0 - 2.4.4
 
-Magento Enterprise Edition (EE): 2.3.x, 2.4.0 - 2.4.3
+Magento Enterprise Edition (EE): 2.3.x, 2.4.0 - 2.4.4
 
 ## 8. Changelog
 
@@ -111,6 +120,13 @@ What's news? See here [CHANGELOG.md](https://github.com/Goomento/PageBuilder/blo
 Feel free to Open an Issue, Fork and Create Pull Request (PR) on GitHub
 
 For opening an issue, click [here](https://github.com/Goomento/PageBuilder/issues/new).
+
+Each issue needs more detail for easily to produce, then please provide
+
+- Goomento version, which is installed in your site. 
+- Your Magento Version, can be revealed by running this command `bin/magento --version`.
+- Description of issue in detail.
+- Browser console log (if capable).
 
 ## 10. Screenshots
 

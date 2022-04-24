@@ -13,7 +13,6 @@ use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Base\AbstractApp;
 use Goomento\PageBuilder\Builder\Css\ContentCss;
 use Goomento\PageBuilder\Builder\Css\GlobalCss;
-use Goomento\PageBuilder\Builder\Managers\Settings as SettingsManager;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
@@ -70,7 +69,8 @@ class Frontend extends AbstractApp
     public function __construct()
     {
         HooksHelper::addAction('pagebuilder/frontend/init', [$this, 'init']);
-        HooksHelper::addAction('pagebuilder/frontend/register_scripts', [$this, 'registerScripts']);
+        HooksHelper::addAction('pagebuilder/frontend/header', [$this, 'registerScripts'], 9);
+        HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$this, 'enqueueScripts']);
         HooksHelper::addAction('pagebuilder/frontend/register_styles', [$this, 'registerStyles']);
 
         $this->addContentFilter();
@@ -98,7 +98,6 @@ class Frontend extends AbstractApp
 
         HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [ $this, 'enqueueStyles' ]);
 
-        // Add Global Fonts to Header & Footer
         HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [ $this, 'printFontsLinks' ]);
         HooksHelper::addAction('pagebuilder/frontend/footer', [ $this, 'footer' ]);
     }
@@ -157,8 +156,7 @@ class Frontend extends AbstractApp
      */
     public function registerScripts()
     {
-        $min_suffix = Configuration::DEBUG ? '' : '.min';
-
+        $minSuffix = Configuration::debug() ? '' : '.min';
         /**
          * Before frontend register scripts.
          *
@@ -169,7 +167,7 @@ class Frontend extends AbstractApp
 
         ThemeHelper::registerScript(
             'goomento-frontend-modules',
-            'Goomento_PageBuilder/js/frontend-modules' . $min_suffix,
+            'Goomento_PageBuilder/build/frontend-modules' . $minSuffix,
             [
                 'jquery',
                 'jquery/ui',
@@ -177,49 +175,9 @@ class Frontend extends AbstractApp
         );
 
         ThemeHelper::registerScript(
-            'goomento-waypoints',
-            'Goomento_PageBuilder/lib/waypoints/waypoints' . $min_suffix,
-            [],
-            '4.0.2'
-        );
-
-        ThemeHelper::registerScript(
-            'flatpickr',
-            'Goomento_PageBuilder/lib/flatpickr/flatpickr' . $min_suffix,
-            [],
-            '4.1.4'
-        );
-
-        ThemeHelper::registerScript(
-            'goomento-dialog',
-            'Goomento_PageBuilder/lib/dialog/dialog' . $min_suffix,
-            [
-            ],
-            '4.7.3'
-        );
-
-        ThemeHelper::registerScript(
-            'goomento-gallery',
-            'Goomento_PageBuilder/lib/e-gallery/js/e-gallery' . $min_suffix,
-            [],
-            '1.0.2'
-        );
-
-        ThemeHelper::registerScript(
-            'underscore',
-            'Goomento_PageBuilder/lib/underscore/underscore'
-        );
-
-        ThemeHelper::registerStyle(
-            'hover-animation',
-            'Goomento_PageBuilder/lib/hover/hover.min.css'
-        );
-
-        ThemeHelper::registerScript(
             'goomento-frontend-engine',
-            'Goomento_PageBuilder/js/frontend' . $min_suffix,
+            'Goomento_PageBuilder/build/frontend' . $minSuffix,
             [
-                'underscore',
                 'jquery',
                 'backbone',
                 'backbone.radio',
@@ -233,10 +191,7 @@ class Frontend extends AbstractApp
 
         ThemeHelper::registerScript(
             'goomento-frontend',
-            'Goomento_PageBuilder/js/frontend-entry',
-            [],
-            null,
-            true
+            'Goomento_PageBuilder/js/frontend-entry'
         );
 
         /**
@@ -259,7 +214,7 @@ class Frontend extends AbstractApp
     public function registerStyles()
     {
 
-        $min_suffix = Configuration::DEBUG ? '' : '.min';
+        $minSuffix = Configuration::debug() ? '' : '.min';
 
         /**
          * Before frontend register styles.
@@ -269,51 +224,15 @@ class Frontend extends AbstractApp
          */
         HooksHelper::doAction('pagebuilder/frontend/before_register_styles');
 
+        $directionSuffix = DataHelper::isRtl() ? '-rtl' : '';
 
-        ThemeHelper::registerStyle(
-            'font-awesome',
-            'Goomento_PageBuilder/lib/font-awesome/css/all' . $min_suffix . '.css',
-            []
-        );
-
-        ThemeHelper::registerStyle(
-            'goomento-animations',
-            'Goomento_PageBuilder/lib/animations/animations.min.css',
-            []
-        );
-
-        ThemeHelper::registerStyle(
-            'flatpickr',
-            'Goomento_PageBuilder/lib/flatpickr/flatpickr'  . $min_suffix . '.css',
-            [],
-            '4.1.4'
-        );
-
-        ThemeHelper::registerStyle(
-            'goomento-gallery',
-            'Goomento_PageBuilder/lib/e-gallery/css/e-gallery'  . $min_suffix . '.css',
-            [],
-            '1.0.2'
-        );
-
-        $direction_suffix = DataHelper::isRtl() ? '-rtl' : '';
-
-        $frontend_file_name = 'frontend' . $direction_suffix . $min_suffix . '.css';
-
-        $frontend_file_url = 'Goomento_PageBuilder/css/' . $frontend_file_name;
+        $frontendFileUrl = 'Goomento_PageBuilder/build/frontend' . $directionSuffix . $minSuffix . '.css';
 
         ThemeHelper::registerStyle(
             'goomento-frontend',
-            $frontend_file_url,
+            $frontendFileUrl,
             [],
-            Configuration::VERSION
-        );
-
-        ThemeHelper::registerStyle(
-            'goomento-widgets',
-            'Goomento_PageBuilder/css/widgets' . $direction_suffix . $min_suffix . '.css',
-            ['goomento-frontend'],
-            Configuration::VERSION
+            Configuration::version()
         );
 
         /**
@@ -372,10 +291,11 @@ class Frontend extends AbstractApp
          */
         HooksHelper::doAction('pagebuilder/frontend/before_enqueue_styles');
 
-
-        ThemeHelper::enqueueStyle('goomento-animations');
-        ThemeHelper::enqueueStyle('goomento-frontend');
+        // @TODO should remove this CSS if not using on storefront
         ThemeHelper::enqueueStyle('fontawesome');
+        ThemeHelper::enqueueStyle('goomento-animations');
+
+        ThemeHelper::enqueueStyle('goomento-frontend');
 
         /**
          * After frontend styles enqueued.
@@ -619,14 +539,9 @@ class Frontend extends AbstractApp
 
         ob_start();
 
-        $css_file->enqueue();
+        HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$css_file, 'enqueue']);
 
-        // Handle JS and Customizer requests, with CSS inline.
-        if (RequestHelper::isAjax()) {
-            $with_css = true;
-        }
-
-        if (!empty($css_file) && $with_css) {
+        if (!empty($css_file) && RequestHelper::isAjax()) {
             $css_file->printCss();
         }
 
@@ -663,7 +578,7 @@ class Frontend extends AbstractApp
             ],
             'is_rtl' => DataHelper::isRtl(),
             'breakpoints' => Configuration::DEFAULT_BREAKPOINTS,
-            'version' => Configuration::VERSION,
+            'version' => Configuration::version(),
             'urls' => [
                 'assets' => UrlBuilderHelper::urlStaticBuilder('Goomento_PageBuilder') . '/',
             ],

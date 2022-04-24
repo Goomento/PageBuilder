@@ -476,7 +476,7 @@ class Local extends AbstractSource
         }
 
         $export_data = [
-            'version' => Configuration::VERSION,
+            'version' => Configuration::version(),
             'title' => $content->getTitle(),
             'type' => self::getTemplateType($template_id),
         ];

@@ -1,16 +1,15 @@
 <?php
 /**
- * @package Goomento_PageBuilder
- * @link https://github.com/Goomento/PageBuilder
+ * @package Goomento_DocBuilder
+ * @link https://github.com/Goomento/DocBuilder
  */
-
 declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractElement;
-use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Managers\Controls;
 
 class ProductList extends AbstractWidget
 {
@@ -61,7 +60,7 @@ class ProductList extends AbstractWidget
      */
     public function getCategories()
     {
-        return [ 'general' ];
+        return [ 'products' ];
     }
 
     /**

@@ -141,6 +141,7 @@ abstract class AbstractWidget extends AbstractElement
      *
      * Retrieve the widget icon.
      *
+     * @link https://fontawesome.com/
      *
      * @return string Widget icon.
      */
