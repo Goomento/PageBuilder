@@ -1,15 +1,32 @@
-![Goomento Page Builder - Drag and Drop](https://i.imgur.com/spx4d9u.png)
+![Goomento - The Magento Page Builder Extension](https://i.imgur.com/zstn8jK.gif)
 
-# Goomento - **The Magento Page Builder Extension**, a free drag and drop toolkit that supports to create custom pages, landing pages, blocks and store designs without writing a line of code
+# Goomento - **The Free Magento Page Builder Extension**, a free drag and drop WYSIWYG editor that supports to create content in your stores.
 
-**Goomento** is a *Free Magento Page Builder Extension*, allows you to set up your own website in any industry 
-easily by simple dragging and dropping manipulation. Notably, it can reuse your previous 
-templates and sections to customize and redesign with your new creativity. 
-All this process has an absence of coding involvement and configures instantly.
+Goomento is a _Free Magento Page Builder Extension_ that allows you to efficiently set up your website by simply 
+dragging and dropping manipulation. Notably, it can reuse your previous content from current or other websites to 
+customize and redesign with your new creativity. All this process has an absence of coding involvement and configures instantly.
 
-## 1. How to install & upgrade Goomento
+### Table of contents
 
-### Install via composer 
+[Installation](#install-goomento)
+
+[Version Compatible](#version-compatible)
+
+[Demo](#demo-site)
+
+[Why Goomento](#why-goomento)
+
+[Free Built-in Widgets](#free-built-in-widgets)
+
+[Change Log](https://github.com/Goomento/PageBuilder/blob/master/CHANGELOG.md)
+
+[Document And User Guide](https://github.com/Goomento/DocBuilder)
+
+[Troubleshoot](#troubleshoot)
+
+[Open An Issue And Contribution](#open-an-issue-and-contribution)
+
+## Install Goomento
 
 Run the following command in Magento 2 root folder:
 
@@ -20,62 +37,108 @@ php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy
 ```
 
-### Upgrade via composer
+## Demo site
 
-```bash
-composer update goomento/module-page-builder
-php bin/magento setup:upgrade
-php bin/magento setup:static-content:deploy
-```
+Storefront: [https://goomento.com](https://goomento.com/)
 
-## 2. Configuration
+## Why Goomento 
 
-2.1 To display Goomento content on storefront, enable module in
+### What You See Is What You Get
 
-    Stores > Settings > Configuration > Goomento > Page Builder > General > Active
+![What You See Is What You Get (WYSIWYG) in the new level](https://i.imgur.com/OTO4Xgb.png)
 
-Change to **Yes** to enable module on storefront.
+What appears on the editor is what you get in the storefront, 100% matched. Drag/drop it and see the changes in the editor right away before publishing it without any concern for output.
 
-2.2 Import Sample templates
+### More Controls More Efficients
 
-From Magento Admin menu, open
+![More Controls More Efficients](https://i.imgur.com/liYvkgH.png)
 
-    Goomento > Builder Actions > Importer > Import Sample templates
+Every aspect of element is controllable by the editor panel, very readable, and efficient. 
+Therefore, you don't need to know coding or experience to update or maintain your website. Instead, let's do it by performing simple actions such as drag and drop.
 
-Choose template, then Import it.
+### Control Your Site Responsive
 
-## 3. Features
+![Control Your Site Responsive](https://i.imgur.com/xPAFIPP.png)
 
-Functionalities:
+Enjoy the visually-appealing experience of creating, checking responsiveness while editing of pages in one place, what you see is what you get on storefront.
 
-- Easy to install, setup and use by both non-tech & tech guys
-- Drag and Drop visual editor
-- Section, Pages, Templates control
-- Import, Export content
-- Undo, Redo, Duplicate and more ...
-- History, Revision management
-- Reuse as page, template
-- Widgets hub management
-- Adaptability in any store
-- High speed optimize
-- Responsive layout
-- Add custom CSS
+### Revision And History Control
 
-## 4. Design concept
+![Revision And History Control](https://i.imgur.com/3mcgoOO.png)
 
-Goomento is using the WYSIWYG Magento Widget to display the content of Page Builder
+You made a typo, let undo, redo it or revert the previous version of your page. Don't worry about the consequence. Every action within Goomento has been recorded.
 
-Goomento is using [Font Awesome Free 5.9.0](https://fontawesome.com/) for Icon displaying.
+### Reduce Cost
 
-## 5. Document and User Guide
+With Goomento, you spend less time on the frontend development process and focus on more important things, meaning you can save thousands of dollars for long developers hours to build your storefront.
 
-See [Repository for Document and Module Sample](https://github.com/Goomento/DocBuilder).
+### Import, Export For Sharing Or Backup
 
-## 6. Troubleshoot
+Goomento gives you flexible access to freely import and export the content to/from your website. You can share these exported files,
+or save it to backup, resources like images and files will be automatically downloaded while importing.
+
+### Fast And Compatible To Any Stores
+
+All resources within Goomento have been wrapped and cached. Therefore, Goomento will not mess it up with your current website theme. 
+CSS/JS only printed out if there was a content of Goomento on-page. Otherwise, resources will hide all, for no-redundant.
+
+### Free Built-in Widgets And Will Be More On The Way
+
+Widget is the brick of your website. By talking the brick, you can combine, move, sharpen, overlap ... +32 free widgets (and more) to create the desired website.
+
+### Add Custom Css In Page
+
+Goomento allows you to get a more personalized look by adding custom CSS to every element. 
+By meaning every, you can add it to widget, column, section, whole page, or all pages.
+
+## Free Built-in Widgets
+
+Basic pack:
+
+- Text
+- HTML
+- Magento Block
+- Section/ Column
+- Image
+- Icon
+- Banner
+- Spacer
+- Video
+- Text Editor
+- Google Maps
+
+General pack:
+
+- Accordion
+- Tabs
+- Toggles
+- Alert
+- Audio
+- Counter
+- Divider
+- Icon Box
+- Icon List
+- Image Box
+- Progress Bar
+- Social Icons
+- Star Rating
+- Banner Slider (Carousel)
+- Image Slider (Carousel)
+- Testimonial
+- Call To Action (CTA)
+- Popup
+
+Product pack:
+
+- Add To Cart Button
+- Product List 
+- Product Slider (Carousel)
+
+## Troubleshoot
 
 **The Page Builder did not display on storefront**
 
-- Make sure that Goomento Page Builder module was enabled, click [here](https://github.com/Goomento/PageBuilder#2-configuration)
+- Make sure that Goomento Page Builder module was enabled, in `Stores > Settings > Configuration > Goomento > Page Builder > General > Active`
 - Make sure Page Builder was `Enabled` and `Store view` is matching with current storefront
 - Flush/ Clean Magento Cache
 
@@ -89,33 +152,20 @@ try to reload your browser, It'll go away
 Goomento stored CSS files in `pub/media/goomento/css`, those files responsible for each content styling, so you can check 
 
 - Folder `pub/media/goomento/css` is writable
-- Try to generate the new style, go to `Goomento > Global.Css > Save and Refesh` - Will refresh all global and contents styling
+- Try to generate the new style, go to `Goomento > Management > Global.Css > Save and Refesh` - Will refresh all global and contents styling
 - Use different `CSS Print Method` in `Stores > Settings > Configuration > Goomento > Page Builder > Editor > Style > CSS Print Method` then
 choose `Internal` - Will use inline CSS instead
 - Flush/ Clean Magento Cache
 
-**The following modules are outdated ...**
+Something else? [Open An Issue](#open-an-issue-and-contribution) or [Contact Us](https://goomento.com/contact/)
 
-From the Goomento version `0.2.4`, Goomento is using the composer.json to manage the version, then you might run this command
-in the `MySQL server` to solve this (if using lower version)
-
-```sql
-DELETE FROM `setup_module` WHERE `setup_module`.`module` LIKE 'Goomento_%'
-```
-
-Something else? [Open an issue](#9-open-an-issue-and-contribution)
-
-## 7. Version compatible
+## Version Compatible
 
 Magento Community Edition (CE): 2.3.x, 2.4.0 - 2.4.4
 
 Magento Enterprise Edition (EE): 2.3.x, 2.4.0 - 2.4.4
 
-## 8. Changelog
-
-What's news? See here [CHANGELOG.md](https://github.com/Goomento/PageBuilder/blob/master/CHANGELOG.md).
-
-## 9. Open an issue and Contribution
+## Open An Issue And Contribution
 
 Feel free to Open an Issue, Fork and Create Pull Request (PR) on GitHub
 
@@ -123,21 +173,7 @@ For opening an issue, click [here](https://github.com/Goomento/PageBuilder/issue
 
 Each issue needs more detail for easily to produce, then please provide
 
-- Goomento version, which is installed in your site. 
+- Goomento version, which is installed on your website. 
 - Your Magento Version, can be revealed by running this command `bin/magento --version`.
 - Description of issue in detail.
 - Browser console log (if capable).
-
-## 10. Screenshots
-
-![Goomento - The Page Builder Interface](https://i.imgur.com/hiRyX5Y.gif)
-One click to use
-
-![Goomento - The Page Builder History Management](https://i.imgur.com/cpxv7Kn.gif)
-History/ Revision Management
-
-![Goomento - The Page Builder Editing](https://i.imgur.com/rj10Ncs.gif)
-Easy to use
-
-![Goomento - The Page Builder Responsive](https://i.imgur.com/abT8OtO.gif)
-Responsive control

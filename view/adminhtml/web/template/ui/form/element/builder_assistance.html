@@ -4,7 +4,7 @@
  * @link https://github.com/Goomento/PageBuilder
  */
 -->
-<div class="builder-assistance" data-bind="blockLoader: isLoading">
+<div class="builder-assistance" data-bind="css: wrapperClasses().join(' ')">
     <div class="builder-assistance-action">
         <div class="builder-assistance-buttons">
             <button data-bind="text: toggleBtnLabel, click: onClickAssistanceBtn,
@@ -14,27 +14,30 @@
         </div>
         <div class="builder-assistance-action-wrapper" data-bind="visible: isActiveBuilderAssistance">
             <div class="builder-assistance-messages builder-assistance-field">
-                <div class="builder-assistance-message" data-bind="text: message"></div>
+                <div class="builder-assistance-message message" data-bind="text: message"></div>
             </div>
             <div class="builder-assistance-actions">
-                <div class="builder-assistance-field" data-bind="visible: showSelectBox && availableContentIds().length > 1">
-                    <select id="builder-assistance-contents" class="admin__control-select builder-assistance-btn" data-bind="
-                        options: availableContentIds, value: selectedContentId, optionsText: 'label',
+                <div class="builder-assistance-field" data-bind="visible: showSelectBox() && availableContentIds().length > 1">
+                    <div class="builder-assistance-select-box" data-bind="visible: showSelectionList()">
+                        <select class="builder-assistance-btn" data-bind="options: availableContentIds,
+                        value: selectedContentId, optionsText: 'label', afterRender: function() {jQuery($element).select2();},
                         optionsValue: 'value', event:{ change: onSelected }
                         "></select>
-                    <span data-bind="i18n: 'Change Page Builder'"></span>
+                    </div>
+                    <span class="builder-assistance-ignore-btn"
+                       data-bind="visible: !showSelectionList(), click: onClickChangeBuilderBtn" title="Click To Change Page Builder"></span>
                 </div>
                 <div class="builder-assistance-field" data-bind="visible: showMigrateBtn">
-                    <button id="builder-assistance-migrate-btn" class="builder-assistance-btn"
+                    <button class="builder-assistance-btn"
                         data-bind="click: onClickMigrateBtn, i18n: 'Migrate Now'"></button>
                 </div>
                 <div class="builder-assistance-field" data-bind="visible: showCreateBtn">
-                    <button id="builder-assistance-create-btn" class="builder-assistance-btn"
+                    <button class="builder-assistance-btn builder-assistance-btn-highlight"
                         data-bind="click: onClickCreateBtn, i18n: 'Create New'"></button>
                     </div>
                 <div class="builder-assistance-field" data-bind="visible: showEditBtn">
-                    <button id="builder-assistance-edit-btn" class="builder-assistance-btn"
-                        data-bind="click: onClickEditBtn, i18n: 'Open Editor'"></button>
+                    <button class="builder-assistance-btn builder-assistance-btn-highlight goomento-logo-white"
+                        data-bind="click: onClickEditBtn, i18n: 'Edit With Goomento'"></button>
                 </div>
             </div>
         </div>

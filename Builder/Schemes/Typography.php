@@ -90,19 +90,19 @@ class Typography extends AbstractSchema
     {
         return [
             self::TYPOGRAPHY_1 => [
-                'font_family' => 'Roboto',
+                'font_family' => 'Open Sans',
                 'font_weight' => '600',
             ],
             self::TYPOGRAPHY_2 => [
-                'font_family' => 'Roboto Slab',
+                'font_family' => 'Open Sans',
                 'font_weight' => '400',
             ],
             self::TYPOGRAPHY_3 => [
-                'font_family' => 'Roboto',
+                'font_family' => 'Open Sans',
                 'font_weight' => '400',
             ],
             self::TYPOGRAPHY_4 => [
-                'font_family' => 'Roboto',
+                'font_family' => 'Open Sans',
                 'font_weight' => '500',
             ],
         ];

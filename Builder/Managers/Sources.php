@@ -113,7 +113,7 @@ class Sources
         }
 
         return [
-            'templates' => $templates,
+            'templates' => array_values($templates),
         ];
     }
 

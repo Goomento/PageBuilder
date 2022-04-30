@@ -1,5 +1,9 @@
 # Magento 2 Goomento Page Builder
 
+## 0.2.5: Updated document
+- Fixed minor bugs
+- Updated document
+
 ## 0.2.4: Added more widgets
 - Fixed minor bugs
 - Enhanced CSS/JS loading

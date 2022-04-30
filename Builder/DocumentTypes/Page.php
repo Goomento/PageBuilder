@@ -39,7 +39,7 @@ class Page extends AbstractDocumentType
         $page->addControl('layout', [
             'label' => __('Layout'),
             'type' => Controls::SELECT,
-            'default' => $page->getModel()->getSetting('layout'),
+            'default' => $page->getModel()->getSetting('layout') ?: 'pagebuilder_content_fullwidth',
             'options' => [
                 'pagebuilder_content_1column' => __('1-Column'),
                 'pagebuilder_content_fullwidth' => __('Full width'),

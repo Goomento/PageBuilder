@@ -241,7 +241,7 @@ class ContentCss extends AbstractCss
      */
     protected function getFileHandleId()
     {
-        return 'gmt-content-' . $this->contentId;
+        return 'goomento-content-' . $this->contentId;
     }
 
     /**

@@ -71,13 +71,13 @@
              parent="Goomento_PageBuilder::action"
              resource="Goomento_PageBuilder::import"/>
 
-        <add id="Goomento_PageBuilder::config"
+        <add id="Goomento_PageBuilder::manage_config"
              title="Configuration"
              module="Goomento_PageBuilder"
              translate="title"
              sortOrder="20"
              action="admin/system_config/edit/section/pagebuilder"
              parent="Goomento_PageBuilder::action"
-             resource="Goomento_PageBuilder::config"/>
+             resource="Goomento_PageBuilder::manage_config"/>
     </menu>
 </config>
