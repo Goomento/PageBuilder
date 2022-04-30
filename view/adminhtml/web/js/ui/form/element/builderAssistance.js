@@ -19,10 +19,12 @@ define([
             wysiwygBtnLabel: $.mage.__('WYSIWYG Editor'),
             message: '',
             selectedContentId: '',
+            wrapperId: '',
             contentId: '',
             isMigrating: false,
             originContent: '',
             showSelectBox: false,
+            showSelectionList: false,
             showEditBtn: false,
             showCreateBtn: false,
             showMigrateBtn: false,
@@ -32,8 +34,9 @@ define([
             showWysiwyg: false,
             editorWindow: null,
             wysiwygEditor: '',
-            editorUrl: '',
+            editorUrl: {href: '', new_tab: false},
             availableContentIds: [],
+            wrapperClasses: [],
             isLoading: assistanceActions.isLoading,
             cols: 15,
             rows: 3,
@@ -44,17 +47,20 @@ define([
          */
         initialize: function () {
             this._super()
-                .observe('toggleBtnLabel message selectedContentId isActiveBuilderAssistance showWysiwyg wysiwygEditor ' +
-                    'availableContentIds showMigrateBtn showCreateBtn showEditBtn showSelectBox wysiwygBtnLabel');
+                .observe('toggleBtnLabel message wrapperClasses selectedContentId isActiveBuilderAssistance showWysiwyg wrapperId wysiwygEditor ' +
+                    'showSelectionList availableContentIds showMigrateBtn showCreateBtn showEditBtn showSelectBox wysiwygBtnLabel');
 
             this.originContent = this.value();
             this.wysiwygEditorId = this.uid + '_wysiwyg_editor';
+            this.wrapperId(this.uid + '_wrapper');
 
             assistanceActions
                 .setEndpoint(this.endpoint)
                 .refreshContentList()
                 .availableContentIds.subscribe(function (items) {
+                    let selectedContentId = this.selectedContentId();
                     this.availableContentIds(items);
+                    this.selectedContentId(selectedContentId);
                     this.activatingAssistance();
                 }.bind(this));
 
@@ -125,9 +131,33 @@ define([
             this.showSelectBox(true);
             this.showMigrateBtn(false);
             this.showEditBtn(true);
-            this.message($.mage.__('Feel Free To Edit It!'));
+            this.showSelectionList(false);
+            this.showSuccessMessage('');
             return this;
         },
+        /**
+         * On Change Builder
+         */
+        onClickChangeBuilderBtn: function () {
+            this.showSelectionList(true);
+        },
+        /**
+         * Show error message to admin
+         */
+        showErrorMessage: function (message) {
+            this.wrapperClasses(['builder-assistance-message-error']);
+            this.message(message);
+        },
+        /**
+         * Show error message to admin
+         */
+        showSuccessMessage: function (message) {
+            this.wrapperClasses(['builder-assistance-message-ok']);
+            this.message(message);
+        },
+        /**
+         *
+         */
         onSelected: function () {
             let selectedContentId = this.selectedContentId();
             if (selectedContentId) {
@@ -179,6 +209,7 @@ define([
             this.showSelectBox(true);
             this.showMigrateBtn(false);
             this.showEditBtn(false);
+            this.showSelectionList(true);
             this.message($.mage.__('Content Changed, Save This Before Continue!'));
         },
         /**
@@ -207,28 +238,38 @@ define([
          */
         onClickEditBtn: function () {
             let cb = function () {
-                let editorUrl = null;
-                try {
-                    editorUrl = this.editorWindow.location.href;
-                } catch (e) {}
-                if (!editorUrl) {
-                    this.editorWindow = window.open(this.editorUrl, '_blank');
+                if (!this.editorUrl.new_tab) {
+                    window.location.href = this.editorUrl.href;
+                } else {
+                    let editorUrl = null;
+                    if (!this.editorWindow) {
+                        this.editorWindow = window.open(this.editorUrl.href, '_blank');
+                    }
+                    try {
+                        editorUrl = this.editorWindow.location.href;
+                    } catch (e) {}
+                    if (!editorUrl) {
+                        this.editorWindow = window.open(this.editorUrl.href, '_blank');
+                    }
+                    if (editorUrl !== this.editorUrl.href) {
+                        this.editorWindow.location.href = this.editorUrl.href;
+                    }
+                    this.editorWindow.focus();
                 }
-                if (editorUrl !== this.editorUrl) {
-                    this.editorWindow.location.href = this.editorUrl;
-                }
-                this.editorWindow.focus();
             }.bind(this);
-            if (!this.editorUrl) {
-                assistanceActions.getEditUrl(this.contentId, function (href) {
-                    this.editorWindow = window.open(href, '_blank');
-                    this.editorUrl = href;
+            if (!this.editorUrl.href) {
+                assistanceActions.getEditUrl(this.contentId, function (editorUrl) {
+                    this.editorUrl = editorUrl;
                     cb();
                 }.bind(this));
             } else {
                 cb();
             }
         },
+        /**
+         * Retrieve sample title
+         * @return {string}
+         */
         getContentTitle: function () {
             let result = '',
                 $title = $('input[name="title"]');

@@ -36,7 +36,7 @@ class Common extends AbstractApp
     {
         HooksHelper::addAction('pagebuilder/init', [$this, 'initComponents']);
         HooksHelper::addAction('pagebuilder/editor/before_enqueue_scripts', [ $this, 'registerScriptsEditorBefore']);
-        HooksHelper::addAction('pagebuilder/header', [ $this, 'registerStyles' ]);
+        HooksHelper::addAction('pagebuilder/register_styles', [ $this, 'registerStyles' ]);
         HooksHelper::addAction('pagebuilder/editor/footer', [ $this, 'printTemplates' ]);
     }
 
@@ -95,7 +95,7 @@ class Common extends AbstractApp
     {
         $min_suffix = Configuration::debug() ? '' : '.min';
 
-        ThemeHelper::enqueueStyle(
+        ThemeHelper::registerStyle(
             'goomento-common',
             'Goomento_PageBuilder/build/common' . $min_suffix . '.css',
             [],

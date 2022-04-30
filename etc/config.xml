@@ -17,6 +17,7 @@
             </import>
             <builder_assistance>
                 <active>1</active>
+                <new_tab>1</new_tab>
             </builder_assistance>
             <editor>
                 <number_of_revision>100</number_of_revision>

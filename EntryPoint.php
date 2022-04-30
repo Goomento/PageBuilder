@@ -243,11 +243,6 @@ class EntryPoint extends BuilderRegister
         );
 
         ThemeHelper::registerStyle(
-            'google-font-roboto',
-            'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap'
-        );
-
-        ThemeHelper::registerStyle(
             'google-font-inter',
             'https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap'
         );

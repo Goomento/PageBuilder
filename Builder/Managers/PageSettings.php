@@ -102,7 +102,9 @@ class PageSettings extends AbstractSettingsManager
     {
         $content = ContentHelper::get($id);
         if (!empty($settings)) {
-            $content->setSettings($settings);
+            foreach ($settings as $name => $value) {
+                $content->setSetting($name, $value);
+            }
         } else {
             $content->setSettings([]);
         }

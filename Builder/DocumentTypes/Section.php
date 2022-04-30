@@ -45,7 +45,7 @@ class Section extends AbstractDocumentType
         $section->addControl('layout', [
             'label' => __('Preview Layout'),
             'type' => Controls::SELECT,
-            'default' => $section->getModel()->getSetting('layout'),
+            'default' => $section->getModel()->getSetting('layout') ?: 'pagebuilder_content_1column',
             'options' => [
                 'pagebuilder_content_1column' => __('1-Column'),
                 'pagebuilder_content_fullwidth' => __('Full width'),

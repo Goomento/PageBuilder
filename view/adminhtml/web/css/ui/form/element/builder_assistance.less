@@ -1,0 +1,79 @@
+@brand-color: linear-gradient(-90deg, #60c576 12%, #5ec6a4 100%);
+
+.builder-assistance {
+    width: 100%;
+    min-height: 100px;
+    &-action * {
+        font-size: 1.5rem !important;
+        line-height: 1.5rem !important;
+    }
+    .goomento-logo-grey, .goomento-logo-white {
+        &:before {
+            min-width: 15px;
+            min-height: 15px;
+        }
+    }
+    &-btn {
+        border: none;
+        padding: 10px 20px;
+        border-radius: 3px;
+        margin-right: 5px;
+        &-highlight, &-highlight:hover, &-highlight:focus {
+            background: @brand-color;
+            color: #fff;
+        }
+    }
+    &-ignore-btn {
+        opacity: 0.5;
+        cursor: pointer;
+        &:before {
+            content: '\e610';
+            -webkit-font-smoothing: antialiased;
+            font-family: 'Admin Icons';
+            font-style: normal;
+            font-weight: normal;
+            line-height: 1;
+            speak: none;
+        }
+    }
+    &-select-box {
+        .select2 {
+            * {
+                line-height: inherit;
+                font-size: inherit;
+            }
+            .select2-selection {
+                padding: 12px 20px;
+                height: auto;
+            }
+            .select2-selection__arrow {
+                height: 100% !important;
+            }
+        }
+    }
+    &-action-wrapper {
+        text-align: center;
+        background: #f8f8f8;
+        padding: 0 0 40px;
+        border-radius: 3px;
+        margin: 20px auto 40px;
+        border: 1px solid #e5e5e5;
+    }
+    &-messages {
+        margin: 20px auto;
+    }
+    &-message {
+        &:empty {
+            display: none;
+        }
+    }
+    &-field {
+        display: inline-block;
+        position: relative;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    &-editor {
+        margin: 20px auto;
+    }
+}

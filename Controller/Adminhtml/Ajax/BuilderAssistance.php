@@ -17,6 +17,7 @@ use Goomento\PageBuilder\Controller\Adminhtml\AbstractAction;
 use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
+use Goomento\PageBuilder\Helper\Data;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Goomento\PageBuilder\Model\Config\Source\PageList;
 use Magento\Backend\App\Action;
@@ -47,6 +48,10 @@ class BuilderAssistance extends AbstractAction
      * @var StoreManagerInterface|StoreManager
      */
     private $storeManager;
+    /**
+     * @var Data
+     */
+    private $dataHelper;
 
     /**
      *
@@ -54,6 +59,7 @@ class BuilderAssistance extends AbstractAction
      * @param ContentRegistryInterface $contentRegistry
      * @param LayoutFactory $layoutFactory
      * @param StoreManagerInterface $storeManager
+     * @param Data $dataHelper
      * @param PageList $pageList
      */
     public function __construct(
@@ -61,6 +67,7 @@ class BuilderAssistance extends AbstractAction
         ContentRegistryInterface $contentRegistry,
         LayoutFactory $layoutFactory,
         StoreManagerInterface $storeManager,
+        Data $dataHelper,
         PageList $pageList
     )
     {
@@ -68,6 +75,7 @@ class BuilderAssistance extends AbstractAction
         $this->contentRegistry = $contentRegistry;
         $this->layoutFactory = $layoutFactory;
         $this->storeManager = $storeManager;
+        $this->dataHelper = $dataHelper;
         parent::__construct($context);
     }
 
@@ -145,6 +153,7 @@ class BuilderAssistance extends AbstractAction
                     $content = $this->contentRegistry->getByIdentifier($identifier);
                     if ($content) {
                         $result['href'] = UrlBuilderHelper::getLiveEditorUrl($content);
+                        $result['new_tab'] = (bool) $this->dataHelper->getBuilderConfig('builder_assistance/new_tab');
                     }
                     break;
                 case 'list':
