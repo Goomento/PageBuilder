@@ -698,7 +698,7 @@ class Common extends AbstractWidget
         $this->addControl(
             'responsive_description',
             [
-                'raw' => __('Responsive visibility will take effect only on preview or live page, and not while editing in SagoTheme.'),
+                'raw' => __('Responsive visibility will take effect only on preview or live page, and not while editing in Goomento.'),
                 'type' => Controls::RAW_HTML,
                 'content_classes' => 'gmt-descriptor',
             ]

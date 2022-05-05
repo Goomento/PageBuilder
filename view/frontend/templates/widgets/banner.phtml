@@ -16,8 +16,10 @@ use Goomento\PageBuilder\Helper\EscaperHelper;
 $widget = $block->getWidget();
 
 $settings = $block->getSettingsForDisplay();
+$title = trim((string) $settings['banner_title']);
+$caption = trim((string) $settings['banner_caption']);
 
-$hasContent = !DataHelper::isEmpty($settings['banner_caption']);
+$hasContent = !empty($title) || !empty($caption);
 
 if (!empty($settings['banner_image']['url'])) :
     if (!empty($settings['banner_link']['url'])) {
@@ -53,12 +55,17 @@ if (!empty($settings['banner_image']['url'])) :
             ?>
             <div <?= $widget->getRenderAttributeString('box-content') ?>>
                 <?php
-                if (!DataHelper::isEmpty($settings['banner_caption'])) :
+                if ($title) :
+                    $widget->addRenderAttribute('title', 'class', 'gmt-banner-title'); ?>
+                    <div <?= $widget->getRenderAttributeString('title') ?>><?= /** @noEscape */ $title ?></div>
+                    <?php
+                endif;
+                if ($caption) :
                     $widget->addRenderAttribute('caption', 'class', 'gmt-banner-description');
 
                     $widget->addInlineEditingAttributes('caption');
                     ?>
-                    <div <?= $widget->getRenderAttributeString('caption') ?>><?= EscaperHelper::escapeHtml($settings['banner_caption']) ?></div>
+                    <div <?= $widget->getRenderAttributeString('caption') ?>><?= /** @noEscape */ $caption ?></div>
                 <?php  endif; ?>
             </div>
         <?php endif;  ?>

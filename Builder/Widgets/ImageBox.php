@@ -9,8 +9,11 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Controls\Groups\BorderGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\BoxShadowGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\CssFilterGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
@@ -56,6 +59,92 @@ class ImageBox extends AbstractWidget
     public function getKeywords()
     {
         return [ 'image', 'photo', 'visual', 'box' ];
+    }
+
+    /**
+     * @param AbstractWidget $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @param array $args
+     * @return void
+     */
+    public static function registerBoxStyle(
+        AbstractWidget $widget,
+        string         $prefix = self::NAME . '_',
+        string         $cssTarget = '.gmt-image-box-wrapper',
+        array          $args = []
+    )
+    {
+        $widget->addControl(
+            $prefix . 'background_color',
+            $args + [
+                'label'     => __('Background'),
+                'type'      => Controls::COLOR,
+                'default'   => '',
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $widget->addResponsiveControl(
+            $prefix . 'padding',
+            $args + [
+                'label'      => __('Padding'),
+                'type'       => Controls::DIMENSIONS,
+                'size_units' => ['px', 'em', '%'],
+                'selectors'  => [
+                    '{{WRAPPER}} ' . $cssTarget => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $widget->addResponsiveControl(
+            $prefix . 'margin',
+            $args + [
+                'label'      => __('Margin'),
+                'type'       => Controls::DIMENSIONS,
+                'size_units' => ['px', 'em', '%'],
+                'selectors'  => [
+                    '{{WRAPPER}} ' . $cssTarget => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $widget->addGroupControl(
+            BorderGroup::NAME,
+            [
+                'name'     => $prefix . 'border',
+                'label'    => __('Border'),
+                'selector' => '{{WRAPPER}} ' . $cssTarget,
+            ]
+        );
+
+        $widget->addControl(
+            $prefix . 'border_radius',
+            [
+                'label'     => __('Border Radius'),
+                'type'      => Controls::SLIDER,
+                'range'     => [
+                    'px' => [
+                        'max' => 50,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget => 'border-radius: {{SIZE}}px;',
+                ],
+            ]
+        );
+
+        $widget->addGroupControl(
+            BoxShadowGroup::NAME,
+            [
+                'name'      => $prefix . 'shadow',
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget,
+                ],
+            ]
+        );
     }
 
     /**
@@ -180,6 +269,19 @@ class ImageBox extends AbstractWidget
                 'default' => 'h3',
             ]
         );
+
+        $this->endControlsSection();
+
+
+        $this->startControlsSection(
+            'section_wrapper_style',
+            [
+                'label' => __('Wrapper'),
+                'tab'   => Controls::TAB_STYLE,
+            ]
+        );
+
+        self::registerBoxStyle($this);
 
         $this->endControlsSection();
 
@@ -441,7 +543,7 @@ class ImageBox extends AbstractWidget
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup::NAME,
+            TypographyGroup::NAME,
             [
                 'name' => 'title_typography',
                 'selector' => '{{WRAPPER}} .gmt-image-box-content .gmt-image-box-title',
@@ -475,7 +577,7 @@ class ImageBox extends AbstractWidget
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup::NAME,
+            TypographyGroup::NAME,
             [
                 'name' => 'description_typography',
                 'selector' => '{{WRAPPER}} .gmt-image-box-content .gmt-image-box-description',

@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Managers;
 
 use Goomento\PageBuilder\Builder\Base\AbstractSettingsManager;
-use Goomento\PageBuilder\Traits\ComponentsLoader;
+use Goomento\PageBuilder\Traits\TraitComponentsLoader;
 
 class Settings
 {
-    use ComponentsLoader;
+    use TraitComponentsLoader;
 
     private $components = [
         GeneralSettings::NAME => GeneralSettings::class,

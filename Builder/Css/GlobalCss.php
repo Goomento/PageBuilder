@@ -146,14 +146,16 @@ class GlobalCss extends AbstractCss
     public function enqueue()
     {
         parent::enqueue();
-        /** @var Frontend $frontend */
-        $frontend = ObjectManagerHelper::get(Frontend::class);
         $schemeManager = ObjectManagerHelper::getSchemasManager();
         /** @var Typography $typography */
         $typography = $schemeManager->getScheme(Typography::NAME);
         $schemeValues = $typography->getSchemeValue();
-        foreach ($schemeValues as $schemeValue) {
-            $frontend->enqueueFont($schemeValue['font_family']);
+
+        if (!empty($schemeValues)) {
+            $frontend = ObjectManagerHelper::getFrontend();
+            foreach ($schemeValues as $schemeValue) {
+                $frontend->enqueueFont($schemeValue['font_family']);
+            }
         }
     }
 

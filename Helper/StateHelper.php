@@ -51,7 +51,8 @@ class StateHelper
     public static function isBuildable()
     {
         return self::isEditorMode()
-            && self::isPreviewMode();
+            || self::isPreviewMode()
+            || self::isViewMode();
     }
 
     /**
@@ -87,7 +88,8 @@ class StateHelper
      */
     public static function isEditorMode()
     {
-        return HooksHelper::didAction('pagebuilder/editor/index');
+        return HooksHelper::didAction('pagebuilder/editor/index') ||
+            HooksHelper::didAction('pagebuilder/editor/render_widget');
     }
 
     /**

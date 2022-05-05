@@ -25,6 +25,9 @@ class ThemeHelper extends \Goomento\Core\Helper\ThemeHelper
      */
     public static function getBodyClass($args = [])
     {
+        $args['goomento-default'] = 'goomento-default';
+        $args['goomento-page'] = 'goomento-page';
+
         if (self::hasContentOnPage()) {
             foreach (self::$contents as $id => $content) {
                 $args['gmt-' . $id] = 'gmt-' . $id;

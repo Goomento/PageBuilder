@@ -39,6 +39,9 @@ class Preview extends View
         } finally {
             if (!empty($e)) {
                 $this->logger->error($e);
+                if ($this->dataHelper->isDebugMode()) {
+                    throw $e;
+                }
             }
         }
 

@@ -144,7 +144,7 @@ abstract class AbstractDocument extends ControlsStack
 
         if (!$widget) {
             throw new Exception(
-                'AbstractWidget not found.'
+                'Widget not found.'
             );
         }
 

@@ -1,0 +1,51 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Builder\Widgets\FacebookLike;
+use Goomento\PageBuilder\Helper\DataHelper;
+
+/**
+ * @var Widget $block
+ * @var FacebookLike $widget
+ */
+$widget = $block->getWidget();
+
+$settings = $block->getSettingsForDisplay();
+
+$type = $settings['facebook_like_type'] ?? '';
+$urlId = $settings['facebook_like_url_id'] ?? '';
+if ($urlId && ! filter_var( $urlId, FILTER_VALIDATE_URL ) ) :
+    ?>
+        <p><?= __('Invalid URL.') ?></p>
+    <?php
+elseif ($type) :
+    if (empty($urlId)) {
+        $urlId = $block->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]);
+    }
+    $attributes = [
+        'data-colorscheme' => $settings['facebook_like_colorscheme'],
+        'data-href' => $urlId,
+        'data-width' => $settings['facebook_like_width']['size'],
+    ];
+    if ($type !== 'comment') {
+        $attributes['data-layout'] = $settings['facebook_like_layout'];
+        $attributes['data-size'] = $settings['facebook_like_size'];
+        $attributes['data-show-faces'] = $settings['facebook_like_show_faces'] ? 'true' : 'false';
+        $attributes['data-share'] = $settings['facebook_like_show_share'] ? 'true' : 'false';
+        $attributes['data-action'] = $type;
+        $attributes['class'] = 'fb-like';
+    } else {
+        $attributes['data-numposts'] = (int) $settings['facebook_like_num_posts'];
+        $attributes['data-order-by'] = $settings['facebook_like_order_by'];
+        $attributes['class'] = 'fb-comments';
+    }
+    $widget->addRenderAttribute('facebook_like', $attributes); ?>
+    <div data-mage-init='{"facebook-sdk": {"app_id":"<?= /* @noEscape */ DataHelper::getFbAppId(); ?>"}}' <?=  $widget->getRenderAttributeString( 'facebook_like' ) ?>> </div>
+    <?php
+endif;

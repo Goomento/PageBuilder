@@ -26,7 +26,7 @@ class Block extends AbstractWidget
     /**
      * @var string
      */
-    protected $template = 'Goomento_PageBuilder::widgets/block.phtml';
+    protected $template = 'Goomento_PageBuilder::widgets/magento/block.phtml';
 
     /**
      * @inheritDoc

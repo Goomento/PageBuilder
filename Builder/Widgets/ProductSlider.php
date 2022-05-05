@@ -13,9 +13,20 @@ use Goomento\PageBuilder\Builder\Managers\Controls;
 
 class ProductSlider extends AbstractWidget
 {
+    /**
+     * @inheriDoc
+     */
     const NAME = 'product-slider';
 
-    protected $template = 'Goomento_PageBuilder::widgets/product_slider.phtml';
+    /**
+     * @inheriDoc
+     */
+    protected $template = 'Goomento_PageBuilder::widgets/product_list.phtml';
+
+    /**
+     * @inheriDoc
+     */
+    protected $renderer = \Goomento\PageBuilder\Block\Widgets\Product\ProductList::class;
 
     /**
      * @inheritDoc
@@ -79,10 +90,7 @@ class ProductSlider extends AbstractWidget
 
         ProductList::registerProductFilter($this, self::NAME . '_');
 
-        $this->removeControl([
-            self::NAME . '_mode',
-            self::NAME . '_products_per_row',
-        ]);
+        $this->removeControl([self::NAME . '_mode', self::NAME . '_show_pager']);
 
         $this->endControlsSection();
 
@@ -167,5 +175,19 @@ class ProductSlider extends AbstractWidget
         ImageCarousel::registerNavigationStyle($this, self::NAME . '_', '.gmt-product-carousel-wrapper');
 
         $this->endControlsSection();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function render()
+    {
+        // Hide the widget at first, then wait for Swiper
+        $this->addRenderAttribute('_wrapper', 'class', 'gmt-invisible');
+        $this->addRenderAttribute('items-wrapper', 'class', 'gmt-product-carousel-wrapper swiper-container');
+        $this->addRenderAttribute('items', 'class', 'gmt-product-carousel swiper-wrapper');
+        $this->addRenderAttribute('item', 'class', 'swiper-slide');
+
+        return parent::render();
     }
 }

@@ -12,8 +12,4 @@
     <head>
         <meta name="robots" content="NOINDEX,NOFOLLOW"/>
     </head>
-    <body>
-        <referenceBlock name="page.bottom.container" remove="true"/>
-        <referenceBlock name="before.body.end" remove="true"/>
-    </body>
 </page>

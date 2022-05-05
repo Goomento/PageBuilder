@@ -53,7 +53,7 @@ class CallToAction extends AbstractWidget
      */
     public function getCategories()
     {
-        return ['products'];
+        return ['general'];
     }
 
     /**
@@ -181,10 +181,10 @@ class CallToAction extends AbstractWidget
     }
 
     /**
-     * @inheritDoc
+     * @return bool
      */
-    protected function contentTemplate()
+    protected function renderPreview(): bool
     {
-        return '';
+        return false;
     }
 }

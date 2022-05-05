@@ -11,6 +11,7 @@ namespace Goomento\PageBuilder\Controller\Actions;
 use Goomento\Core\Model\Registry;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Controller\AbstractAction;
+use Goomento\PageBuilder\Helper\Data;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 use Goomento\PageBuilder\Logger\Logger;
 use Goomento\PageBuilder\Traits\TraitHttpPage;
@@ -35,6 +36,7 @@ class Actions extends AbstractAction implements HttpPostActionInterface
      * @param Context $context
      * @param Logger $logger
      * @param Registry $registry
+     * @param Data $dataHelper
      * @param ObjectManagerInterface $objectManager
      * @param array $actions
      */
@@ -42,13 +44,14 @@ class Actions extends AbstractAction implements HttpPostActionInterface
         Context $context,
         Logger $logger,
         Registry $registry,
+        Data $dataHelper,
         ObjectManagerInterface $objectManager,
         array $actions = []
     )
     {
         $this->objectManager = $objectManager;
         $this->actions = $actions;
-        parent::__construct($context, $logger, $registry);
+        parent::__construct($context, $logger, $registry, $dataHelper);
     }
 
     /**

@@ -13,6 +13,7 @@ use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Elements;
 use Goomento\PageBuilder\Builder\Managers\Widgets;
 use Goomento\PageBuilder\Builder\Widgets\Common;
+use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
@@ -257,6 +258,7 @@ abstract class AbstractWidget extends AbstractElement
             'categories' => $this->getCategories(),
             'html_wrapper_class' => $this->getHtmlWrapperClass(),
             'show_in_panel' => $this->showInPanel(),
+            'render_preview' => $this->renderPreview(),
         ];
 
         /** @var Controls $managersControls */
@@ -366,13 +368,23 @@ abstract class AbstractWidget extends AbstractElement
          */
         HooksHelper::doAction('pagebuilder/widget/before_render_content', $this);
 
-        ob_start();
+        try {
+            ob_start();
 
-        $widget_return = $this->render();
+            $widget_return = $this->render();
 
-        $widget_content = ob_get_clean();
+        } catch (\Exception $e) {
+            if (DataHelper::isDebugMode() && StateHelper::isBuildable()) {
+                $this->addRenderAttribute('_container', 'class', 'gmt-widget-debug');
+                printf('<pre class="gmt-debugging">%s</pre>', $e->__toString());
+            } else {
+                // Don't need to handle this case
+            }
+        } finally {
+            $widget_content = ob_get_clean();
+        }
 
-        if (empty($widget_content) && $widget_return) {
+        if (empty($widget_content) && !empty($widget_return)) {
             $widget_content = $widget_return;
         }
 
@@ -609,5 +621,15 @@ abstract class AbstractWidget extends AbstractElement
         );
 
         $this->endControlsSection();
+    }
+
+    /**
+     * Decide to render preview in Editor or not
+     *
+     * @return bool
+     */
+    protected function renderPreview() : bool
+    {
+        return true;
     }
 }

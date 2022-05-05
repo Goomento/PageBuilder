@@ -50,31 +50,44 @@
                     <comment>Keep the same tab or open the Goomento in new tab.</comment>
                 </field>
             </group>
+            <group id="integrations" translate="label" type="text" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Integrations</label>
+                <field id="google_maps_key" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google Maps Embed API</label>
+                    <comment><![CDATA[Get Embed API from <a href="https://developers.google.com/maps/documentation/embed/get-api-key">credentials page.</a>]]></comment>
+                </field>
+                <field id="fb_app_id" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Facebook App Id</label>
+                    <comment><![CDATA[Get ID from <a href="https://developers.facebook.com/apps/">facebook developer page.</a>]]></comment>
+                </field>
+            </group>
             <group id="editor" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Editor</label>
+                <field id="debug" translate="label" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Debug Mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enabled debug mode will display error in storefront.</comment>
+                </field>
                 <field id="is_rtl" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Is RTL</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="resources_globally" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Add JS/CSS Globally</label>
+                    <label>Use Goomento As Apart Of Theme</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Default JS/CSS will be added to all pages in storefront.</comment>
                 </field>
-                <group id="style" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="style" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Style</label>
                     <field id="css_print_method" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Css Print Method</label>
                         <source_model>Goomento\PageBuilder\Model\Config\Source\CssPrintMethods</source_model>
                         <backend_model>Goomento\PageBuilder\Model\Config\Backend\RefreshStyle</backend_model>
                     </field>
-                </group>
-                <group id="render" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Render</label>
-                    <field id="fallback" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Fallback</label>
-                        <source_model>Goomento\PageBuilder\Model\Config\Source\RenderFallback</source_model>
-                        <comment>If any issue happens during display PageBuilder, choose its behavior.</comment>
+                    <field id="local_font" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Use Local Font</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>Hide Google Fonts from storefront.</comment>
                     </field>
                 </group>
             </group>

@@ -8,6 +8,8 @@ require([
     'Goomento_PageBuilder/js/model/slider',
     'pagebuilderRegister'
 ], function ($, model, pagebuilderRegister) {
+    'use strict';
+
     return pagebuilderRegister.widgetRegister(
         'image-carousel',
         model,

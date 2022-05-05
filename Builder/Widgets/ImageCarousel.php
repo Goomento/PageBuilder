@@ -358,7 +358,7 @@ class ImageCarousel extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} ' . $cssTarget . ' .gmt-swiper-button.gmt-swiper-button-prev, {{WRAPPER}} ' . $cssTarget . ' .gmt-swiper-button.gmt-swiper-button-next' => 'font-size: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget . ' .gmt-swiper-button.gmt-swiper-button-prev i, {{WRAPPER}} ' . $cssTarget . ' .gmt-swiper-button.gmt-swiper-button-next i' => 'font-size: {{SIZE}}{{UNIT}};',
                 ],
                 'condition' => [
                     'navigation' => [ 'arrows', 'both' ],

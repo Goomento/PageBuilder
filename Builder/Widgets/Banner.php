@@ -74,6 +74,16 @@ class Banner extends AbstractWidget
         );
 
         $widget->addControl(
+            $prefix . 'title',
+            $args + [
+                'label' => __('Title'),
+                'type' => Controls::TEXT,
+                'default' => __('Enter the title here.'),
+                'placeholder' => __('Enter your title'),
+            ]
+        );
+
+        $widget->addControl(
             $prefix . 'caption',
             $args + [
                 'label' => __('Caption'),
@@ -214,24 +224,34 @@ class Banner extends AbstractWidget
      * @param array $args
      * @return void
      */
+    public static function registerTitleStyle(
+        AbstractElement $widget,
+        string $prefix = self::NAME . '_title_',
+        string $cssTarget = '.gmt-banner-title',
+        array $args = []
+    )
+    {
+        Text::registerTextStyle($widget, $prefix, $cssTarget, $args);
+    }
+
+    /**
+     * @param AbstractElement $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @param array $args
+     * @return void
+     */
     public static function registerCaptionStyle(
         AbstractElement $widget,
-        string $prefix = self::NAME . '_',
+        string $prefix = self::NAME . '_caption_',
         string $cssTarget = '.gmt-banner-content',
         array $args = []
     )
     {
-        $widget->addGroupControl(
-            TypographyGroup::NAME,
-            [
-                'name' => $prefix . 'caption_typography',
-                'selector' => '{{WRAPPER}} ' . $cssTarget,
-                'scheme' => Typography::TYPOGRAPHY_3,
-            ]
-        );
+        Text::registerTextStyle($widget, $prefix, $cssTarget);
 
         $widget->addResponsiveControl(
-            $prefix . 'caption_position',
+            $prefix . 'position',
             $args + [
                 'label' => __('Position'),
                 'type' => Controls::SELECT,
@@ -251,7 +271,7 @@ class Banner extends AbstractWidget
         );
 
         $widget->addResponsiveControl(
-            $prefix . 'caption_padding',
+            $prefix . 'padding',
             $args + [
                 'label' => __('Padding'),
                 'type' => Controls::SLIDER,
@@ -266,7 +286,7 @@ class Banner extends AbstractWidget
         );
 
         $widget->addResponsiveControl(
-            $prefix . 'caption_margin',
+            $prefix . 'margin',
             $args + [
                 'label' => __('Margin'),
                 'type' => Controls::DIMENSIONS,
@@ -277,20 +297,8 @@ class Banner extends AbstractWidget
             ]
         );
 
-        $widget->addControl(
-            $prefix . 'caption_color',
-            $args + [
-                'label' => __('Color'),
-                'type' => Controls::COLOR,
-                'default' => '',
-                'selectors' => [
-                    '{{WRAPPER}} ' . $cssTarget => 'color: {{VALUE}};',
-                ]
-            ]
-        );
-
         $widget->addResponsiveControl(
-            $prefix . 'caption_width',
+            $prefix . 'width',
             $args + [
                 'label' => __('Width'),
                 'type' => Controls::SLIDER,
@@ -316,7 +324,7 @@ class Banner extends AbstractWidget
         );
 
         $widget->addControl(
-            $prefix . 'caption_background',
+            $prefix . 'background',
             $args + [
                 'label' => __('Background'),
                 'type' => Controls::COLOR,
@@ -353,6 +361,18 @@ class Banner extends AbstractWidget
         );
 
         self::registerImageStyle($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_style_title',
+            [
+                'label' => __('Title'),
+                'tab'   => Controls::TAB_STYLE,
+            ]
+        );
+
+        self::registerTitleStyle($this);
 
         $this->endControlsSection();
 

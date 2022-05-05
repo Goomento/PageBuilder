@@ -87,12 +87,38 @@ class Data extends AbstractHelper
     }
 
     /**
+     * Enabled Debug Mode or not
+     *
+     * @return bool
+     */
+    public function isDebugMode()
+    {
+        return (bool) $this->getBuilderConfig(
+            'editor/debug'
+        );
+    }
+
+    /**
+     * Use local font instead
+     *
+     * @return bool
+     */
+    public function isLocalFont()
+    {
+        return (bool) $this->getBuilderConfig(
+            'editor/style/local_font'
+        );
+    }
+
+    /**
+     * Get CSS print method
+     *
      * @return string
      */
-    public function getRenderFallback()
+    public function getCssPrintMethod()
     {
-        return (string) $this->getBuilderConfig(
-            'editor/render/fallback'
+        return (bool) $this->getBuilderConfig(
+            'editor/style/css_print_method'
         );
     }
 
@@ -113,6 +139,27 @@ class Data extends AbstractHelper
     {
         return (bool) $this->getBuilderConfig(
             'editor/resources_globally'
+        );
+    }
+
+    /**
+     * Facebook App Key
+     * @return string
+     */
+    public function getFbAppId()
+    {
+        return (string) $this->getBuilderConfig(
+            'integrations/fb_app_id'
+        );
+    }
+    /**
+     * Maps Embedded Key by Google
+     * @return string
+     */
+    public function getGoogleMapsKey()
+    {
+        return (string) $this->getBuilderConfig(
+            'integrations/google_maps_key'
         );
     }
 }

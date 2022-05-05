@@ -1,0 +1,148 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Builder\Managers\Icons;
+use Goomento\PageBuilder\Helper\EscaperHelper;
+
+/**
+ * @var Widget $block
+ */
+$widget = $block->getWidget();
+$settings = $block->getSettingsForDisplay();
+$widget->addRenderAttribute('pricing_wrapper', 'class', 'gmt-pricing');
+$widget->addRenderAttribute('pricing_wrapper', 'class',
+    $settings['pricing_table_icon_enabled'] === 'yes' ? 'gmt-pricing-show-icon' : 'gmt-pricing-hide-icon');
+$widget->addRenderAttribute('pricing_wrapper', 'class',
+    $settings['pricing_table_onsale'] === 'yes' ? 'gmt-pricing-onsale' : '');
+$widget->addRenderAttribute('pricing_price_currency', 'class', 'gmt-currency-' . $settings['pricing_table_price_cur_placement']);
+$widget->addRenderAttribute([
+    'pricing_head' => [
+        'class' => 'gmt-pricing-head'
+    ],
+    'pricing_body' => [
+        'class' => 'gmt-pricing-body'
+    ],
+    'pricing_footer' => [
+        'class' => 'gmt-pricing-footer'
+    ],
+    'pricing_features' => [
+        'class' => 'gmt-pricing-features'
+    ],
+    'pricing_price_currency' => [
+        'class' => 'gmt-price-currency'
+    ],
+]);
+$titleTag = $settings['pricing_table_title_size'] ?: 'span';
+?>
+<div <?= $widget->getRenderAttributeString('pricing_wrapper'); ?>>
+    <div <?= $widget->getRenderAttributeString('pricing_head'); ?>>
+        <<?= $titleTag ?> class="gmt-pricing-title"><?= /** @noEscape  */ $settings['pricing_table_title'] ?></<?= $titleTag ?>>
+    </div>
+    <div <?= $widget->getRenderAttributeString('pricing_body'); ?>>
+        <div class="gmt-pricing-prices">
+            <span class="gmt-price-tag">
+                <?php if ($settings['pricing_table_onsale'] === 'yes') : ?>
+                    <del class="gmt-original-price">
+                        <span <?= $widget->getRenderAttributeString('pricing_price_currency'); ?>><?= /** @noEscape  */ $settings['pricing_table_price_cur'] ?></span>
+                        <span><?= /** @noEscape  */ $settings['pricing_table_price'] ?></span>
+                    </del>
+                <?php endif; ?>
+                <span class="gmt-sale-price">
+                    <span <?= $widget->getRenderAttributeString('pricing_price_currency'); ?>><?= /** @noEscape  */ $settings['pricing_table_price_cur'] ?></span>
+                    <span><?= /** @noEscape */$settings['pricing_table_onsale'] === 'yes' ?
+                        $settings['pricing_table_onsale_price'] : $settings['pricing_table_price'] ?></span>
+                </span>
+            </span>
+            <span class="gmt-price-period">
+                <?= /** @noEscape */$settings['pricing_table_period_separator']
+                . $settings['pricing_table_price_period'] ?></span>
+        </div>
+        <ul <?= $widget->getRenderAttributeString('pricing_features'); ?>>
+            <?php
+            foreach ($settings['pricing_table_items'] as $index => $item) :
+                $widget->addRenderAttribute('pricing_feature_item' . $index, 'class', 'pricing-feature');
+                $widget->addRenderAttribute('pricing_feature_item' . $index, 'class', 'yes' === $item['pricing_table_item_active']
+                    ? 'pricing-feature-active' : 'pricing-feature-disabled');
+                ?>
+                <li <?= $widget->getRenderAttributeString('pricing_feature_item' . $index); ?>>
+                    <?php if ('yes' === $settings['pricing_table_icon_enabled']) : ?>
+                        <span style="color:<?= $item['pricing_table_item_icon_color'] ?>;" >
+                            <?php if (!empty($item['pricing_table_item_selected_icon'])): ?>
+                                <?php Icons::renderIcon($item['pricing_table_item_selected_icon'], [ 'aria-hidden' => 'true' ]) ?>
+                            <?php endif; ?>
+                        </span>
+                    <?php endif; ?>
+                    <?php if ('yes' !== $item['pricing_table_item_active']) : ?><del><?php endif; ?>
+                        <span><?= /** @noEscape */ $item['pricing_table_item'] ?></span>
+                        <?php if ('yes' !== $item['pricing_table_item_active']) : ?></del><?php endif; ?>
+                </li>
+            <?php
+            endforeach;
+            ?>
+        </ul>
+    </div>
+    <?php if($settings['pricing_table_button_show'] === 'yes') :
+        if (!empty($settings['pricing_table_button_link']['url'])) {
+            $widget->addRenderAttribute('button', 'href', $settings['pricing_table_button_link']['url']);
+            $widget->addRenderAttribute('button', 'class', 'gmt-button-link');
+
+            if ($settings['pricing_table_button_link']['is_external']) {
+                $widget->addRenderAttribute('button', 'target', '_blank');
+            }
+
+            if ($settings['pricing_table_button_link']['nofollow']) {
+                $widget->addRenderAttribute('button', 'rel', 'nofollow');
+            }
+        }
+
+        if (!empty($settings['pricing_table_button_size'])) {
+            $widget->addRenderAttribute('button', 'class', 'gmt-size-' . $settings['pricing_table_button_size']);
+        }
+
+        $widget->addRenderAttribute('button', 'class', 'gmt-button');
+        $widget->addRenderAttribute('button', 'role', 'button');
+
+        if (!empty($settings['pricing_table_button_css_id'])) {
+            $widget->addRenderAttribute('button', 'id', $settings['pricing_table_button_css_id']);
+        }
+
+        if (!empty($settings['button_size'])) {
+            $widget->addRenderAttribute('button', 'class', 'gmt-size-' . $settings['pricing_table_button_size']);
+        }
+
+        $widget->addRenderAttribute([
+            'btn-content-wrapper' => [
+                'class' => 'gmt-button-content-wrapper',
+            ],
+            'btn-icon-align' => [
+                'class' => [
+                    'gmt-button-icon',
+                    'gmt-align-icon-' . $settings['pricing_table_button_icon_align'],
+                ],
+            ],
+            'btn-text' => [
+                'class' => 'gmt-button-text',
+            ],
+        ]);
+
+        ?>
+        <div <?= $widget->getRenderAttributeString('pricing_footer'); ?>>
+            <a <?= $widget->getRenderAttributeString('button'); ?>>
+                <?php if (!empty($settings['pricing_table_button_icon']) || ! empty($settings['pricing_table_button_selected_icon']['value'])) : ?>
+                    <em <?= $widget->getRenderAttributeString('btn-icon-align'); ?>>
+                        <?php Icons::renderIcon($settings['pricing_table_button_selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
+                    </em>
+                <?php endif; ?>
+                <span <?= $widget->getRenderAttributeString('btn-content-wrapper'); ?>>
+                    <span <?= $widget->getRenderAttributeString('btn-text'); ?>><?= /** @noEscape */ $settings['pricing_table_button_text']; ?></span>
+                </span>
+            </a>
+        </div>
+    <?php endif; ?>
+</div>

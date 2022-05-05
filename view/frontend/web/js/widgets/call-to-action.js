@@ -8,6 +8,8 @@ define([
     'jquery/jquery.cookie',
     'Magento_Ui/js/modal/modal',
 ], function ($, pagebuilderRegister) {
+    'use strict';
+
     /**
      * For call to action
      *

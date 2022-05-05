@@ -15,6 +15,8 @@ define([
         defaults: {
             elementTmpl: 'Goomento_PageBuilder/ui/form/element/builder_assistance',
             endpoint: '',
+            html_name: '',
+            template: 'ui/form/field',
             toggleBtnLabel: '',
             wysiwygBtnLabel: $.mage.__('WYSIWYG Editor'),
             message: '',
@@ -274,7 +276,7 @@ define([
             let result = '',
                 $title = $('input[name="title"]');
 
-            if ($title.length) {
+            if ($title.length && $title.val()) {
                 result = $title.val();
             } else {
                 let title = document.title.split('/');
