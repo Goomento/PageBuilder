@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\Block\Adminhtml;
+namespace Goomento\PageBuilder\Block\Adminhtml\Component;
 
 use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Block\Widget;
@@ -77,6 +77,7 @@ class Wysiwyg extends Widget
                 'style' => 'width:725px;height:460px',
                 'required' => true,
                 'force_load' => true,
+                'use_origin_editor' => true,
                 'config' => $this->wysiwygConfig->getConfig($config)
             ]
         );

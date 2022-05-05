@@ -17,12 +17,12 @@ use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
 use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
-use Goomento\PageBuilder\Traits\ComponentsLoader;
+use Goomento\PageBuilder\Traits\TraitComponentsLoader;
 use Magento\Framework\Exception\LocalizedException;
 
 class Sources
 {
-    use ComponentsLoader;
+    use TraitComponentsLoader;
 
     /**
      * Template library manager constructor.

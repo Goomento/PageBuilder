@@ -16,13 +16,13 @@ use Goomento\PageBuilder\Builder\Modules\Ajax;
 use Goomento\PageBuilder\Builder\Css\GlobalCss;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
-use Goomento\PageBuilder\Traits\ComponentsLoader;
+use Goomento\PageBuilder\Traits\TraitComponentsLoader;
 
 
 class Schemes
 {
 
-    use ComponentsLoader;
+    use TraitComponentsLoader;
 
     /**
      * @var \Goomento\PageBuilder\Builder\Base\AbstractSchema[]

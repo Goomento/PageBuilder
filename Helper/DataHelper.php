@@ -11,7 +11,6 @@ namespace Goomento\PageBuilder\Helper;
 
 use Goomento\Core\Traits\TraitStaticCaller;
 use Goomento\Core\Traits\TraitStaticInstances;
-use Goomento\PageBuilder\Configuration;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
@@ -19,8 +18,13 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
  * @method static mixed getConfig($path, $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT, $scopeCode = null)
  * @method static mixed getBuilderConfig($path, $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT, $scopeCode = null)
  * @method static bool getAllowedDownloadImage() Whether download image or not
- * @method static bool isActive()
+ * @method static bool isActive() Deprecated Decide to use should be following the WYSIWYG or On/Off option each content
  * @method static string getDownloadFolder()
+ * @method static string getCssPrintMethod()
+ * @method static string getFbAppId()
+ * @method static string getGoogleMapsKey()
+ * @method static bool isLocalFont()
+ * @method static bool isDebugMode()
  */
 class DataHelper
 {
@@ -33,14 +37,6 @@ class DataHelper
     public static function isRtl(): bool
     {
         return (bool) self::getBuilderConfig('editor/is_rtl');
-    }
-
-    /**
-     * @return string
-     */
-    public static function getCssPrintMethod()
-    {
-        return (string) self::getBuilderConfig('editor/style/css_print_method');
     }
 
     /**

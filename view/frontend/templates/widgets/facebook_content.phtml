@@ -1,0 +1,64 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Builder\Widgets\FacebookContent;
+use Goomento\PageBuilder\Helper\DataHelper;
+
+/**
+ * @var Widget $block
+ * @var FacebookContent $widget
+ */
+$widget = $block->getWidget();
+
+$settings = $block->getSettingsForDisplay();
+
+$type = $settings['facebook_content_type'] ?? '';
+
+if (!empty($type)) :
+    $attributes = [
+        'data-height' => $settings['facebook_content_height']['size'],
+        'data-width' => $settings['facebook_content_width']['size'],
+    ];
+    if ($type === 'page') {
+        $urlId = $settings['facebook_content_page_url'] ?? '';
+        $attributes = array_merge($attributes, [
+            'class' => 'fb-page',
+            'data-small-header' => $settings['facebook_content_small_header'] ? 'true' : 'false',
+            'data-hide-cover' => $settings['facebook_content_show_cover'] ? 'false' : 'true',
+            'data-show-facepile' => $settings['facebook_content_show_facepile'] ? 'true' : 'false',
+            'data-hide-cta' => $settings['facebook_content_show_cta'] ? 'false' : 'true',
+            'data-tabs' => implode( ',', $settings['facebook_content_tabs'] ),
+        ]);
+    } elseif ($type === 'post') {
+        $urlId = $settings['facebook_content_post_url'] ?? '';
+        $attributes = array_merge($attributes, [
+            'class' => 'fb-post',
+            'data-show-text' => $settings['facebook_content_show_text'] ? 'true' : 'false',
+        ]);
+    } elseif ($type === 'video') {
+        $urlId = $settings['facebook_content_video_url'] ?? '';
+        $attributes = array_merge($attributes, [
+            'class' => 'fb-video',
+            'data-show-text' => $settings['facebook_content_show_text'] ? 'true' : 'false',
+            'data-allowfullscreen' => $settings['facebook_content_video_allowfullscreen'] ? 'true' : 'false',
+            'data-autoplay' => $settings['facebook_content_video_autoplay'] ? 'true' : 'false',
+            'show-captions' => $settings['facebook_content_video_show_captions'] ? 'true' : 'false',
+        ]);
+    }
+    if (!$urlId || ! filter_var( $urlId, FILTER_VALIDATE_URL ) ) :
+        ?>
+        <p><?= __('Invalid URL.') ?></p>
+        <?php else :
+        $attributes['data-href'] = $urlId;
+        $widget->addRenderAttribute('facebook_content', $attributes); ?>
+        <div data-mage-init='{"facebook-sdk": {"app_id":"<?= /* @noEscape */ DataHelper::getFbAppId(); ?>"}}' <?=  $widget->getRenderAttributeString( 'facebook_content' ) ?>>
+        </div>
+    <?php
+    endif;
+endif;

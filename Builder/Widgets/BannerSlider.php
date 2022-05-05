@@ -81,14 +81,16 @@ class BannerSlider extends AbstractWidget
                 'default' => [
                     [
                         'banner_image' => DataHelper::getPlaceholderImageSrc(),
+                        'banner_title' => __('Lorem ipsum dolor sit amet.'),
                         'banner_caption' => __('Lorem ipsum dolor sit amet.'),
                     ],
                     [
                         'banner_image' => DataHelper::getPlaceholderImageSrc(),
+                        'banner_title' => __('Lorem ipsum dolor sit amet.'),
                         'banner_caption' => __('Lorem ipsum dolor sit amet.'),
                     ],
                 ],
-                'title_field' => '{{{ banner_caption }}}',
+                'title_field' => '{{{ banner_title }}}',
             ]
         );
 
@@ -149,6 +151,18 @@ class BannerSlider extends AbstractWidget
         $this->endControlsSection();
 
         $this->startControlsSection(
+            'section_style_title',
+            [
+                'label' => __('Title'),
+                'tab'   => Controls::TAB_STYLE,
+            ]
+        );
+
+        Banner::registerTitleStyle($this, self::NAME . '_title_');
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
             'section_style_content',
             [
                 'label' => __('Caption'),
@@ -156,7 +170,7 @@ class BannerSlider extends AbstractWidget
             ]
         );
 
-        Banner::registerCaptionStyle($this, self::NAME . '_');
+        Banner::registerCaptionStyle($this, self::NAME . '_caption_');
 
         $this->endControlsSection();
     }

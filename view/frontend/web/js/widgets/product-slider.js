@@ -7,6 +7,8 @@ define([
     'Goomento_PageBuilder/js/model/slider',
     'pagebuilderRegister'
 ], function ($, model, pagebuilderRegister) {
+    'use strict';
+
     pagebuilderRegister.widgetRegister(
         'product-slider',
         model,

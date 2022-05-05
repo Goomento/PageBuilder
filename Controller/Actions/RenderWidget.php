@@ -8,9 +8,10 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Controller\Actions;
 
-use Goomento\PageBuilder\Builder\Managers\Documents;
+use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\PageBuilder;
+use Magento\Cms\Model\Template\FilterProvider;
 use Magento\Framework\View\Result\PageFactory;
 
 class RenderWidget extends AbstractActions
@@ -22,13 +23,25 @@ class RenderWidget extends AbstractActions
     private $init = false;
 
     /**
-     * Make sure the layout is loaded, thus we can render design
+     * @var PageFactory
      */
-    private function renderPage()
+    private $pageFactory;
+    /**
+     * @var FilterProvider
+     */
+    private $filterProvider;
+
+    /**
+     * @param PageFactory $pageFactory
+     * @param FilterProvider $filterProvider
+     */
+    public function __construct(
+        PageFactory $pageFactory,
+        FilterProvider $filterProvider
+    )
     {
-        ObjectManagerHelper::get(
-            PageFactory::class
-        )->create();
+        $this->pageFactory = $pageFactory;
+        $this->filterProvider = $filterProvider;
     }
 
     /**
@@ -39,7 +52,8 @@ class RenderWidget extends AbstractActions
         if (false === $this->init) {
             $this->init = true;
             PageBuilder::initialize();
-            $this->renderPage();
+            // Fixed issue when render widget that requires loaded element from XML
+            $this->pageFactory->create();
         }
     }
 
@@ -50,11 +64,15 @@ class RenderWidget extends AbstractActions
     public function doAction($actionData, $params = [])
     {
         $this->init();
-        /** @var Documents $documentManager */
-        $documentManager = ObjectManagerHelper::get(Documents::class);
+        HooksHelper::doAction('pagebuilder/editor/render_widget');
+        $documentManager = ObjectManagerHelper::getDocumentsManager();
         $document = $documentManager->get($params['content_id']);
+        $rendered = $document->renderElement($actionData['data']);
+        if (!empty($rendered)) {
+            $rendered = $this->filterProvider->getBlockFilter()->filter($rendered);
+        }
         return [
-            'render' => $document->renderElement($actionData['data'])
+            'render' => $rendered
         ];
     }
 }

@@ -41,6 +41,9 @@ class Published extends AbstractAction
         } finally {
             if (!empty($e)) {
                 $this->logger->error($e);
+                if ($this->dataHelper->isDebugMode()) {
+                    throw $e;
+                }
             }
         }
 

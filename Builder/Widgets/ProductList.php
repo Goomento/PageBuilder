@@ -24,6 +24,11 @@ class ProductList extends AbstractWidget
     const NAME = 'product-list';
 
     /**
+     * @inheriDoc
+     */
+    protected $renderer = \Goomento\PageBuilder\Block\Widgets\Product\ProductList::class;
+
+    /**
      * @inheritDoc
      */
     public function getStyleDepends()
@@ -102,14 +107,26 @@ class ProductList extends AbstractWidget
                     '33' => 3,
                     '25' => 4,
                     '20' => 5,
+                ],
+                'condition' => [
+                    $prefix . 'mode' => 'grid'
                 ]
+            ]
+        );
+
+        $widget->addControl(
+            $prefix . 'show_pager',
+            $args + [
+                'label' => __( 'Display Page Control' ),
+                'type' => Controls::SWITCHER,
+                'default' => 'yes',
             ]
         );
 
         $widget->addControl(
             $prefix . 'products_per_page',
             $args + [
-                'label' => __('Product Per Page'),
+                'label' => __('Products Per Page'),
                 'type' => Controls::NUMBER,
                 'default' => 12,
             ]

@@ -1,10 +1,13 @@
-![Goomento - The Magento Page Builder Extension](https://i.imgur.com/zstn8jK.gif)
+<img alt="Goomento - The Magento Page Builder Extension" src="https://i.imgur.com/zstn8jK.gif" width="800"/>
 
-# Goomento - **The Free Magento Page Builder Extension**, a free drag and drop WYSIWYG editor that supports to create content in your stores.
+# Goomento - The Free Magento Page Builder Extension, allows you to create unique Magento websites using advanced animations, custom CSS, responsive designs, and more, by performing simple actions such as drag and drop.
 
 Goomento is a _Free Magento Page Builder Extension_ that allows you to efficiently set up your website by simply 
 dragging and dropping manipulation. Notably, it can reuse your previous content from current or other websites to 
 customize and redesign with your new creativity. All this process has an absence of coding involvement and configures instantly.
+
+Goomento is built for designers, developers and agencies, who want to optimize the process of creating an interface for an E-commerce 
+store on the platform of Magento.
 
 ### Table of contents
 
@@ -14,7 +17,7 @@ customize and redesign with your new creativity. All this process has an absence
 
 [Demo](#demo-site)
 
-[Why Goomento](#why-goomento)
+[Why Us](#why-us)
 
 [Free Built-in Widgets](#free-built-in-widgets)
 
@@ -41,59 +44,52 @@ php bin/magento setup:static-content:deploy
 
 Storefront: [https://goomento.com](https://goomento.com/)
 
-## Why Goomento 
+## Why Us 
 
-### What You See Is What You Get
-
-![What You See Is What You Get (WYSIWYG) in the new level](https://i.imgur.com/OTO4Xgb.png)
+###### What You See Is What You Get
 
 What appears on the editor is what you get in the storefront, 100% matched. Drag/drop it and see the changes in the editor right away before publishing it without any concern for output.
 
-### More Controls More Efficients
+###### More Controls More Efficients
 
-![More Controls More Efficients](https://i.imgur.com/liYvkgH.png)
-
-Every aspect of element is controllable by the editor panel, very readable, and efficient. 
+Every aspect of element is controllable by the editor panel, very readable, and efficient.
 Therefore, you don't need to know coding or experience to update or maintain your website. Instead, let's do it by performing simple actions such as drag and drop.
 
-### Control Your Site Responsive
-
-![Control Your Site Responsive](https://i.imgur.com/xPAFIPP.png)
+###### Control Your Site Responsive
 
 Enjoy the visually-appealing experience of creating, checking responsiveness while editing of pages in one place, what you see is what you get on storefront.
 
-### Revision And History Control
+###### Revision And History Control
 
-![Revision And History Control](https://i.imgur.com/3mcgoOO.png)
+Goomento recorded your actions and versions of your page. Therefore, can undo/redo or revert the page to someday in the past.
 
-You made a typo, let undo, redo it or revert the previous version of your page. Don't worry about the consequence. Every action within Goomento has been recorded.
+###### Reduce Cost
 
-### Reduce Cost
+With Goomento, you spend less time on the frontend development process and focus on creation of design, meaning you can save thousands of dollars for long developers hours to build your storefront.
 
-With Goomento, you spend less time on the frontend development process and focus on more important things, meaning you can save thousands of dollars for long developers hours to build your storefront.
-
-### Import, Export For Sharing Or Backup
+###### Import, Export For Sharing Or Backup
 
 Goomento gives you flexible access to freely import and export the content to/from your website. You can share these exported files,
 or save it to backup, resources like images and files will be automatically downloaded while importing.
 
-### Fast And Compatible To Any Stores
+###### Fast And Compatible To Any Stores
 
-All resources within Goomento have been wrapped and cached. Therefore, Goomento will not mess it up with your current website theme. 
+All resources within Goomento have been wrapped and cached. Therefore, Goomento will not mess it up with your current website theme.
 CSS/JS only printed out if there was a content of Goomento on-page. Otherwise, resources will hide all, for no-redundant.
 
-### Free Built-in Widgets And Will Be More On The Way
+###### +40 Free Built-in Widgets And Will Be More
 
-Widget is the brick of your website. By talking the brick, you can combine, move, sharpen, overlap ... +32 free widgets (and more) to create the desired website.
+Each website is built with a combination of widgets. You can drag/drop, move, sharpen, overlap ... +40 free widgets to create your unique website.
 
-### Add Custom Css In Page
+To create your own widget, check this out [Document And User Guide](https://github.com/Goomento/DocBuilder)
 
-Goomento allows you to get a more personalized look by adding custom CSS to every element. 
-By meaning every, you can add it to widget, column, section, whole page, or all pages.
+###### Add Custom Css In Page
+
+Goomento allows you to get a more personalized look by adding custom CSS to every element, such as: widget, column, section, whole page, or all pages.
 
 ## Free Built-in Widgets
 
-Basic pack:
+###### Basic pack:
 
 - Text
 - HTML
@@ -107,7 +103,7 @@ Basic pack:
 - Text Editor
 - Google Maps
 
-General pack:
+###### General pack:
 
 - Accordion
 - Tabs
@@ -126,13 +122,22 @@ General pack:
 - Image Slider (Carousel)
 - Testimonial
 - Call To Action (CTA)
-- Popup
+- Popup (Set section as a popup/modal)
+- Facebook Like + Comment
+- Facebook Pages + Post + Video
 
-Product pack:
+###### Product pack:
 
 - Add To Cart Button
-- Product List 
+- Product List
 - Product Slider (Carousel)
+- Pricing Table
+
+Magento pack:
+- Recently Viewed Products
+- Recently Compared Products
+- New Products
+- Orders And Returns
 
 ## Troubleshoot
 
@@ -140,6 +145,7 @@ Product pack:
 
 - Make sure that Goomento Page Builder module was enabled, in `Stores > Settings > Configuration > Goomento > Page Builder > General > Active`
 - Make sure Page Builder was `Enabled` and `Store view` is matching with current storefront
+- Enable the Debug Mode to see what happened, in `Stores > Settings > Configuration > Goomento > Page Builder > Editor > Debug Mode`
 - Flush/ Clean Magento Cache
 
 **Visual editor did not load**

@@ -90,15 +90,12 @@ class Frontend extends AbstractApp
             return;
         }
 
-        HooksHelper::addFilter('pagebuilder/frontend/body_class', [ $this, 'bodyClass' ]);
-
         if (StateHelper::isPreviewMode()) {
             return;
         }
 
         HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [ $this, 'enqueueStyles' ]);
 
-        HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [ $this, 'printFontsLinks' ]);
         HooksHelper::addAction('pagebuilder/frontend/footer', [ $this, 'footer' ]);
     }
 
@@ -291,7 +288,6 @@ class Frontend extends AbstractApp
          */
         HooksHelper::doAction('pagebuilder/frontend/before_enqueue_styles');
 
-        // @TODO should remove this CSS if not using on storefront
         ThemeHelper::enqueueStyle('fontawesome');
         ThemeHelper::enqueueStyle('goomento-animations');
 
@@ -317,8 +313,9 @@ class Frontend extends AbstractApp
     {
         $this->enqueueStyles();
         $this->enqueueScripts();
-
-        $this->printFontsLinks();
+        if (!DataHelper::isLocalFont()) {
+            $this->printFontsLinks();
+        }
     }
 
     /**

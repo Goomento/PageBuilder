@@ -45,7 +45,7 @@ class TemplateHelper
     {
         $params = array_merge($params, [
             'template' => $widget->getTemplate(),
-            'widget' => $widget
+            'builder_widget' => $widget
         ]);
         $rendeder = $widget->getRenderer();
         return self::getHtml(!empty($rendeder) ? $rendeder : Widget::class, $params);

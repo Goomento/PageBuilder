@@ -17,4 +17,7 @@
     <type name="Magento\Store\Model\ResourceModel\Store">
         <plugin name="pagebuilder.update_url_rewrites_after_store_save" type="Goomento\PageBuilder\Plugin\Store\Model\ResourceModel\Store"/>
     </type>
+    <type name="Magento\Framework\Data\Form\Element\Editor">
+        <plugin name="pagebuilder.builder_assistance" type="Goomento\PageBuilder\Plugin\Framework\Data\Form\Element\Editor"/>
+    </type>
 </config>

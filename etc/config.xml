@@ -11,6 +11,10 @@
             <general>
                 <active>1</active>
             </general>
+            <integrations>
+                <fb_app_id />
+                <google_maps_key />
+            </integrations>
             <import>
                 <allowed_download_image>0</allowed_download_image>
                 <download_folder>media/goomento/images/imported/</download_folder>
@@ -23,11 +27,10 @@
                 <number_of_revision>100</number_of_revision>
                 <is_rtl>0</is_rtl>
                 <resources_globally>0</resources_globally>
-                <render>
-                    <fallback>empty</fallback>
-                </render>
+                <debug>0</debug>
                 <style>
                     <css_print_method>internal</css_print_method>
+                    <local_font>0</local_font>
                 </style>
             </editor>
         </pagebuilder>

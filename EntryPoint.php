@@ -212,6 +212,11 @@ class EntryPoint extends BuilderRegister
             'call-to-action',
             'Goomento_PageBuilder/js/widgets/call-to-action'
         );
+
+        ThemeHelper::registerScript(
+            'facebook-sdk',
+            'Goomento_PageBuilder/js/widgets/facebook-sdk'
+        );
     }
 
     /**
@@ -297,6 +302,13 @@ class EntryPoint extends BuilderRegister
             Builder\Widgets\Toggle::class,
             Builder\Widgets\AddToCartButton::class,
             Builder\Widgets\CallToAction::class,
+            Builder\Widgets\FacebookLike::class,
+            Builder\Widgets\FacebookContent::class,
+            Builder\Widgets\Magento\RecentlyViewedProducts::class,
+            Builder\Widgets\Magento\RecentlyComparedProducts::class,
+            Builder\Widgets\Magento\NewProducts::class,
+            Builder\Widgets\Magento\OrdersAndReturns::class,
+            Builder\Widgets\PricingTable::class,
         ];
 
         foreach ($widgets as $widget) {

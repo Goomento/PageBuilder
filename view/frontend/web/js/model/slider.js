@@ -8,6 +8,7 @@ define([
     'jquery',
     'swiper',
 ], function (_, $, Swiper) {
+    'use strict';
     /**
      * Model for Slider
      * The `args` is the JSON and contains
@@ -54,7 +55,7 @@ define([
                     slidesPerGroup: +elementSettings.slides_to_scroll_tablet || 1,
                 };
 
-                if ( ! this.isEdit && 'yes' === elementSettings.autoplay ) {
+                if ( 'yes' === elementSettings.autoplay ) {
                     swiperOptions.autoplay = {
                         delay: elementSettings.autoplay_speed,
                         disableOnInteraction: !! elementSettings.pause_on_hover,

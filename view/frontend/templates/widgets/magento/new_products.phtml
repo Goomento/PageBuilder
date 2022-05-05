@@ -1,0 +1,49 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Helper\LayoutHelper;
+
+/**
+ * @var Widget $block
+ */
+$widget = $block->getWidget();
+$settings = $block->getSettingsForDisplay();
+
+
+switch ($settings['magento-np_template']) {
+    case 'list_default':
+        $template = 'Magento_Catalog::product/widget/new/column/new_default_list.phtml';
+        break;
+    case 'list_names':
+        $template = 'Magento_Catalog::product/widget/new/column/new_names_list.phtml';
+        break;
+    case 'list_images':
+        $template = 'Magento_Catalog::product/widget/new/column/new_images_list.phtml';
+        break;
+    case 'list':
+        $template = 'Magento_Catalog::product/widget/new/content/new_list.phtml';
+        break;
+    default:
+        $template = 'Magento_Catalog::product/widget/new/content/new_grid.phtml';
+        break;
+}
+
+$args = [
+    'data' => [
+        'template' => $template,
+        'products_count' => $settings['magento-np_num_posts'],
+        'display_type' => $settings['magento-np_display_type'],
+        'products_per_page' => $settings['magento-np_products_per_page'],
+        'show_pager' => $settings['magento-np_show_pager'] === 'yes' ? 1 : 0,
+    ]
+];
+
+$block = LayoutHelper::createBlock('Magento\Catalog\Block\Product\Widget\NewWidget', '', $args);
+?>
+<div class="gmt-magento-recently-compared-products"><?= $block->toHtml() ?></div>

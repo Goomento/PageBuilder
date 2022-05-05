@@ -153,9 +153,9 @@ class Preview
      */
     public function footer()
     {
-        /** @var Frontend $frontend */
-        $frontend = ObjectManagerHelper::get(Frontend::class);
+        $frontend = ObjectManagerHelper::getFrontend();
         $frontend->footer();
+        $frontend->printFontsLinks();
     }
 
     /**

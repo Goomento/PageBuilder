@@ -75,7 +75,8 @@ class GoogleMaps extends AbstractWidget
             ]
         );
 
-        $default_address = 'Mui Dien Cape Lighthouse';
+        $default_address = 'Hang Sơn Đoòng';
+
         $this->addControl(
             'address',
             [
