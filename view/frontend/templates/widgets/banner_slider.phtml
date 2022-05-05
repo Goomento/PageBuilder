@@ -21,7 +21,9 @@ if (count($banners)) :
         <div class="gmt-banner-carousel swiper-wrapper">
             <?php
             foreach ($banners as $index => $banner) :
-                $hasContent = !empty($banner['banner_caption']);
+                $caption = trim((string) $banner['banner_caption']);
+                $title = trim((string) $banner['banner_title']);
+                $hasContent = !empty($caption) || !empty($title);
                 ?>
                 <div class="gmt-banner-slider-item swiper-slide">
                     <div class="gmt-banner-wrapper">
@@ -70,16 +72,16 @@ if (count($banners)) :
                         if ($hasContent) :
                             $widget->addRenderAttribute('box-content' . $index, 'class', 'gmt-banner-content');
                             $widget->addRenderAttribute('box-content' . $index, 'class', 'gmt-banner-content-position-' . ($settings['banner-slider_caption_position'] ?? ''));
-
                             ?>
                             <div <?= /** @noEscape  */ $widget->getRenderAttributeString('box-content' . $index) ?>>
                                 <?php
                                 $widget->addRenderAttribute('caption' . $index, 'class', 'gmt-banner-description');
                                 $widget->addInlineEditingAttributes('caption' . $index);
-                                ?>
-                                <div <?= $widget->getRenderAttributeString('caption' . $index) ?>>
-                                    <?= $banner['banner_caption'] ?>
-                                </div>
+                                if ($title) :
+                                    $widget->addRenderAttribute('title' . $index, 'class', 'gmt-banner-title'); ?>
+                                    <div <?= $widget->getRenderAttributeString('title' . $index) ?>><?= /** @noEscape */ $title ?></div>
+                                <?php endif; ?>
+                                <div <?= $widget->getRenderAttributeString('caption' . $index) ?>><?= /** @noEscape */ $caption ?></div>
                             </div>
                         <?php endif; ?>
                     </div>

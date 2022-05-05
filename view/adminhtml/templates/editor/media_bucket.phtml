@@ -6,12 +6,15 @@
 
 declare(strict_types=1);
 /**
- * @var MediaBucket $block
+ * @var Template $block
  */
 
-use Goomento\PageBuilder\Block\Adminhtml\MediaBucket;
+use Magento\Backend\Block\Template;
 use Goomento\PageBuilder\Builder\Modules\Editor;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Helper\UrlBuilderHelper;
+use Magento\Framework\UrlInterface;
+
 /** @var Editor $editor */
 $editor = ObjectManagerHelper::get(Editor::class);
 $document = $editor->getDocument();
@@ -26,7 +29,7 @@ if ($storeIds) {
     <input type="hidden" id="image-bucket">
 </div>
 <script>
-    var mediaUrl = "<?= $block->getMediaUrl() ?>";
+    window.mediaUrl = "<?= UrlBuilderHelper::getFrontendUrl('', ['_type' => UrlInterface::URL_TYPE_MEDIA]); ?>";
 </script>
 <script type="text/x-magento-init">
 {

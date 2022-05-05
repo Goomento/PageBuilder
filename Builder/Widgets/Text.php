@@ -74,11 +74,11 @@ class Text extends AbstractWidget
      * @param AbstractWidget $widget
      * @param string $prefix
      */
-    public static function registerTextInterface(AbstractWidget $widget, string $prefix = self::NAME . '_')
+    public static function registerTextInterface(AbstractWidget $widget, string $prefix = self::NAME . '_', array $args = [])
     {
         $widget->addControl(
             $prefix . 'title',
-            [
+            $args + [
                 'label' => __('Title'),
                 'type' => Controls::TEXTAREA,
                 'dynamic' => [
@@ -91,7 +91,7 @@ class Text extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'link',
-            [
+            $args + [
                 'label' => __('Link'),
                 'type' => Controls::URL,
                 'dynamic' => [
@@ -106,7 +106,7 @@ class Text extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'size',
-            [
+            $args + [
                 'label' => __('Size'),
                 'type' => Controls::SELECT,
                 'default' => 'default',
@@ -123,7 +123,7 @@ class Text extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'tag',
-            [
+            $args + [
                 'label' => __('HTML Tag'),
                 'type' => Controls::SELECT,
                 'options' => [

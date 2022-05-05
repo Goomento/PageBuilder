@@ -11,6 +11,8 @@ define([
     Swiper,
     moduleResolver
 ) {
+    'use strict';
+
     moduleResolver(function () {
         (function (w, objects) {
             for (let ob in objects) {

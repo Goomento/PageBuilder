@@ -6,6 +6,7 @@
 define([
     'jquery'
 ], function ($) {
+    'use strict';
 
     /**
      * Regis widget

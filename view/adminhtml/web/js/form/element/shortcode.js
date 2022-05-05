@@ -1,3 +1,8 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
 define([
     'jquery',
     'Magento_Ui/js/grid/columns/column',
@@ -49,6 +54,11 @@ define([
                 }
             }]
         },
+        /**
+         * Get Modal
+         * @return {null}
+         * @private
+         */
         _getModal: function () {
             let html = shortcodeHtml.replaceAll('%identifier', this.identifier);
             if (this.$modal === null) {
@@ -60,10 +70,14 @@ define([
 
             return this.$modal;
         },
+        /**
+         * Open modal
+         * @param row
+         */
         openModal: function (row) {
             this.identifier = row.identifier;
             this._getModal()
-                .modal("openModal");;
+                .modal("openModal");
         }
     });
 });

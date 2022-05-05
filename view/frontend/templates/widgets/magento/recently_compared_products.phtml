@@ -1,0 +1,42 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Helper\LayoutHelper;
+
+/**
+ * @var Widget $block
+ */
+$widget = $block->getWidget();
+$settings = $block->getSettingsForDisplay();
+
+switch ($settings['magento-rcp_template']) {
+    case 'sidebar':
+        $template = 'Magento_Catalog::product/widget/compared/sidebar.phtml';
+        break;
+    case 'grid':
+        $template = 'Magento_Catalog::product/widget/compared/grid.phtml';
+        break;
+    default:
+        $template = 'Magento_Catalog::product/widget/compared/list.phtml';
+        break;
+}
+
+$args = [
+    'data' => [
+        'template' => $template,
+        'page_size' => $settings['magento-rcp_num_posts'],
+        'uiComponent' => 'widget_recently_compared',
+        'show_attributes' => implode(',', $settings['magento-rcp_show_attributes']),
+        'show_buttons' => implode(',', $settings['magento-rcp_show_buttons']),
+    ]
+];
+
+$block = LayoutHelper::createBlock('Magento\Catalog\Block\Widget\RecentlyCompared', '', $args);
+?>
+<div class="gmt-magento-recently-compared-products"><?= $block->toHtml() ?></div>

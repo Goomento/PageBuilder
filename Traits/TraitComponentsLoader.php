@@ -10,7 +10,7 @@ namespace Goomento\PageBuilder\Traits;
 
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
-trait ComponentsLoader
+trait TraitComponentsLoader
 {
     /**
      * @return array

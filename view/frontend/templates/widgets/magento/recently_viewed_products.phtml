@@ -1,0 +1,42 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Helper\LayoutHelper;
+
+/**
+ * @var Widget $block
+ */
+$widget = $block->getWidget();
+$settings = $block->getSettingsForDisplay();
+
+switch ($settings['magento-rvp_template']) {
+    case 'sidebar':
+        $template = 'Magento_Catalog::product/widget/viewed/sidebar.phtml';
+        break;
+    case 'grid':
+        $template = 'Magento_Catalog::product/widget/viewed/grid.phtml';
+        break;
+    default:
+        $template = 'Magento_Catalog::product/widget/viewed/list.phtml';
+        break;
+}
+
+$args = [
+    'data' => [
+        'template' => $template,
+        'page_size' => $settings['magento-rvp_num_posts'],
+        'uiComponent' => 'widget_recently_viewed',
+        'show_attributes' => implode(',', $settings['magento-rvp_show_attributes']),
+        'show_buttons' => implode(',', $settings['magento-rvp_show_buttons']),
+    ]
+];
+
+$block = LayoutHelper::createBlock('Magento\Catalog\Block\Widget\RecentlyViewed', '', $args);
+?>
+<div class="gmt-magento-recently-viewed-products"><?= $block->toHtml() ?></div>

@@ -180,6 +180,9 @@ class Elements
             'products' => [
                 'title' => __('Products'),
             ],
+            'magento' => [
+                'title' => __('Magento'),
+            ],
         ];
 
         HooksHelper::doAction('pagebuilder/elements/categories_registered', $this);

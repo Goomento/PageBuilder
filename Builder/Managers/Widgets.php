@@ -13,11 +13,11 @@ use Goomento\PageBuilder\Builder\Base\AbstractWidget;
 use Goomento\PageBuilder\Builder\Modules\Ajax;
 use Goomento\PageBuilder\Builder\Widgets\Common;
 use Goomento\PageBuilder\Helper\HooksHelper;
-use Goomento\PageBuilder\Traits\ComponentsLoader;
+use Goomento\PageBuilder\Traits\TraitComponentsLoader;
 
 class Widgets
 {
-    use ComponentsLoader;
+    use TraitComponentsLoader;
 
     /**
      * Widget types.

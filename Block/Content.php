@@ -268,37 +268,10 @@ class Content extends Template implements BlockInterface
                 }
             } catch (Exception $e) {
                 $this->logger->error($e);
-                if ($this->isAllowedFallback()) {
-                    $html = $this->fallback();
-                } else {
+                if ($this->dataHelper->isDebugMode()) {
                     throw $e;
                 }
             }
-        }
-
-        return $html;
-    }
-
-    /**
-     * Whether display error or not
-     *
-     * @return bool
-     */
-    protected function isAllowedFallback()
-    {
-        return $this->dataHelper->getRenderFallback() !== 'nothing';
-    }
-
-    /**
-     * @return string
-     */
-    protected function fallback()
-    {
-        $fallback = $this->dataHelper->getRenderFallback();
-        switch ($fallback) {
-            case 'empty':
-            default:
-                $html = '';
         }
 
         return $html;
