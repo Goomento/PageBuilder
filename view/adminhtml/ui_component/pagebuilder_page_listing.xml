@@ -184,7 +184,7 @@
                 </item>
             </argument>
             <settings>
-                <options class="Goomento\PageBuilder\Model\Content\Source\Statuses"/>
+                <options class="Goomento\PageBuilder\Model\Config\Source\Statuses"/>
                 <filter>select</filter>
                 <dataType>select</dataType>
                 <label translate="true">Status</label>

@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\Model\Content;
+namespace Goomento\PageBuilder\Model\ItemProvider;
 
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Model\ResourceModel\Content\Collection;

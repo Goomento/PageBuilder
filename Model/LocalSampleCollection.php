@@ -6,13 +6,13 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\SampleImport;
+namespace Goomento\PageBuilder\Model;
 
 use Goomento\PageBuilder\Api\Data\SampleImportInterface;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Magento\Framework\Exception\LocalizedException;
 
-class SampleImport
+class LocalSampleCollection
 {
     /**
      * @var SampleImportInterface[]|[]
@@ -43,7 +43,7 @@ class SampleImport
         if ($this->processed === false) {
             $this->processed = true;
 
-            foreach ($this->samples as $sampleName => &$sampleModel) {
+            foreach ($this->samples as &$sampleModel) {
                 if (is_string($sampleModel)) {
                     $sampleModel = ObjectManagerHelper::get(
                         $sampleModel

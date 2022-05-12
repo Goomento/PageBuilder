@@ -14,13 +14,75 @@ use Goomento\PageBuilder\Model\Config\Frontend\Version;
 
 ?>
 
-<div>
-    <div style="padding-left: 33%;">
-        <p>Thanks for using <span style="font-weight: bold; color: #448940;">Goomento</span> - The Magento Page Builder Extension</p>
-        <p>Module Version: <span style="background: #009499; color: #fff; padding: 1px 5px; border-radius: 3px;"><?= Configuration::version() ?></span></p>
+<div class="gmt-system_config" id="goomento_pagebuilder">
+    <div class="gmt-system_config-wrapper">
+        <p>Thanks for using <strong>Goomento</strong> - The Magento Page Builder Extension</p>
+        <p>Module Version: <span class="gmt-version"><?= Configuration::version() ?></span></p>
         <a target="_blank"
            href="https://github.com/Goomento/PageBuilder">
             <?= __('What\'s new?') ?>
         </a>
+        <div class="gmt-system_config-release-notes">
+            <div class="gmt-system_config-release-note" style="display: none">
+                <strong><?= __('Latest Release:') ?></strong>
+                <div>
+                    <span><?= __('Version') ?></span>
+                    <span class="gmt-version"></span>
+                </div>
+                <div>
+                    <span><?= __('Release Note') ?></span>
+                    <br>
+                    <span class="gmt-version-note"></span>
+                </div>
+                <div>
+                    <a href="#"><?= __('Download now') ?></a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<style>
+    .gmt-system_config .gmt-system_config-wrapper {padding-left: 33%;}
+    .gmt-system_config .gmt-system_config-wrapper .gmt-version{background: #009499; color: #fff; padding: 1px 5px; border-radius: 3px;}
+    .gmt-system_config .gmt-system_config-wrapper .gmt-system_config-release-note{padding: 10px; border: 1px solid #009499; max-width: 500px; border-radius: 5px; margin-top: 10px; margin-bottom: 10px; box-shadow: 2px 2px 2px 2px #e5e5e5;}
+</style>
+<script>
+    require(['ko', 'jquery'], function (ko, $) {
+        let json = localStorage.getItem('pagebuilder_releases'),
+            time = parseInt(localStorage.getItem('pagebuilder_time'));
+
+        if (json && time && !isNaN(time)) {
+            let savedTime = (new Date()) - new Date(time);
+            if (savedTime < 1000*60*60*24) {
+                json = '';
+            }
+        }
+        if (json) {
+            try {json = JSON.parse(json);} catch (e) {
+                json = null;
+            }
+        }
+
+        let render = function (json) {
+            let $root = $('#goomento_pagebuilder .gmt-system_config-release-note');
+            $root.find('.gmt-version').text(json.tag_name);
+            $root.find('.gmt-version-note').text(json.body);
+            $root.find('a').attr('href', json.zipball_url);
+            $root.show();
+        };
+
+        if (Object.keys(json || {}).length) {
+            render(json);
+        } else {
+            $.get('https://api.github.com/repos/Goomento/PageBuilder/releases/latest', 'json')
+                .done(function (jsonData) {
+                    if (!jsonData || Object.keys(jsonData || {}).length < 1) {
+                        return;
+                    }
+                    localStorage.setItem('pagebuilder_releases', JSON.stringify(jsonData));
+                    localStorage.setItem('pagebuilder_time', (new Date(time)).getTime() + '');
+                    render(jsonData);
+                });
+        }
+    });
+</script>

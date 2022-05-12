@@ -102,7 +102,7 @@ abstract class AbstractCss extends AbstractFile
      */
     protected function useExternalFile()
     {
-        return 'external'  === DataHelper::getCssPrintMethod();
+        return !DataHelper::useInlineCss();
     }
 
     /**

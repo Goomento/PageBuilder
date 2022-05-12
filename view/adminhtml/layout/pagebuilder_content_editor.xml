@@ -9,7 +9,8 @@
     <update handle="pagebuilder_general"/>
     <body>
         <referenceContainer name="content">
-            <block name="pagebuilder.content" template="Goomento_PageBuilder::editor/live_editor.phtml" />
+            <block name="pagebuilder.editor" template="Goomento_PageBuilder::editor/live_editor.phtml" />
+            <block name="pagebuilder.media_bucket" template="Goomento_PageBuilder::editor/media_bucket.phtml" />
         </referenceContainer>
         <attribute name="class" value="gmt-editor-active"/>
         <attribute name="class" value="gmt-editor-page"/>

@@ -8,14 +8,13 @@ declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
 use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
-use Goomento\PageBuilder\Helper\DataHelper;
 
 /**
  * @var Widget $block
  */
 $widget = $block->getWidget();
 $settings = $widget->getSettingsForDisplay();
-$has_content = !DataHelper::isEmpty($settings['title_text']) || !DataHelper::isEmpty($settings['description_text']);
+$has_content = !empty($settings['title_text']) || !empty($settings['description_text']);
 ?>
 <div class="gmt-image-box-wrapper">
     <?php
@@ -32,13 +31,6 @@ $has_content = !DataHelper::isEmpty($settings['title_text']) || !DataHelper::isE
     }
 
     if (!empty($settings['image']['url'])) {
-        $widget->addRenderAttribute('image', 'src', $settings['image']['url']);
-        $widget->addRenderAttribute('image', 'alt', '');
-        $widget->addRenderAttribute('image', 'title', '');
-
-        if ($settings['hover_animation']) {
-            $widget->addRenderAttribute('image', 'class', 'gmt-animation-' . $settings['hover_animation']);
-        }
 
         $image_html = ImageSizeGroup::getAttachmentImageHtml($settings);
 
@@ -53,7 +45,7 @@ $has_content = !DataHelper::isEmpty($settings['title_text']) || !DataHelper::isE
     if ($has_content) : ?>
         <div class="gmt-image-box-content">
             <?php
-            if (!DataHelper::isEmpty($settings['title_text'])) :
+            if (!empty($settings['title_text'])) :
                 $widget->addRenderAttribute('title_text', 'class', 'gmt-image-box-title');
 
                 $widget->addInlineEditingAttributes('title_text', 'none');
@@ -71,7 +63,7 @@ $has_content = !DataHelper::isEmpty($settings['title_text']) || !DataHelper::isE
                 <?php
             endif;
 
-            if (!DataHelper::isEmpty($settings['description_text'])) :
+            if (!empty($settings['description_text'])) :
                 $widget->addRenderAttribute('description_text', 'class', 'gmt-image-box-description');
 
                 $widget->addInlineEditingAttributes('description_text');
