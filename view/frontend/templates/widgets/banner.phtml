@@ -7,8 +7,6 @@
 declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
-use Goomento\PageBuilder\Helper\DataHelper;
-use Goomento\PageBuilder\Helper\EscaperHelper;
 
 /**
  * @var Widget $block
@@ -42,6 +40,7 @@ if (!empty($settings['banner_image']['url'])) :
         $widget->addRenderAttribute('image', 'class', 'gmt-animation-' . $settings['banner_hover_animation']);
     }
     $image_html = '<img ' . $widget->getRenderAttributeString('image') . '/>';
+
     if (!empty($settings['banner_link']['url'])) {
         $image_html = '<a ' . $widget->getRenderAttributeString('link') . '>' . $image_html . '</a>';
     }

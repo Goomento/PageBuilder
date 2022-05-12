@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Controller\Adminhtml\Ajax;
 
 use Goomento\PageBuilder\Helper\HooksHelper;
-use Goomento\PageBuilder\PageBuilder;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 
 class Json extends AbstractAjax implements HttpPostActionInterface

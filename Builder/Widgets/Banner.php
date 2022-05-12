@@ -11,9 +11,7 @@ namespace Goomento\PageBuilder\Builder\Widgets;
 use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
 use Goomento\PageBuilder\Builder\Controls\Groups\CssFilterGroup;
-use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Builder\Schemes\Typography;
 use Goomento\PageBuilder\Helper\DataHelper;
 
 class Banner extends AbstractWidget

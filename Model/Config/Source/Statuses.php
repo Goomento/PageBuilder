@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\Model\Content\Source;
+namespace Goomento\PageBuilder\Model\Config\Source;
 
 use Goomento\PageBuilder\Model\Content;
 use Magento\Framework\Data\OptionSourceInterface;

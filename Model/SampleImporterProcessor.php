@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\SampleImport;
+namespace Goomento\PageBuilder\Model;
 
 use Goomento\PageBuilder\Api\Data\SampleImportInterface;
 use Goomento\PageBuilder\Api\SampleImporterInterface;
@@ -17,7 +17,7 @@ use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
 
-class ImporterProcessor implements SampleImporterInterface
+class SampleImporterProcessor implements SampleImporterInterface
 {
     /**
      * @var string
@@ -80,7 +80,7 @@ class ImporterProcessor implements SampleImporterInterface
     /**
      * @param $search
      * @param $replace
-     * @return ImporterProcessor
+     * @return SampleImporterProcessor
      */
     public function setReplacements($search, $replace = null) : SampleImporterInterface
     {
@@ -175,7 +175,7 @@ class ImporterProcessor implements SampleImporterInterface
 
     /**
      * @param SampleImportInterface $sampleImport
-     * @return ImporterProcessor
+     * @return SampleImporterProcessor
      */
     public function setSampleImport(SampleImportInterface $sampleImport ) : SampleImporterInterface
     {

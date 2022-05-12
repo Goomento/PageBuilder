@@ -1,5 +1,8 @@
 # Magento 2 Goomento Page Builder
 
+## 0.2.7: Fixed minor bugs
+- Fixed minor bugs
+
 ## 0.2.6: Added and updated widgets
 - Fixed minor bugs
 - Added debug mode configuration

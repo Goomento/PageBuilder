@@ -13,7 +13,7 @@ use Goomento\PageBuilder\Controller\Adminhtml\AbstractAction;
 use Goomento\PageBuilder\Helper\RegistryHelper;
 use Goomento\PageBuilder\Logger\Logger;
 use Goomento\PageBuilder\Traits\TraitHttpPage;
-use Goomento\PageBuilder\SampleImport\SampleImport;
+use Goomento\PageBuilder\Model\LocalSampleCollection;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -24,10 +24,6 @@ class SampleImporter extends AbstractAction implements HttpGetActionInterface
 
     const ADMIN_RESOURCE = 'Goomento_PageBuilder::import';
     /**
-     * @var SampleImport
-     */
-    private $sampleImport;
-    /**
      * @var Logger
      */
     private $logger;
@@ -35,21 +31,25 @@ class SampleImporter extends AbstractAction implements HttpGetActionInterface
      * @var SampleImporterInterface
      */
     private $sampleImporter;
+    /**
+     * @var LocalSampleCollection
+     */
+    private $localSampleCollection;
 
     /**
      * @param Context $context
-     * @param SampleImport $sampleImport
+     * @param LocalSampleCollection $localSampleCollection
      * @param SampleImporterInterface $sampleImporter
      * @param Logger $logger
      */
     public function __construct(
         Context $context,
-        SampleImport $sampleImport,
+        LocalSampleCollection $localSampleCollection,
         SampleImporterInterface $sampleImporter,
         Logger $logger
     )
     {
-        $this->sampleImport = $sampleImport;
+        $this->localSampleCollection = $localSampleCollection;
         $this->logger = $logger;
         $this->sampleImporter = $sampleImporter;
         parent::__construct($context);
@@ -61,7 +61,7 @@ class SampleImporter extends AbstractAction implements HttpGetActionInterface
     public function execute()
     {
         try {
-            $allSamples = $this->sampleImport->getAllSamples();
+            $allSamples = $this->localSampleCollection->getAllSamples();
             RegistryHelper::register('all_import_samples', $allSamples);
             $isImport = (bool) $this->getRequest()->getParam('import');
             if ($isImport === true) {
@@ -109,7 +109,7 @@ class SampleImporter extends AbstractAction implements HttpGetActionInterface
     protected function getPageConfig()
     {
         return [
-            'title' => __('Import Templates/Samples'),
+            'title' => __('Import Samples'),
             'active_menu' => 'Goomento_PageBuilder::import',
         ];
     }

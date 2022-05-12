@@ -20,7 +20,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
  * @method static bool getAllowedDownloadImage() Whether download image or not
  * @method static bool isActive() Deprecated Decide to use should be following the WYSIWYG or On/Off option each content
  * @method static string getDownloadFolder()
- * @method static string getCssPrintMethod()
+ * @method static bool useInlineCss()
  * @method static string getFbAppId()
  * @method static string getGoogleMapsKey()
  * @method static bool isLocalFont()

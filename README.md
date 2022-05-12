@@ -1,6 +1,6 @@
 <img alt="Goomento - The Magento Page Builder Extension" src="https://i.imgur.com/zstn8jK.gif" width="800"/>
 
-# Goomento - The Free Magento Page Builder Extension, allows you to create unique Magento websites using advanced animations, custom CSS, responsive designs, and more, by performing simple actions such as drag and drop.
+# Goomento - The Free Magento Page Builder Extension, allows you to create unique Magento websites, landing pages using advanced animations, custom CSS, responsive designs, and more, by performing simple actions such as drag and drop.
 
 Goomento is a _Free Magento Page Builder Extension_ that allows you to efficiently set up your website by simply 
 dragging and dropping manipulation. Notably, it can reuse your previous content from current or other websites to 
@@ -133,7 +133,7 @@ Goomento allows you to get a more personalized look by adding custom CSS to ever
 - Product Slider (Carousel)
 - Pricing Table
 
-Magento pack:
+###### Magento pack:
 - Recently Viewed Products
 - Recently Compared Products
 - New Products
@@ -143,9 +143,9 @@ Magento pack:
 
 **The Page Builder did not display on storefront**
 
-- Make sure that Goomento Page Builder module was enabled, in `Stores > Settings > Configuration > Goomento > Page Builder > General > Active`
+- Make sure that Goomento Page Builder module was enabled, in `Goomento > Configuration > General > Active`
 - Make sure Page Builder was `Enabled` and `Store view` is matching with current storefront
-- Enable the Debug Mode to see what happened, in `Stores > Settings > Configuration > Goomento > Page Builder > Editor > Debug Mode`
+- Enable the Debug Mode to see what happened, in `Goomento > Configuration > Editor > Debug Mode` choose `Yes`
 - Flush/ Clean Magento Cache
 
 **Visual editor did not load**
@@ -159,11 +159,11 @@ Goomento stored CSS files in `pub/media/goomento/css`, those files responsible f
 
 - Folder `pub/media/goomento/css` is writable
 - Try to generate the new style, go to `Goomento > Management > Global.Css > Save and Refesh` - Will refresh all global and contents styling
-- Use different `CSS Print Method` in `Stores > Settings > Configuration > Goomento > Page Builder > Editor > Style > CSS Print Method` then
-choose `Internal` - Will use inline CSS instead
+- Use different `CSS Print Method` in `Goomento > Configuration > Editor > Style > Use Inline Css` then
+choose `Yes` - Will use inline CSS instead
 - Flush/ Clean Magento Cache
 
-Something else? [Open An Issue](#open-an-issue-and-contribution) or [Contact Us](https://goomento.com/contact/)
+Something else? [Open An Issue](https://github.com/Goomento/PageBuilder/issues/new) or [Contact Us](https://goomento.com/contact/)
 
 ## Version Compatible
 

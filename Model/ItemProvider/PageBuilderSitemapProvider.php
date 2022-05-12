@@ -17,7 +17,7 @@ use Goomento\PageBuilder\Model\ResourceModel\Content\Collection;
 use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory;
 use Goomento\PageBuilder\Logger\Logger;
 
-class PageBuilderSitemap implements ItemProviderInterface
+class PageBuilderSitemapProvider implements ItemProviderInterface
 {
     /**
      * @var CollectionFactory

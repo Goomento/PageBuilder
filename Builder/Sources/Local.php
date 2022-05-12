@@ -520,7 +520,8 @@ class Local extends AbstractSource
     private function getJsonName($export_data)
     {
         $title = $export_data['title'];
-        return sprintf('Goomento_Pagebuilder_%s.json', EscaperHelper::slugify($title, '_'));
+        $time  = date('Y-m-d-H-i-s');
+        return sprintf('Goomento-Pagebuilder-%s-%s.json', EscaperHelper::slugify($title, '-'), $time);
     }
 
     /**

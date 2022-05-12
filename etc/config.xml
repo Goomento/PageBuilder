@@ -29,7 +29,7 @@
                 <resources_globally>0</resources_globally>
                 <debug>0</debug>
                 <style>
-                    <css_print_method>internal</css_print_method>
+                    <use_inline_css>1</use_inline_css>
                     <local_font>0</local_font>
                 </style>
             </editor>

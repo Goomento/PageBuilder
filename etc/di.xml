@@ -15,7 +15,7 @@
     <preference for="Goomento\PageBuilder\Api\ContentManagementInterface" type="Goomento\PageBuilder\Model\ContentManagement" />
     <preference for="Goomento\PageBuilder\Api\ContentImportProcessorInterface" type="Goomento\PageBuilder\Model\ContentImportProcessor" />
     <preference for="Goomento\PageBuilder\Api\ContentRegistryInterface" type="Goomento\PageBuilder\Model\ContentRegistry" />
-    <preference for="Goomento\PageBuilder\Api\SampleImporterInterface" type="Goomento\PageBuilder\SampleImport\ImporterProcessor" />
+    <preference for="Goomento\PageBuilder\Api\SampleImporterInterface" type="Goomento\PageBuilder\Model\SampleImporterProcessor" />
     <preference for="Goomento\PageBuilder\Api\ConfigInterface" type="Goomento\PageBuilder\Model\Config" />
 
     <type name="Magento\Framework\EntityManager\MetadataPool">
@@ -72,7 +72,7 @@
             <argument name="instanceName" xsi:type="string">Goomento\PageBuilder\Model\ResourceModel\Page\Collection</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Goomento\PageBuilder\Model\Page\PageDataProvider" type="Goomento\PageBuilder\Model\Content\ContentDataProvider">
+    <virtualType name="Goomento\PageBuilder\Model\Page\PageDataProvider" type="Goomento\PageBuilder\Model\ItemProvider\ContentDataProvider">
         <arguments>
             <argument name="contentCollectionFactory" xsi:type="object">Goomento\PageBuilder\Model\ResourceModel\Page\CollectionFactory</argument>
         </arguments>
@@ -93,7 +93,7 @@
             <argument name="instanceName" xsi:type="string">Goomento\PageBuilder\Model\ResourceModel\Section\Collection</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Goomento\PageBuilder\Model\Section\PageDataProvider" type="Goomento\PageBuilder\Model\Content\ContentDataProvider">
+    <virtualType name="Goomento\PageBuilder\Model\Section\PageDataProvider" type="Goomento\PageBuilder\Model\ItemProvider\ContentDataProvider">
         <arguments>
             <argument name="contentCollectionFactory" xsi:type="object">Goomento\PageBuilder\Model\ResourceModel\Section\CollectionFactory</argument>
         </arguments>
@@ -114,7 +114,7 @@
             <argument name="instanceName" xsi:type="string">Goomento\PageBuilder\Model\ResourceModel\Template\Collection</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Goomento\PageBuilder\Model\Template\PageDataProvider" type="Goomento\PageBuilder\Model\Content\ContentDataProvider">
+    <virtualType name="Goomento\PageBuilder\Model\Template\PageDataProvider" type="Goomento\PageBuilder\Model\ItemProvider\ContentDataProvider">
         <arguments>
             <argument name="contentCollectionFactory" xsi:type="object">Goomento\PageBuilder\Model\ResourceModel\Template\CollectionFactory</argument>
         </arguments>
@@ -236,14 +236,7 @@
     <type name="Magento\Sitemap\Model\ItemProvider\Composite">
         <arguments>
             <argument name="itemProviders" xsi:type="array">
-                <item name="pagebuilderProvider" xsi:type="object">Goomento\PageBuilder\Model\ItemProvider\PageBuilderSitemap</item>
-            </argument>
-        </arguments>
-    </type>
-    <type name="Goomento\PageBuilder\SampleImport\SampleImport">
-        <arguments>
-            <argument name="samples" xsi:type="array">
-                <item name="luma" xsi:type="string">Goomento\PageBuilder\SampleImport\Samples\Luma</item>
+                <item name="pagebuilderProvider" xsi:type="object">Goomento\PageBuilder\Model\ItemProvider\PageBuilderSitemapProvider</item>
             </argument>
         </arguments>
     </type>

@@ -12,31 +12,31 @@ declare(strict_types=1);
 use Goomento\PageBuilder\Api\Data\SampleImportInterface;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\RegistryHelper;
-use Goomento\PageBuilder\SampleImport\ImporterProcessor;
+use Goomento\PageBuilder\Model\SampleImporterProcessor;
 use Magento\Backend\Block\Template;
 
 /** @var SampleImportInterface[] $allSamples */
 $allSamples = (array) RegistryHelper::registry('all_import_samples');
 
-/** @var ImporterProcessor $importProcessor */
+/** @var SampleImporterProcessor $importProcessor */
 $importProcessor = ObjectManagerHelper::get(
-    ImporterProcessor::class
+    SampleImporterProcessor::class
 );
 ?>
 <div class="admin__data-grid-wrap">
     <table class="data-grid">
         <thead>
         <tr>
-            <th class="data-grid-th" style="text-align: center"><?= __('Sample name') ?></th>
-            <th class="data-grid-th" style="text-align: center"><?= __('Templates') ?></th>
-            <th class="data-grid-th" style="text-align: center"><?= __('Actions') ?></th>
+            <th class="data-grid-th" align="center"><?= __('Name') ?></th>
+            <th class="data-grid-th" align="center"><?= __('Templates') ?></th>
+            <th class="data-grid-th" align="center"><?= __('Actions') ?></th>
         </tr>
         </thead>
         <tbody>
         <?php if (!empty($allSamples)) : ?>
             <?php foreach ($allSamples as $sampleName => $sample) : ?>
                 <tr data-role="row">
-                    <td style="text-align: center">
+                    <td align="center">
                         <span><?= $sample->getName() ?></span>
                     </td>
                     <td style="padding: 0">
@@ -48,8 +48,8 @@ $importProcessor = ObjectManagerHelper::get(
                                     ?>
                                     <tr>
                                         <td><?= $fileName ?></td>
-                                        <td style="text-align: center">
-                                            <a href="?sample=<?= $sampleName ?>&filename=<?= $fileName ?>&import=1"><?= __('Import') ?></a>
+                                        <td>
+                                            <a href="?sample=<?= $block->escapeHtmlAttr($sampleName) ?>&filename=<?= $block->escapeHtmlAttr($fileName) ?>&import=1"><?= __('Import') ?></a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -57,11 +57,15 @@ $importProcessor = ObjectManagerHelper::get(
                             </table>
                         <?php endif; ?>
                     </td>
-                    <td style="text-align: center">
-                        <a href="?sample=<?= $sampleName ?>&import=1"><?= __('Import All') ?></a>
+                    <td align="center">
+                        <a href="?sample=<?= $block->escapeHtmlAttr($sampleName) ?>&import=1"><?= __('Import All') ?></a>
                     </td>
                 </tr>
             <?php endforeach; ?>
+        <?php else : ?>
+            <tr align="center">
+                <td colspan="3"><small><?= __('Empty') ?></small></td>
+            </tr>
         <?php endif; ?>
         </tbody>
     </table>

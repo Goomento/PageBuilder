@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Helper;
 
 use Goomento\Core\Traits\TraitStaticInstances;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
 
 class Data extends AbstractHelper
 {
@@ -25,7 +25,7 @@ class Data extends AbstractHelper
      * @param null $scopeCode
      * @return mixed
      */
-    public function getConfig($path, string $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT, $scopeCode = null)
+    public function getConfig($path, string $scopeType = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->scopeConfig->getValue($path, $scopeType, $scopeCode);
     }
@@ -44,7 +44,7 @@ class Data extends AbstractHelper
      * @param null $scopeCode
      * @return mixed
      */
-    public function getBuilderConfig($name, string $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT, $scopeCode = null)
+    public function getBuilderConfig($name, string $scopeType = ScopeInterface::SCOPE_STORE, $scopeCode = null)
     {
         return $this->getConfig(sprintf('%s/%s', static::PREFIX_XML_PATH, $name), $scopeType, $scopeCode);
     }
@@ -111,14 +111,14 @@ class Data extends AbstractHelper
     }
 
     /**
-     * Get CSS print method
+     * Use Inline CSS
      *
-     * @return string
+     * @return bool
      */
-    public function getCssPrintMethod()
+    public function useInlineCss()
     {
         return (bool) $this->getBuilderConfig(
-            'editor/style/css_print_method'
+            'editor/style/use_inline_css'
         );
     }
 

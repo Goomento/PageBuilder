@@ -8,6 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Api;
 
+/**
+ * Use for local import template files, uses to define .json and media files.
+ */
 interface SampleImporterInterface
 {
     /**
