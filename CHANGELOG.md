@@ -1,5 +1,9 @@
 # Magento 2 Goomento Page Builder
 
+## 0.2.8: Updated Sample Import Process
+- Added Menu widget
+- Updated Sample Import Process 
+
 ## 0.2.7: Fixed minor bugs
 - Fixed minor bugs
 

@@ -16,6 +16,11 @@ interface SampleImportInterface
     public function getName();
 
     /**
+     * @return string|null
+     */
+    public function getDescription();
+
+    /**
      * Get media dir to import
      * @return array[]|string
      */
