@@ -26,18 +26,19 @@ $importProcessor = ObjectManagerHelper::get(
 <div class="admin__data-grid-wrap">
     <table class="data-grid">
         <thead>
-        <tr>
-            <th class="data-grid-th" align="center"><?= __('Name') ?></th>
-            <th class="data-grid-th" align="center"><?= __('Templates') ?></th>
-            <th class="data-grid-th" align="center"><?= __('Actions') ?></th>
-        </tr>
+            <tr>
+                <th class="data-grid-th" align="center"><?= __('Name') ?></th>
+                <th class="data-grid-th" align="center"><?= __('Templates') ?></th>
+                <th class="data-grid-th" align="center"><?= __('Actions') ?></th>
+            </tr>
         </thead>
         <tbody>
         <?php if (!empty($allSamples)) : ?>
             <?php foreach ($allSamples as $sampleName => $sample) : ?>
                 <tr data-role="row">
-                    <td align="center">
-                        <span><?= $sample->getName() ?></span>
+                    <td>
+                        <p><?= $block->escapeHtml($sample->getName()) ?></p>
+                        <small><i><?= $block->escapeHtml($sample->getDescription()) ?></i></small>
                     </td>
                     <td style="padding: 0">
                         <?php if ($sources = (array) $importProcessor->setSourceDir($sample->getSourceFiles())->getSourceFiles()) : ?>

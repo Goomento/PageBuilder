@@ -9,20 +9,16 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Model;
 
 use Goomento\PageBuilder\Api\Data\SampleImportInterface;
-use Goomento\PageBuilder\Helper\ObjectManagerHelper;
-use Magento\Framework\Exception\LocalizedException;
+use Goomento\PageBuilder\Traits\TraitComponentsLoader;
 
 class LocalSampleCollection
 {
-    /**
-     * @var SampleImportInterface[]|[]
-     */
-    private $samples = [];
+    use TraitComponentsLoader;
 
     /**
-     * @var bool
+     * @var array
      */
-    private $processed = false;
+    private $components;
 
     /**
      * @param array $samples
@@ -31,44 +27,23 @@ class LocalSampleCollection
         array $samples = []
     )
     {
-        $this->samples = $samples;
+        $this->components = $samples;
     }
 
     /**
      * @return SampleImportInterface[]|[]
-     * @throws LocalizedException
      */
     public function getAllSamples()
     {
-        if ($this->processed === false) {
-            $this->processed = true;
-
-            foreach ($this->samples as &$sampleModel) {
-                if (is_string($sampleModel)) {
-                    $sampleModel = ObjectManagerHelper::get(
-                        $sampleModel
-                    );
-                }
-
-                if (!is_object($sampleModel) || !($sampleModel instanceof SampleImportInterface)) {
-                    throw new LocalizedException(
-                        __('Invalid sample model')
-                    );
-                }
-            }
-        }
-
-        return $this->samples;
+        return $this->getComponents();
     }
 
     /**
      * @param string $name
      * @return mixed|null
-     * @throws LocalizedException
      */
     public function getSample(string $name)
     {
-        $this->getAllSamples();
-        return $this->samples[$name] ?? null;
+        return $this->getComponent($name);
     }
 }

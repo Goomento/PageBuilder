@@ -1,0 +1,36 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Builder\Widgets\Navigation;
+use Goomento\PageBuilder\Helper\LayoutHelper;
+
+/**
+ * @var Widget $block
+ * @var Navigation $widget
+ */
+$widget = $block->getWidget();
+$settings = $block->getSettingsForDisplay();
+$menuId = (string) $settings['navigation_menu_id'];
+if (class_exists('Snowdog\Menu\Block\Menu') && $menuId) {
+    $type = (string) $settings['navigation_menu_type'];
+    $menuHtml = LayoutHelper::createBlock('Snowdog\Menu\Block\Menu', '', [
+        'data' => [
+            'menu' => $menuId,
+            'menu_type' => $type,
+        ]
+    ])
+        ->setTemplate('Goomento_PageBuilder::snowdog_menu/menu.phtml')
+        ->toHtml();
+    if (!empty($menuHtml)) : ?>
+        <div class="gmt-widget-navigation-<?= $type ?>">
+            <?= /** @noEscape */ $menuHtml ?>
+        </div>
+    <?php
+    endif;
+}

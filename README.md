@@ -1,14 +1,12 @@
 <img alt="Goomento - The Magento Page Builder Extension" src="https://i.imgur.com/zstn8jK.gif" width="800"/>
 
-# Goomento - The Free Magento Page Builder Extension, allows you to create unique Magento websites, landing pages using advanced animations, custom CSS, responsive designs, and more, by performing simple actions such as drag and drop.
+# Goomento - The Free Magento Page Builder Extension, allows you to create unique Magento websites, landing pages using advanced animations, custom CSS, responsive designs, and more, without a line of code.
 
 Goomento is a _Free Magento Page Builder Extension_ that allows you to efficiently set up your website by simply 
 dragging and dropping manipulation. Notably, it can reuse your previous content from current or other websites to 
 customize and redesign with your new creativity. All this process has an absence of coding involvement and configures instantly.
 
-Goomento is built for designers, developers and agencies, who want to optimize the process of creating an interface for an E-commerce 
-store on the platform of Magento.
-
+Goomento is built for **designers**, **developers** and **marketers**, who want to optimize the process of creating and managing the Magento store.
 ### Table of contents
 
 [Installation](#install-goomento)
@@ -48,44 +46,47 @@ Storefront: [https://goomento.com](https://goomento.com/)
 
 ###### What You See Is What You Get
 
-What appears on the editor is what you get in the storefront, 100% matched. Drag/drop it and see the changes in the editor right away before publishing it without any concern for output.
+**What appears on the editor is what you get in the storefront**. Drag/drop it and see the changes in the editor right away before publishing it without any concern for output.
 
 ###### More Controls More Efficients
 
 Every aspect of element is controllable by the editor panel, very readable, and efficient.
-Therefore, you don't need to know coding or experience to update or maintain your website. Instead, let's do it by performing simple actions such as drag and drop.
+Therefore, **you don't need to know coding or experience to edit, just click and see** !!!
+
+You can control: Layout such as width and height, Background, Color, Border, Typography, Shadow, CSS Id-classes, Padding, Margin, Z-Index
+, Order, Animation such as hover or while loading, Responsive such as show-hide in tablet and mobile devices ....
 
 ###### Control Your Site Responsive
 
-Enjoy the visually-appealing experience of creating, checking responsiveness while editing of pages in one place, what you see is what you get on storefront.
+Enjoy the visually-appealing experience of creating, **checking responsiveness while editing of pages in one place**, what you see is what you get on storefront.
 
 ###### Revision And History Control
 
-Goomento recorded your actions and versions of your page. Therefore, can undo/redo or revert the page to someday in the past.
+Goomento recorded your actions and versions of your page. Therefore, **can undo/redo or revert the page** to someday in the past.
 
 ###### Reduce Cost
 
-With Goomento, you spend less time on the frontend development process and focus on creation of design, meaning you can save thousands of dollars for long developers hours to build your storefront.
+With Goomento, you **spend less time on the frontend development** process and focus on creation of design, meaning you can save thousands of dollars for long developers hours to build your storefront.
 
 ###### Import, Export For Sharing Or Backup
 
-Goomento gives you flexible access to freely import and export the content to/from your website. You can share these exported files,
+Goomento gives you flexible access to **freely import, export the content to/from your website**. You can share these exported files,
 or save it to backup, resources like images and files will be automatically downloaded while importing.
 
 ###### Fast And Compatible To Any Stores
 
-All resources within Goomento have been wrapped and cached. Therefore, Goomento will not mess it up with your current website theme.
-CSS/JS only printed out if there was a content of Goomento on-page. Otherwise, resources will hide all, for no-redundant.
+Goomento uses its own CSS and JS, which are **optimized for use individually and impact to its self**, and other elements outside Goomento will keep the same.
 
-###### +40 Free Built-in Widgets And Will Be More
+###### +40 Free Built-in Widgets
 
-Each website is built with a combination of widgets. You can drag/drop, move, sharpen, overlap ... +40 free widgets to create your unique website.
+Each website is built with a combination of widgets. You can **drag/drop, move, sharpen, overlap ... +40 free widgets** 
+to create your unique landing pages or the whole website.
 
 To create your own widget, check this out [Document And User Guide](https://github.com/Goomento/DocBuilder)
 
 ###### Add Custom Css In Page
 
-Goomento allows you to get a more personalized look by adding custom CSS to every element, such as: widget, column, section, whole page, or all pages.
+Goomento allows you to get a more personalized look by **adding custom CSS to every element**, such as: widget, column, section, whole page, or all pages.
 
 ## Free Built-in Widgets
 
@@ -125,6 +126,7 @@ Goomento allows you to get a more personalized look by adding custom CSS to ever
 - Popup (Set section as a popup/modal)
 - Facebook Like + Comment
 - Facebook Pages + Post + Video
+- Navigation (Menu)
 
 ###### Product pack:
 
