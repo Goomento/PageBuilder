@@ -7,7 +7,6 @@
 declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
-use Goomento\PageBuilder\Helper\DataHelper;
 
 /**
  * @var Widget $block
@@ -26,7 +25,7 @@ $widget->addRenderAttribute('wrapper', [
     'aria-valuemin' => '0',
     'aria-valuemax' => '100',
     'aria-valuenow' => $progress_percentage,
-    'aria-valuetext' => $settings['progress_inner_text'],
+    'aria-valuetext' => (string) $settings['progress_inner_text'],
 ]);
 
 if (!empty($settings['progress_type'])) {
@@ -42,10 +41,15 @@ $widget->addRenderAttribute('inner_text', [
     'class' => 'gmt-progress-text',
 ]);
 
-$widget->addInlineEditingAttributes('inner_text');
+$widget->addRenderAttribute('progress_title', [
+    'class' => 'gmt-title',
+]);
 
-if (!DataHelper::isEmpty($settings['progress_title'])) { ?>
-    <span class="gmt-title"><?= $settings['progress_title']; ?></span>
+$widget->addInlineEditingAttributes(['inner_text' => 'progress_inner_text']);
+$widget->addInlineEditingAttributes('progress_title');
+
+if (!empty($settings['progress_title'])) { ?>
+    <span <?= $widget->getRenderAttributeString('progress_title'); ?>><?= $settings['progress_title']; ?></span>
 <?php } ?>
 
 <div <?= $widget->getRenderAttributeString('wrapper'); ?>>

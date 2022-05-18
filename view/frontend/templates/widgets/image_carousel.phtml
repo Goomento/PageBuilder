@@ -101,9 +101,9 @@ if (!empty($slides)) :
     }
 
     $slides_count = count($settings['image-carousel_carousel']); ?>
-    <div <?php echo $widget->getRenderAttributeString('carousel-wrapper'); ?>>
-        <div <?php echo $widget->getRenderAttributeString('carousel'); ?>>
-            <?php echo implode('', $slides); ?>
+    <div <?= $widget->getRenderAttributeString('carousel-wrapper'); ?>>
+        <div <?= $widget->getRenderAttributeString('carousel'); ?>>
+            <?= implode('', $slides); ?>
         </div>
         <?php if (1 < $slides_count) : ?>
             <?php if ($show_dots) : ?>

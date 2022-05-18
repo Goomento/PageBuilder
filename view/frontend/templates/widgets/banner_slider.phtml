@@ -16,11 +16,14 @@ $settings = $block->getSettingsForDisplay();
 $banners = $settings['banner_list'] ?? [];
 
 if (count($banners)) :
+    $widget->addRenderAttribute('_wrapper', 'class', 'gmt-invisible');
     ?>
     <div class="gmt-banner-slider-wrapper swiper-container">
         <div class="gmt-banner-carousel swiper-wrapper">
             <?php
             foreach ($banners as $index => $banner) :
+                $bannerTitleSettingKey = 'banner_list.' . $index . '.banner_title';
+                $bannerCaptionSettingKey = 'banner_list.' . $index . '.banner_caption';
                 $caption = trim((string) $banner['banner_caption']);
                 $title = trim((string) $banner['banner_title']);
                 $hasContent = !empty($caption) || !empty($title);
@@ -75,13 +78,14 @@ if (count($banners)) :
                             ?>
                             <div <?= /** @noEscape  */ $widget->getRenderAttributeString('box-content' . $index) ?>>
                                 <?php
-                                $widget->addRenderAttribute('caption' . $index, 'class', 'gmt-banner-description');
-                                $widget->addInlineEditingAttributes('caption' . $index);
+                                $widget->addRenderAttribute($bannerCaptionSettingKey, 'class', 'gmt-banner-description');
+                                $widget->addInlineEditingAttributes($bannerTitleSettingKey, 'none');
+                                $widget->addInlineEditingAttributes($bannerCaptionSettingKey);
                                 if ($title) :
-                                    $widget->addRenderAttribute('title' . $index, 'class', 'gmt-banner-title'); ?>
-                                    <div <?= $widget->getRenderAttributeString('title' . $index) ?>><?= /** @noEscape */ $title ?></div>
+                                    $widget->addRenderAttribute($bannerTitleSettingKey, 'class', 'gmt-banner-title'); ?>
+                                    <div <?= $widget->getRenderAttributeString($bannerTitleSettingKey) ?>><?= /** @noEscape */ $title ?></div>
                                 <?php endif; ?>
-                                <div <?= $widget->getRenderAttributeString('caption' . $index) ?>><?= /** @noEscape */ $caption ?></div>
+                                <div <?= $widget->getRenderAttributeString($bannerCaptionSettingKey) ?>><?= /** @noEscape */ $caption ?></div>
                             </div>
                         <?php endif; ?>
                     </div>

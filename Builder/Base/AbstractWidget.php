@@ -18,6 +18,7 @@ use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\TemplateHelper;
+use function GuzzleHttp\Promise\is_settled;
 
 abstract class AbstractWidget extends AbstractElement
 {
@@ -542,24 +543,6 @@ abstract class AbstractWidget extends AbstractElement
     }
 
     /**
-     * Get repeater setting key.
-     *
-     * Retrieve the unique setting key for the current repeater item. Used to connect the current element in the
-     * repeater to it's settings model and it's control in the panel.
-     *
-     * @param string $setting_key      The current setting key inside the repeater item (e.g. `tab_title`).
-     * @param string $repeater_key     The repeater key containing the array of all the items in the repeater (e.g. `tabs`).
-     * @param int $repeater_item_index The current item index in the repeater array (e.g. `3`).
-     *
-     * @return string The repeater setting key (e.g. `tabs.3.tab_title`).
-     * @deprecated Should use by your own
-     */
-    public function getRepeaterSettingKey($setting_key, $repeater_key, $repeater_item_index)
-    {
-        return implode('.', [ $repeater_key, $repeater_item_index, $setting_key ]);
-    }
-
-    /**
      * Add inline editing attributes.
      *
      * Define specific area in the element to be editable inline. The element can have several areas, with this method
@@ -569,23 +552,27 @@ abstract class AbstractWidget extends AbstractElement
      * Note: When you use wysiwyg control use the advanced toolbar, with textarea control use the basic toolbar. Text
      * control should not have toolbar.
      *
-     * @param string $key Element key.
+     * @param string|array $key Element key.
      * @param string $toolbar Optional. Toolbar type. Accepted values are `advanced`, `basic` or `none`. Default is
      *                        `basic`.
      */
-    public function addInlineEditingAttributes($key, $toolbar = 'basic')
+    public function addInlineEditingAttributes($key, string $toolbar = 'none')
     {
         if (!StateHelper::isEditorMode()) {
             return;
         }
 
-        $this->addRenderAttribute($key, [
-            'class' => 'gmt-inline-editing',
-            'data-gmt-setting-key' => $key,
-        ]);
+        if (is_string($key)) {
+            $key = [$key => $key];
+        }
 
-        if ('basic' !== $toolbar) {
-            $this->addRenderAttribute($key, [
+        foreach ($key as $elementName => $backendKey) {
+            $this->addRenderAttribute($elementName, [
+                'class' => 'gmt-inline-editing',
+                'data-gmt-setting-key' => $backendKey,
+            ]);
+
+            $this->addRenderAttribute($elementName, [
                 'data-gmt-inline-editing-toolbar' => $toolbar,
             ]);
         }

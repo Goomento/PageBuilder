@@ -24,7 +24,7 @@ class StarRating extends AbstractWidget
     /**
      * @inheritDoc
      */
-    protected $template = 'Goomento_PageBuilder::widgets/start_rating.phtml';
+    protected $template = 'Goomento_PageBuilder::widgets/star_rating.phtml';
 
     /**
      * @inheritDoc
@@ -345,46 +345,6 @@ class StarRating extends AbstractWidget
     /**
      * @inheritDoc
      */
-    protected function render()
-    {
-        $settings = $this->getSettingsForDisplay();
-        $rating_data = $this->getRating();
-        $textual_rating = $rating_data[0] . '/' . $rating_data[1];
-        $icon = '';
-
-        if ('star_unicode' === $settings['star_style']) {
-            $icon = '&#9733;';
-
-            if ('outline' === $settings['unmarked_star_style']) {
-                $icon = '&#9734;';
-            }
-        }
-
-        $this->addRenderAttribute('icon_wrapper', [
-            'class' => 'gmt-star-rating',
-            'title' => $textual_rating,
-            'itemtype' => 'http://schema.org/Rating',
-            'itemscope' => '',
-            'itemprop' => 'reviewRating',
-        ]);
-
-        $this->addRenderAttribute('icon_wrapper', 'class', 'gmt-star-unmarked-' . ($settings['unmarked_star_style'] ?? ''));
-
-        $schema_rating = '<span itemprop="ratingValue" class="gmt-screen-only">' . $textual_rating . '</span>';
-        $stars_element = '<div ' . $this->getRenderAttributeString('icon_wrapper') . '>' . $this->renderStars($icon) . ' ' . $schema_rating . '</div>'; ?>
-
-		<div class="gmt-star-rating__wrapper">
-			<?php if (!DataHelper::isEmpty($settings['title'])) : ?>
-				<div class="gmt-star-rating__title"><?php echo $settings['title']; ?></div>
-			<?php endif; ?>
-			<?php echo $stars_element; ?>
-		</div>
-		<?php
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function contentTemplate()
     {
         ?>
@@ -424,6 +384,9 @@ class StarRating extends AbstractWidget
 				}
 			}
 
+			view.addRenderAttribute( 'title', 'class', 'gmt-star-rating__title' );
+            view.addInlineEditingAttributes( 'title', 'none' );
+
 			view.addRenderAttribute( 'iconWrapper', 'class', 'gmt-star-rating' );
 			view.addRenderAttribute( 'iconWrapper', 'class', 'gmt-star-unmarked-' + settings.unmarked_star_style );
 			view.addRenderAttribute( 'iconWrapper', 'itemtype', 'http://schema.org/Rating' );
@@ -436,7 +399,7 @@ class StarRating extends AbstractWidget
 
 		<div class="gmt-star-rating__wrapper">
 			<# if ( ! _.isEmpty( settings.title ) ) { #>
-				<div class="gmt-star-rating__title">{{ settings.title }}</div>
+				<div {{{ view.getRenderAttributeString( 'title' ) }}}>{{ settings.title }}</div>
 			<# } #>
 			<div {{{ view.getRenderAttributeString( 'iconWrapper' ) }}} >
 				{{{ stars }}}

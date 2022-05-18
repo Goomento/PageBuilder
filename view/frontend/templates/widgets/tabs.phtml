@@ -20,17 +20,14 @@ $id_int = substr((string) $widget->getIdInt(), 0, 3); ?>
         <?php
         foreach ($tabs as $index => $item) :
             $tab_count = $index + 1;
-
-            $tab_title_setting_key = $widget->getRepeaterSettingKey('tab_title', 'tabs', $index);
-
-            $widget->addRenderAttribute($tab_title_setting_key, [
+            $widget->addRenderAttribute('tab_title' . $index, [
                 'id' => 'gmt-tab-title-' . $id_int . $tab_count,
                 'class' => [ 'gmt-tab-title', 'gmt-tab-desktop-title' ],
                 'data-tab' => $tab_count,
                 'role' => 'tab',
                 'aria-controls' => 'gmt-tab-content-' . $id_int . $tab_count,
             ]); ?>
-            <div <?= $widget->getRenderAttributeString($tab_title_setting_key); ?>><a href=""><?= $item['tab_title']; ?></a></div>
+            <div <?= $widget->getRenderAttributeString('tab_title' . $index); ?>><a href=""><?= /** @noEscape */ $item['tab_title']; ?></a></div>
         <?php endforeach; ?>
     </div>
     <div class="gmt-tabs-content-wrapper">
@@ -38,11 +35,10 @@ $id_int = substr((string) $widget->getIdInt(), 0, 3); ?>
         foreach ($tabs as $index => $item) :
             $tab_count = $index + 1;
 
-            $tab_content_setting_key = $widget->getRepeaterSettingKey('tab_content', 'tabs', $index);
+            $tabContentSettingKey = 'tabs.' . $index . '.tab_content';
+            $tabTitleMobileSettingKey = 'mobile.tabs.' . $index . '.tab_content';
 
-            $tab_title_mobile_setting_key = $widget->getRepeaterSettingKey('tab_title_mobile', 'tabs', $tab_count);
-
-            $widget->addRenderAttribute($tab_content_setting_key, [
+            $widget->addRenderAttribute($tabContentSettingKey, [
                 'id' => 'gmt-tab-content-' . $id_int . $tab_count,
                 'class' => [ 'gmt-tab-content', 'gmt-clearfix' ],
                 'data-tab' => $tab_count,
@@ -50,15 +46,15 @@ $id_int = substr((string) $widget->getIdInt(), 0, 3); ?>
                 'aria-labelledby' => 'gmt-tab-title-' . $id_int . $tab_count,
             ]);
 
-            $widget->addRenderAttribute($tab_title_mobile_setting_key, [
+            $widget->addRenderAttribute($tabTitleMobileSettingKey, [
                 'class' => [ 'gmt-tab-title', 'gmt-tab-mobile-title' ],
                 'data-tab' => $tab_count,
                 'role' => 'tab',
             ]);
 
-            $widget->addInlineEditingAttributes($tab_content_setting_key, 'advanced'); ?>
-            <div <?= $widget->getRenderAttributeString($tab_title_mobile_setting_key); ?>><?= $item['tab_title']; ?></div>
-            <div <?= $widget->getRenderAttributeString($tab_content_setting_key); ?>><?= /** @noEscape  */ $item['tab_content'] ?></div>
+            $widget->addInlineEditingAttributes($tabContentSettingKey, 'advanced'); ?>
+            <div <?= $widget->getRenderAttributeString($tabTitleMobileSettingKey); ?>><?= /** @noEscape */ $item['tab_title']; ?></div>
+            <div <?= $widget->getRenderAttributeString($tabContentSettingKey); ?>><?= /** @noEscape  */ $item['tab_content'] ?></div>
         <?php endforeach; ?>
     </div>
 </div>

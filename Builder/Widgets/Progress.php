@@ -49,7 +49,7 @@ class Progress extends AbstractWidget
      */
     public function getKeywords()
     {
-        return [ 'progress', 'bar' ];
+        return [ 'progress', 'bar', 'process' ];
     }
 
     /**
@@ -266,46 +266,5 @@ class Progress extends AbstractWidget
         Text::registerSimpleTextStyle($this, self::NAME . '_', '.gmt-title');
 
         $this->endControlsSection();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function contentTemplate()
-    {
-        ?>
-		<#
-		let progress_percentage = 0;
-		if ( ! isNaN( settings.progress_percent.size ) ) {
-			progress_percentage = 100 < settings.progress_percent.size ? 100 : settings.progress_percent.size;
-		}
-
-		view.addRenderAttribute( 'progressWrapper', {
-			'class': [ 'gmt-progress-wrapper', 'progress-' + settings.progress_type ],
-			'role': 'progressbar',
-			'aria-valuemin': '0',
-			'aria-valuemax': '100',
-			'aria-valuenow': progress_percentage,
-			'aria-valuetext': settings.progress_inner_text
-		} );
-
-		view.addRenderAttribute( 'inner_text', {
-			'class': 'gmt-progress-text'
-		} );
-
-		view.addInlineEditingAttributes( 'inner_text' );
-		#>
-		<# if ( settings.progress_title ) { #>
-			<span class="gmt-title">{{{ settings.progress_title }}}</span><#
-		} #>
-		<div {{{ view.getRenderAttributeString( 'progressWrapper' ) }}}>
-			<div class="gmt-progress-bar" data-max="{{ progress_percentage }}">
-				<span {{{ view.getRenderAttributeString( 'inner_text' ) }}}>{{{ settings.progress_inner_text }}}</span>
-				<# if ( 'hide' !== settings.progress_display_percentage ) { #>
-					<span class="gmt-progress-percentage">{{{ progress_percentage }}}%</span>
-				<# } #>
-			</div>
-		</div>
-		<?php
     }
 }

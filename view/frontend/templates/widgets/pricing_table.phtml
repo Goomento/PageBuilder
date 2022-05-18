@@ -25,6 +25,9 @@ $widget->addRenderAttribute([
     'pricing_head' => [
         'class' => 'gmt-pricing-head'
     ],
+    'pricing_title' => [
+        'class' => 'gmt-pricing-title'
+    ],
     'pricing_body' => [
         'class' => 'gmt-pricing-body'
     ],
@@ -39,18 +42,20 @@ $widget->addRenderAttribute([
     ],
 ]);
 $titleTag = $settings['pricing_table_title_size'] ?: 'span';
+$widget->addInlineEditingAttributes(['pricing_title' => 'pricing_table_title']);
 ?>
 <div <?= $widget->getRenderAttributeString('pricing_wrapper'); ?>>
     <div <?= $widget->getRenderAttributeString('pricing_head'); ?>>
-        <<?= $titleTag ?> class="gmt-pricing-title"><?= /** @noEscape  */ $settings['pricing_table_title'] ?></<?= $titleTag ?>>
+        <<?= $titleTag ?> <?= $widget->getRenderAttributeString('pricing_title'); ?>><?= /** @noEscape  */ $settings['pricing_table_title'] ?></<?= $titleTag ?>>
     </div>
     <div <?= $widget->getRenderAttributeString('pricing_body'); ?>>
         <div class="gmt-pricing-prices">
             <span class="gmt-price-tag">
-                <?php if ($settings['pricing_table_onsale'] === 'yes') : ?>
+                <?php if ($settings['pricing_table_onsale'] === 'yes') :
+                    ?>
                     <del class="gmt-original-price">
                         <span <?= $widget->getRenderAttributeString('pricing_price_currency'); ?>><?= /** @noEscape  */ $settings['pricing_table_price_cur'] ?></span>
-                        <span><?= /** @noEscape  */ $settings['pricing_table_price'] ?></span>
+                        <span <?= $widget->getRenderAttributeString('pricing_table_price'); ?>><?= /** @noEscape  */ $settings['pricing_table_price'] ?></span>
                     </del>
                 <?php endif; ?>
                 <span class="gmt-sale-price">
@@ -66,6 +71,8 @@ $titleTag = $settings['pricing_table_title_size'] ?: 'span';
         <ul <?= $widget->getRenderAttributeString('pricing_features'); ?>>
             <?php
             foreach ($settings['pricing_table_items'] as $index => $item) :
+                $key = 'pricing_table_items.' . $index . '.pricing_table_item';
+                $widget->addInlineEditingAttributes($key);
                 $widget->addRenderAttribute('pricing_feature_item' . $index, 'class', 'pricing-feature');
                 $widget->addRenderAttribute('pricing_feature_item' . $index, 'class', 'yes' === $item['pricing_table_item_active']
                     ? 'pricing-feature-active' : 'pricing-feature-disabled');
@@ -79,8 +86,8 @@ $titleTag = $settings['pricing_table_title_size'] ?: 'span';
                         </span>
                     <?php endif; ?>
                     <?php if ('yes' !== $item['pricing_table_item_active']) : ?><del><?php endif; ?>
-                        <span><?= /** @noEscape */ $item['pricing_table_item'] ?></span>
-                        <?php if ('yes' !== $item['pricing_table_item_active']) : ?></del><?php endif; ?>
+                        <span <?= $widget->getRenderAttributeString($key); ?>><?= /** @noEscape */ $item['pricing_table_item'] ?></span>
+                    <?php if ('yes' !== $item['pricing_table_item_active']) : ?></del><?php endif; ?>
                 </li>
             <?php
             endforeach;
@@ -130,7 +137,7 @@ $titleTag = $settings['pricing_table_title_size'] ?: 'span';
                 'class' => 'gmt-button-text',
             ],
         ]);
-
+        $widget->addInlineEditingAttributes(['btn-text' => 'pricing_table_button_text']);
         ?>
         <div <?= $widget->getRenderAttributeString('pricing_footer'); ?>>
             <a <?= $widget->getRenderAttributeString('button'); ?>>

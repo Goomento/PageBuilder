@@ -37,14 +37,18 @@ $widget->addRenderAttribute('icon_wrapper', [
     'itemprop' => 'reviewRating',
 ]);
 
+$widget->addRenderAttribute('title', [
+    'class' => 'gmt-star-rating__title',
+]);
+$widget->addInlineEditingAttributes('title');
 $widget->addRenderAttribute('icon_wrapper', 'class', 'gmt-star-unmarked-' . ($settings['unmarked_star_style'] ?? ''));
 
 $schema_rating = '<span itemprop="ratingValue" class="gmt-screen-only">' . $textual_rating . '</span>';
 $stars_element = '<div ' . $widget->getRenderAttributeString('icon_wrapper') . '>' . $widget->renderStars($icon) . ' ' . $schema_rating . '</div>'; ?>
 
 <div class="gmt-star-rating__wrapper">
-    <?php if (!DataHelper::isEmpty($settings['title'])) : ?>
-        <div class="gmt-star-rating__title"><?php echo $settings['title']; ?></div>
+    <?php if (!empty($settings['title'])) : ?>
+        <div <?= $widget->getRenderAttributeString('title') ?>><?= /** @noEscape */ $settings['title']; ?></div>
     <?php endif; ?>
-    <?php echo $stars_element; ?>
+    <?= $stars_element; ?>
 </div>

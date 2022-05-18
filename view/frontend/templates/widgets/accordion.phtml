@@ -21,10 +21,10 @@ $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
     <div class="gmt-accordion" role="tablist">
     <?php foreach ($settings['accordion_tabs'] as $index => $item) :
         $tab_count = $index + 1;
-        $tab_title_setting_key = $widget->getRepeaterSettingKey('tab_title', 'tabs', $index);
-        $tab_content_setting_key = $widget->getRepeaterSettingKey('tab_content', 'tabs', $index);
+        $tabTitleSettingKey = 'accordion_tabs.' . $index . '.tab_title';
+        $tabContentSettingKey = 'accordion_tabs.' . $index . '.accordion_tab_content';
 
-        $widget->addRenderAttribute($tab_title_setting_key, [
+        $widget->addRenderAttribute($tabTitleSettingKey, [
             'id' => 'gmt-tab-title-' . $idInt . $tab_count,
             'class' => [ 'gmt-tab-title' ],
             'data-tab' => $tab_count,
@@ -32,7 +32,7 @@ $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
             'aria-controls' => 'gmt-tab-content-' . $idInt . $tab_count,
         ]);
 
-        $widget->addRenderAttribute($tab_content_setting_key, [
+        $widget->addRenderAttribute($tabContentSettingKey, [
             'id' => 'gmt-tab-content-' . $idInt . $tab_count,
             'class' => [ 'gmt-tab-content', 'gmt-clearfix' ],
             'data-tab' => $tab_count,
@@ -40,9 +40,9 @@ $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
             'aria-labelledby' => 'gmt-tab-title-' . $idInt . $tab_count,
         ]);
 
-        $widget->addInlineEditingAttributes($tab_content_setting_key, 'advanced'); ?>
+        $widget->addInlineEditingAttributes($tabContentSettingKey, 'advanced'); ?>
         <div class="gmt-accordion-item">
-        <<?= $settings['accordion_title_html_tag']; ?> <?= $widget->getRenderAttributeString($tab_title_setting_key); ?>>
+        <<?= $settings['accordion_title_html_tag']; ?> <?= $widget->getRenderAttributeString($tabTitleSettingKey); ?>>
             <?php if ($hasIcon) : ?>
                 <span class="gmt-accordion-icon gmt-accordion-icon-<?= EscaperHelper::escapeHtml($settings['accordion_icon_align']); ?>" aria-hidden="true">
                     <span class="gmt-accordion-icon-closed"><?php Icons::renderIcon($settings['accordion_selected_icon']); ?></span>
@@ -51,7 +51,7 @@ $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
             <?php endif; ?>
         <a href=""><?= $item['accordion_tab_title']; ?></a>
         </<?= $settings['accordion_title_html_tag']; ?>>
-        <div <?= $widget->getRenderAttributeString($tab_content_setting_key); ?>><?= /** @noEscape  */ $item['accordion_tab_content']; ?></div>
+        <div <?= $widget->getRenderAttributeString($tabContentSettingKey); ?>><?= /** @noEscape  */ $item['accordion_tab_content']; ?></div>
         </div>
     <?php endforeach; ?>
     </div>

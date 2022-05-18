@@ -473,33 +473,4 @@ class SocialIcons extends AbstractWidget
 
         $this->endControlsSection();
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function contentTemplate()
-    {
-        ?>
-		<# var iconsHTML = {}; #>
-		<div class="gmt-social-icons-wrapper">
-			<# _.each( settings.social_icon_list, function( item, index ) {
-				var link = item.link ? item.link.url : '',
-					social = goomento.helpers.getSocialNetworkNameFromIcon( item.social_icon, item.social, false );
-                    className = (item.social_icon.value + '').replace('fab fa-', '').replace('fas fa-', '');
-				#>
-				<a class="gmt-icon gmt-social-icon gmt-social-icon-{{ className }} gmt-animation-{{ settings.hover_animation }} gmt-repeater-item-{{item._id}}" href="{{ link }}">
-					<span class="gmt-screen-only">{{{ social }}}</span>
-					<#
-						iconsHTML[ index ] = goomento.helpers.renderIcon( view, item.social_icon, {}, 'i', 'object' );
-						if ( ( ! item.social ) && iconsHTML[ index ] && iconsHTML[ index ].rendered ) { #>
-							{{{ iconsHTML[ index ].value }}}
-						<# } else { #>
-							<i class="{{ item.social }}"></i>
-						<# }
-					#>
-				</a>
-			<# } ); #>
-		</div>
-		<?php
-    }
 }

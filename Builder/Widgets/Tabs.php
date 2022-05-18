@@ -289,48 +289,4 @@ class Tabs extends AbstractWidget
 
         $this->endControlsSection();
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function contentTemplate()
-    {
-        ?>
-		<div class="gmt-tabs" role="tablist">
-			<#
-			if ( settings.tabs ) {
-				var tabindex = view.getIDInt().toString().substr( 0, 3 );
-				#>
-				<div class="gmt-tabs-wrapper">
-					<#
-					_.each( settings.tabs, function( item, index ) {
-						var tabCount = index + 1;
-						#>
-						<div id="gmt-tab-title-{{ tabindex + tabCount }}" class="gmt-tab-title gmt-tab-desktop-title" data-tab="{{ tabCount }}" role="tab" aria-controls="gmt-tab-content-{{ tabindex + tabCount }}"><a href="">{{{ item.tab_title }}}</a></div>
-					<# } ); #>
-				</div>
-				<div class="gmt-tabs-content-wrapper">
-					<#
-					_.each( settings.tabs, function( item, index ) {
-						var tabCount = index + 1,
-							tabContentKey = view.getRepeaterSettingKey( 'tab_content', 'tabs',index );
-
-						view.addRenderAttribute( tabContentKey, {
-							'id': 'gmt-tab-content-' + tabindex + tabCount,
-							'class': [ 'gmt-tab-content', 'gmt-clearfix', 'gmt-repeater-item-' + item._id ],
-							'data-tab': tabCount,
-							'role' : 'tabpanel',
-							'aria-labelledby' : 'gmt-tab-title-' + tabindex + tabCount
-						} );
-
-						view.addInlineEditingAttributes( tabContentKey, 'advanced' );
-						#>
-						<div class="gmt-tab-title gmt-tab-mobile-title" data-tab="{{ tabCount }}" role="tab">{{{ item.tab_title }}}</div>
-						<div {{{ view.getRenderAttributeString( tabContentKey ) }}}>{{{ item.tab_content }}}</div>
-					<# } ); #>
-				</div>
-			<# } #>
-		</div>
-		<?php
-    }
 }

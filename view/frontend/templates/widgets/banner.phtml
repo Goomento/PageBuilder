@@ -55,14 +55,14 @@ if (!empty($settings['banner_image']['url'])) :
             <div <?= $widget->getRenderAttributeString('box-content') ?>>
                 <?php
                 if ($title) :
+                    $widget->addInlineEditingAttributes(['title' => 'banner_title']);
                     $widget->addRenderAttribute('title', 'class', 'gmt-banner-title'); ?>
                     <div <?= $widget->getRenderAttributeString('title') ?>><?= /** @noEscape */ $title ?></div>
                     <?php
                 endif;
                 if ($caption) :
                     $widget->addRenderAttribute('caption', 'class', 'gmt-banner-description');
-
-                    $widget->addInlineEditingAttributes('caption');
+                    $widget->addInlineEditingAttributes(['caption' => 'banner_caption']);
                     ?>
                     <div <?= $widget->getRenderAttributeString('caption') ?>><?= /** @noEscape */ $caption ?></div>
                 <?php  endif; ?>
