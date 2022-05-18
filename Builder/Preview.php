@@ -105,8 +105,14 @@ class Preview
             'Goomento_PageBuilder/build/editor-preview' . $direction_suffix . $suffix . '.css',
             [
                 'goomento-select2',
+                'inline-editor'
             ],
             Configuration::version()
+        );
+
+        ThemeHelper::registerStyle(
+            'inline-editor',
+            'Goomento_PageBuilder/lib/sofish/pen.css'
         );
 
         ThemeHelper::enqueueStyle('editor-preview');
@@ -132,11 +138,10 @@ class Preview
         /** @var Widgets $widgetManager */
         $widgetManager = ObjectManagerHelper::get(Widgets::class);
         $widgetManager->enqueueWidgetsScripts();
-        $suffix = Configuration::debug() ? '' : '.min';
 
         ThemeHelper::enqueueScript(
-            'goomento-inline-editor',
-            'Goomento_PageBuilder/lib/inline-editor/js/inline-editor' . $suffix
+            'sofish-pen',
+            'Goomento_PageBuilder/lib/sofish/pen'
         );
 
         /**

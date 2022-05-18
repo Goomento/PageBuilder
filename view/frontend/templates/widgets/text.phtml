@@ -30,7 +30,7 @@ if (!empty($settings['text_size'])) {
     $widget->addRenderAttribute('title', 'class', 'gmt-size-' . $settings['text_size']);
 }
 
-$widget->addInlineEditingAttributes('title');
+$widget->addInlineEditingAttributes(['title' => 'text_title']);
 
 if (!empty($settings['text_link']['url'])) {
     $widget->addRenderAttribute('url', 'href', $settings['text_link']['url']);

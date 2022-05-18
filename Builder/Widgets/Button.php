@@ -354,10 +354,6 @@ class Button extends AbstractWidget
             $args + [
                 'label' => __('Background Color'),
                 'type' => Controls::COLOR,
-                'scheme' => [
-                    'type' => Color::NAME,
-                    'value' => Color::COLOR_4,
-                ],
                 'selectors' => [
                     '{{WRAPPER}}  ' . $cssTarget => 'background-color: {{VALUE}};',
                 ],

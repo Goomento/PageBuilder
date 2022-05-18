@@ -275,10 +275,6 @@ class Toggle extends AbstractWidget
                 'selectors' => [
                     '{{WRAPPER}} .gmt-toggle .gmt-tab-title.gmt-active' => 'color: {{VALUE}};',
                 ],
-                'scheme' => [
-                    'type' => Color::NAME,
-                    'value' => Color::COLOR_4,
-                ],
             ]
         );
 
@@ -437,65 +433,5 @@ class Toggle extends AbstractWidget
         );
 
         $this->endControlsSection();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function contentTemplate()
-    {
-        ?>
-		<div class="gmt-toggle" role="tablist">
-			<#
-			if ( settings.tabs ) {
-				var tabindex = view.getIDInt().toString().substr( 0, 3 ),
-					iconHTML = goomento.helpers.renderIcon( view, settings.selected_icon, {}, 'i' , 'object' ),
-					iconActiveHTML = goomento.helpers.renderIcon( view, settings.selected_active_icon, {}, 'i' , 'object' );
-
-				_.each( settings.tabs, function( item, index ) {
-					var tabCount = index + 1,
-						tabTitleKey = view.getRepeaterSettingKey( 'tab_title', 'tabs', index ),
-						tabContentKey = view.getRepeaterSettingKey( 'tab_content', 'tabs', index );
-
-					view.addRenderAttribute( tabTitleKey, {
-						'id': 'gmt-tab-title-' + tabindex + tabCount,
-						'class': [ 'gmt-tab-title' ],
-						'data-tab': tabCount,
-						'role': 'tab',
-						'aria-controls': 'gmt-tab-content-' + tabindex + tabCount
-					} );
-
-					view.addRenderAttribute( tabContentKey, {
-						'id': 'gmt-tab-content-' + tabindex + tabCount,
-						'class': [ 'gmt-tab-content', 'gmt-clearfix' ],
-						'data-tab': tabCount,
-						'role': 'tabpanel',
-						'aria-labelledby': 'gmt-tab-title-' + tabindex + tabCount
-					} );
-
-					view.addInlineEditingAttributes( tabContentKey, 'advanced' );
-					#>
-					<div class="gmt-toggle-item">
-						<{{{ settings.title_html_tag }}} {{{ view.getRenderAttributeString( tabTitleKey ) }}}>
-							<# if ( settings.icon || settings.selected_icon ) { #>
-							<span class="gmt-toggle-icon gmt-toggle-icon-{{ settings.icon_align }}" aria-hidden="true">
-								<# if ( iconHTML && iconHTML.rendered && ! settings.icon ) { #>
-									<span class="gmt-toggle-icon-closed">{{{ iconHTML.value }}}</span>
-									<span class="gmt-toggle-icon-opened">{{{ iconActiveHTML.value }}}</span>
-								<# } else { #>
-									<i class="gmt-toggle-icon-closed {{ settings.icon }}"></i>
-									<i class="gmt-toggle-icon-opened {{ settings.icon_active }}"></i>
-								<# } #>
-							</span>
-							<# } #>
-							<a href="">{{{ item.tab_title }}}</a>
-						</{{{ settings.title_html_tag }}}>
-						<div {{{ view.getRenderAttributeString( tabContentKey ) }}}>{{{ item.tab_content }}}</div>
-					</div>
-					<#
-				} );
-			} #>
-		</div>
-		<?php
     }
 }

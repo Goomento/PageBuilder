@@ -50,7 +50,7 @@ $has_content = !empty($settings['title_text']) || !empty($settings['description_
 
                 $widget->addInlineEditingAttributes('title_text', 'none');
 
-                $title_html = $settings['title_text'];
+                $title_html = /** @noEscape */ $settings['title_text'];
 
                 if (!empty($settings['link']['url'])) {
                     $title_html = '<a ' . $widget->getRenderAttributeString('link') . '>' . $title_html . '</a>';
@@ -66,7 +66,7 @@ $has_content = !empty($settings['title_text']) || !empty($settings['description_
             if (!empty($settings['description_text'])) :
                 $widget->addRenderAttribute('description_text', 'class', 'gmt-image-box-description');
 
-                $widget->addInlineEditingAttributes('description_text');
+                $widget->addInlineEditingAttributes('description_text', 'basic');
 
                 ?>
                 <p <?= $widget->getRenderAttributeString('description_text') ?>>

@@ -215,11 +215,4 @@ class Audio extends AbstractWidget
 
         $this->endControlsSection();
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function contentTemplate()
-    {
-    }
 }

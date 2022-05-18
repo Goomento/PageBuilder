@@ -11,6 +11,7 @@ namespace Goomento\PageBuilder\Builder\Widgets;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
 use Goomento\PageBuilder\Builder\Controls\Groups\BorderGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
@@ -210,7 +211,7 @@ class Testimonial extends AbstractWidget
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup::NAME,
+            TypographyGroup::NAME,
             [
                 'name' => 'content_typography',
                 'scheme' => Typography::TYPOGRAPHY_3,
@@ -299,7 +300,7 @@ class Testimonial extends AbstractWidget
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup::NAME,
+            TypographyGroup::NAME,
             [
                 'name' => 'name_typography',
                 'scheme' => Typography::TYPOGRAPHY_1,
@@ -335,7 +336,7 @@ class Testimonial extends AbstractWidget
         );
 
         $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup::NAME,
+            TypographyGroup::NAME,
             [
                 'name' => 'job_typography',
                 'scheme' => Typography::TYPOGRAPHY_2,
@@ -344,81 +345,5 @@ class Testimonial extends AbstractWidget
         );
 
         $this->endControlsSection();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function contentTemplate()
-    {
-        ?>
-        <#
-        var image = {
-            id: settings.testimonial_image.id,
-            url: settings.testimonial_image.url,
-            size: settings.testimonial_image_size,
-            dimension: settings.testimonial_image_custom_dimension,
-            model: view.getEditModel()
-            };
-            var imageUrl = false, hasImage = '';
-
-            if ( '' !== settings.testimonial_image.url ) {
-            imageUrl = goomento.imagesManager.getImageUrl( image );
-            hasImage = ' gmt-has-image';
-
-            var imageHtml = '<img src="' + imageUrl + '" alt="testimonial" />';
-            if ( settings.link.url ) {
-                imageHtml = '<a href="' + settings.link.url + '">' + imageHtml + '</a>';
-            }
-        }
-
-        var testimonial_alignment = settings.testimonial_alignment ? ' gmt-testimonial-text-align-' + settings.testimonial_alignment : '';
-        var testimonial_image_position = settings.testimonial_image_position ? ' gmt-testimonial-image-position-' + settings.testimonial_image_position : '';
-        #>
-        <div class="gmt-testimonial-wrapper{{ testimonial_alignment }}">
-            <# if ( '' !== settings.testimonial_content ) {
-            view.addRenderAttribute( 'testimonial_content', 'class', 'gmt-testimonial-content' );
-
-            view.addInlineEditingAttributes( 'testimonial_content' );
-            #>
-            <div {{{ view.getRenderAttributeString( 'testimonial_content' ) }}}>{{{ settings.testimonial_content }}}</div>
-        <# } #>
-        <div class="gmt-testimonial-meta{{ hasImage }}{{ testimonial_image_position }}">
-            <div class="gmt-testimonial-meta-inner">
-                <# if ( imageUrl ) { #>
-                <div class="gmt-testimonial-image">{{{ imageHtml }}}</div>
-                <# } #>
-
-                <div class="gmt-testimonial-details">
-                    <# if ( '' !== settings.testimonial_name ) {
-                    view.addRenderAttribute( 'testimonial_name', 'class', 'gmt-testimonial-name' );
-
-                    view.addInlineEditingAttributes( 'testimonial_name', 'none' );
-
-                    var testimonialNameHtml = settings.testimonial_name;
-                    if ( settings.link.url ) {
-                    testimonialNameHtml = '<a href="' + settings.link.url + '">' + testimonialNameHtml + '</a>';
-                    }
-                    #>
-                    <div {{{ view.getRenderAttributeString( 'testimonial_name' ) }}}>{{{ testimonialNameHtml }}}</div>
-                <# } #>
-
-                <# if ( '' !== settings.testimonial_job ) {
-                view.addRenderAttribute( 'testimonial_job', 'class', 'gmt-testimonial-job' );
-
-                view.addInlineEditingAttributes( 'testimonial_job', 'none' );
-
-                var testimonialJobHtml = settings.testimonial_job;
-                if ( settings.link.url ) {
-                testimonialJobHtml = '<a href="' + settings.link.url + '">' + testimonialJobHtml + '</a>';
-                }
-                #>
-                <div {{{ view.getRenderAttributeString( 'testimonial_job' ) }}}>{{{ testimonialJobHtml }}}</div>
-            <# } #>
-            </div>
-            </div>
-        </div>
-        </div>
-        <?php
     }
 }

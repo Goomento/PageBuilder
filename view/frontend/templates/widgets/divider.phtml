@@ -27,7 +27,7 @@ $widget->addRenderAttribute('wrapper', 'class', 'gmt-divider');
 if (!empty($svg_code)) {
     $widget->addRenderAttribute('wrapper', 'style', '--divider-pattern-url: url("data:image/svg+xml,' . $widget->svgToDataUri($svg_code) . '");');
 } ?>
-<div <?php echo $widget->getRenderAttributeString('wrapper'); ?>>
+<div <?= $widget->getRenderAttributeString('wrapper'); ?>>
         <span class="gmt-divider-separator">
         <?php if ($has_icon) : ?>
             <div class="gmt-icon gmt-divider__element">
@@ -39,7 +39,7 @@ if (!empty($svg_code)) {
         <?php elseif ($has_text) :
             $widget->addInlineEditingAttributes('text');
             $widget->addRenderAttribute('text', [ 'class' => [ 'gmt-divider__text', 'gmt-divider__element' ] ]); ?>
-            <span <?php echo $widget->getRenderAttributeString('text'); ?>><?php echo $settings['text']; ?></span>
+            <span <?= $widget->getRenderAttributeString('text'); ?>><?= $settings['text']; ?></span>
         <?php endif; ?>
         </span>
 </div>

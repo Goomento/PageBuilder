@@ -24,18 +24,17 @@ if (!empty($settings['alert_type'])) {
 }
 
 $widget->addRenderAttribute('wrapper', 'role', 'alert');
-
 $widget->addRenderAttribute('alert_title', 'class', 'gmt-alert-title');
+$widget->addInlineEditingAttributes('alert_title', 'none');
 
-$widget->addInlineEditingAttributes('alert_title', 'none'); ?>
+?>
 <div <?= $widget->getRenderAttributeString('wrapper'); ?>>
     <span <?= $widget->getRenderAttributeString('alert_title'); ?>><?= $settings['alert_title']; ?></span>
     <?php
-    if (!DataHelper::isEmpty($settings['alert_description'])) :
+    if (!empty($settings['alert_description'])) :
         $widget->addRenderAttribute('alert_description', 'class', 'gmt-alert-description');
-
         $widget->addInlineEditingAttributes('alert_description'); ?>
-        <span <?= $widget->getRenderAttributeString('alert_description'); ?>><?= $settings['alert_description']; ?></span>
+        <span <?= $widget->getRenderAttributeString('alert_description'); ?>><?= /** @noEscape */ $settings['alert_description']; ?></span>
     <?php endif; ?>
     <?php if ('show' === $settings['alert_show_dismiss']) : ?>
         <button type="button" class="gmt-alert-dismiss">

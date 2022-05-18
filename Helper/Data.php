@@ -35,7 +35,7 @@ class Data extends AbstractHelper
      */
     public function isActive()
     {
-        return $this->scopeConfig->isSetFlag(self::ACTIVE_XML_PATH);
+        return (bool) $this->getConfig(self::ACTIVE_XML_PATH);
     }
 
     /**
@@ -152,6 +152,7 @@ class Data extends AbstractHelper
             'integrations/fb_app_id'
         );
     }
+
     /**
      * Maps Embedded Key by Google
      * @return string

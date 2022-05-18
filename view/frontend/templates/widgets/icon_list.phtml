@@ -32,11 +32,9 @@ if ('inline' === $settings['view']) {
 <ul <?= $widget->getRenderAttributeString('icon_list'); ?>>
     <?php
     foreach ($settings['icon_list'] as $index => $item) :
-        $repeater_setting_key = $widget->getRepeaterSettingKey('text', 'icon_list', $index);
-
-        $widget->addRenderAttribute($repeater_setting_key, 'class', 'gmt-icon-list-text');
-
-        $widget->addInlineEditingAttributes($repeater_setting_key);
+        $key = 'icon_list.' . $index . '.text';
+        $widget->addRenderAttribute($key , 'class', 'gmt-icon-list-text');
+        $widget->addInlineEditingAttributes($key);
         ?>
         <li class="gmt-icon-list-item" >
             <?php
@@ -64,11 +62,10 @@ if ('inline' === $settings['view']) {
             if (!empty($item['icon']) || (! empty($item['selected_icon']['value']))) :
                 ?>
                 <span class="gmt-icon-list-icon">
-							<?php
-                            Icons::renderIcon($item['selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
-						</span>
+                    <?php Icons::renderIcon($item['selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
+                </span>
             <?php endif; ?>
-            <span <?= $widget->getRenderAttributeString($repeater_setting_key); ?>><?= $item['text']; ?></span>
+            <span <?= $widget->getRenderAttributeString($key); ?>><?= /** @noEscape */ $item['text']; ?></span>
             <?php if (!empty($item['link']['url'])) : ?>
                 </a>
             <?php endif; ?>

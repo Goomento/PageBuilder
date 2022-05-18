@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 use Goomento\Core\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Helper\StateHelper;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Block\Product\ListProduct;
 use Goomento\PageBuilder\Builder\Managers\Icons;
@@ -78,7 +79,7 @@ if (!empty($postParams)) :
                         'class' => 'gmt-button-text',
                     ],
                 ]);
-                $widget->addInlineEditingAttributes('text', 'none'); ?>
+                $widget->addInlineEditingAttributes(['text' => 'addcart-button_text'], 'none'); ?>
                 <?php if (!empty($settings['addcart-button_icon']) || ! empty($settings['addcart-button_selected_icon']['value'])) : ?>
                     <em <?= $widget->getRenderAttributeString('icon-align'); ?>>
                         <?php Icons::renderIcon($settings['addcart-button_selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
@@ -89,7 +90,8 @@ if (!empty($postParams)) :
                 </span>
             </button>
         </form>
-        <script type="text/x-magento-init">
+        <?php if (!StateHelper::isEditorMode()) : ?>
+            <script type="text/x-magento-init">
         {
             "[data-role=tocart-form]": {
                 "catalogAddToCart": {
@@ -100,6 +102,7 @@ if (!empty($postParams)) :
             }
         }
         </script>
+        <?php endif; ?>
     </div>
 <?php
 endif;

@@ -198,7 +198,6 @@ class Editor
                 'is_administrator' => AuthorizationHelper::isCurrentUserCan('config'),
             ],
             'rich_editing_enabled' => true,
-            'inlineEditing' => ObjectManagerHelper::getWidgetsManager()->getInlineEditingConfig(),
             'dynamicTags' => ObjectManagerHelper::getTagsManager()->getConfig(),
         ];
 

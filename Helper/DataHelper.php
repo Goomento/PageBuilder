@@ -174,16 +174,6 @@ class DataHelper
     }
 
     /**
-     * @param $control_value
-     * @return bool
-     * @deprecated
-     */
-    public static function isEmpty($control_value)
-    {
-        return '0' !== $control_value && empty($control_value);
-    }
-
-    /**
      *
      * @param string $handle
      * @param string $js_var

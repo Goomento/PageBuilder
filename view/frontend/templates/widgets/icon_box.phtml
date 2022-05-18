@@ -61,7 +61,7 @@ $widget->addInlineEditingAttributes('description_text');
         <<?= $settings['title_size']; ?> class="gmt-icon-box-title">
             <<?= implode(' ', [ $icon_tag, $link_attributes ]); ?><?= $widget->getRenderAttributeString('title_text'); ?>><?= $settings['title_text']; ?></<?= $icon_tag; ?>>
         </<?= $settings['title_size']; ?>>
-        <?php if (!DataHelper::isEmpty($settings['description_text'])) : ?>
+        <?php if (!empty($settings['description_text'])) : ?>
             <p <?= $widget->getRenderAttributeString('description_text'); ?>><?= /** @noEscape */ $settings['description_text']; ?></p>
         <?php endif; ?>
     </div>
