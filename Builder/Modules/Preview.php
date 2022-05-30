@@ -6,10 +6,8 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\Builder;
+namespace Goomento\PageBuilder\Builder\Modules;
 
-use Goomento\PageBuilder\Builder\Managers\Widgets;
-use Goomento\PageBuilder\Builder\Modules\Frontend;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Managers\Documents;
 use Goomento\PageBuilder\Helper\HooksHelper;
@@ -40,7 +38,7 @@ class Preview
 
         HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$this, 'enqueueScripts']);
         HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$this, 'enqueueStyles']);
-        HooksHelper::addFilter('pagebuilder/content/html', [ $this,'builderWrapper' ], 999999);
+        HooksHelper::addFilter('pagebuilder/content/html', [ $this,'builderWrapper' ], 2022);
 
         HooksHelper::addAction('pagebuilder/frontend/footer', [ $this, 'footer']);
 
@@ -92,9 +90,11 @@ class Preview
      */
     public function enqueueStyles()
     {
-        ObjectManagerHelper::get(Frontend::class)->enqueueStyles();
+        ObjectManagerHelper::getFrontend()
+            ->enqueueStyles();
 
-        ObjectManagerHelper::get(Widgets::class)->enqueueWidgetsStyles();
+        ObjectManagerHelper::getWidgetsManager()
+            ->enqueueWidgetsStyles();
 
         $suffix = Configuration::debug() ? '' : '.min';
 
@@ -104,7 +104,7 @@ class Preview
             'editor-preview',
             'Goomento_PageBuilder/build/editor-preview' . $direction_suffix . $suffix . '.css',
             [
-                'goomento-select2',
+                'jquery-select2',
                 'inline-editor'
             ],
             Configuration::version()
@@ -131,18 +131,14 @@ class Preview
      */
     public function enqueueScripts()
     {
-        /** @var Frontend $frontend */
-        $frontend = ObjectManagerHelper::get(Frontend::class);
-        $frontend->registerScripts();
+        ObjectManagerHelper::getFrontend()
+            ->registerScripts();
 
-        /** @var Widgets $widgetManager */
-        $widgetManager = ObjectManagerHelper::get(Widgets::class);
-        $widgetManager->enqueueWidgetsScripts();
+        ObjectManagerHelper::getWidgetsManager()
+            ->enqueueWidgetsScripts();
 
-        ThemeHelper::enqueueScript(
-            'sofish-pen',
-            'Goomento_PageBuilder/lib/sofish/pen'
-        );
+        // For inline editor
+        ThemeHelper::enqueueScript('sofish-pen');
 
         /**
          * Preview enqueue scripts.

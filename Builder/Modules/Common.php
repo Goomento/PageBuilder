@@ -78,7 +78,7 @@ class Common extends AbstractApp
             'Goomento_PageBuilder/build/common' . $minSuffix,
             [
                 'goomento-common-modules',
-                'goomento-dialog',
+                'dialogs-manager',
             ]
         );
 

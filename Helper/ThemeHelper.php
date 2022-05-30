@@ -20,7 +20,7 @@ class ThemeHelper extends \Goomento\Core\Helper\ThemeHelper
     /**
      * Add body class to theme
      *
-     * @param array $args
+     * @param array|string $args
      * @return array
      */
     public static function getBodyClass($args = [])

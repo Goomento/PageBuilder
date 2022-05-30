@@ -99,26 +99,6 @@ class Frontend extends AbstractApp
         HooksHelper::addAction('pagebuilder/frontend/footer', [ $this, 'footer' ]);
     }
 
-    /**
-     * Body tag classes.
-     *
-     *
-     * Fired by `body_class` filter.
-     *
-     * @param array $classes Optional. One or more classes to add to the body tag class list.
-     *                       Default is an empty array.
-     *
-     * @return array Body tag classes.
-     *
-     */
-    public function bodyClass($classes = [])
-    {
-        $classes = array_merge($classes, $this->body_classes);
-
-        $classes[] = 'gmt-page';
-
-        return $classes;
-    }
 
     /**
      * Add content filter.
@@ -179,10 +159,10 @@ class Frontend extends AbstractApp
                 'backbone',
                 'backbone.radio',
                 'backbone.marionette',
-                'goomento-frontend-modules',
-                'goomento-dialog',
-                'goomento-waypoints',
+                'dialogs-manager',
+                'waypoints',
                 'pagebuilderRegister',
+                'goomento-frontend-modules',
             ]
         );
 
@@ -423,7 +403,8 @@ class Frontend extends AbstractApp
 
             $fonts_url .= '&display=swap';
 
-            ThemeHelper::enqueueStyle('google-fonts-' . $google_fonts_index, $fonts_url);
+            ThemeHelper::registerStyle('google-fonts-' . $google_fonts_index, $fonts_url);
+            ThemeHelper::enqueueStyle('google-fonts-' . $google_fonts_index);
         }
 
         if (!empty($google_fonts['early'])) {
@@ -432,7 +413,8 @@ class Frontend extends AbstractApp
 
                 $font_url = sprintf('https://fonts.googleapis.com/earlyaccess/%s.css', strtolower(str_replace(' ', '', $current_font)));
 
-                ThemeHelper::enqueueStyle('google-earlyaccess-' . $google_fonts_index, $font_url);
+                ThemeHelper::registerStyle('google-earlyaccess-' . $google_fonts_index, $font_url);
+                ThemeHelper::enqueueStyle('google-earlyaccess-' . $google_fonts_index);
             }
         }
     }
@@ -593,7 +575,10 @@ class Frontend extends AbstractApp
             ];
         }
 
-        return $settings;
+        /**
+         * Allows to modify this
+         */
+        return HooksHelper::applyFilters('pagebuilder/frontend/js_variables', $settings);
     }
 
     /**

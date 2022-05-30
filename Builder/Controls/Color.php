@@ -26,7 +26,7 @@ class Color extends AbstractControlData
         ThemeHelper::registerScript(
             'color-picker-alpha',
             'Goomento_PageBuilder/lib/color-picker/color-picker-alpha',
-            ['iris', 'goomento-editor']
+            ['iris']
         );
 
         ThemeHelper::enqueueScript('color-picker-alpha');

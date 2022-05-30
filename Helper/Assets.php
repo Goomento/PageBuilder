@@ -169,23 +169,21 @@ class Assets extends AbstractHelper
     }
 
     /**
+     * The path must indicate the file in `pub` directory
      * @param $path
-     * @param Store|null $store
      * @return string|null
-     * @throws FileSystemException|NoSuchEntityException
+     * @throws FileSystemException
      */
-    public function pathToUrl($path, $store = null)
+    public function pathToUrl($path)
     {
         $paths = $this->parsePath($path);
         if ($paths['directory_code']) {
             $uriPart = $paths['related_path'];
-            if ($store instanceof Store) {
-                $url = $store->getUrl($uriPart, ['_type' => $paths['directory_code']]);
+            if ($paths['directory_code'] === 'media') {
+                return $this->_urlBuilder->getUrl($uriPart, ['_type' => 'media']);
             } else {
-                $url = $this->_urlBuilder->getDirectUrl($uriPart, ['_type' => $paths['directory_code']]);
+                return $this->_urlBuilder->getDirectUrl($uriPart, ['_type' => 'link']);
             }
-
-            return $url;
         }
         return null;
     }
@@ -193,6 +191,7 @@ class Assets extends AbstractHelper
     /**
      * @param $folder
      * @return string
+     * @throws FileSystemException
      */
     public function mkDirIfNotExisted($folder)
     {

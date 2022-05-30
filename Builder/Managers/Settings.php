@@ -30,7 +30,7 @@ class Settings
      */
     public function addSettingsManager(AbstractSettingsManager $manager)
     {
-        $this->components[$manager->getName()] = $manager;
+        $this->setComponent($manager->getName(), $manager);
     }
 
     /**

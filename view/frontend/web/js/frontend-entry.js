@@ -4,28 +4,14 @@
  */
 
 define([
-    'swiper',
-    'Goomento_PageBuilder/js/moduleResolver',
-    'domReady!'
+    'goomento-frontend-engine',
 ], function (
-    Swiper,
-    moduleResolver
+    Frontend
 ) {
     'use strict';
 
-    moduleResolver(function () {
-        (function (w, objects) {
-            for (let ob in objects) {
-                w[ob] = w[ob] ||  objects[ob];
-            }
-        })(window, {
-            'Swiper': Swiper,
-        });
-        require(['goomento-frontend-engine'], function (Frontend) {
-            window.goomentoFrontend = new Frontend();
-            if ( ! goomentoFrontend.isEditMode() ) {
-                goomentoFrontend.init();
-            }
-        });
-    });
+    window.goomentoFrontend = window.goomentoFrontend || new Frontend();
+    if ( ! goomentoFrontend.isEditMode() ) {
+        goomentoFrontend.init();
+    }
 });

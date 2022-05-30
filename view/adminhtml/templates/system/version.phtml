@@ -49,29 +49,28 @@ use Goomento\PageBuilder\Model\Config\Frontend\Version;
 <script>
     require(['ko', 'jquery'], function (ko, $) {
         let json = localStorage.getItem('pagebuilder_releases'),
-            time = parseInt(localStorage.getItem('pagebuilder_time'));
+            time = parseInt(localStorage.getItem('pagebuilder_time')),
+            aDayTime = 1000*60*60*24,
+            nowTime = (new Date).getTime(),
+            render = function (json) {
+                let $root = $('#goomento_pagebuilder .gmt-system_config-release-note');
+                $root.find('.gmt-version').text(json.tag_name);
+                $root.find('.gmt-version-note').text(json.body);
+                $root.find('a').attr('href', json.zipball_url);
+                $root.show();
+            },
+            isValid = false;
 
         if (json && time && !isNaN(time)) {
-            let savedTime = (new Date()) - new Date(time);
-            if (savedTime < 1000*60*60*24) {
-                json = '';
-            }
-        }
-        if (json) {
-            try {json = JSON.parse(json);} catch (e) {
-                json = null;
-            }
+            try {
+                json = JSON.parse(json);
+                if (nowTime - time > 0 && nowTime - time < aDayTime) {
+                    isValid = true;
+                }
+            } catch (e) {}
         }
 
-        let render = function (json) {
-            let $root = $('#goomento_pagebuilder .gmt-system_config-release-note');
-            $root.find('.gmt-version').text(json.tag_name);
-            $root.find('.gmt-version-note').text(json.body);
-            $root.find('a').attr('href', json.zipball_url);
-            $root.show();
-        };
-
-        if (Object.keys(json || {}).length) {
+        if (isValid === true) {
             render(json);
         } else {
             $.get('https://api.github.com/repos/Goomento/PageBuilder/releases/latest', 'json')
@@ -80,7 +79,7 @@ use Goomento\PageBuilder\Model\Config\Frontend\Version;
                         return;
                     }
                     localStorage.setItem('pagebuilder_releases', JSON.stringify(jsonData));
-                    localStorage.setItem('pagebuilder_time', (new Date(time)).getTime() + '');
+                    localStorage.setItem('pagebuilder_time', nowTime);
                     render(jsonData);
                 });
         }

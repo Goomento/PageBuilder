@@ -119,7 +119,7 @@ class PageBuilder implements SubSystemInterface
         HooksHelper::doAction('pagebuilder/init');
         HooksHelper::doAction("pagebuilder/{$areaCode}/init");
 
-        HooksHelper::addFilter('pagebuilder/frontend/body_class', [ThemeHelper::class, 'getBodyClass']);
+        HooksHelper::addFilter('body_classes', [ThemeHelper::class, 'getBodyClass']);
 
         HooksHelper::addFilter('style_loader_src', function ($src = '') {
             if (strpos($src, 'http') === false) {

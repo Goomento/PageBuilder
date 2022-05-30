@@ -112,12 +112,4 @@ class NewProducts extends AbstractMagentoWidget
 
         $this->endControlsSection();
     }
-
-    /**
-     * @return bool
-     */
-    protected function renderPreview(): bool
-    {
-        return false;
-    }
 }
