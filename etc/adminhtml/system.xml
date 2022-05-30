@@ -45,7 +45,7 @@
                     <comment>Replace the default Magento Editor By Goomento.</comment>
                 </field>
                 <field id="new_tab" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                    <label>Open Goomento In New Tab</label>
+                    <label>Open In New Tab</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Keep the same tab or open the Goomento in new tab.</comment>
                 </field>

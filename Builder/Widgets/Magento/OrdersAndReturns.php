@@ -56,12 +56,4 @@ class OrdersAndReturns extends AbstractMagentoWidget
 
         $this->endControlsSection();
     }
-
-    /**
-     * @return bool
-     */
-    protected function renderPreview(): bool
-    {
-        return false;
-    }
 }

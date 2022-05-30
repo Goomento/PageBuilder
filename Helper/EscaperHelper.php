@@ -29,12 +29,16 @@ class EscaperHelper
      * Filtering posted data. Converting localized data if needed
      *
      * @param array $data
+     * @param bool $escaped
      * @return array
      */
-    public static function filter(array $data)
+    public static function filter(array $data, bool $escaped = false)
     {
-        $filterRules = [];
-        return (new \Zend_Filter_Input($filterRules, [], $data))->getUnescaped();
+        if ($escaped) {
+            return (new \Zend_Filter_Input([], [], $data))->getEscaped();
+        } else {
+            return (new \Zend_Filter_Input([], [], $data))->getUnescaped();
+        }
     }
 
     /**

@@ -1,5 +1,11 @@
 # Magento 2 Goomento Page Builder
 
+## 0.2.9: Enhanced theme loader
+- Enhanced theme loader
+- Fixed minor bugs 
+- Moved theme hooks to Goomento_Core module
+- Removed unused resources
+
 ## 0.2.8: Added Inline Editor
 - Added Menu widget
 - Updated Sample Import Process 

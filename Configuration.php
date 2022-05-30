@@ -36,6 +36,15 @@ class Configuration
     }
 
     /**
+     * Get Current Magento Version
+     * @return string
+     */
+    public static function magentoVersion()
+    {
+        return (string) Developer::getVar(Developer::MAGENTO_VERSION);
+    }
+
+    /**
      * Default Breakpoints
      * In case of has the custom breakpoints, modify this and SCSS breakpoint also
      */

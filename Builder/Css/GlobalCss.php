@@ -9,9 +9,6 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Css;
 
 use Goomento\PageBuilder\Builder\Base\AbstractCss;
-use Goomento\PageBuilder\Builder\Modules\Frontend;
-use Goomento\PageBuilder\Builder\Managers\Schemes;
-use Goomento\PageBuilder\Builder\Managers\Widgets;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ConfigHelper;
@@ -24,8 +21,6 @@ class GlobalCss extends AbstractCss
      * SagoTheme global CSS file handler ID.
      */
     const FILE_HANDLER_ID = 'goomento-global';
-
-    const META_KEY = 'global_css';
 
     /**
      * Get CSS file name.
@@ -52,11 +47,11 @@ class GlobalCss extends AbstractCss
 
     /**
      * GlobalCss constructor.
-     * @param string $file_name
+     * @param string $fileName
      */
-    public function __construct($file_name = 'global.css')
+    public function __construct($fileName = 'global.css')
     {
-        parent::__construct($file_name);
+        parent::__construct($fileName);
     }
 
     /**
@@ -98,8 +93,7 @@ class GlobalCss extends AbstractCss
      */
     private function renderSchemesCss()
     {
-        /** @var Widgets $widgetsManager */
-        $widgetsManager = ObjectManagerHelper::get(Widgets::class);
+        $widgetsManager = ObjectManagerHelper::getWidgetsManager();
         foreach ($widgetsManager->getWidgetTypes() as $widget) {
             $scheme_controls = $widget->getSchemeControls();
 
@@ -125,8 +119,7 @@ class GlobalCss extends AbstractCss
             }
         }
 
-        /** @var Schemes $schemesManager */
-        $schemesManager = ObjectManagerHelper::get(Schemes::class);
+        $schemesManager = ObjectManagerHelper::getSchemasManager();
         foreach ($schemesManager->getRegisteredSchemes() as $schemaName => $schemaObject) {
             foreach ($schemaObject->getScheme() as $key => $value) {
                 if (is_array($value['value'])) {

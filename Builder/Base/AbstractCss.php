@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Base;
 
-use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Modules\Frontend;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Icons;
@@ -56,8 +55,6 @@ abstract class AbstractCss extends AbstractFile
      */
     protected $fonts = [];
 
-    protected $icons_fonts = [];
-
     /**
      * Stylesheet object.
      *
@@ -84,9 +81,9 @@ abstract class AbstractCss extends AbstractFile
      * Initializing SagoTheme CSS file.
      *
      */
-    public function __construct($file_name)
+    public function __construct($fileName)
     {
-        parent::__construct($file_name);
+        parent::__construct($fileName);
 
         $this->initStylesheet();
     }
@@ -188,16 +185,16 @@ abstract class AbstractCss extends AbstractFile
                 ThemeHelper::inlineStyle($dep, $meta['css']);
             }
         } else { // Re-check if it's not empty after CSS update.
-            ThemeHelper::enqueueStyle(
+            ThemeHelper::registerStyle(
                 $this->getFileHandleId(),
                 $this->getUrl(),
                 $this->getEnqueueDependencies(),
                 $this->getMeta('css_updated_time')
             );
+            ThemeHelper::enqueueStyle($this->getFileHandleId());
         }
 
-        /** @var Frontend $frontend */
-        $frontend = ObjectManagerHelper::get(Frontend::class);
+        $frontend = ObjectManagerHelper::getFrontend();
         // Handle fonts.
         if (!empty($meta['fonts'])) {
             foreach ($meta['fonts'] as $font) {
@@ -382,8 +379,7 @@ abstract class AbstractCss extends AbstractFile
             $this->setFont($value);
         }
 
-        /** @var Controls $controlManager */
-        $controlManager = ObjectManagerHelper::get(Controls::class);
+        $controlManager = ObjectManagerHelper::getControlsManager();
         $control_obj = $controlManager->getControl($control['type']);
 
         return (string) $control_obj->getStyleValue($placeholder, $value, $control);

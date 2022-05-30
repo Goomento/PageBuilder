@@ -111,7 +111,7 @@ Goomento allows you to get a more personalized look by **adding custom CSS to ev
 - Toggles
 - Alert
 - Audio
-- Counter
+- Countdown
 - Divider
 - Icon Box
 - Icon List

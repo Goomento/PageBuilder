@@ -8,23 +8,35 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Helper;
 
-
 use Goomento\Core\Traits\TraitStaticCaller;
 use Goomento\Core\Traits\TraitStaticInstances;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+use Goomento\PageBuilder\Helper\Data;
 
 /**
  * @see \Goomento\PageBuilder\Helper\Data
- * @method static mixed getConfig($path, $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT, $scopeCode = null)
- * @method static mixed getBuilderConfig($path, $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT, $scopeCode = null)
+ * @method static mixed getConfig($path, $scopeType = ScopeInterface::SCOPE_STORE, $scopeCode = null)
+ * @see Data::getConfig()
+ * @method static mixed getBuilderConfig($path, $scopeType = ScopeInterface::SCOPE_STORE, $scopeCode = null)
+ * @see Data::getBuilderConfig()
  * @method static bool getAllowedDownloadImage() Whether download image or not
+ * @see Data::getAllowedDownloadImage()
  * @method static bool isActive() Deprecated Decide to use should be following the WYSIWYG or On/Off option each content
+ * @see Data::isActive()
  * @method static string getDownloadFolder()
+ * @see Data::getDownloadFolder()
  * @method static bool useInlineCss()
+ * @see Data::useInlineCss()
  * @method static string getFbAppId()
+ * @see Data::getFbAppId()
  * @method static string getGoogleMapsKey()
+ * @see Data::getGoogleMapsKey()
  * @method static bool isLocalFont()
+ * @see Data::isLocalFont()
  * @method static bool isDebugMode()
+ * @see Data::isDebugMode()
+ * @method static bool addResourceGlobally()
+ * @see Data::addResourceGlobally()
  */
 class DataHelper
 {
@@ -222,17 +234,32 @@ class DataHelper
      */
     public static function renderHtmlAttributes(array $attributes)
     {
-        $rendered_attributes = [];
+        $renderedAttributes = [];
 
-        foreach ($attributes as $attribute_key => $attribute_values) {
-            if (is_array($attribute_values)) {
-                $attribute_values = implode(' ', $attribute_values);
+        foreach ($attributes as $attributeKey => $attributeValues) {
+            if (is_array($attributeValues)) {
+                foreach ($attributeValues as &$value) {
+                    if (!is_scalar($value)) {
+                        if (is_array($value)) {
+                            $value = \Zend_Json::encode($value);
+                        } elseif (is_object($value) && method_exists($value, '__toString')) {
+                            $value = $value->__toString();
+                        } else {
+                            try {
+                                $value = (string) $value;
+                            } catch (\Exception $e) {
+                                $value = '';
+                            }
+                        }
+                    }
+                }
+                $attributeValues = implode(' ', $attributeValues);
             }
 
-            $rendered_attributes[] = sprintf('%1$s="%2$s"', $attribute_key, EscaperHelper::escapeHtml($attribute_values));
+            $renderedAttributes[] = sprintf('%1$s="%2$s"', $attributeKey, EscaperHelper::escapeHtmlAttr($attributeValues));
         }
 
-        return implode(' ', $rendered_attributes);
+        return implode(' ', $renderedAttributes);
     }
 
     /**

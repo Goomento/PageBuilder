@@ -214,7 +214,7 @@
                 <item name="widgets-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Widgets</item>
                 <item name="icons-widgets" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Icons</item>
                 <item name="live-editor" xsi:type="string">Goomento\PageBuilder\Builder\Modules\Editor</item>
-                <item name="preview" xsi:type="string">Goomento\PageBuilder\Builder\Preview</item>
+                <item name="preview" xsi:type="string">Goomento\PageBuilder\Builder\Modules\Preview</item>
                 <item name="frontend" xsi:type="string">Goomento\PageBuilder\Builder\Modules\Frontend</item>
                 <item name="template-library" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Sources</item>
                 <item name="tags-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Tags</item>
@@ -255,12 +255,6 @@
     </type>
     <type name="Goomento\PageBuilder\Model\ResourceModel\Content">
         <plugin name="invalidateContentCache" type="Goomento\PageBuilder\Plugin\PageBuilder\Model\ResourceModel\Content" />
-    </type>
-    <type name="Magento\Framework\Controller\ResultInterface">
-        <plugin name="pagebuilder.modify_response"
-                type="Goomento\PageBuilder\Plugin\Framework\Controller\ResultInterface\ModifyResponse"
-                sortOrder="0"/>
-        <plugin name="result-builtin-cache" sortOrder="1"/>
     </type>
 </config>
 

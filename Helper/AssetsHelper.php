@@ -14,7 +14,7 @@ use Goomento\Core\Traits\TraitStaticInstances;
 /**
  * @method static getDefaultPlaceholderUrl() string
  * @method static string getModulePath($module, $type = '')
- * @method static string pathToUrl($path, $store = null)
+ * @method static string pathToUrl($path)
  * @method static mkDirIfNotExisted($folder)
  * @method static writeToFile($fileName, $content)
  * @method static delete($fileName)

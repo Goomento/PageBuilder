@@ -110,6 +110,16 @@ class Editor
             ['goomento-common-modules']
         );
 
+        $magentoVersion = Configuration::magentoVersion();
+        if (!$magentoVersion || version_compare($magentoVersion, '2.4.4', '<')) {
+            ThemeHelper::removeScripts('jquery/ui');
+            ThemeHelper::registerScript(
+                'jquery/ui',
+                'Goomento_PageBuilder/lib/jquery/jquery-ui.min',
+                ['jquery']
+            );
+        }
+
         ThemeHelper::registerScript(
             'goomento-editor-engine',
             'Goomento_PageBuilder/build/editor' . $suffix,
@@ -130,7 +140,7 @@ class Editor
                 'wysiwygAdapter',
                 'tipsy',
                 'color-picker-alpha',
-                'jquery-goomento-select2',
+                'jquery-select2',
                 'flatpickr',
                 'ace',
                 'ace-language-tools',
@@ -141,7 +151,13 @@ class Editor
 
         ThemeHelper::registerScript(
             'goomento-editor',
-            'Goomento_PageBuilder/js/editor-entry'
+            'Goomento_PageBuilder/js/editor-entry',
+            [
+                'nprogress',
+                'nouislider',
+                'swiper',
+                'perfect-scrollbar'
+            ]
         );
 
         /**
@@ -201,17 +217,14 @@ class Editor
             'dynamicTags' => ObjectManagerHelper::getTagsManager()->getConfig(),
         ];
 
+        /**
+         * Allows to modify this
+         */
+        $config = HooksHelper::applyFilters('pagebuilder/editor/js_variables', $config);
+
         DataHelper::printJsConfig('goomento-editor', 'goomentoConfig', $config);
 
         ThemeHelper::enqueueScript('goomento-editor');
-
-        $html = <<<HTML
-    require(['Goomento_PageBuilder/js/moduleResolver'], function (moduleResolver) {
-        moduleResolver.resolveJquery(() => {});
-    });
-HTML;
-
-        ThemeHelper::inlineScript('goomento-editor', $html, 'before');
 
         ObjectManagerHelper::getControlsManager()->enqueueControlScripts();
 
@@ -249,7 +262,7 @@ HTML;
             'Goomento_PageBuilder/build/editor' . $directionSuffix . $suffix . '.css',
             [
                 'goomento-common',
-                'goomento-select2',
+                'jquery-select2',
                 'google-font-inter',
                 'flatpickr',
                 'fontawesome',

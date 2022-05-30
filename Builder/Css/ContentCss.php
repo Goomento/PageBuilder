@@ -11,14 +11,12 @@ namespace Goomento\PageBuilder\Builder\Css;
 use Goomento\PageBuilder\Builder\Base\AbstractCss;
 use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Base\AbstractElement;
-use Goomento\PageBuilder\Builder\Managers\Elements;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 class ContentCss extends AbstractCss
 {
-
     /**
      * SagoTheme post CSS file prefix.
      */
@@ -155,10 +153,9 @@ class ContentCss extends AbstractCss
         $data = $this->getData();
 
         if (!empty($data)) {
-            /** @var Elements $elementsManager */
-            $elementsManager = ObjectManagerHelper::get(Elements::class);
             foreach ($data as $element_data) {
-                $element = $elementsManager->createElementInstance((array) $element_data);
+                $element = ObjectManagerHelper::getElementsManager()
+                    ->createElementInstance((array) $element_data);
 
                 if (!$element) {
                     continue;

@@ -65,7 +65,7 @@ abstract class AbstractFile extends AbstractEntity
     }
 
 
-    public function __construct($file_name)
+    public function __construct($fileName)
     {
         /**
          * SagoTheme File Name
@@ -73,37 +73,47 @@ abstract class AbstractFile extends AbstractEntity
          * Filters the File name
          *
          *
-         * @param string   $file_name
+         * @param string   $fileName
          * @param object $this The file instance, which inherits Goomento\PageBuilder\Core\Files
          */
-        $file_name = HooksHelper::applyFilters('pagebuilder/files/file_name', $file_name, $this);
+        $fileName = HooksHelper::applyFilters('pagebuilder/files/file_name', $fileName, $this);
 
-        $this->setFileName($file_name);
+        $this->setFileName($fileName);
 
         $this->setFilesDir(static::DEFAULT_FILES_DIR);
 
         $this->setPath();
     }
 
-
+    /**
+     * @param $files_dir
+     * @return void
+     */
     public function setFilesDir($files_dir)
     {
         $this->files_dir = $files_dir;
     }
 
-
+    /**
+     * @param $file_name
+     * @return void
+     */
     public function setFileName($file_name)
     {
         $this->file_name = $file_name;
     }
 
-
+    /**
+     * @return mixed
+     */
     public function getFileName()
     {
         return $this->file_name;
     }
 
-
+    /**
+     * @return string
+     */
     public function getUrl()
     {
         return self::getBaseUploadsUrl() . $this->files_dir . $this->file_name;
@@ -121,7 +131,9 @@ abstract class AbstractFile extends AbstractEntity
         return $this->content;
     }
 
-
+    /**
+     * @return void
+     */
     public function update()
     {
         $this->updateFile();
@@ -133,7 +145,9 @@ abstract class AbstractFile extends AbstractEntity
         $this->updateMeta($meta);
     }
 
-
+    /**
+     * @return void
+     */
     public function updateFile()
     {
         $this->content = $this->parseContent();

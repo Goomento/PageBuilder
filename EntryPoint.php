@@ -20,8 +20,19 @@ class EntryPoint extends BuilderRegister
      */
     public function init(array $buildSubject = [])
     {
+        // Should add default JS/CSS to all pages
+        HooksHelper::addAction('print_resources', function () {
+            return DataHelper::addResourceGlobally() || ThemeHelper::hasContentOnPage();
+        });
+
         HooksHelper::addAction('pagebuilder/register_scripts', [$this, 'beforeRegisterScripts'], 9);
-        parent::init($buildSubject);
+
+        // Register the widget to be used
+        HooksHelper::addAction('pagebuilder/widgets/widgets_registered', [$this, 'registerWidgets']);
+
+        // Register the default resource css, js files
+        HooksHelper::addAction('pagebuilder/register_styles', [$this, 'registerStyles']);
+        HooksHelper::addAction('pagebuilder/register_scripts', [$this, 'registerScripts']);
     }
 
     /**
@@ -40,11 +51,15 @@ class EntryPoint extends BuilderRegister
             ['jquery', 'mage/translate']
         );
 
-        // Use default Magento underscore
-        ThemeHelper::registerScript(
-            'underscore',
-            'underscore'
-        );
+        $magentoVersion = Configuration::magentoVersion();
+        if (!$magentoVersion || version_compare($magentoVersion, '2.4.4', '<')) {
+            // Use `underscore` by Goomento for the good fit
+            ThemeHelper::removeScripts('underscore');
+            ThemeHelper::registerScript(
+                'underscore',
+                'Goomento_PageBuilder/lib/underscore/underscore.min'
+            );
+        }
 
         ThemeHelper::registerScript(
             'backbone',
@@ -85,12 +100,12 @@ class EntryPoint extends BuilderRegister
 
         ThemeHelper::registerScript(
             'imagesloaded',
-            'Goomento_PageBuilder/lib/imagesloaded/imagesloaded' . $minSuffix
+            'Goomento_PageBuilder/lib/imagesloaded/imagesloaded.min'
         );
 
         ThemeHelper::registerScript(
-            'goomento-dialog',
-            'Goomento_PageBuilder/lib/dialog/dialog' . $minSuffix,
+            'dialogs-manager',
+            'Goomento_PageBuilder/lib/dialog/dialog.min',
             ['jquery/ui',]
         );
 
@@ -99,9 +114,18 @@ class EntryPoint extends BuilderRegister
             'Goomento_PageBuilder/lib/swiper/swiper.min'
         );
 
+        ThemeHelper::inlineScript('swiper',
+            "require(['swiper'], Swiper => {window.Swiper = window.Swiper || Swiper});", 'before');
+
         ThemeHelper::registerScript(
-            'goomento-waypoints',
-            'Goomento_PageBuilder/lib/waypoints/waypoints' . $minSuffix
+            'sofish-pen',
+            'Goomento_PageBuilder/lib/sofish/pen',
+            ['jquery']
+        );
+
+        ThemeHelper::registerScript(
+            'waypoints',
+            'Goomento_PageBuilder/lib/waypoints/waypoints.min'
         );
 
         ThemeHelper::registerScript(
@@ -110,60 +134,48 @@ class EntryPoint extends BuilderRegister
         );
 
         ThemeHelper::registerScript(
-            'goomento-dialog',
-            'Goomento_PageBuilder/lib/dialog/dialog' . $minSuffix
-        );
-
-        ThemeHelper::registerScript(
             'nouislider',
-            'Goomento_PageBuilder/lib/nouislider/nouislider.min'
+            'Goomento_PageBuilder/lib/nouislider/nouislider.min',
+            ['jquery']
         );
 
-        ThemeHelper::registerScript(
-            'goomento-waypoints',
-            'Goomento_PageBuilder/lib/waypoints/waypoints-for-editor' . $minSuffix
-        );
-
-        ThemeHelper::registerScript(
-            'goomento-gallery',
-            'Goomento_PageBuilder/lib/e-gallery/js/e-gallery' . $minSuffix
-        );
-
-        ThemeHelper::registerStyle(
-            'hover-animation',
-            'Goomento_PageBuilder/lib/hover/hover.min.css'
-        );
+        ThemeHelper::inlineScript('nouislider',
+            "require(['nouislider'], nouislider => {window.noUiSlider = window.noUiSlider || nouislider});", 'before');
 
         ThemeHelper::registerScript(
             'perfect-scrollbar',
-            'Goomento_PageBuilder/lib/perfect-scrollbar/js/perfect-scrollbar' . $minSuffix
+            'Goomento_PageBuilder/lib/perfect-scrollbar/js/perfect-scrollbar.min',
+            ['jquery']
         );
+
+        ThemeHelper::inlineScript('perfect-scrollbar',
+            "require(['perfect-scrollbar'], PerfectScrollbar => {window.PerfectScrollbar = window.PerfectScrollbar || PerfectScrollbar});",
+            'before');
 
         ThemeHelper::registerScript(
             'jquery-easing',
-            'Goomento_PageBuilder/lib/jquery-easing/jquery-easing' . $minSuffix,
+            'Goomento_PageBuilder/lib/jquery-easing/jquery-easing.min',
             ['jquery']
         );
 
         ThemeHelper::registerScript(
             'nprogress',
-            'Goomento_PageBuilder/lib/nprogress/nprogress' . $minSuffix
+            'Goomento_PageBuilder/lib/nprogress/nprogress.min'
+
         );
+        ThemeHelper::inlineScript('nprogress',
+            "require(['nprogress'], NProgress => {window.NProgress = window.NProgress || NProgress});",
+            'before');
 
         ThemeHelper::registerScript(
             'tipsy',
-            'Goomento_PageBuilder/lib/tipsy/tipsy' . $minSuffix
+            'Goomento_PageBuilder/lib/tipsy/tipsy.min'
         );
 
         ThemeHelper::registerScript(
-            'jquery-goomento-select2',
-            'Goomento_PageBuilder/lib/e-select2/js/e-select2.full' . $minSuffix,
+            'jquery-select2',
+            'Goomento_PageBuilder/lib/e-select2/js/e-select2.full.min',
             ['jquery']
-        );
-
-        ThemeHelper::registerScript(
-            'flatpickr',
-            'Goomento_PageBuilder/lib/flatpickr/flatpickr' . $minSuffix
         );
 
         ThemeHelper::registerScript(
@@ -179,7 +191,7 @@ class EntryPoint extends BuilderRegister
 
         ThemeHelper::registerScript(
             'jquery-hover-intent',
-            'Goomento_PageBuilder/lib/jquery-hover-intent/jquery-hover-intent' . $minSuffix,
+            'Goomento_PageBuilder/lib/jquery-hover-intent/jquery-hover-intent.min',
             ['jquery']
         );
 
@@ -233,6 +245,11 @@ class EntryPoint extends BuilderRegister
         );
 
         ThemeHelper::registerStyle(
+            'hover-animation',
+            'Goomento_PageBuilder/lib/hover/hover.min.css'
+        );
+
+        ThemeHelper::registerStyle(
             'goomento-animations',
             'Goomento_PageBuilder/lib/animations/animations.min.css'
         );
@@ -243,18 +260,13 @@ class EntryPoint extends BuilderRegister
         );
 
         ThemeHelper::registerStyle(
-            'goomento-gallery',
-            'Goomento_PageBuilder/lib/e-gallery/css/e-gallery'  . $minSuffix
-        );
-
-        ThemeHelper::registerStyle(
             'google-font-inter',
             'https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap'
         );
 
         ThemeHelper::registerStyle(
-            'goomento-select2',
-            'Goomento_PageBuilder/lib/e-select2/css/e-select2' . $minSuffix
+            'jquery-select2',
+            'Goomento_PageBuilder/lib/e-select2/css/e-select2.min.css'
         );
 
         ThemeHelper::registerStyle(

@@ -354,6 +354,10 @@ class Button extends AbstractWidget
             $args + [
                 'label' => __('Background Color'),
                 'type' => Controls::COLOR,
+                'scheme' => [
+                    'type' => Color::NAME,
+                    'value' => Color::COLOR_4,
+                ],
                 'selectors' => [
                     '{{WRAPPER}}  ' . $cssTarget => 'background-color: {{VALUE}};',
                 ],
@@ -466,36 +470,5 @@ class Button extends AbstractWidget
         self::registerButtonStyle($this, 'button_');
 
         $this->endControlsSection();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function contentTemplate()
-    {
-        ?>
-		<#
-		view.addRenderAttribute( 'text', 'class', 'gmt-button-text' );
-		view.addInlineEditingAttributes( 'text', 'none' );
-		var iconHTML = goomento.helpers.renderIcon( view, settings.button_selected_icon, { 'aria-hidden': true }, 'i' , 'object' );
-        settings.button_size = settings.button_size ? settings.button_size : 'sm';
-		#>
-		<div class="gmt-button-wrapper">
-			<a id="{{ settings.button_css_id }}" class="gmt-button gmt-size-{{ settings.button_size }} gmt-animation-{{ settings.hover_animation }}" href="{{ settings.button_link.url }}" role="button">
-				<span class="gmt-button-content-wrapper">
-					<# if ( settings.button_icon || settings.button_selected_icon ) { #>
-					<span class="gmt-button-icon gmt-align-icon-{{ settings.button_icon_align }}">
-						<# if ( ! settings.button_icon && iconHTML.rendered ) { #>
-							{{{ iconHTML.value }}}
-						<# } else { #>
-							<i class="{{ settings.button_icon }}" aria-hidden="true"></i>
-						<# } #>
-					</span>
-					<# } #>
-					<span {{{ view.getRenderAttributeString( 'text' ) }}}>{{{ settings.button_text }}}</span>
-				</span>
-			</a>
-		</div>
-		<?php
     }
 }
