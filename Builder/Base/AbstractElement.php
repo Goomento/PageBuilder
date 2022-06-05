@@ -675,7 +675,7 @@ abstract class AbstractElement extends ControlsStack
                 'gmt-element-' . $id,
             ],
             'data-id' => $id,
-            'data-element_type' => $this->getName(),
+            'data-element_type' => $this->getType(),
         ]);
 
         $class_settings = [];

@@ -1,0 +1,43 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+.gmt-widget-banner-slider {
+    .gmt-banner-slider-wrapper {
+        position: static;
+        .gmt-banner-slider-item {
+            .gmt-banner-wrapper {
+                position: relative;
+
+                .gmt-banner-content {
+                    position: absolute;
+                    vertical-align: middle;
+                }
+
+                .gmt-banner-img {
+                    width: 100%;
+                    > img {
+                        width: 100%;
+                    }
+                }
+
+                @media (max-width: 540px) {
+
+                    .gmt-banner-img {
+                        margin-left: auto !important;
+                        margin-right: auto !important;
+                    }
+                }
+
+                .gmt-banner-img {
+                    display: inline-block; // For alignment content
+                }
+
+                .gmt-banner-description {
+                    margin: 0;
+                }
+            }
+        }
+    }
+}

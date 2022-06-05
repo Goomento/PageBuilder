@@ -1,0 +1,147 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+.gmt-star-rating {
+	color: @gray-mouse;
+    font-family: "Font Awesome 5 Free", serif;
+	display: inline-block;
+
+	i {
+		display: inline-block;
+		position: relative;
+		font-style: normal;
+		cursor: default;
+
+		&:before {
+			content: "\f005";
+			display: block;
+			font-size: inherit;
+			font-family: inherit;
+			position: absolute;
+			overflow: hidden;
+			color: @orange;
+			top: 0;
+            font-weight: 700;
+			.start(0);
+		}
+	}
+
+	.gmt-star-empty:before {
+		content: none;
+	}
+
+    .gmt-star-1:before {
+        width: 10%;
+    }
+    .gmt-star-2:before {
+        width: 20%;
+    }
+    .gmt-star-3:before {
+        width: 30%;
+    }
+    .gmt-star-4:before {
+        width: 40%;
+    }
+    .gmt-star-5:before {
+        width: 50%;
+    }
+    .gmt-star-6:before {
+        width: 60%;
+    }
+    .gmt-star-7:before {
+        width: 70%;
+    }
+    .gmt-star-8:before {
+        width: 80%;
+    }
+    .gmt-star-9:before {
+        width: 90%;
+    }
+
+	&__wrapper {
+		display: flex;
+		align-items: center;
+	}
+
+	&__title {
+        .css_direction_property(margin-right, margin-left, @space-md);
+	}
+}
+
+.star_rating_align_default() {
+    &--align {
+
+        &-right {
+
+            .gmt-star-rating__wrapper {
+                text-align: right;
+                .css_direction_value(justify-content, flex-end, flex-start);
+            }
+        }
+
+        &-left {
+
+            .gmt-star-rating__wrapper {
+                text-align: left;
+                .css_direction_value(justify-content, flex-start, flex-end);
+            }
+        }
+
+        &-center {
+            .gmt-star-rating__wrapper {
+                text-align: center;
+                justify-content: center;
+            }
+        }
+
+        &-justify {
+            .gmt-star-rating__title {
+                .css_direction_property(margin-right, margin-left, auto);
+            }
+        }
+    }
+}
+
+.star_rating_align(@device) {
+
+	.gmt-star-rating {
+
+		&@{device} {
+            .star_rating_align_default()
+		}
+	}
+}
+
+.gmt-star-rating {
+    .star_rating_align_default()
+}
+@media (max-width: @screen-md) {
+	.star_rating_align(-tablet);
+}
+
+@media (max-width: @screen-sm) {
+	.star_rating_align(-mobile);
+}
+
+.last-star{
+	letter-spacing: 0;
+}
+
+.gmt--star-style-star_unicode {
+
+	.gmt-star-rating {
+		font-family: 'Arial', 'Helvetica', sans-serif;
+
+		i:not(.gmt-star-empty):before {
+			content: '\002605';
+		}
+	}
+}
+
+.gmt--star-style-star_fontawesome {
+    .gmt-star-unmarked-solid {
+        font-weight: 700;
+    }
+}

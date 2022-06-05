@@ -1,0 +1,136 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+.gmt-widget-navigation {
+    [data-action="navigation"] {
+        ul { // General
+            padding: 0;
+            margin: 0;
+            display: flex;
+            z-index: 10;
+            border: 1px solid #d8d8d8;
+            border-bottom: none;
+            border-radius: 3px;
+            li {
+                list-style: none;
+                margin: 0;
+                padding: @space-md;
+                position: relative;
+                border-bottom: 1px solid #d8d8d8;
+                a {
+                    color: #575757;
+                    padding-right: @space-xl;
+                    display: block;
+                    &.ui-state-active, &.ui-state-focus {
+                        color: #000;
+                    }
+                }
+                &[class*=item--parent] {
+                    > a {
+                        display: block;
+                        position: relative;
+                        &:after {
+                            content: "\f107";
+                            display: block;
+                            font-family: "Font Awesome 5 Free";
+                            font-weight: 900;
+                            position: absolute;
+                            right: 0;
+                            top: 50%;
+                            -webkit-transform: translateY(-50%);
+                            -ms-transform: translateY(-50%);
+                            transform: translateY(-50%);
+                            transform-origin: center;
+                            width: @space-md;
+                            height: @space-md;
+                            line-height: @space-md;
+                        }
+                    }
+                }
+            }
+        }
+
+        > ul {
+            flex-direction: column;
+            // Horizontal menu
+            > li { // level 1
+                min-width: 50px;
+                > a {
+                }
+                ul { // All submenus
+                    display: none;
+                    position: relative;
+                    min-width: 200px;
+                    li {
+                        padding: @space-md;
+                    }
+                }
+            }
+        }
+        // Tablet and below
+        @media (max-width: @screen-md) {
+            > ul {
+                > li {
+                    ul { // all submenus
+                        position: relative;
+                        left: 0 !important;
+                        top: 0 !important;
+                        margin: @space-sm 0;
+                        min-width: auto;
+                        &[expanded="true"] {
+                            background: #ebebeb;
+                        }
+                    }
+                }
+                li {
+                    &[class*=item--parent] {
+                        > a {
+                            &.ui-state-active, &.ui-state-focus {
+                                &:after {
+                                    content: "\f106";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // Desktop and above
+        @media (min-width: @screen-md) {
+            ul { // General
+                li {
+                }
+            }
+            > ul {
+                &.gmt-menu-horizontal {
+                    flex-direction: row;
+                    border: none;
+                    > li {
+                        border: none;
+                    }
+                }
+                &.gmt-menu-vertical {
+                    [class*=item--parent] {
+                        > a {
+                            &:after {
+                                content: "\f105";
+                            }
+                        }
+                    }
+                }
+                > li {
+                    ul { // all submenus
+                        position: absolute;
+                        background: #ffffff;
+                        border-radius: 3px;
+                        box-shadow: 2px 2px 4px 2px #adadada1;
+                        border: 1px solid #d8d8d8;
+                        border-bottom: none;
+                    }
+                }
+            }
+        }
+    }
+}

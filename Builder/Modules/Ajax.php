@@ -19,6 +19,7 @@ use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 
 class Ajax extends AbstractModule
 {
+    const NAME = 'ajax';
 
     /**
      * Ajax actions.
@@ -69,19 +70,6 @@ class Ajax extends AbstractModule
     public function __construct()
     {
         HooksHelper::addAction('pagebuilder/ajax/processing', [ $this,'handleAjaxRequest' ]);
-    }
-
-    /**
-     * Get module name.
-     *
-     * Retrieve the module name.
-     *
-     *
-     * @return string AbstractModule name.
-     */
-    public function getName()
-    {
-        return 'ajax';
     }
 
     /**
@@ -197,19 +185,9 @@ class Ajax extends AbstractModule
      */
     protected function getInitSettings()
     {
-        $params = [
-            '_query' => [
-                EncryptorHelper::ACCESS_TOKEN => EncryptorHelper::createAccessToken()
-            ]
-        ];
-
         return [
             'url' => UrlBuilderHelper::getUrl('pagebuilder/ajax/json'),
             'actions' => [
-                'render_widget' => UrlBuilderHelper::getFrontendUrl(
-                    'pagebuilder/actions/actions',
-                    $params
-                ),
                 'heartbeat' => UrlBuilderHelper::getUrl('pagebuilder/ajax/heartbeat')
             ],
         ];

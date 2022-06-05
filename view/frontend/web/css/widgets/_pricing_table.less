@@ -1,0 +1,41 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+.gmt-widget-pricing_table {
+    .gmt-pricing {
+        width: 100%;
+        padding: @space-md;
+
+        .gmt-pricing-head {
+            font-weight: bold;
+            font-size: 2.5rem;
+            margin-bottom: @space-md;
+        }
+
+        .gmt-pricing-body {
+            padding-bottom: @space-xl;
+            .gmt-pricing-features {
+                list-style: none;
+                padding: 0;
+                margin: 0; // Reset style
+            }
+            .gmt-pricing-prices {
+                margin-bottom: @space-md;
+                .gmt-price-tag {
+                    font-size: 2rem;
+                    .gmt-original-price {
+                        font-size: 1.8rem;
+                    }
+                }
+            }
+            .gmt-original-price, .gmt-sale-price {
+                display: inline-table;
+            }
+            .gmt-currency-right {
+                float: right;
+            }
+        }
+    }
+}

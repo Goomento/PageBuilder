@@ -1,0 +1,99 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+.gmt-widget-image-box {
+
+	.gmt-image-box-content {
+		width: 100%;
+	}
+
+	@media (min-width: @screen-md) {
+
+		&.gmt-position- {
+
+			&left, &right {
+
+				.gmt-image-box-wrapper {
+					display: flex;
+				}
+			}
+
+			&right {
+
+				.gmt-image-box-wrapper {
+                    .css_direction_value(text-align, right, left);
+                    .css_direction_value(flex-direction, row-reverse, row);
+				}
+			}
+
+			&left {
+
+				.gmt-image-box-wrapper {
+                    .css_direction_value(text-align, left, right);
+                    .css_direction_value(flex-direction, row, row-reverse);
+				}
+			}
+
+			&top {
+
+				.gmt-image-box-img {
+					margin: auto;
+				}
+			}
+		}
+
+		&.gmt-vertical-align- {
+
+			&top {
+
+				.gmt-image-box-wrapper {
+					align-items: flex-start;
+				}
+			}
+
+			&middle {
+
+				.gmt-image-box-wrapper {
+					align-items: center;
+				}
+			}
+
+			&bottom {
+
+				.gmt-image-box-wrapper {
+					align-items: flex-end;
+				}
+			}
+		}
+	}
+
+	@media (max-width: @screen-sm) {
+
+		.gmt-image-box-img {
+			margin-left: auto !important;
+			margin-right: auto !important;
+			margin-bottom: @space-lg;
+		}
+	}
+
+	.gmt-image-box-img {
+		display: inline-block;
+	}
+
+	.gmt-image-box-title {
+
+		a {
+			color: inherit;
+		}
+	}
+
+	.gmt-image-box-wrapper {
+		text-align: center;
+	}
+
+	.gmt-image-box-description {
+		margin: 0;
+	}
+}

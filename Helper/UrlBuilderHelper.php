@@ -74,6 +74,7 @@ class UrlBuilderHelper
             $storeId = (int) $routeParams['store_id'];
             unset($routeParams['store_id']);
         }
+
         if ($storeId !== 0) {
             self::getFrontendUrlBuilder()->setScope($storeId);
             $routeParams['_current'] = false;
@@ -92,6 +93,7 @@ class UrlBuilderHelper
     {
         return self::getFrontendUrl('pagebuilder/content/preview', [
             'content_id' => $content->getId(),
+            'store_id' => self::getStoreId($content),
             '_query' => [
                 EncryptorHelper::ACCESS_TOKEN => EncryptorHelper::createAccessToken($content, $userId),
                 'layout' => $content->getSetting('layout')
@@ -111,6 +113,7 @@ class UrlBuilderHelper
         }
         return self::getFrontendUrl('pagebuilder/content/view', [
             'content_id' => $content,
+            'store_id' => self::getStoreId($content),
             '_query' => [
                 EncryptorHelper::ACCESS_TOKEN => EncryptorHelper::createAccessToken($content, $userId)
             ]
@@ -126,14 +129,33 @@ class UrlBuilderHelper
         if (!($content instanceof ContentInterface)) {
             $content = ContentHelper::get((int) $content);
         }
-        $storeIds = $content->getStoreIds();
-        $storeId = 0;
-        if (!empty($storeIds) && !in_array(0, $storeIds)) {
-            $storeId = $storeIds[0];
-        }
+
         return self::getFrontendUrl($content->getIdentifier(), [
-            'store_id' => $storeId
+            'store_id' => self::getStoreId($content)
         ]);
+    }
+
+    /**
+     * @param $content
+     * @return int
+     */
+    private static function getStoreId($content) : int
+    {
+        $storeId = RequestHelper::getParam('store');
+        if ($storeId === null) {
+            $storeId = 0;
+            if (!($content instanceof ContentInterface)) {
+                $content = ContentHelper::get((int) $content);
+            }
+            $storeIds = $content->getStoreIds();
+            if (!empty($storeIds)) {
+                sort($storeIds);
+                // get last store id of content
+                $storeId = array_pop($storeIds);
+            }
+        }
+
+        return (int) $storeId;
     }
 
     /**
@@ -160,8 +182,7 @@ class UrlBuilderHelper
             $content = ContentHelper::get((int) $content);
         }
         return self::getUrl('pagebuilder/content/edit', [
-            'content_id' => $content->getId(),
-            'type' => $content->getType()
+            'type' => $content->getType(),
         ]);
     }
 
@@ -192,6 +213,7 @@ class UrlBuilderHelper
         }
         return self::getUrl('pagebuilder/content/editor', [
             'content_id' => $content->getId(),
+            'store' => self::getStoreId($content),
             'type' => $content->getType()
         ]);
     }

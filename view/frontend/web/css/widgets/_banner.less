@@ -1,0 +1,84 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+.gmt-banner-content {
+    position: absolute;
+    vertical-align: middle;
+    padding: 1rem;
+    &-position {
+        &-top-left {
+            top: 0;
+            left: 0;
+        }
+        &-top-center {
+            top: 0;
+            .start(50%);
+            transform: translateX(-50%);
+        }
+        &-top-right {
+            top: 0;
+            right: 0;
+        }
+        &-middle-left {
+            left: 0;
+            transform: translateY(-50%);
+            top: 50%;
+        }
+        &-middle-center {
+            .start(50%);
+            transform: translateY(-50%) translateX(-50%);
+            top: 50%;
+        }
+        &-middle-right {
+            right: 0;
+            transform: translateY(-50%);
+            top: 50%;
+        }
+        &-bottom-left {
+            bottom: 0;
+            left: 0;
+        }
+        &-bottom-center {
+            .start(50%);
+            bottom: 0;
+            transform: translateX(-50%);
+        }
+        &-bottom-right {
+            right: 0;
+            bottom: 0;
+        }
+    }
+}
+
+.gmt-widget-banner {
+
+    position: relative;
+
+    .gmt-banner-img {
+        width: 100%;
+        > img {
+            width: 100%;
+        }
+    }
+
+
+    .gmt-banner-img {
+        display: inline-block; // For alignment content
+    }
+
+    .gmt-banner-description {
+        margin: 0;
+    }
+}
+
+@media (max-width:  @screen-sm) {
+    .gmt-widget-banner {
+        // TEMP code to override the image spacing
+        .gmt-banner-img {
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+    }
+}
+

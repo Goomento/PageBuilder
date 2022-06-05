@@ -9,12 +9,10 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Modules;
 
 use Goomento\PageBuilder\Configuration;
-use Goomento\PageBuilder\Builder\Managers\Documents;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\RegistryHelper;
-use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 
 class Preview
@@ -29,18 +27,12 @@ class Preview
      */
     public function init()
     {
-        if (StateHelper::isAdminhtml()) {
-            return;
-        }
-
         $model = RegistryHelper::registry('current_preview_content');
         $this->contentId = $model ? $model->getId() : 0;
 
         HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$this, 'enqueueScripts']);
         HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$this, 'enqueueStyles']);
         HooksHelper::addFilter('pagebuilder/content/html', [ $this,'builderWrapper' ], 2022);
-
-        HooksHelper::addAction('pagebuilder/frontend/footer', [ $this, 'footer']);
 
         /**
          * Do action `pagebuilder/preview/init`
@@ -69,8 +61,7 @@ class Preview
     public function builderWrapper($content)
     {
         if ($this->getContentId()) {
-            /** @var Documents $documentManager */
-            $documentManager = ObjectManagerHelper::get(Documents::class);
+            $documentManager = ObjectManagerHelper::getDocumentsManager();
             $document = $documentManager->get($this->getContentId());
 
             $attributes = $document->getContainerAttributes();
@@ -90,19 +81,19 @@ class Preview
      */
     public function enqueueStyles()
     {
-        ObjectManagerHelper::getFrontend()
-            ->enqueueStyles();
+//        ObjectManagerHelper::getFrontend()
+//            ->enqueueStyles();
 
         ObjectManagerHelper::getWidgetsManager()
             ->enqueueWidgetsStyles();
 
-        $suffix = Configuration::debug() ? '' : '.min';
+        $debugSuffix = Configuration::debug() ? '' : '.min';
 
-        $direction_suffix = DataHelper::isRtl() ? '-rtl' : '';
+        $directionSuffix = DataHelper::isRtl() ? '-rtl' : '';
 
         ThemeHelper::registerStyle(
             'editor-preview',
-            'Goomento_PageBuilder/build/editor-preview' . $direction_suffix . $suffix . '.css',
+            'Goomento_PageBuilder/build/editor-preview' . $directionSuffix . $debugSuffix . '.css',
             [
                 'jquery-select2',
                 'inline-editor'
@@ -131,8 +122,8 @@ class Preview
      */
     public function enqueueScripts()
     {
-        ObjectManagerHelper::getFrontend()
-            ->registerScripts();
+//        ObjectManagerHelper::getFrontend()
+//            ->registerScripts();
 
         ObjectManagerHelper::getWidgetsManager()
             ->enqueueWidgetsScripts();
@@ -155,7 +146,8 @@ class Preview
     public function footer()
     {
         $frontend = ObjectManagerHelper::getFrontend();
-        $frontend->footer();
+//        $frontend->header();
+//        $frontend->footer();
         $frontend->printFontsLinks();
     }
 
@@ -164,6 +156,6 @@ class Preview
      */
     public function __construct()
     {
-        HooksHelper::addAction('pagebuilder/content/preview', [ $this, 'init' ], 0);
+        HooksHelper::addAction('pagebuilder/content/preview', [ $this, 'init' ]);
     }
 }

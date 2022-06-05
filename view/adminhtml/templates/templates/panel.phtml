@@ -193,7 +193,9 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 		<?php
 		$scheme_fields_keys = TypographyGroup::getSchemeFieldsKeys();
 
-		$typography_group = ObjectManagerHelper::get(Controls::class)->getControlGroups( 'typography' );
+		$typography_group = ObjectManagerHelper::getControlsManager()
+            ->getControlGroups( TypographyGroup::NAME );
+
 		$typography_fields = $typography_group->getFields();
 
 		$scheme_fields = array_intersect_key( $typography_fields, array_flip( $scheme_fields_keys ) );

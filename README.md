@@ -1,4 +1,4 @@
-<img alt="Goomento - The Magento Page Builder Extension" src="https://i.imgur.com/zstn8jK.gif" width="800"/>
+![Goomento - Free Magento Page Builder Extension](https://i.imgur.com/s5A4AZm.png)
 
 # Goomento - The Free Magento Page Builder Extension, allows you to create unique Magento websites, landing pages using advanced animations, custom CSS, responsive designs, and more, without a line of code.
 
@@ -7,6 +7,7 @@ dragging and dropping manipulation. Notably, it can reuse your previous content 
 customize and redesign with your new creativity. All this process has an absence of coding involvement and configures instantly.
 
 Goomento is built for **designers**, **developers** and **marketers**, who want to optimize the process of creating and managing the Magento store.
+
 ### Table of contents
 
 [Installation](#install-goomento)
@@ -15,15 +16,21 @@ Goomento is built for **designers**, **developers** and **marketers**, who want 
 
 [Demo](#demo-site)
 
-[Why Us](#why-us)
+[Setup](#setup)
 
-[Free Built-in Widgets](#free-built-in-widgets)
+[Why Us](https://github.com/Goomento/PageBuilder/wiki/Why-Goomento)
+
+[Free Built-in Widgets](https://github.com/Goomento/PageBuilder/wiki/Free-Built-in-Widgets)
+
+[How To Use](https://github.com/Goomento/DocBuilder/blob/master/Guide/HOW_TO_USE.md)
+
+[Custom Templates](#custom-templates)
 
 [Change Log](https://github.com/Goomento/PageBuilder/blob/master/CHANGELOG.md)
 
 [Document And User Guide](https://github.com/Goomento/DocBuilder)
 
-[Troubleshoot](#troubleshoot)
+[Troubleshoot](https://github.com/Goomento/PageBuilder/wiki/Troubleshoot)
 
 [Open An Issue And Contribution](#open-an-issue-and-contribution)
 
@@ -42,130 +49,57 @@ php bin/magento setup:static-content:deploy
 
 Storefront: [https://goomento.com](https://goomento.com/)
 
-## Why Us 
+## Setup
 
-###### What You See Is What You Get
+1. Create Landing Pages, Blocks, Templates in the admin area `Goomento > Pages & Landing Pages`.
 
-**What appears on the editor is what you get in the storefront**. Drag/drop it and see the changes in the editor right away before publishing it without any concern for output.
+2. Add Builder Block, Page to the layout, using the same `identifier` as in the admin area to the layout `.xml` file.
 
-###### More Controls More Efficients
+```xml
+<block class="PageBuilderRenderer" name="unique-block-name">
+    <arguments>
+        <argument name="identifier" xsi:type="string">identifier</argument>
+    </arguments>
+</block>
+```
 
-Every aspect of element is controllable by the editor panel, very readable, and efficient.
-Therefore, **you don't need to know coding or experience to edit, just click and see** !!!
+3. Add Builder Block, Page to the template, use this snippet in the template `.phtml` file
 
-You can control: Layout such as width and height, Background, Color, Border, Typography, Shadow, CSS Id-classes, Padding, Margin, Z-Index
-, Order, Animation such as hover or while loading, Responsive such as show-hide in tablet and mobile devices ....
+```php
+<?= $block->getLayout()
+    ->getBlock('PageBuilderRenderer')
+    ->setIdentifier('identifier')
+    ->toHtml(); ?>
+```
 
-###### Control Your Site Responsive
+## Custom Templates
 
-Enjoy the visually-appealing experience of creating, **checking responsiveness while editing of pages in one place**, what you see is what you get on storefront.
+Create directories inside your theme files that will contain the custom resources (`.phtml`, `js`, `less` files ...) with the following structure.
 
-###### Revision And History Control
+```
+app/design/frontend/<Vendor>/
+├── <theme>/
+│   ├── Goomento_PageBuilder/
+│   │   ├── templates
+│   │   │   ├── widgets
+│   │   │   │   ├── <phtml_widget_file>
+│   │   │── web
+│   │   │   ├── css
+│   │   │   │   ├── widgets
+│   │   │   │   │   ├── <less_widget_file>
+│   │   │   ├── js
+│   │   │   │   ├── widgets
+│   │   │   │   │   ├── <js_widget_file>
+```
 
-Goomento recorded your actions and versions of your page. Therefore, **can undo/redo or revert the page** to someday in the past.
+- `<phtml_widget_file>` is `.phtml` file - which copied from [templates directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/templates/widgets), 
+these files will render HTML of widget.
 
-###### Reduce Cost
+- `<less_widget_file>` is `.less` file - which copied from [css directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/web/css/widgets),
+these files will render the widget styling. (Some widgets don't need Less file)
 
-With Goomento, you **spend less time on the frontend development** process and focus on creation of design, meaning you can save thousands of dollars for long developers hours to build your storefront.
-
-###### Import, Export For Sharing Or Backup
-
-Goomento gives you flexible access to **freely import, export the content to/from your website**. You can share these exported files,
-or save it to backup, resources like images and files will be automatically downloaded while importing.
-
-###### Fast And Compatible To Any Stores
-
-Goomento uses its own CSS and JS, which are **optimized for use individually and impact to its self**, and other elements outside Goomento will keep the same.
-
-###### +40 Free Built-in Widgets
-
-Each website is built with a combination of widgets. You can **drag/drop, move, sharpen, overlap ... +40 free widgets** 
-to create your unique landing pages or the whole website.
-
-To create your own widget, check this out [Document And User Guide](https://github.com/Goomento/DocBuilder)
-
-###### Add Custom Css In Page
-
-Goomento allows you to get a more personalized look by **adding custom CSS to every element**, such as: widget, column, section, whole page, or all pages.
-
-## Free Built-in Widgets
-
-###### Basic pack:
-
-- Text
-- HTML
-- Magento Block
-- Section/ Column
-- Image
-- Icon
-- Banner
-- Spacer
-- Video
-- Text Editor
-- Google Maps
-
-###### General pack:
-
-- Accordion
-- Tabs
-- Toggles
-- Alert
-- Audio
-- Countdown
-- Divider
-- Icon Box
-- Icon List
-- Image Box
-- Progress Bar
-- Social Icons
-- Star Rating
-- Banner Slider (Carousel)
-- Image Slider (Carousel)
-- Testimonial
-- Call To Action (CTA)
-- Popup (Set section as a popup/modal)
-- Facebook Like + Comment
-- Facebook Pages + Post + Video
-- Navigation (Menu)
-
-###### Product pack:
-
-- Add To Cart Button
-- Product List
-- Product Slider (Carousel)
-- Pricing Table
-
-###### Magento pack:
-- Recently Viewed Products
-- Recently Compared Products
-- New Products
-- Orders And Returns
-
-## Troubleshoot
-
-**The Page Builder did not display on storefront**
-
-- Make sure that Goomento Page Builder module was enabled, in `Goomento > Configuration > General > Active`
-- Make sure Page Builder was `Enabled` and `Store view` is matching with current storefront
-- Enable the Debug Mode to see what happened, in `Goomento > Configuration > Editor > Debug Mode` choose `Yes`
-- Flush/ Clean Magento Cache
-
-**Visual editor did not load**
-
-- Visual editor may crash for the first load, it's due to the timeout of loading resources from CDN,
-try to reload your browser, It'll go away
-
-**Missing style on storefront**
-
-Goomento stored CSS files in `pub/media/goomento/css`, those files responsible for each content styling, so you can check 
-
-- Folder `pub/media/goomento/css` is writable
-- Try to generate the new style, go to `Goomento > Management > Global.Css > Save and Refesh` - Will refresh all global and contents styling
-- Use different `CSS Print Method` in `Goomento > Configuration > Editor > Style > Use Inline Css` then
-choose `Yes` - Will use inline CSS instead
-- Flush/ Clean Magento Cache
-
-Something else? [Open An Issue](https://github.com/Goomento/PageBuilder/issues/new) or [Contact Us](https://goomento.com/contact/)
+- `<js_widget_file>` is `.js` file - which copied from [js directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/web/js/widgets), 
+these files bind JavaScript to widget. (Some widgets don't need Js file)
 
 ## Version Compatible
 

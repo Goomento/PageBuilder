@@ -1,0 +1,84 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+.gmt-widget-progress {
+    .css_direction_value(text-align, left, right);
+}
+
+.gmt-progress-wrapper {
+	position: relative;
+	background-color: @gray;
+	color: @white;
+	height: 100%;
+	border-radius: 2px;
+}
+
+.gmt-progress-bar {
+	display: flex;
+	background-color: @success;
+	width: 0;
+	font-size: 11px;
+	height: 30px;
+	line-height: 30px;
+	border-radius: 2px;
+	transition: width 1s ease-in-out;
+}
+
+.gmt-progress-text {
+	flex-grow: 1;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+    .css_direction_property(padding-left, padding-right, @space-lg);
+}
+
+.gmt-progress-percentage {
+    .css_direction_property(padding-right, padding-left, @space-lg);
+}
+
+.gmt-widget-progress {
+	.gmt-progress-wrapper {
+
+		&.progress-info {
+
+			.gmt-progress-bar {
+				background-color: @info;
+			}
+		}
+
+		&.progress-success {
+
+			.gmt-progress-bar {
+				background-color: @success;
+			}
+		}
+
+		&.progress-warning {
+
+			.gmt-progress-bar {
+				background-color: @warning;
+			}
+		}
+
+		&.progress-danger {
+
+			.gmt-progress-bar {
+				background-color: @danger;
+			}
+		}
+	}
+}
+
+.gmt-progress .gmt-title {
+	display: block;
+}
+
+// Responsive mode
+@media (max-width: @screen-sm) {
+
+	.gmt-progress-text {
+        .css_direction_property(padding-left, padding-right, @space-md);
+	}
+}

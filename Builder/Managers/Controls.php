@@ -338,16 +338,13 @@ class Controls
     }
 
     /**
-     * @param null $id
+     * @param string|null $id
      * @return array|mixed|null
      */
-    public function getControlGroups($id = null)
+    public function getControlGroups($id)
     {
-        if (!empty($id)) {
-            return $this->controlGroups[$id] ?? null;
-        }
-
-        return $this->controlGroups;
+        $this->getControls();
+        return $this->controlGroups[$id] ?? $this->controlGroups;
     }
 
     /**

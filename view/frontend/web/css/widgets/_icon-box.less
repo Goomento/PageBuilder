@@ -1,0 +1,92 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+.gmt-widget-icon-box {
+
+	@media (min-width: @screen-md) {
+
+		&.gmt-position- {
+
+			&left,
+			&right {
+
+				.gmt-icon-box-wrapper {
+					display: flex;
+				}
+
+				.gmt-icon-box-icon {
+					display: inline-flex;
+					flex: 0 0 auto; // Hack for Safari
+				}
+			}
+
+			&right {
+
+				.gmt-icon-box-wrapper {
+                    .css_direction_value(text-align, right, left);
+                    .css_direction_value(flex-direction, row-reverse, row);
+				}
+			}
+
+			&left {
+
+				.gmt-icon-box-wrapper {
+                    .css_direction_value(text-align, left, right);
+                    .css_direction_value(flex-direction, row, row-reverse);
+				}
+			}
+
+			&top {
+
+				.gmt-icon-box-img {
+					margin: auto;
+				}
+			}
+		}
+
+		&.gmt-vertical-align- {
+
+			&top {
+
+				.gmt-icon-box-wrapper {
+					align-items: flex-start;
+				}
+			}
+
+			&middle {
+
+				.gmt-icon-box-wrapper {
+					align-items: center;
+				}
+			}
+
+			&bottom {
+
+				.gmt-icon-box-wrapper {
+					align-items: flex-end;
+				}
+			}
+		}
+	}
+
+	.gmt-icon-box-wrapper {
+		text-align: center;
+	}
+
+	.gmt-icon-box-title {
+
+		a {
+			color: inherit;
+		}
+	}
+
+	.gmt-icon-box-content {
+		flex-grow: 1;
+	}
+
+	.gmt-icon-box-description {
+		margin: 0;
+	}
+}

@@ -69,9 +69,6 @@ class Frontend extends AbstractApp
     public function __construct()
     {
         HooksHelper::addAction('pagebuilder/frontend/init', [$this, 'init']);
-        HooksHelper::addAction('pagebuilder/frontend/header', [$this, 'registerScripts'], 9);
-        HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$this, 'enqueueScripts']);
-        HooksHelper::addAction('pagebuilder/frontend/register_styles', [$this, 'registerStyles']);
 
         $this->addContentFilter();
     }
@@ -86,17 +83,12 @@ class Frontend extends AbstractApp
      */
     public function init()
     {
-        if (StateHelper::isEditorMode()) {
-            return;
-        }
+        HooksHelper::addAction('pagebuilder/frontend/register_scripts', [$this, 'registerScripts'], 9);
 
-        if (StateHelper::isPreviewMode()) {
-            return;
-        }
+        HooksHelper::addAction('pagebuilder/frontend/register_styles', [$this, 'registerStyles'], 9);
 
-        HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [ $this, 'enqueueStyles' ]);
-
-        HooksHelper::addAction('pagebuilder/frontend/footer', [ $this, 'footer' ]);
+        HooksHelper::addAction('pagebuilder/frontend/header', [ $this, 'header' ], 9);
+        HooksHelper::addAction('pagebuilder/frontend/footer', [ $this, 'footer' ], 9);
     }
 
 
@@ -156,9 +148,6 @@ class Frontend extends AbstractApp
             'Goomento_PageBuilder/build/frontend' . $minSuffix,
             [
                 'jquery',
-                'backbone',
-                'backbone.radio',
-                'backbone.marionette',
                 'dialogs-manager',
                 'waypoints',
                 'pagebuilderRegister',
@@ -168,8 +157,11 @@ class Frontend extends AbstractApp
 
         ThemeHelper::registerScript(
             'goomento-frontend',
-            'Goomento_PageBuilder/js/frontend-entry'
+            'Goomento_PageBuilder/js/frontend-entry',
+            ['underscore']
         );
+
+        $this->printConfig();
 
         /**
          * After frontend register scripts.
@@ -239,8 +231,6 @@ class Frontend extends AbstractApp
 
         ThemeHelper::enqueueScript('goomento-frontend');
 
-        $this->printConfig();
-
         /**
          * After frontend enqueue scripts.
          *
@@ -287,11 +277,18 @@ class Frontend extends AbstractApp
     }
 
     /**
+     * Run header hook
+     */
+    public function header()
+    {
+        $this->enqueueStyles();
+    }
+
+    /**
      * Run footer hook
      */
     public function footer()
     {
-        $this->enqueueStyles();
         $this->enqueueScripts();
         if (!DataHelper::isLocalFont()) {
             $this->printFontsLinks();

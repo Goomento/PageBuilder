@@ -17,6 +17,6 @@ define([
 
     setTimeout(() => {
         window.goomento = window.goomento || new App;
-        goomento.start();
-    }, 500);
+        $( goomento.start() );
+    }, 200);
 });

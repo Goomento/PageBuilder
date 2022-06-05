@@ -5,13 +5,18 @@
 
 define([
     'goomento-frontend-engine',
+    'jquery',
+    'mage/translate'
 ], function (
-    Frontend
+    Frontend,
+    $
 ) {
     'use strict';
 
     window.goomentoFrontend = window.goomentoFrontend || new Frontend();
+
     if ( ! goomentoFrontend.isEditMode() ) {
-        goomentoFrontend.init();
+        $( window ).trigger( 'pagebuilder/frontend/init', goomentoFrontend);
+        $( () => goomentoFrontend.init() );
     }
 });

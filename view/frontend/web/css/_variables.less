@@ -1,0 +1,149 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+@logo-primary: #448940;
+@logo-secondary: #009499;
+@primary-gradiant: linear-gradient(-90deg,#60c576 12%,#5ec6a4 100%);
+
+// Primary Colors
+@white:         #ffffff;
+@gray-100: #f7f7fc;
+@gray-200: #f3f3f9;
+@gray-300: #e9e9f2;
+@gray-400: #dfdfeb;
+@gray-500: #9e9fb4;
+@gray-600: #737491;
+@gray-700: #5a5b75;
+@gray-800: #4a4b65;
+@gray-900: #37384e;
+@black: #000000;
+
+@gray-darkest:  #2C2C2C;
+@gray-darker:   #373a3c;
+@gray-dark:     #55595c;
+@gray:          #818a91;
+@gray-light:    #D4D4D4;
+@gray-lighter:  #eceeef;
+@gray-lightest: #f7f7f7;
+@gray-mouse:    #CCD6DF;
+@gray-bg:       #e6e9ec;
+
+@blue:          #0275d8;
+@blue-flat:     #1b607f;
+@blue-light:    #5bc0de;
+@green:         #5cb85c;
+@green-light:   #2ecc71;
+@orange:        #f0ad4e;
+@red:           #d9534f;
+@purple:		#9C7AC1;
+
+@info:			@blue-light;
+@success:		@logo-primary;
+@warning:		@orange;
+@danger:		@red;
+
+////Official Social / Sharing Colors
+@android:		#A4C639;
+@apple:			#999999;
+@behance:		#1769ff;
+@bitbucket: 	#205081;
+@codepen:		#000000;
+@delicious: 	#3399ff;
+@deviantart: 	#05cc47;
+@digg:			#005be2;
+@dribbble:		#ea4c89;
+@gmt:		    #448940;
+@envelope:		#ea4335;
+@facebook:		#3b5998;
+@flickr:		#0063dc;
+@foursquare:	#2d5be3;
+@freecodecamp:	#006400;
+@github:		#333333;
+@gitlab:		#e24329;
+@google-plus:	#dd4b39;
+@houzz:			#7ac142;
+@instagram:		#262626;
+@jsfiddle:		#487AA2;
+@linkedin:		#0077b5;
+@medium:		#00ab6b;
+@meetup:		#ec1c40;
+@mixcloud:		#273a4b;
+@odnoklassniki:	#F4731C;
+@pinterest:		#bd081c;
+@pocket:		#EF3F56;
+@print:			#aaaaaa;
+@product-hunt:	#da552f;
+@reddit:		#ff4500;
+@rss:			#f26522;
+@shopping-cart:	#4CAF50;
+@skype:			#00AFF0;
+@slideshare:	#0077b5;
+@snapchat:		#fffc00;
+@soundcloud:	#ff8800;
+@spotify:		#2ebd59;
+@stack-overflow:#fe7a15;
+@steam:			#00adee;
+@stumbleupon:	#EB4924;
+@telegram:		#2CA5E0;
+@thumbtack:		#1aa1d8;
+@tripadvisor:	#589442;
+@tumblr:		#35465c;
+@twitch:		#6441A5;
+@twitter:		#1DA1F2;
+@viber:			#665cac;
+@vimeo:			#1ab7ea;
+@vk:			#45668e;
+@weibo:			#df2029;
+@weixin:		#7bb32e;
+@whatsapp:		#25d366;
+@wordpress:		#21759b;
+@xing:			#026466;
+@yelp:			#af0606;
+@youtube:		#cd201f;
+@five-h-px:		#0099e5;
+
+@transition-hover: all .3s;
+
+// Responsive Breakpoints
+@screen-sm: 480px;
+@screen-md: 768px;
+@screen-lg: 1025px;
+@screen-xl: 1440px;
+@screen-xxl: 1600px;
+
+@space-xs: .25rem; // 2.5px
+@space-sm: .5rem; // 5px
+@space-md: 1rem; // 10px
+@space-lg: 1.5rem; // 15px
+@space-xl: 2rem; // 20px
+
+// Mixins
+.css_direction_value(@property, @ltrValue, @rtlValue) {
+    & when (@direction = ltr) {
+            @{property}: @ltrValue;
+    }
+    & when (@direction = rtl) {
+            @{property}: @rtlValue;
+    }
+}
+
+.css_direction_property(@ltrProperty, @rtlProperty, @value) {
+    & when (@direction = ltr) {
+            @{ltrProperty}: @value;
+    }
+    & when (@direction = rtl) {
+            @{rtlProperty}: @value;
+    }
+}
+
+.end(@value) {
+    .css_direction_property(right, left, @value);
+}
+
+.start(@value) {
+    .css_direction_property(left, right, @value);
+}
+
+

@@ -1,0 +1,98 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+.gmt-button {
+    display: inline-block;
+    line-height: 1;
+    background-color: @gray;
+    color: #fff;
+    fill: #fff;
+    text-align: center;
+    transition: @transition-hover;
+
+    &:hover,
+    &:focus,
+    &:visited {
+        color: #fff;
+    }
+
+    &-icon svg {
+        width: 1em;
+    }
+
+    &.gmt-size- {
+
+        &xs {
+            font-size: 13px;
+            padding: @space-md @space-xl;
+        }
+
+        &sm {
+            font-size: @space-lg;
+            padding: 12px 24px;
+        }
+
+        &md {
+            font-size: 16px;
+            padding: @space-lg 30px;
+        }
+
+        &lg {
+            font-size: 18px;
+            padding: @space-xl 40px;
+        }
+
+        &xl {
+            font-size: @space-xl;
+            padding: 25px 50px;
+        }
+    }
+
+    .gmt-align-icon- {
+
+        &right {
+            float: right;
+            margin-left: @space-sm;
+        }
+
+        &left {
+            float: left;
+            margin-right: @space-sm;
+        }
+    }
+
+    .gmt-button-text {
+        display: inline-block;
+    }
+
+    span {
+        text-decoration: inherit; //fix for conflict with text-decoration & inline-block
+    }
+}
+
+.gmt-element {
+    .gmt-button {
+        &-info {
+            .gmt-button {
+                background: @info;
+            }
+        }
+        &-success {
+            .gmt-button {
+                background: @success;
+            }
+        }
+        &-warning {
+            .gmt-button {
+                background: @warning;
+            }
+        }
+        &-danger {
+            .gmt-button {
+                background: @danger;
+            }
+        }
+    }
+}

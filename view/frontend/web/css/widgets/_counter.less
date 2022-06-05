@@ -1,0 +1,39 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+.gmt-counter {
+
+	.gmt-counter- {
+
+		&number- {
+
+			&wrapper {
+				display: flex;
+				font-size: 69px;
+				line-height: 1;
+			}
+
+			&prefix,
+			&suffix {
+				flex-grow: 1;
+				white-space: pre-wrap;
+			}
+
+			&prefix {
+                .css_direction_value(text-align, right, left);
+			}
+
+			&suffix {
+                .css_direction_value(text-align, left, right);
+			}
+		}
+
+		&title {
+			text-align: center;
+			font-size: 19px;
+			line-height: 2.5;
+		}
+	}
+}

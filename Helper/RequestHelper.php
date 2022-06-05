@@ -11,6 +11,7 @@ namespace Goomento\PageBuilder\Helper;
 
 use Goomento\Core\Traits\TraitStaticCaller;
 use Goomento\Core\Traits\TraitStaticInstances;
+use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Framework\App\RequestInterface;
 
 /**
@@ -44,6 +45,33 @@ class RequestHelper
     public static function getAccessToken()
     {
         return self::getParam(EncryptorHelper::ACCESS_TOKEN);
+    }
+
+    /**
+     * @return DataPersistorInterface
+     */
+    public static function getDataPersistor() : DataPersistorInterface
+    {
+        return self::getInstance(DataPersistorInterface::class);
+    }
+
+    /**
+     * @param string $key
+     * @param $data
+     * @return void
+     */
+    public static function setPersistedData(string $key, $data)
+    {
+        self::getDataPersistor()->set($key, $data);
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public static function getPersistedData(string $key)
+    {
+        return self::getDataPersistor()->get($key);
     }
 
     /**
