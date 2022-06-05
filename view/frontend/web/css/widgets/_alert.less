@@ -1,0 +1,70 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+.gmt-widget-alert {
+    .gmt-alert {
+        padding: @space-lg;
+        border-left: @space-sm solid transparent;
+        position: relative;
+        .css_direction_value(text-align, left, right);
+
+        .gmt-alert-title {
+            display: block;
+            font-weight: bold;
+            color: @white;
+        }
+
+        .gmt-alert-description {
+            display: block;
+            font-size: 13px;
+            color: @white;
+        }
+
+        button.gmt-alert-dismiss {
+            position: absolute;
+            .end(@space-md);
+            top: @space-md;
+            padding: 3px;
+            font-size: @space-xl;
+            line-height: 1;
+            background: transparent;
+            color: inherit;
+            border: none;
+            cursor: pointer;
+        }
+
+        &.gmt-alert-info {
+            background-color: @info;
+            border-color: darken(@info, 10%);
+        }
+
+        &.gmt-alert-success {
+            background-color: @success;
+            border-color: darken(@success, 10%);
+        }
+
+        &.gmt-alert-warning {
+            background-color: @warning;
+            border-color: darken(@warning, 10%);
+        }
+
+        &.gmt-alert-danger {
+            background-color: @danger;
+            border-color: darken(@danger, 10%);
+        }
+    }
+
+    // Responsive mode
+    @media (max-width: @screen-sm) {
+        .gmt-alert {
+            padding: @space-md;
+
+            button.gmt-alert-dismiss {
+                right: 7px;
+                top: 7px;
+            }
+        }
+    }
+}

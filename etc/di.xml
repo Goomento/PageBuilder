@@ -256,5 +256,8 @@
     <type name="Goomento\PageBuilder\Model\ResourceModel\Content">
         <plugin name="invalidateContentCache" type="Goomento\PageBuilder\Plugin\PageBuilder\Model\ResourceModel\Content" />
     </type>
+    <type name="Magento\Framework\RequireJs\Config">
+        <plugin name="modifyResources" type="Goomento\PageBuilder\Plugin\Framework\RequireJs\Config\ModifyResources" />
+    </type>
 </config>
 

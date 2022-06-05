@@ -69,10 +69,10 @@ class Store
      * @param AbstractModel $store
      * @return void
      */
-    public function afterSave(ResourceStore $object, ResourceStore $result, AbstractModel $store): void
+    public function afterSave(ResourceStore $object, ResourceStore $result, $store): void
     {
         try {
-            if ($store->isObjectNew()) {
+            if ($store instanceof AbstractModel && $store->isObjectNew()) {
                 $this->urlPersist->replace(
                     $this->generatePageBuilderUrls((int)$store->getId())
                 );

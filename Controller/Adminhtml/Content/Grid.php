@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 
+use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Backend\App\Action\Context;
@@ -89,11 +90,15 @@ class Grid extends Action implements HttpGetActionInterface
      */
     protected function getPageConfig()
     {
-        $type = $this->getContentType();
-        $type = (string) __(ucfirst($type) . 's');
+        $title = $this->getContentType();
+        if ($title === ContentInterface::TYPE_PAGE) {
+            $title = __('Pages & Landing Pages');
+        } else {
+            $title = (string) __(ucfirst($title) . 's');
+        }
         return [
             'active_menu' => 'Goomento_PageBuilder::' . $this->getContentType(),
-            'title' => $type,
+            'title' => $title,
             'handler' => $this->getContentLayoutName('grid')
         ];
     }

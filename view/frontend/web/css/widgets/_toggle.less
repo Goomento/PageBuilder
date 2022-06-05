@@ -1,0 +1,75 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+.gmt-toggle {
+    .css_direction_value(text-align, left, right);
+
+	.gmt-tab-title {
+		font-weight: bold;
+		line-height: 1;
+		margin: 0;
+		padding: @space-lg;
+		border-bottom: 1px solid @gray-light;
+		cursor: pointer;
+		outline: none;
+
+		.gmt-toggle-icon {
+			display: inline-block;
+			width: 1em;
+
+			&.gmt-toggle-icon- {
+
+				&right {
+					float: right;
+					text-align: right;
+				}
+
+				&left {
+					float: left;
+					text-align: left;
+				}
+			}
+
+			.gmt-toggle-icon-closed {
+				display: block;
+			}
+			.gmt-toggle-icon-opened {
+				display: none;
+			}
+		}
+
+		&.gmt-active {
+			border-bottom: none;
+
+			.gmt-toggle-icon-closed {
+				display: none;
+			}
+			.gmt-toggle-icon-opened {
+				display: block;
+			}
+		}
+	}
+
+	.gmt-tab-content {
+	    padding: @space-lg;
+		border-bottom: 1px solid @gray-light;
+	    display: none;
+	}
+}
+
+// Responsive mode
+@media (max-width: @screen-sm) {
+
+	.gmt-toggle {
+
+		.gmt-tab-title {
+			padding: 12px;
+		}
+
+		.gmt-tab-content {
+			padding: 12px @space-md;
+		}
+	}
+}

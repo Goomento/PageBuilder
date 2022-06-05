@@ -41,9 +41,15 @@ class LiveEditorButton extends AbstractGenericButton implements ButtonProviderIn
      */
     public function getLiveEditorUrl()
     {
+        $storeId = 0;
+        if ($this->getRequest()->getParam('store')) {
+            $storeId = (int) $this->getRequest()->getParam('store');
+        }
+
         return $this->getUrl('pagebuilder/content/editor', [
             'content_id' => $this->getContentId(),
-            'type' => $this->getContentType()
+            'type' => $this->getContentType(),
+            'store' => $storeId
         ]);
     }
 }

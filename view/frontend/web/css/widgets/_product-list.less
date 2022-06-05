@@ -1,0 +1,33 @@
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+.gmt-product-items {
+    .gmt-product-item {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        margin-bottom: @space-xl;
+        * {
+            box-sizing: initial; // Use value of magento
+        }
+        .product-item-info {
+            width: 100%;
+            .product-item-inner {
+                margin-top: 9px;
+            }
+        }
+    }
+}
+.gmt-products-list {
+    .gmt-product-items {
+        .product-item {
+            width: 100%;
+            .product-item-photo, .product-item-details {
+                display: inline-block;
+                vertical-align: top;
+            }
+        }
+    }
+}

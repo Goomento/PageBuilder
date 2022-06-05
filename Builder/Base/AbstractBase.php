@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Base;
 
+use Goomento\PageBuilder\Helper\HooksHelper;
+
 abstract class AbstractBase extends AbstractEntity
 {
     /**
@@ -78,6 +80,8 @@ abstract class AbstractBase extends AbstractEntity
     }
 
     /**
+     * Init settings
+     *
      * @return array
      */
     protected function getInitSettings()
@@ -92,6 +96,9 @@ abstract class AbstractBase extends AbstractEntity
     {
         if (null === $this->settings) {
             $this->settings = $this->getInitSettings();
+
+            $this->settings = HooksHelper::applyFilters('pagebuilder/settings/' . static::TYPE . '/' . static::NAME,
+                $this->settings);
         }
     }
 }

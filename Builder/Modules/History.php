@@ -14,18 +14,7 @@ use Goomento\PageBuilder\Helper\TemplateHelper;
 
 class History extends BaseModule
 {
-    /**
-     * Get module name.
-     *
-     * Retrieve the history module name.
-     *
-     *
-     * @return string AbstractModule name.
-     */
-    public function getName()
-    {
-        return 'history';
-    }
+    const NAME = 'history';
 
     /**
      * @return void

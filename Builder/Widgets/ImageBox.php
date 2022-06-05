@@ -234,15 +234,15 @@ class ImageBox extends AbstractWidget
                 'options' => [
                     'left' => [
                         'title' => __('Left'),
-                        'icon' => 'fas fa-align-left',
+                        'icon' => 'fas fa-angle-left',
                     ],
                     'top' => [
                         'title' => __('Top'),
-                        'icon' => 'fas fa-level-up-alt',
+                        'icon' => 'fas fa-angle-up',
                     ],
                     'right' => [
                         'title' => __('Right'),
-                        'icon' => 'fas fa-align-right',
+                        'icon' => 'fas fa-angle-right',
                     ],
                 ],
                 'prefix_class' => 'gmt-position-',

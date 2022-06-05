@@ -20,21 +20,7 @@ abstract class AbstractModule extends AbstractBase
      */
     private $components = [];
 
-    /**
-     * Module instance.
-     *
-     * Holds the module instance.
-     *
-     *
-     * @var AbstractModule
-     */
-    protected static $_instances = [];
-
-
-    public static function isActive()
-    {
-        return true;
-    }
+    const TYPE = 'module';
 
     /**
      * Clone.

@@ -48,8 +48,10 @@ class EntryPoint extends BuilderRegister
         ThemeHelper::registerScript(
             'pagebuilderRegister',
             'Goomento_PageBuilder/js/action/pagebuilderRegister',
-            ['jquery', 'mage/translate']
+            ['jquery']
         );
+
+        ThemeHelper::enqueueScript('pagebuilderRegister');
 
         $magentoVersion = Configuration::magentoVersion();
         if (!$magentoVersion || version_compare($magentoVersion, '2.4.4', '<')) {
@@ -271,7 +273,7 @@ class EntryPoint extends BuilderRegister
 
         ThemeHelper::registerStyle(
             'goomento-widgets',
-            'Goomento_PageBuilder/build/widgets' . $directionSuffix . $minSuffix,
+            'Goomento_PageBuilder/css/widgets' . $directionSuffix . '.css',
             ['goomento-frontend'],
             Configuration::version()
         );

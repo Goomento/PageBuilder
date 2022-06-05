@@ -1,5 +1,11 @@
 # Magento 2 Goomento Page Builder
 
+## 0.2.10: Optimized resources
+- Fixed minor bugs
+- Added Less files for customization
+- Added preview for specific store view
+- Optimized resources
+
 ## 0.2.9: Enhanced theme loader
 - Enhanced theme loader
 - Fixed minor bugs 

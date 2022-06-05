@@ -7,13 +7,32 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="pagebuilder_general"/>
+    <head>
+        <remove src="extjs/resources/css/ext-all.css"/>
+        <remove src="extjs/resources/css/ytheme-magento.css"/>
+        <remove src="css/styles-old.css"/>
+    </head>
     <body>
         <referenceContainer name="content">
             <block name="pagebuilder.editor" template="Goomento_PageBuilder::editor/live_editor.phtml" />
             <block name="pagebuilder.media_bucket" template="Goomento_PageBuilder::editor/media_bucket.phtml" />
+
+            <block name="pagebuilder.editor.templates.global" template="Goomento_PageBuilder::templates/global.phtml" />
+            <block name="pagebuilder.editor.templates.panel" template="Goomento_PageBuilder::templates/panel.phtml" />
+            <block name="pagebuilder.editor.templates.panel_elements" template="Goomento_PageBuilder::templates/panel_elements.phtml" />
+            <block name="pagebuilder.editor.templates.repeater" template="Goomento_PageBuilder::templates/repeater.phtml" />
+            <block name="pagebuilder.editor.templates.templates" template="Goomento_PageBuilder::templates/templates.phtml" />
+            <block name="pagebuilder.editor.templates.navigator" template="Goomento_PageBuilder::templates/navigator.phtml" />
+            <block name="pagebuilder.editor.templates.hotkeys" template="Goomento_PageBuilder::templates/hotkeys.phtml" />
         </referenceContainer>
+
+
         <attribute name="class" value="gmt-editor-active"/>
         <attribute name="class" value="gmt-editor-page"/>
+
+        <referenceContainer name="requirejs-config" remove="true"/>
+        <referenceContainer name="head.calendar" remove="true"/>
+
         <referenceContainer name="header.inner.left" remove="true"/>
         <referenceContainer name="header.inner.right" remove="true"/>
         <referenceContainer name="menu.wrapper" remove="true"/>

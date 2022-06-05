@@ -107,10 +107,6 @@ define([
                 return swiperOptions;
             }
 
-        const swiper = new Swiper( $carousel, getSwiperSettings() );
-
-        $element.on('DOMSubtreeModified DOMNodeInserted DOMNodeRemoved', function () {
-            swiper.update();
-        });
+        new Swiper( $carousel, getSwiperSettings() );
     }
 });

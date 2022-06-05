@@ -15,14 +15,15 @@ use Goomento\PageBuilder\Builder\Shapes;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Base\AbstractDocument;
 use Goomento\PageBuilder\Helper\ContentHelper;
+use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
 use Goomento\PageBuilder\Helper\ConfigHelper;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\RequestHelper;
-use Goomento\PageBuilder\Helper\TemplateHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
+use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 
 class Editor
 {
@@ -42,6 +43,7 @@ class Editor
 
     /**
      * Init the editor
+     * This function trigger in editor only, otherwise, will make confused system
      */
     public function init()
     {
@@ -52,10 +54,38 @@ class Editor
 
         HooksHelper::addAction('pagebuilder/adminhtml/footer', [ $this,'editorFooterTrigger' ]);
 
-        HooksHelper::addAction('pagebuilder/adminhtml/enqueue_scripts', [ $this,'enqueueScripts' ]);
+        HooksHelper::addAction('pagebuilder/adminhtml/register_scripts', [ $this,'registerScripts' ], 11);
         HooksHelper::addAction('pagebuilder/adminhtml/enqueue_scripts', [ $this,'enqueueStyles' ]);
 
+        // Print out the script in footer
+        HooksHelper::addAction('pagebuilder/editor/footer', [ $this,'enqueueScripts' ]);
+
+        HooksHelper::addFilter('pagebuilder/settings/module/ajax', [ $this,'getAjaxUrls' ]);
+
         HooksHelper::doAction('pagebuilder/editor/init');
+    }
+
+    /**
+     * Modify Ajax URLs setting
+     *
+     * @param $settings
+     * @return mixed
+     */
+    public function getAjaxUrls($settings)
+    {
+        if (isset($settings['actions'])) {
+            $storeId = (int) RequestHelper::getParam('store');
+            $settings['actions']['render_widget'] = UrlBuilderHelper::getFrontendUrl(
+                'pagebuilder/actions/actions',
+                [
+                    '_query' => [
+                        EncryptorHelper::ACCESS_TOKEN => EncryptorHelper::createAccessToken(),
+                    ],
+                    'store_id' => $storeId
+                ]
+            );
+        }
+        return $settings;
     }
 
     /**
@@ -100,7 +130,7 @@ class Editor
 
     /**
      */
-    public function enqueueScripts()
+    public function registerScripts()
     {
         $suffix = Configuration::debug() ? '' : '.min';
 
@@ -110,14 +140,189 @@ class Editor
             ['goomento-common-modules']
         );
 
+        ThemeHelper::removeScripts('jquery/ui');
+
+        ThemeHelper::registerScript(
+            'jquery/ui',
+            'Goomento_PageBuilder/lib/jquery/jquery-ui.min',
+            ['jquery'],
+            [
+                'requirejs' => [
+                    'map' => [
+                        '*' => [
+                            'jquery-ui-modules/widget' => 'jquery/ui',
+                            'jquery-ui-modules/core' => 'jquery/ui',
+                            'jquery-ui-modules/accordion' => 'jquery/ui',
+                            'jquery-ui-modules/autocomplete' => 'jquery/ui',
+                            'jquery-ui-modules/button' => 'jquery/ui',
+                            'jquery-ui-modules/datepicker' => 'jquery/ui',
+                            'jquery-ui-modules/dialog' => 'jquery/ui',
+                            'jquery-ui-modules/draggable' => 'jquery/ui',
+                            'jquery-ui-modules/droppable' => 'jquery/ui',
+                            'jquery-ui-modules/effect-blind' => 'jquery/ui',
+                            'jquery-ui-modules/effect-bounce' => 'jquery/ui',
+                            'jquery-ui-modules/effect-clip' => 'jquery/ui',
+                            'jquery-ui-modules/effect-drop' => 'jquery/ui',
+                            'jquery-ui-modules/effect-explode' => 'jquery/ui',
+                            'jquery-ui-modules/effect-fade' => 'jquery/ui',
+                            'jquery-ui-modules/effect-fold' => 'jquery/ui',
+                            'jquery-ui-modules/effect-highlight' => 'jquery/ui',
+                            'jquery-ui-modules/effect-scale' => 'jquery/ui',
+                            'jquery-ui-modules/effect-pulsate' => 'jquery/ui',
+                            'jquery-ui-modules/effect-shake' => 'jquery/ui',
+                            'jquery-ui-modules/effect-slide' => 'jquery/ui',
+                            'jquery-ui-modules/effect-transfer' => 'jquery/ui',
+                            'jquery-ui-modules/effect' => 'jquery/ui',
+                            'jquery-ui-modules/menu' => 'jquery/ui',
+                            'jquery-ui-modules/mouse' => 'jquery/ui',
+                            'jquery-ui-modules/position' => 'jquery/ui',
+                            'jquery-ui-modules/progressbar' => 'jquery/ui',
+                            'jquery-ui-modules/resizable' => 'jquery/ui',
+                            'jquery-ui-modules/selectable' => 'jquery/ui',
+                            'jquery-ui-modules/slider' => 'jquery/ui',
+                            'jquery-ui-modules/sortable' => 'jquery/ui',
+                            'jquery-ui-modules/spinner' => 'jquery/ui',
+                            'jquery-ui-modules/tabs' => 'jquery/ui',
+                            'jquery-ui-modules/tooltip' => 'jquery/ui',
+                        ]
+                    ]
+                ]
+            ]
+        );
+
+        $requirejs = [
+            'map' => [
+                '*' => [
+                    'ko' => 'knockoutjs/knockout',
+                    'knockout' => 'knockoutjs/knockout',
+                    'mageUtils' => 'mage/utils/main',
+                    'rjsResolver' => 'mage/requirejs/resolver',
+                    'tinymce4' => 'tiny_mce_4/tinymce.min',
+                    'wysiwygAdapter' => 'mage/adminhtml/wysiwyg/tiny_mce/tinymce4Adapter',
+                    'translateInline' => 'mage/translate-inline',
+                    'form' => 'mage/backend/form',
+                    'button' => 'mage/backend/button',
+                    'accordion' => 'mage/accordion',
+                    'actionLink' => 'mage/backend/action-link',
+                    'validation' => 'mage/backend/validation',
+                    'notification' => 'mage/backend/notification',
+                    'loader' => 'mage/loader_old',
+                    'loaderAjax' => 'mage/loader_old',
+                    'floatingHeader' => 'mage/backend/floating-header',
+                    'suggest' => 'mage/backend/suggest',
+                    'mediabrowser' => 'jquery/jstree/jquery.jstree',
+                    'tabs' => 'mage/backend/tabs',
+                    'treeSuggest' => 'mage/backend/tree-suggest',
+                    'calendar' => 'mage/calendar',
+                    'dropdown' => 'mage/dropdown_old',
+                    'collapsible' => 'mage/collapsible',
+                    'menu' => 'mage/backend/menu',
+                    'jstree' => 'jquery/jstree/jquery.jstree',
+                    'details' => 'jquery/jquery.details',
+                    'mediaUploader' => 'Magento_Backend/js/media-uploader',
+                    'mage/translate' => 'Magento_Backend/js/translate',
+                    'eavInputTypes' => 'Magento_Eav/js/input-types',
+                    'folderTree' => 'Magento_Cms/js/folder-tree',
+                    'uiElement' => 'Magento_Ui/js/lib/core/element/element',
+                    'uiCollection' => 'Magento_Ui/js/lib/core/collection',
+                    'uiComponent' => 'Magento_Ui/js/lib/core/collection',
+                    'uiClass' => 'Magento_Ui/js/lib/core/class',
+                    'uiEvents' => 'Magento_Ui/js/lib/core/events',
+                    'uiRegistry' => 'Magento_Ui/js/lib/registry/registry',
+                    'consoleLogger' => 'Magento_Ui/js/lib/logger/console-logger',
+                    'uiLayout' => 'Magento_Ui/js/core/renderer/layout',
+                    'buttonAdapter' => 'Magento_Ui/js/form/button-adapter',
+                    'tinymceDeprecated' => 'Magento_Tinymce3/tiny_mce/tiny_mce_src',
+                    'escaper' =>  'Magento_Security/js/escaper',
+                ]
+            ],
+            'shim' => [
+                'extjs/ext-tree' => [
+                    'prototype'
+                ],
+                'extjs/ext-tree-checkbox' => [
+                    'extjs/ext-tree',
+                    'extjs/defaults'
+                ],
+                'jquery/editableMultiselect/js/jquery.editable' => [
+                    'jquery'
+                ],
+                'tiny_mce_4/tinymce.min' => [
+                    'exports' => 'tinyMCE'
+                ],
+                'jquery/jquery-migrate' => ['jquery'],
+                'jquery/jstree/jquery.hotkeys' => ['jquery'],
+                'jquery/hover-intent' => ['jquery'],
+                'mage/adminhtml/backup' => ['prototype'],
+                'mage/captcha' => ['prototype'],
+                'mage/new-gallery' => ['jquery'],
+                'mage/webapi' => ['jquery'],
+                'jquery/ui' => ['jquery'],
+                'MutationObserver' => ['es6-collections'],
+                'matchMedia' => [
+                    'exports' => 'mediaCheck'
+                ],
+                'magnifier/magnifier' => ['jquery'],
+                'Magento_Tinymce3/tiny_mce/tiny_mce_src' => [
+                    'exports' => 'tinymce'
+                ],
+            ],
+            'bundles' => [
+                'js/theme' => [
+                    'globalNavigation',
+                    'globalSearch',
+                    'modalPopup',
+                    'useDefault',
+                    'loadingPopup',
+                    'collapsable',
+                ]
+            ],
+            'deps' => [
+                'js/theme',
+                'mage/backend/bootstrap',
+                'mage/adminhtml/globals',
+                'jquery/jquery-migrate',
+            ],
+            'paths' => [
+                'jquery/validate' => 'jquery/jquery.validate',
+                'jquery/hover-intent' => 'jquery/jquery.hoverIntent',
+                'jquery/file-uploader' => 'jquery/fileUploader/jquery.fileupload-fp',
+                'prototype' => 'legacy-build.min',
+                'jquery/jquery-storageapi' => 'Magento_Cookie/js/jquery.storageapi.extended',
+                'text' => 'mage/requirejs/text',
+                'domReady' => 'requirejs/domReady',
+                'spectrum' => 'jquery/spectrum/spectrum',
+                'tinycolor' => 'jquery/spectrum/tinycolor',
+                'jquery-ui-modules' => 'jquery/ui-modules',
+                'ui/template' => 'Magento_Ui/templates'
+            ],
+            'config' => [
+                'mixins' => [
+                    'jquery/jstree/jquery.jstree' => [
+                        'mage/backend/jstree-mixin' => true
+                    ],
+                    'jquery' => [
+                        'jquery/patches/jquery' => true
+                    ],
+                ],
+                'text' => [
+                    'headers' => [
+                        'X-Requested-With' => 'XMLHttpRequest'
+                    ]
+                ]
+            ]
+        ];
+
         $magentoVersion = Configuration::magentoVersion();
-        if (!$magentoVersion || version_compare($magentoVersion, '2.4.4', '<')) {
-            ThemeHelper::removeScripts('jquery/ui');
-            ThemeHelper::registerScript(
-                'jquery/ui',
-                'Goomento_PageBuilder/lib/jquery/jquery-ui.min',
-                ['jquery']
-            );
+        if ($magentoVersion) {
+            if (version_compare($magentoVersion, '2.4.4', '>=')) {
+                $requirejs['paths']['jquery/file-uploader'] = 'jquery/fileUploader/jquery.fileupload';
+                $requirejs['shim']['tiny_mce_5/tinymce.min'] = [
+                    'exports' => 'tinyMCE'
+                ];
+                $requirejs['map']['*']['tinymce'] = 'tiny_mce_5/tinymce.min';
+                $requirejs['map']['*']['wysiwygAdapter'] = 'mage/adminhtml/wysiwyg/tiny_mce/tinymce5Adapter';
+            }
         }
 
         ThemeHelper::registerScript(
@@ -126,18 +331,16 @@ class Editor
             [
                 'underscore',
                 'jquery',
-                'mage/translate',
                 'jquery/ui',
                 'backbone',
                 'backbone.radio',
                 'backbone.marionette',
-                'mage/translate',
+                'mage/adminhtml/wysiwyg/tiny_mce/setup',
                 'nouislider',
                 'goomento-common',
                 'goomento-editor-modules',
                 'perfect-scrollbar',
                 'nprogress',
-                'wysiwygAdapter',
                 'tipsy',
                 'color-picker-alpha',
                 'jquery-select2',
@@ -146,6 +349,9 @@ class Editor
                 'ace-language-tools',
                 'jquery-hover-intent',
                 'imagesloaded',
+            ],
+            [
+                'requirejs' => $requirejs
             ]
         );
 
@@ -224,9 +430,13 @@ class Editor
 
         DataHelper::printJsConfig('goomento-editor', 'goomentoConfig', $config);
 
-        ThemeHelper::enqueueScript('goomento-editor');
-
         ObjectManagerHelper::getControlsManager()->enqueueControlScripts();
+
+    }
+
+    public function enqueueScripts()
+    {
+        ThemeHelper::enqueueScript('goomento-editor');
 
         /**
          * After editor enqueue scripts.
@@ -319,7 +529,7 @@ EDITOR_WAPPER;
     }
 
     /**
-     *
+     * Trigger the header
      */
     public function editorHeaderTrigger()
     {
@@ -345,8 +555,6 @@ EDITOR_WAPPER;
         ObjectManagerHelper::getSchemasManager()->printSchemesTemplates();
         ObjectManagerHelper::getTagsManager()->printTemplates();
 
-        $this->initEditorTemplates();
-
         /**
          * SagoTheme editor footer.
          *
@@ -363,28 +571,6 @@ EDITOR_WAPPER;
      */
     public function __construct()
     {
-        HooksHelper::addAction('pagebuilder/editor/index', [ $this, 'init' ]);
-        HooksHelper::addAction('pagebuilder/editor/footer', [ $this, 'initEditorTemplates' ]);
-    }
-
-    /**
-     * Init editor templates.
-     *
-     *
-     */
-    public function initEditorTemplates()
-    {
-        $template_names = [
-            'global',
-            'panel',
-            'panel_elements',
-            'repeater',
-            'templates',
-            'navigator',
-            'hotkeys',
-        ];
-        foreach ($template_names as $template_name) {
-            echo TemplateHelper::getHtml("Goomento_PageBuilder::templates/$template_name.phtml");
-        }
+        HooksHelper::addAction('pagebuilder/editor/index', [ $this, 'init' ]); // catch trigger in controller
     }
 }

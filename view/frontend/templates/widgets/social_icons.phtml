@@ -15,57 +15,46 @@ use Goomento\PageBuilder\Builder\Managers\Icons;
 $widget = $block->getWidget();
 $settings = $widget->getSettingsForDisplay();
 
-$fallback_defaults = [
-    'fab fa-facebook',
-    'fab fa-twitter',
-    'fab fa-google-plus',
-];
-
-$class_animation = '';
+$classAnimation = '';
 
 if (!empty($settings['hover_animation'])) {
-    $class_animation = ' gmt-animation-' . $settings['hover_animation'];
+    $classAnimation = ' gmt-animation-' . $settings['hover_animation'];
 }
 ?>
 <div class="gmt-social-icons-wrapper">
     <?php
-    foreach ($settings['social_icon_list'] as $index => $item) {
+    foreach ($settings['social_icon_list'] as $index => $item) :
         $social = '';
 
-        // add old default
-        if (empty($item['social'])) {
-            $item['social'] = $fallback_defaults[$index] ?? 'fab fa-magento';
+        if (isset($item['social_icon']['value']) && $item['social_icon']['value']) {
+            $value = explode(' ', $item['social_icon']['value']);
+            $social = str_replace('fa-', '', $value[1]);
         }
 
-        if (!empty($item['social'])) {
-            $social = str_replace('fas fa-', '', $item['social']);
-        }
+        $linkKey = 'link_' . $index;
 
-        $link_key = 'link_' . $index;
-
-        $widget->addRenderAttribute($link_key, 'href', $item['link']['url']);
+        $widget->addRenderAttribute($linkKey, 'href', $item['link']['url']);
 
         $className = str_replace('fab fa-', '', $social);
         $className = str_replace('fas fa-', '', $className);
 
-        $widget->addRenderAttribute($link_key, 'class', [
+        $widget->addRenderAttribute($linkKey, 'class', [
             'gmt-icon',
             'gmt-social-icon',
-            'gmt-social-icon-' . $className . $class_animation,
+            'gmt-social-icon-' . $className . $classAnimation,
             'gmt-repeater-item-' . $item['_id'],
         ]);
 
         if ($item['link']['is_external']) {
-            $widget->addRenderAttribute($link_key, 'target', '_blank');
+            $widget->addRenderAttribute($linkKey, 'target', '_blank');
         }
 
         if ($item['link']['nofollow']) {
-            $widget->addRenderAttribute($link_key, 'rel', 'nofollow');
+            $widget->addRenderAttribute($linkKey, 'rel', 'nofollow');
         } ?>
-        <a <?= $widget->getRenderAttributeString($link_key); ?>>
+        <a <?= $widget->getRenderAttributeString($linkKey); ?>>
             <span class="gmt-screen-only"><?= ucwords($social); ?></span>
             <?php Icons::renderIcon($item['social_icon']); ?>
         </a>
-        <?php
-    } ?>
+    <?php endforeach; ?>
 </div>
