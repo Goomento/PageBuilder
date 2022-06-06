@@ -18,6 +18,11 @@ use Goomento\PageBuilder\Builder\Elements\Section;
 use Goomento\PageBuilder\Builder\Widgets\TextEditor;
 
 /**
+ *
+ * NOTE: Use these static methods in template hook only - which wrapped in HooksHelper::doAction( 'header' ) or
+ * HooksHelper::doAction( 'footer' ) ... . Otherwise might cause some issues with classes loader.
+ * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
+ *
  * @see \Goomento\PageBuilder\Helper\Content
  * @method static RevisionSearchResultsInterface getRevisionsByContent($contentId, $statuses = null, ?int $limit = null)
  * @method static RevisionInterface getRevision($revisionId)

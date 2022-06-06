@@ -12,6 +12,11 @@ use Goomento\Core\Traits\TraitStaticCaller;
 use Goomento\Core\Traits\TraitStaticInstances;
 
 /**
+ *
+ * NOTE: Use these static methods in template hook only - which wrapped in HooksHelper::doAction( 'header' ) or
+ * HooksHelper::doAction( 'footer' ) ... . Otherwise might cause some issues with classes loader.
+ * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
+ *
  * @method static emergency($message, array $context = array())
  * @method static alert($message, array $context = array())
  * @method static critical($message, array $context = array())

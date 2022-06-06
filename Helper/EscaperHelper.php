@@ -13,12 +13,23 @@ use Goomento\Core\Traits\TraitStaticInstances;
 use Magento\Framework\Escaper;
 
 /**
+ *
+ * NOTE: Use these static methods in template hook only - which wrapped in HooksHelper::doAction( 'header' ) or
+ * HooksHelper::doAction( 'footer' ) ... . Otherwise might cause some issues with classes loader.
+ * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
+ *
  * @method static escapeHtml($data, $allowedTags = null)
+ * @see Escaper::escapeHtml()
  * @method static escapeHtmlAttr($string, $escapeSingleQuote = true)
+ * @see Escaper::escapeHtmlAttr()
  * @method static encodeUrlParam($string)
+ * @see Escaper::encodeUrlParam()
  * @method static escapeJs($string)
+ * @see Escaper::escapeJs()
  * @method static escapeCss($string)
+ * @see Escaper::escapeCss()
  * @method static escapeJsQuote($data, $quote = '\'')
+ * @see Escaper::escapeJsQuote()
  */
 class EscaperHelper
 {

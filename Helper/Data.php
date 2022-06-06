@@ -19,6 +19,10 @@ class Data extends AbstractHelper
 
     const ACTIVE_XML_PATH = self::PREFIX_XML_PATH . '/general/active';
 
+    const DEV_CSS_MINIFY_FILES_XML_PATH = 'dev/css/minify_files';
+
+    const DEV_JS_MINIFY_FILES_XML_PATH = 'dev/js/minify_files';
+
     /**
      * @param $path
      * @param string $scopeType
@@ -162,5 +166,25 @@ class Data extends AbstractHelper
         return (string) $this->getBuilderConfig(
             'integrations/google_maps_key'
         );
+    }
+
+    /**
+     * Is CSS minification enable
+     *
+     * @return bool
+     */
+    public function isCssMinifyFilesEnabled()
+    {
+        return (bool) $this->getConfig(self::DEV_CSS_MINIFY_FILES_XML_PATH);
+    }
+
+    /**
+     * Is JavaScript minification enable
+     *
+     * @return bool
+     */
+    public function isJsMinifyFilesEnabled()
+    {
+        return (bool) $this->getConfig(self::DEV_JS_MINIFY_FILES_XML_PATH);
     }
 }

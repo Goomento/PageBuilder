@@ -124,7 +124,7 @@ abstract class AbstractFile extends AbstractEntity
      */
     public function getContent()
     {
-        if (!$this->content) {
+        if ($this->content === null) {
             $this->content = $this->parseContent();
         }
 

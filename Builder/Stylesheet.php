@@ -8,6 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder;
 
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Magento\Framework\Code\Minifier\Adapter\Css\CSSmin;
+
 class Stylesheet
 {
     /**
@@ -43,6 +46,11 @@ class Stylesheet
      * @var array
      */
     private $variables = [];
+
+    /**
+     * @var CSSmin|null
+     */
+    private $minifier;
 
     /**
      * Parse CSS rules.
@@ -285,7 +293,28 @@ class Stylesheet
             $styleText .= $raw;
         }
 
-        return $styleText;
+        return $this->minifyContent($styleText);
+    }
+
+
+    /**
+     * Minify CSS
+     *
+     * @param string $content
+     * @return string
+     */
+    public function minifyContent(string $content) : string
+    {
+        $content = trim($content);
+        if ($content !== '') {
+            if ($this->minifier === null) {
+                $this->minifier = ObjectManagerHelper::get(CSSmin::class);
+            }
+
+            $content = $this->minifier->minify($content);
+        }
+
+        return $content;
     }
 
     /**

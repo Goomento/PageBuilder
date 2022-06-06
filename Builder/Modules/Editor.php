@@ -22,8 +22,10 @@ use Goomento\PageBuilder\Helper\ConfigHelper;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\RequestHelper;
+use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
+use Magento\Framework\RequireJs\Config;
 
 class Editor
 {
@@ -61,6 +63,14 @@ class Editor
         HooksHelper::addAction('pagebuilder/editor/footer', [ $this,'enqueueScripts' ]);
 
         HooksHelper::addFilter('pagebuilder/settings/module/ajax', [ $this,'getAjaxUrls' ]);
+
+        HooksHelper::addAction('header', function () {
+            if (DataHelper::isJsMinifyFilesEnabled() && StateHelper::isProductionMode()) {
+                /** @var Config $requireJsConfig */
+                $requireJsConfig = ObjectManagerHelper::get(\Magento\Framework\RequireJs\Config::class);
+                echo '<script>' . $requireJsConfig->getMinResolverCode() . '</script>';
+            }
+        }, 9); // Should print out at first
 
         HooksHelper::doAction('pagebuilder/editor/init');
     }
@@ -286,7 +296,7 @@ class Editor
             'paths' => [
                 'jquery/validate' => 'jquery/jquery.validate',
                 'jquery/hover-intent' => 'jquery/jquery.hoverIntent',
-                'jquery/file-uploader' => 'jquery/fileUploader/jquery.fileupload-fp',
+                'jquery/file-uploader' => 'jquery/fileUploader/jquery.fileupload',
                 'prototype' => 'legacy-build.min',
                 'jquery/jquery-storageapi' => 'Magento_Cookie/js/jquery.storageapi.extended',
                 'text' => 'mage/requirejs/text',
@@ -316,7 +326,6 @@ class Editor
         $magentoVersion = Configuration::magentoVersion();
         if ($magentoVersion) {
             if (version_compare($magentoVersion, '2.4.4', '>=')) {
-                $requirejs['paths']['jquery/file-uploader'] = 'jquery/fileUploader/jquery.fileupload';
                 $requirejs['shim']['tiny_mce_5/tinymce.min'] = [
                     'exports' => 'tinyMCE'
                 ];

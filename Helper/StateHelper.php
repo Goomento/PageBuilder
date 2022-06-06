@@ -11,11 +11,19 @@ namespace Goomento\PageBuilder\Helper;
 use Goomento\Core\Traits\TraitStaticCaller;
 use Goomento\Core\Traits\TraitStaticInstances;
 use Magento\Framework\App\Area;
+use Magento\Framework\App\State;
 
 /**
+ *
+ * NOTE: Use these static methods in template hook only - which wrapped in HooksHelper::doAction( 'header' ) or
+ * HooksHelper::doAction( 'footer' ) ... . Otherwise might cause some issues with classes loader.
+ * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
+ *
  * @see \Goomento\Core\Helper\State
  * @method static string getAreaCode()
- * @method static bool isAdminhtml()
+ * @see State::getAreaCode()
+ * @method static string getMode()
+ * @see State::getMode()
  */
 class StateHelper
 {
@@ -101,10 +109,30 @@ class StateHelper
     }
 
     /**
+     * Whether is Production mode or not
+     *
+     * @return bool
+     */
+    public static function isProductionMode()
+    {
+        return self::getMode() === State::MODE_PRODUCTION;
+    }
+
+    /**
+     * Whether is Adminhtml or not
+     *
+     * @return bool
+     */
+    public static function isAdminhtml(): bool
+    {
+        return self::getAreaCode() === Area::AREA_ADMINHTML;
+    }
+
+    /**
      * @inheritdoc
      */
     static protected function getStaticInstance()
     {
-        return \Goomento\Core\Helper\State::class;
+        return State::class;
     }
 }

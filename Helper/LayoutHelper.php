@@ -14,6 +14,11 @@ use Magento\Framework\View\Element\BlockInterface;
 use Magento\Framework\View\LayoutInterface;
 
 /**
+ *
+ * NOTE: Use these static methods in template hook only - which wrapped in HooksHelper::doAction( 'header' ) or
+ * HooksHelper::doAction( 'footer' ) ... . Otherwise might cause some issues with classes loader.
+ * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
+ *
  * @see LayoutInterface::createBlock()
  * @method static BlockInterface createBlock($type, $name = '', array $arguments = [])
  * @method static BlockInterface|false getBlock(string $name)
