@@ -34,5 +34,17 @@
                 </style>
             </editor>
         </pagebuilder>
+        <dev>
+            <js>
+                <minify_exclude>
+                    <tiny_mce>/ace/</tiny_mce>
+                </minify_exclude>
+            </js>
+            <css>
+                <minify_exclude>
+                    <tiny_mce>/ace/</tiny_mce>
+                </minify_exclude>
+            </css>
+        </dev>
     </default>
 </config>

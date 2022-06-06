@@ -13,6 +13,11 @@ use Goomento\Core\Traits\TraitStaticInstances;
 use Goomento\PageBuilder\Model\Config;
 
 /**
+ *
+ * NOTE: Use these static methods in template hook only - which wrapped in HooksHelper::doAction( 'header' ) or
+ * HooksHelper::doAction( 'footer' ) ... . Otherwise might cause some issues with classes loader.
+ * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
+ *
  * @see Config::getValue()
  * @method static getValue($path, $storeId = 0)
  * @method static getCustomCss($storeId = 0) Get Custom CSS

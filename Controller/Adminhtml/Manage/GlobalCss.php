@@ -30,7 +30,7 @@ class GlobalCss extends AbstractManage
             $data = $this->getRequest()->getPostValue();
             $data = EscaperHelper::filter($data);
             if (isset($data[Config::CUSTOM_CSS]) && $data[Config::CUSTOM_CSS] !== $this->config->getValue(Config::CUSTOM_CSS)) {
-                $customCss = EscaperHelper::escapeCss($data['custom_css']);
+                $customCss = trim($data['custom_css']);
                 $this->dataPersistor->set(Config::CUSTOM_CSS, $customCss);
                 $this->config->setValue(Config::CUSTOM_CSS, $customCss);
             }

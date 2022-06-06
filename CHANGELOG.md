@@ -5,6 +5,8 @@
 - Added Less files for customization
 - Added preview for specific store view
 - Optimized resources
+- Added minify CSS proceed
+- Optimized for PRODUCTION mode
 
 ## 0.2.9: Enhanced theme loader
 - Enhanced theme loader

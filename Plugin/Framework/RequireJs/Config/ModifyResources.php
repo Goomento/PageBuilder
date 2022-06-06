@@ -50,21 +50,10 @@ class ModifyResources
      */
     public function getUnderscoreJs() : string
     {
-        $requireJs = <<<SCRIPT
-/**
- * @package Goomento_PageBuilder
- * @link https://github.com/Goomento/PageBuilder
- */
-
-  var config = {
-     paths: {
-         'underscore': 'Goomento_PageBuilder/lib/underscore/underscore.min'
-     }
- };
-SCRIPT;
+        $requireJs = "var config = { paths: { 'underscore': 'Goomento_PageBuilder/lib/underscore/underscore.min' } };";
         return str_replace(
             '%config%',
-            $requireJs,
+            trim($requireJs),
             Config::PARTIAL_CONFIG_TEMPLATE
         );
     }

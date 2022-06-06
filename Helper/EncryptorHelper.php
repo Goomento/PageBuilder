@@ -11,6 +11,13 @@ namespace Goomento\PageBuilder\Helper;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
 
+/**
+ *
+ * NOTE: Use these static methods in template hook only - which wrapped in HooksHelper::doAction( 'header' ) or
+ * HooksHelper::doAction( 'footer' ) ... . Otherwise might cause some issues with classes loader.
+ * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
+ *
+ */
 class EncryptorHelper
 {
     const ACCESS_TOKEN = 'token';

@@ -11,6 +11,7 @@ namespace Goomento\PageBuilder;
 use Goomento\PageBuilder\Builder\Managers\Widgets;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 
 class EntryPoint extends BuilderRegister
@@ -271,9 +272,11 @@ class EntryPoint extends BuilderRegister
             'Goomento_PageBuilder/lib/e-select2/css/e-select2.min.css'
         );
 
+        $mustMinify = DataHelper::isJsMinifyFilesEnabled() && StateHelper::isProductionMode();
+
         ThemeHelper::registerStyle(
             'goomento-widgets',
-            'Goomento_PageBuilder/css/widgets' . $directionSuffix . '.css',
+            'Goomento_PageBuilder/css/widgets' . $directionSuffix . ($mustMinify ? '.min' : '') . '.css',
             ['goomento-frontend'],
             Configuration::version()
         );

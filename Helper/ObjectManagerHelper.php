@@ -20,9 +20,11 @@ use Goomento\PageBuilder\Builder\Modules\Frontend;
 use Magento\Store\Model\StoreManager;
 
 /**
- * Stored the Classes in use to save expense
- * This class's using ObjectManager pattern - which is not encourage by Magento
- * Use this by your own caution
+ *
+ * NOTE: Use these static methods in template hook only - which wrapped in HooksHelper::doAction( 'header' ) or
+ * HooksHelper::doAction( 'footer' ) ... . Otherwise might cause some issues with classes loader.
+ * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
+ *
  */
 class ObjectManagerHelper extends \Goomento\Core\Helper\ObjectManagerHelper
 {

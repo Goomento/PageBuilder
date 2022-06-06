@@ -37,6 +37,10 @@ use Goomento\PageBuilder\Helper\Data;
  * @see Data::isDebugMode()
  * @method static bool addResourceGlobally()
  * @see Data::addResourceGlobally()
+ * @method static bool isCssMinifyFilesEnabled()
+ * @see Data::isCssMinifyFilesEnabled()
+ * @method static bool isJsMinifyFilesEnabled()
+ * @see Data::isJsMinifyFilesEnabled()
  */
 class DataHelper
 {

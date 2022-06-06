@@ -45,36 +45,37 @@ php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy
 ```
 
-## Demo site
-
-Storefront: [https://goomento.com](https://goomento.com/)
-
 ## Setup
 
 1. Create Landing Pages, Blocks, Templates in the admin area `Goomento > Pages & Landing Pages`.
 
-2. Add Builder Block, Page to the layout, using the same `identifier` as in the admin area to the layout `.xml` file.
+2. Add Blocks, Pages to layout, using the same `identifier` as in the admin area to the layout `.xml` file.
 
 ```xml
 <block class="PageBuilderRenderer" name="unique-block-name">
     <arguments>
-        <argument name="identifier" xsi:type="string">identifier</argument>
+        <argument name="identifier" xsi:type="string">home-page-identifier</argument>
     </arguments>
 </block>
 ```
 
-3. Add Builder Block, Page to the template, use this snippet in the template `.phtml` file
+3. Add Blocks, Pages to template, use this snippet in the template `.phtml` file
 
 ```php
 <?= $block->getLayout()
     ->getBlock('PageBuilderRenderer')
-    ->setIdentifier('identifier')
+    ->setIdentifier('home-page-identifier')
     ->toHtml(); ?>
 ```
 
+## Demo site
+
+Storefront: [https://goomento.com](https://goomento.com/)
+
 ## Custom Templates
 
-Create directories inside your theme files that will contain the custom resources (`.phtml`, `js`, `less` files ...) with the following structure.
+Goomento also allows to make a taylor styling of widget, hence will be a good fit to your theme,
+to do that, create directories inside your theme files that will contain the custom resources with the following structure.
 
 ```
 app/design/frontend/<Vendor>/
@@ -82,24 +83,26 @@ app/design/frontend/<Vendor>/
 │   ├── Goomento_PageBuilder/
 │   │   ├── templates
 │   │   │   ├── widgets
-│   │   │   │   ├── <phtml_widget_file>
+│   │   │   │   ├── <widget.phtml>
 │   │   │── web
 │   │   │   ├── css
 │   │   │   │   ├── widgets
-│   │   │   │   │   ├── <less_widget_file>
+│   │   │   │   │   ├── <widget.less>
 │   │   │   ├── js
 │   │   │   │   ├── widgets
-│   │   │   │   │   ├── <js_widget_file>
+│   │   │   │   │   ├── <widget.js>
 ```
 
-- `<phtml_widget_file>` is `.phtml` file - which copied from [templates directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/templates/widgets), 
+- `<widget.phtml>` is `.phtml` file - which copied from [templates directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/templates/widgets), 
 these files will render HTML of widget.
 
-- `<less_widget_file>` is `.less` file - which copied from [css directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/web/css/widgets),
-these files will render the widget styling. (Some widgets don't need Less file)
+- `<widget.less>` is `.less` file - which copied from [css directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/web/css/widgets),
+these files will render the widget styling.
 
-- `<js_widget_file>` is `.js` file - which copied from [js directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/web/js/widgets), 
-these files bind JavaScript to widget. (Some widgets don't need Js file)
+- `<widget.js>` is `.js` file - which copied from [js directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/web/js/widgets), 
+these files bind JavaScript to widget.
+
+- For configurable of widget, check out this [Goomento/PageBuilder/Builder/Widgets](https://github.com/Goomento/PageBuilder/tree/master/Builder/Widgets)
 
 ## Version Compatible
 

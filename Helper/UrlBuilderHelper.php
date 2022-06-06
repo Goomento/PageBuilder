@@ -13,6 +13,13 @@ use Magento\Framework\Url;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Asset\Repository;
 
+/**
+ *
+ * NOTE: Use these static methods in template hook only - which wrapped in HooksHelper::doAction( 'header' ) or
+ * HooksHelper::doAction( 'footer' ) ... . Otherwise might cause some issues with classes loader.
+ * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
+ *
+ */
 class UrlBuilderHelper
 {
     /**
@@ -183,6 +190,7 @@ class UrlBuilderHelper
         }
         return self::getUrl('pagebuilder/content/edit', [
             'type' => $content->getType(),
+            'content_id' => $content->getId(),
         ]);
     }
 

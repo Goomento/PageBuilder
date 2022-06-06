@@ -166,7 +166,7 @@ class GlobalCss extends AbstractCss
 
         $customCss = (string) ConfigHelper::getValue('custom_css');
 
-        if (trim($customCss)) {
+        if (trim($customCss) !== '') {
             $this->stylesheetObj->addRawCss($customCss);
         }
 
