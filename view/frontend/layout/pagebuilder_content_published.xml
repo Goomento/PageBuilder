@@ -9,7 +9,7 @@
     <update handle="pagebuilder_content" />
     <body>
         <referenceContainer name="content">
-            <block class="Goomento\PageBuilder\Block\Editor\View" name="pagebuilder.published_content"/>
+            <block class="Goomento\PageBuilder\Block\Content\Published" name="pagebuilder.published_content"/>
         </referenceContainer>
     </body>
 </page>

@@ -15,7 +15,7 @@ use Magento\Framework\Exception\LocalizedException;
  * For Editor Preview purpose, therefore, there is no content should be rendered
  * This page will not be cached
  */
-class Preview extends View
+class EditorPreview extends View
 {
     /**
      * @inheritdoc
@@ -23,10 +23,7 @@ class Preview extends View
     public function execute()
     {
         try {
-            // Set current model
-            $this->registry->register('current_preview_content', $this->getContent(true));
-
-            HooksHelper::doAction('pagebuilder/content/preview');
+            HooksHelper::doAction('pagebuilder/content/preview', $this->getContent(true));
             return $this->renderPage();
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage(
@@ -36,9 +33,9 @@ class Preview extends View
             $this->messageManager->addErrorMessage(
                 __('Something went wrong when render content view.')
             );
+            $this->logger->error($e);
         } finally {
             if (!empty($e)) {
-                $this->logger->error($e);
                 if ($this->dataHelper->isDebugMode()) {
                     throw $e;
                 }
@@ -57,7 +54,9 @@ class Preview extends View
 
         return [
             'editable_title' => 'Preview: %1',
-            'handler' => $layout,
+            'handler' => $layout ? $layout : (
+                $this->getContentLayout() ?: 'pagebuilder_content_1column'
+            ),
         ];
     }
 }

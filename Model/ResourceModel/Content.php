@@ -8,20 +8,22 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model\ResourceModel;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
-use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 class Content extends AbstractDb
 {
+    use SerializeDataTrait;
+
     /**
      * @inheriDoc
      */
     protected $_serializableFields = [
-        ContentInterface::SETTINGS => [null, []],
-        ContentInterface::ELEMENTS => [null, []],
+        BuildableContentInterface::SETTINGS => [null, []],
+        BuildableContentInterface::ELEMENTS => [null, []],
     ];
 
     /**
@@ -42,33 +44,6 @@ class Content extends AbstractDb
         $object->setData(ContentInterface::STORE_IDS, $this->lookupStoreIds((int) $object->getId()));
         $object->setHasDataChanges(false);
     }
-
-    /**
-     * @param DataObject $object
-     * @return DataObject
-     */
-    public function unserializeData(DataObject $object)
-    {
-        foreach ($this->_serializableFields as $field => $parameters) {
-            list($serializeDefault, $unserializeDefault) = $parameters;
-            $this->_unserializeField($object, $field, $unserializeDefault);
-        }
-        return $object;
-    }
-
-    /**
-     * @param DataObject $object
-     * @return DataObject
-     */
-    public function serializeData(DataObject $object)
-    {
-        foreach ($this->_serializableFields as $field => $parameters) {
-            list($serializeDefault, $unserializeDefault) = $parameters;
-            $this->_serializeField($object, $field, $serializeDefault, isset($parameters[2]));
-        }
-        return $object;
-    }
-
 
     /**
      * Get store ids to which specified item is assigned
@@ -103,15 +78,6 @@ class Content extends AbstractDb
         parent::_afterSave($object);
         $this->updateStoreIds($object);
         return $this;
-    }
-
-    /**
-     * @param AbstractModel $object
-     * @return void
-     */
-    public function unserializeFields(\Magento\Framework\Model\AbstractModel $object)
-    {
-        parent::unserializeFields($object);
     }
 
     /**

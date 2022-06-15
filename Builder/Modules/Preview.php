@@ -8,27 +8,27 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Modules;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
-use Goomento\PageBuilder\Helper\RegistryHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 
 class Preview
 {
+
     /**
-     * @var int
+     * @var null|BuildableContentInterface
      */
-    private $contentId;
+    private $contentModel;
 
     /**
      * Init the preview
      */
-    public function init()
+    public function initByContent(BuildableContentInterface  $buildableContent)
     {
-        $model = RegistryHelper::registry('current_preview_content');
-        $this->contentId = $model ? $model->getId() : 0;
+        $this->contentModel = $buildableContent;
 
         HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$this, 'enqueueScripts']);
         HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$this, 'enqueueStyles']);
@@ -41,28 +41,22 @@ class Preview
     }
 
     /**
-     * @return int
-     */
-    public function getContentId()
-    {
-        return $this->contentId;
-    }
-
-    /**
      * Builder wrapper.
      *
      * Used to add an empty HTML wrapper for the builder, the javascript will add
      * the content later.
      *
-     * @param string $content The content of the builder.
+     * @param BuildableContentInterface $buildableContent The content of the builder.
      *
-     * @return string HTML wrapper for the builder.
+     * @return BuildableContentInterface with HTML wrapper for the builder.
      */
-    public function builderWrapper($content)
+    public function builderWrapper(BuildableContentInterface $buildableContent)
     {
-        if ($this->getContentId()) {
+        if ($buildableContent->getId()) {
+
             $documentManager = ObjectManagerHelper::getDocumentsManager();
-            $document = $documentManager->get($this->getContentId());
+
+            $document = $documentManager->getByContent( $this->contentModel );
 
             $attributes = $document->getContainerAttributes();
 
@@ -70,10 +64,10 @@ class Preview
 
             $attributes['class'] .= ' gmt-edit-mode';
 
-            $content = '<div ' . DataHelper::renderHtmlAttributes($attributes) . '></div>';
+            $buildableContent->setRenderContent('<div ' . DataHelper::renderHtmlAttributes($attributes) . '></div>');
         }
 
-        return $content;
+        return $buildableContent;
     }
 
     /**
@@ -81,9 +75,6 @@ class Preview
      */
     public function enqueueStyles()
     {
-//        ObjectManagerHelper::getFrontend()
-//            ->enqueueStyles();
-
         ObjectManagerHelper::getWidgetsManager()
             ->enqueueWidgetsStyles();
 
@@ -122,9 +113,6 @@ class Preview
      */
     public function enqueueScripts()
     {
-//        ObjectManagerHelper::getFrontend()
-//            ->registerScripts();
-
         ObjectManagerHelper::getWidgetsManager()
             ->enqueueWidgetsScripts();
 
@@ -145,10 +133,7 @@ class Preview
      */
     public function footer()
     {
-        $frontend = ObjectManagerHelper::getFrontend();
-//        $frontend->header();
-//        $frontend->footer();
-        $frontend->printFontsLinks();
+        ObjectManagerHelper::getFrontend()->printFontsLinks();
     }
 
     /**
@@ -156,6 +141,6 @@ class Preview
      */
     public function __construct()
     {
-        HooksHelper::addAction('pagebuilder/content/preview', [ $this, 'init' ]);
+        HooksHelper::addAction('pagebuilder/content/preview', [ $this, 'initByContent']);
     }
 }

@@ -8,13 +8,12 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Modules;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractModule;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
-use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\LoggerHelper;
-use Goomento\PageBuilder\Helper\RequestHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 
 class Ajax extends AbstractModule
@@ -29,7 +28,7 @@ class Ajax extends AbstractModule
      *
      * @var array
      */
-    private $ajaxCctions = [];
+    private $registeredAjaxActions = [];
 
     /**
      * Ajax requests.
@@ -39,7 +38,7 @@ class Ajax extends AbstractModule
      *
      * @var array
      */
-    private $requests = [];
+    private $ajaxRequestingActions = [];
 
     /**
      * Ajax response data.
@@ -49,7 +48,15 @@ class Ajax extends AbstractModule
      *
      * @var array
      */
-    private $response_data = [];
+    private $responseData = [];
+
+    /**
+     * Ajax response code.
+     *
+     *
+     * @var int
+     */
+    private $responseCode = 200;
 
     /**
      * Current ajax action ID.
@@ -64,12 +71,13 @@ class Ajax extends AbstractModule
     /**
      * Ajax manager constructor.
      *
-     * Initializing SagoTheme ajax manager.
+     * Initializing Goomento ajax manager.
      *
      */
     public function __construct()
     {
         HooksHelper::addAction('pagebuilder/ajax/processing', [ $this,'handleAjaxRequest' ]);
+        HooksHelper::addAction('pagebuilder/ajax/return_data', [ $this,'handleAjaxResponse' ]);
     }
 
     /**
@@ -89,7 +97,7 @@ class Ajax extends AbstractModule
             throw new \Exception(sprintf('Use `%s` hook to register ajax action', 'pagebuilder/ajax/register_actions'));
         }
 
-        $this->ajaxCctions[ $tag ] = compact('tag', 'callback');
+        $this->registeredAjaxActions[ $tag ] = compact('tag', 'callback');
     }
 
     /**
@@ -99,14 +107,8 @@ class Ajax extends AbstractModule
      *
      *
      */
-    public function handleAjaxRequest()
+    public function handleAjaxRequest(BuildableContentInterface $buildableContent, array $requestParams) : void
     {
-        $contentId = 0;
-
-        if (!empty($_REQUEST['content_id'])) {
-            $contentId = (int) $_REQUEST['content_id'];
-        }
-
         /**
          * Register ajax actions.
          *
@@ -119,48 +121,72 @@ class Ajax extends AbstractModule
          */
         HooksHelper::doAction('pagebuilder/ajax/register_actions', $this);
 
-        $actions = RequestHelper::getParam('actions');
         try {
-            $this->requests = \Zend_Json::decode($actions);
-        } catch (\Exception $e) {
-            $this->addResponseData(false, __('Invalid format.'), 400);
-            $this->requests = [];
-        }
-        $this->requests = EscaperHelper::filter($this->requests);
-        foreach ($this->requests as $id => $actionData) {
-            $this->currentActionId = $id;
+            $this->ajaxRequestingActions = \Zend_Json::decode( $requestParams['actions'] ?? '' );
 
-            if (!isset($this->ajaxCctions[ $actionData['action'] ?? '' ])) {
-                $this->addResponseData(false, __('Action not found.'), 400);
+            $this->ajaxRequestingActions = EscaperHelper::filter($this->ajaxRequestingActions);
+        } catch (\Exception $e) {
+            $this->addToCurrentResponseData(false, __('Invalid format.'), 400);
+            $this->ajaxRequestingActions = [];
+        }
+
+        foreach ($this->ajaxRequestingActions as $actionId => $actionData) {
+
+            $this->currentActionId = $actionId;
+
+            if (!isset($this->registeredAjaxActions[ $actionData['action'] ?? '' ])) {
+                $this->addToCurrentResponseData(false, __('Action not found.'), 400);
 
                 continue;
             }
 
-            if ($contentId) {
-                $actionData['data']['content_id'] = $contentId;
+            if ($buildableContent->getId()) {
+                $actionData['data']['content_id'] = $buildableContent->getId();
             }
 
             try {
-                $results = call_user_func($this->ajaxCctions[ $actionData['action'] ]['callback'], $actionData['data'], $this);
+                $results = call_user_func(
+                    $this->registeredAjaxActions[ $actionData['action'] ]['callback'],
+                    $actionData['data'],
+                    $buildableContent
+                );
 
                 if (false === $results) {
-                    $this->addResponseData(false);
+                    $this->addToCurrentResponseData(false);
                 } else {
-                    $this->addResponseData(true, $results);
+                    $this->addToCurrentResponseData(true, $results);
                 }
             } catch (\Exception $e) {
                 LoggerHelper::error($e);
                 if (Configuration::debug()) {
-                    $this->addResponseData(false, $e->getMessage(), $e->getCode());
+                    $this->addToCurrentResponseData(false, $e->getMessage(), $e->getCode());
                 } else {
-                    $this->addResponseData(false, __('Something went wrong. Please try again later.'), 502);
+                    $this->addToCurrentResponseData(false, __('Something went wrong. Please try again later.'), 502);
                 }
             }
         }
 
         $this->currentActionId = null;
 
-        $this->sendSuccess();
+        $this->markAsSuccess();
+    }
+
+    /**
+     * @param array $data
+     * @param BuildableContentInterface $buildableContent
+     * @return array
+     */
+    public function handleAjaxResponse(array $data, BuildableContentInterface $buildableContent)
+    {
+        $response = [
+            'success' => true,
+            'status_code' => $this->responseCode,
+            'data' => [
+                'responses' => $this->responseData,
+            ],
+        ];
+
+        return array_merge($data, ['data' => $response]);
     }
 
     /**
@@ -177,7 +203,7 @@ class Ajax extends AbstractModule
             return false;
         }
 
-        return $this->requests[ $this->currentActionId ];
+        return $this->ajaxRequestingActions[ $this->currentActionId ];
     }
 
     /**
@@ -197,51 +223,14 @@ class Ajax extends AbstractModule
      * Ajax success response.
      *
      * Send a JSON response data back to the ajax request, indicating success.
-     *
      */
-    private function sendSuccess()
+    private function markAsSuccess()
     {
-        $response = [
-            'success' => true,
-            'data' => [
-                'responses' => $this->response_data,
-            ],
-        ];
-
         while (ob_get_status()) {
             ob_end_clean();
         }
 
-        HooksHelper::addFilter('pagebuilder/ajax/response', function ($r) use ($response) {
-            return array_merge($r, [
-                'status_code' => $response['data']['code'] ?? 200,
-                'data' => $response,
-            ]);
-        });
-    }
-
-    /**
-     * Ajax failure response.
-     *
-     * Send a JSON response data back to the ajax request, indicating failure.
-     *
-     *
-     * @param null $code
-     */
-    private function sendError($code = null)
-    {
-        $response = [
-            'success' => true,
-            'data' => [
-                'responses' => $this->response_data,
-            ],
-        ];
-        HooksHelper::addFilter('pagebuilder/ajax/response', function ($r) use ($response, $code) {
-            return array_merge($r, [
-                'status_code' => $code,
-                'data' => $response,
-            ]);
-        });
+        $this->responseCode = 200;
     }
 
     /**
@@ -258,9 +247,9 @@ class Ajax extends AbstractModule
      *
      * @return Ajax An instance of ajax manager.
      */
-    private function addResponseData($success, $data = null, $code = 200)
+    private function addToCurrentResponseData($success, $data = null, $code = 200)
     {
-        $this->response_data[ $this->currentActionId ] = [
+        $this->responseData[ $this->currentActionId ] = [
             'success' => $success,
             'code' => $code,
             'data' => $data,

@@ -9,10 +9,10 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Managers;
 
 use Exception;
-use Goomento\PageBuilder\Api\Data\ContentInterface;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Sources\Local;
 use Goomento\PageBuilder\Builder\Base\AbstractDocument;
-use Goomento\PageBuilder\Builder\Modules\Ajax as Ajax;
+use Goomento\PageBuilder\Builder\Modules\Ajax;
 use Goomento\PageBuilder\Builder\DocumentTypes\Page;
 use Goomento\PageBuilder\Builder\DocumentTypes\Section;
 use Goomento\PageBuilder\Builder\DocumentTypes\Template;
@@ -66,7 +66,7 @@ class Documents
      * @throws LocalizedException
      * @throws Exception
      */
-    public function registerAjaxActions($ajaxManager)
+    public function registerAjaxActions(Ajax $ajaxManager)
     {
         $ajaxManager->registerAjaxAction('save_builder', [ $this, 'ajaxSave' ]);
         $ajaxManager->registerAjaxAction('discard_changes', [ $this, 'ajaxDiscardChanges' ]);
@@ -113,27 +113,27 @@ class Documents
      * Retrieve the document data based on a content ID.
      *
      *
-     * @param $id
-     * @param bool $from_cache Optional. Whether to retrieve cached data. Default is true.
+     * @param BuildableContentInterface $content
+     * @param bool $fromCache Optional. Whether to retrieve cached data. Default is true.
      *
      * @return false|AbstractDocument AbstractDocument data or false if content ID was not entered.
      */
-    public function get($id, $from_cache = true)
+    public function getByContent(BuildableContentInterface $content, $fromCache = true)
     {
         $this->registerTypes();
-
-        $model = ContentHelper::get($id);
-
-        if (!$id || ! $model) {
-            return false;
+        $cacheKey = $content->getUniqueIdentity();
+        if (!$fromCache || ! isset($this->documents[$cacheKey])) {
+            $docTypeClass = $this->getDocumentType( $content->getOriginContent()->getType() );
+            $this->documents[$cacheKey] = ObjectManagerHelper::create($docTypeClass, [
+                    'data' => [
+                        'id' => $content->getId(),
+                        'model' => $content,
+                    ]
+                ]
+            );
         }
 
-        if (!$from_cache || ! isset($this->documents[$id])) {
-            $doc_type_class = $this->getDocumentType($model->getType());
-            $this->documents[$id] = ObjectManagerHelper::create($doc_type_class, ['data' => ['id' => $id]]);
-        }
-
-        return $this->documents[$id];
+        return $this->documents[$cacheKey];
     }
 
     /**
@@ -204,7 +204,7 @@ class Documents
         }
 
         if (!isset($data['status'])) {
-            $data['status'] = ContentInterface::STATUS_PENDING;
+            $data['status'] = BuildableContentInterface::STATUS_PENDING;
         }
 
         $data['type'] = $type;
@@ -212,7 +212,7 @@ class Documents
         $content = ContentHelper::create($data);
 
         /** @var AbstractDocument $document */
-        $document = ObjectManagerHelper::create($class, ['data' => ['id' => $content->getId()]]);
+        $document = ObjectManagerHelper::create($class, ['data' => ['id' => $content->getId(), 'model' => $content]]);
 
         $document->save([]);
 
@@ -230,16 +230,19 @@ class Documents
      *
      * @return array The document data after saving.
      */
-    public function ajaxSave($request)
+    public function ajaxSave(array $requestData, BuildableContentInterface $buildableContent)
     {
-        $document = $this->get($request['content_id']);
+
+        $buildableContent->setStatus($requestData['status'] ?? BuildableContentInterface::STATUS_REVISION);
+
+        $document = $this->getByContent( $buildableContent );
 
         $data = [
-            'elements' => $request['elements'],
-            'settings' => $request['settings'],
+            'elements' => $requestData['elements'],
+            'settings' => $requestData['settings'],
         ];
 
-        $document->save($data);
+        $document->save( $data );
 
         $return_data = [
             'config' => [

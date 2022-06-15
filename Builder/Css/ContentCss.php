@@ -8,30 +8,19 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Css;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractCss;
 use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Base\AbstractElement;
+use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Helper\StateHelper;
 
 class ContentCss extends AbstractCss
 {
-    /**
-     * SagoTheme post CSS file prefix.
-     */
-    const FILE_PREFIX = 'content-';
-
     const META_KEY = 'css';
-
-    /**
-     * ContentCss ID.
-     *
-     * Holds the current content ID.
-     *
-     * @var int
-     */
-    private $contentId;
 
     /**
      * Get CSS file name.
@@ -44,31 +33,39 @@ class ContentCss extends AbstractCss
     const NAME = 'content';
 
     /**
+     * @var BuildableContentInterface
+     */
+    private $model;
+
+    /**
      * ContentCss CSS file constructor.
      *
      * Initializing the CSS file of the post. Set the content ID and initiate the stylesheet.
      *
      *
-     * @param mixed $contentId ContentCss ID.
+     * @param BuildableContentInterface $content
      */
-    public function __construct($contentId)
+    public function __construct(BuildableContentInterface $content)
     {
-        $this->contentId = $contentId;
+        $this->model = $content;
 
-        parent::__construct(self::FILE_PREFIX . $contentId . '.css');
+        $parts = [
+            'pagebuilder-',
+            $content->getStatus(),
+            '-',
+            $content->getId(),
+            '.css'
+        ];
+
+        parent::__construct(implode('', $parts));
     }
 
     /**
-     * Get content ID.
-     *
-     * Retrieve the ID of current content.
-     *
-     *
-     * @return int ContentCss ID.
+     * @return BuildableContentInterface
      */
-    public function getContentId()
+    public function getModel()
     {
-        return (int) $this->contentId;
+        return $this->model;
     }
 
     /**
@@ -83,7 +80,7 @@ class ContentCss extends AbstractCss
      */
     public function getElementUniqueSelector(AbstractElement $element)
     {
-        return '.gmt-' . $this->contentId . ' .gmt-element' . $element->getUniqueSelector();
+        return '.gmt-' . $this->getModel()->getStatus() . '-' . $this->getModel()->getId() . ' .gmt-element' . $element->getUniqueSelector();
     }
 
     /**
@@ -96,7 +93,7 @@ class ContentCss extends AbstractCss
      */
     protected function loadMeta()
     {
-        return ContentHelper::get($this->contentId)->getSetting(static::META_KEY);
+        return $this->model->getSetting(static::META_KEY);
     }
 
     /**
@@ -111,9 +108,8 @@ class ContentCss extends AbstractCss
      */
     protected function updateMeta($meta)
     {
-        $content = ContentHelper::get($this->contentId);
-        $content->setSetting(static::META_KEY, $meta);
-        ContentHelper::save($content, false);
+        $this->model->setSetting(static::META_KEY, $meta);
+        ContentHelper::save( $this->model );
     }
 
     /**
@@ -124,9 +120,8 @@ class ContentCss extends AbstractCss
      */
     protected function deleteMeta()
     {
-        $content = ContentHelper::get($this->contentId);
-        $content->deleteSetting(static::META_KEY);
-        ContentHelper::save($content, false);
+        $this->model->deleteSetting(static::META_KEY);
+        ContentHelper::save( $this->model );
     }
 
     /**
@@ -139,7 +134,7 @@ class ContentCss extends AbstractCss
      */
     protected function getData()
     {
-        return ContentHelper::get($this->contentId)->getElements();
+        return $this->model->getElements();
     }
 
     /**
@@ -153,9 +148,9 @@ class ContentCss extends AbstractCss
         $data = $this->getData();
 
         if (!empty($data)) {
-            foreach ($data as $element_data) {
+            foreach ($data as $elementData) {
                 $element = ObjectManagerHelper::getElementsManager()
-                    ->createElementInstance((array) $element_data);
+                    ->createElementInstance((array) $elementData);
 
                 if (!$element) {
                     continue;
@@ -190,15 +185,22 @@ class ContentCss extends AbstractCss
      * @param array $values Values array.
      * @param array $placeholders Placeholders.
      * @param array $replacements Replacements.
-     * @param array|null $all_controls All controls.
+     * @param array|null $allControls All controls.
      */
-    public function addControlsStackStyleRules(ControlsStack $controls_stack, array $controls, array $values, array $placeholders, array $replacements, array $all_controls = null)
+    public function addControlsStackStyleRules(
+        ControlsStack $controls_stack,
+        array $controls,
+        array $values,
+        array $placeholders,
+        array $replacements,
+        array $allControls = null
+    )
     {
-        parent::addControlsStackStyleRules($controls_stack, $controls, $values, $placeholders, $replacements, $all_controls);
+        parent::addControlsStackStyleRules($controls_stack, $controls, $values, $placeholders, $replacements, $allControls);
 
         if ($controls_stack instanceof AbstractElement) {
-            foreach ($controls_stack->getChildren() as $child_element) {
-                $this->renderStyles($child_element);
+            foreach ($controls_stack->getChildren() as $childElement) {
+                $this->renderStyles($childElement);
             }
         }
     }
@@ -238,7 +240,7 @@ class ContentCss extends AbstractCss
      */
     protected function getFileHandleId()
     {
-        return 'goomento-content-' . $this->contentId;
+        return 'gmt-' . $this->getModel()->getStatus()   . '-' . $this->getModel()->getId();
     }
 
     /**
@@ -276,5 +278,19 @@ class ContentCss extends AbstractCss
          * @param AbstractElement $element The element.
          */
         HooksHelper::doAction('pagebuilder/element/parse_css', $this, $element);
+    }
+
+    /**
+     * Use external file.
+     *
+     * Whether to use external CSS file of not. When there are new schemes or settings
+     * updates.
+     *
+     *
+     * @return bool True if the CSS requires an update, False otherwise.
+     */
+    protected function useExternalFile()
+    {
+        return !DataHelper::useInlineCss();
     }
 }

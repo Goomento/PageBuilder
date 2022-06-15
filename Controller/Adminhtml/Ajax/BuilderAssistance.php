@@ -11,6 +11,7 @@ namespace Goomento\PageBuilder\Controller\Adminhtml\Ajax;
 use Goomento\Core\Traits\TraitHttpAction;
 use Goomento\Core\Traits\TraitHttpExecutable;
 use Goomento\PageBuilder\Api\ContentRegistryInterface;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Block\Adminhtml\Component\Wysiwyg;
 use Goomento\PageBuilder\Controller\Adminhtml\AbstractAction;
@@ -95,7 +96,7 @@ class BuilderAssistance extends AbstractAction
                 case 'create':
                     $contentData = [
                         'title' => (string) ($data['title'] ?? __('Block %1', EncryptorHelper::uniqueString())),
-                        'status' => ContentInterface::STATUS_PENDING,
+                        'status' => BuildableContentInterface::STATUS_PENDING,
                         'type' => ContentInterface::TYPE_SECTION,
                         'elements' => [],
                         'settings' => [],

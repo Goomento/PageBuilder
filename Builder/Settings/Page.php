@@ -8,10 +8,8 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Settings;
 
-use Goomento\PageBuilder\Api\Data\ContentInterface;
-use Goomento\PageBuilder\Builder\Managers\Documents;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractSettings;
-use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 class Page extends AbstractSettings
@@ -19,14 +17,9 @@ class Page extends AbstractSettings
     /**
      * Content Model
      *
-     * @var ContentInterface
+     * @var BuildableContentInterface
      */
-    private $pageModel;
-
-    /**
-     * @var int
-     */
-    private $contentId;
+    private $model;
 
     /**
      * Model constructor.
@@ -38,10 +31,7 @@ class Page extends AbstractSettings
      */
     public function __construct(array $data = [])
     {
-        if (!empty($data['id'])) {
-            $this->contentId = (int) $data['id'];
-            $this->pageModel = ContentHelper::get($this->contentId);
-        }
+        $this->model = $data['model'] ?? null;
 
         parent::__construct($data);
     }
@@ -69,7 +59,7 @@ class Page extends AbstractSettings
      */
     public function getUniqueName()
     {
-        return $this->getName() . '-' . $this->contentId;
+        return $this->getName() . '-' . $this->model->getId();
     }
 
     /**
@@ -82,9 +72,8 @@ class Page extends AbstractSettings
      */
     public function getCssWrapperSelector()
     {
-        /** @var Documents $documentManagers */
-        $documentManagers = ObjectManagerHelper::get(Documents::class);
-        $document = $documentManagers->get($this->contentId);
+        $documentManagers = ObjectManagerHelper::getDocumentsManager();
+        $document = $documentManagers->getByContent( $this->model );
         return $document->getCssWrapperSelector();
     }
 
@@ -103,7 +92,7 @@ class Page extends AbstractSettings
     public function getPanelPageSettings()
     {
         return [
-            'title' => __('%1 Settings', $this->pageModel->getTitle()),
+            'title' => __('%1 Settings', $this->model->getTitle()),
         ];
     }
 
@@ -117,10 +106,10 @@ class Page extends AbstractSettings
     protected function registerControls()
     {
         // Check if it's a real model, or abstract (for example - on import )
-        if ($this->contentId) {
-            /** @var Documents $documentManager */
-            $documentManager = ObjectManagerHelper::get(Documents::class);
-            $document = $documentManager->get($this->contentId);
+        if ($this->model) {
+
+            $documentManager = ObjectManagerHelper::getDocumentsManager();
+            $document = $documentManager->getByContent( $this->model );
 
             if ($document) {
                 $controls = $document->getControls();

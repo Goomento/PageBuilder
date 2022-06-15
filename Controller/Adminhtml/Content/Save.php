@@ -74,16 +74,6 @@ class Save extends AbstractContent implements HttpPostActionInterface
                     $content->setStoreIds($data['store_id']);
                 }
 
-                if ($content->isObjectNew()) {
-                    $content->setAuthorId(
-                        $this->userHelper->getCurrentAdminUser()->getId()
-                    );
-                }
-
-                $content->setLastEditorId(
-                    $this->userHelper->getCurrentAdminUser()->getId()
-                );
-
                 $content->setTitle($data['title']);
 
                 if (!empty($data['content_data'])) {
@@ -113,8 +103,20 @@ class Save extends AbstractContent implements HttpPostActionInterface
 
                 $this->proceedContent($content, $data);
 
+                $hasChangedState = $content->getStatus() !== $content->getOrigData('status') ||
+                    $content->getIsActive() !== $content->getOrigData('is_active');
+
+                if (!$isNewObject && $hasChangedState && !$this->_authorization->isAllowed($this->getContentResourceName('publish'))) {
+                    throw new LocalizedException(
+                        __('Sorry, you need permissions to save this content.')
+                    );
+                }
+
                 $this->contentManagement->refreshContentAssets($content);
                 $content = $this->contentRepository->save($content);
+
+                // Also create a revision
+                $this->contentManagement->createRevision($content);
 
                 $this->messageManager->addSuccessMessage(
                     __('You saved the content.')

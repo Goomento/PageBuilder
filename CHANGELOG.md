@@ -1,5 +1,12 @@
 # Magento 2 Goomento Page Builder
 
+## 0.3.0: New Editor Layout
+- Added new Editor layout
+- Fixed minor bugs
+- Fixed media issues
+- Enhanced Revision management
+
+
 ## 0.2.10: Optimized resources
 - Fixed minor bugs
 - Added Less files for customization

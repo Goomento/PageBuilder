@@ -11,7 +11,7 @@ namespace Goomento\PageBuilder\Model;
 use Goomento\PageBuilder\Api\Data;
 use Goomento\PageBuilder\Api\ContentRepositoryInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
-use Goomento\PageBuilder\Helper\Authorization;
+use Goomento\PageBuilder\Helper\AdminUser;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
@@ -55,9 +55,9 @@ class ContentRepository implements ContentRepositoryInterface
      */
     private $collectionProcessor;
     /**
-     * @var Authorization
+     * @var AdminUser
      */
-    private $authorizationHelper;
+    private $adminUser;
 
     /**
      * ContentRepository constructor.
@@ -67,7 +67,7 @@ class ContentRepository implements ContentRepositoryInterface
      * @param Data\ContentSearchResultsInterfaceFactory $searchResultsFactory
      * @param StoreManagerInterface $storeManager
      * @param CollectionProcessorInterface|null $collectionProcessor
-     * @param Authorization $authorizationHelper
+     * @param AdminUser $adminUser
      */
     public function __construct(
         ResourceContent $resource,
@@ -76,7 +76,7 @@ class ContentRepository implements ContentRepositoryInterface
         Data\ContentSearchResultsInterfaceFactory $searchResultsFactory,
         StoreManagerInterface $storeManager,
         CollectionProcessorInterface $collectionProcessor,
-        Authorization $authorizationHelper
+        AdminUser $adminUser
     ) {
         $this->resource = $resource;
         $this->contentFactory = $contentFactory;
@@ -84,7 +84,7 @@ class ContentRepository implements ContentRepositoryInterface
         $this->searchResultsFactory = $searchResultsFactory;
         $this->storeManager = $storeManager;
         $this->collectionProcessor = $collectionProcessor;
-        $this->authorizationHelper = $authorizationHelper;
+        $this->adminUser = $adminUser;
     }
 
     /**
@@ -98,6 +98,13 @@ class ContentRepository implements ContentRepositoryInterface
             $this->setStoreId($content);
             $this->setIdentifier($content);
             $this->validateIdentifier($content);
+            $currentAdminUser = $this->adminUser->getCurrentAdminUser();
+            if ( !$content->getId() ) {
+                $content->setAuthorId($currentAdminUser ? $currentAdminUser->getId() : 0);
+                $content->setLastEditorId($content->getAuthorId());
+            } else {
+                $content->setLastEditorId($currentAdminUser ? $currentAdminUser->getId() : 0);
+            }
             $this->resource->save($content);
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
@@ -182,16 +189,6 @@ class ContentRepository implements ContentRepositoryInterface
         if (!isset(Content::getAvailableStatuses()[$content->getStatus()])) {
             throw new LocalizedException(
                 __('Invalid content status: %1', $content->getStatus())
-            );
-        }
-
-        if (
-            $content->getStatus() === ContentInterface::STATUS_PUBLISHED &&
-            $content->getOrigData('status') !== ContentInterface::STATUS_PUBLISHED &&
-            !$this->authorizationHelper->isAllowed($content->getRoleName('publish'))
-        ) {
-            throw new LocalizedException(
-                __('You can\'t publish this content')
             );
         }
     }

@@ -138,6 +138,12 @@ abstract class AbstractSchema extends AbstractEntity
         ?>
 		<script type="text/template" id="tmpl-gmt-panel-schemes-<?= static::NAME ?>">
 			<div class="gmt-panel-scheme-buttons">
+                <div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-close">
+                    <button class="gmt-button">
+                        <i class="fas fa-chevron-left"></i>
+                        <?= __('Close'); ?>
+                    </button>
+                </div>
 				<div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-reset">
 					<button class="gmt-button">
 						<i class="fas fa-undo" aria-hidden="true"></i>

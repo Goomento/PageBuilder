@@ -50,7 +50,8 @@
             "settings": true,
             "author_id": true,
             "status": true,
-            "creation_time": true
+            "creation_time": true,
+            "label": true
         },
         "index": {
             "PAGEBUILDER_CONTENT_REVISION_ELEMENTS": true,

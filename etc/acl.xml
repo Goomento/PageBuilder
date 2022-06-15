@@ -13,8 +13,6 @@
                     <resource id="Goomento_PageBuilder::menu" title="Page Builder" sortOrder="10" >
                         <resource id="Goomento_PageBuilder::page" title="Pages" sortOrder="10" >
                             <resource id="Goomento_PageBuilder::page_view" title="View" sortOrder="10" />
-                            <resource id="Goomento_PageBuilder::page_grid" title="Grid" sortOrder="20" />
-                            <resource id="Goomento_PageBuilder::page_design" title="Design" sortOrder="30" />
                             <resource id="Goomento_PageBuilder::page_save" title="Save" sortOrder="40" />
                             <resource id="Goomento_PageBuilder::page_publish" title="Publish" sortOrder="50" />
                             <resource id="Goomento_PageBuilder::page_export" title="Export" sortOrder="60" />
@@ -22,8 +20,6 @@
                         </resource>
                         <resource id="Goomento_PageBuilder::template" title="Templates" sortOrder="20" >
                             <resource id="Goomento_PageBuilder::template_view" title="View" sortOrder="10" />
-                            <resource id="Goomento_PageBuilder::template_grid" title="Grid" sortOrder="20" />
-                            <resource id="Goomento_PageBuilder::template_design" title="Design" sortOrder="30" />
                             <resource id="Goomento_PageBuilder::template_save" title="Save" sortOrder="40" />
                             <resource id="Goomento_PageBuilder::template_publish" title="Publish" sortOrder="50" />
                             <resource id="Goomento_PageBuilder::template_export" title="Export" sortOrder="60" />
@@ -31,8 +27,6 @@
                         </resource>
                         <resource id="Goomento_PageBuilder::section" title="Sections" sortOrder="30" >
                             <resource id="Goomento_PageBuilder::section_view" title="View" sortOrder="10" />
-                            <resource id="Goomento_PageBuilder::section_grid" title="Grid" sortOrder="20" />
-                            <resource id="Goomento_PageBuilder::section_design" title="Design" sortOrder="30" />
                             <resource id="Goomento_PageBuilder::section_save" title="Save" sortOrder="40" />
                             <resource id="Goomento_PageBuilder::section_publish" title="Publish" sortOrder="50" />
                             <resource id="Goomento_PageBuilder::section_export" title="Export" sortOrder="60" />

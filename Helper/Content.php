@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Helper;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Magento\Framework\App\Helper\Context;
 use Exception;
 use Goomento\PageBuilder\Api\ContentRepositoryInterface;
@@ -62,22 +63,30 @@ class Content extends AbstractHelper
 
 
     /**
-     * @param $contentId
-     * @param null $statuses
+     * @param ContentInterface $content
+     * @param array|null $statuses
      * @param int|null $limit
-     * @return RevisionSearchResultsInterface
+     * @param int|null $currentPage
+     * @return RevisionInterface[]
      * @throws LocalizedException
      */
-    public function getRevisionsByContent($contentId, $statuses = null, ?int $limit = null)
+    public function getRevisionsByContent(ContentInterface $content, ?array $statuses = null, ?int $limit = 200, ?int $currentPage = 1)
     {
-        if ($contentId instanceof ContentInterface) {
-            $contentId = $contentId->getId();
-        }
         return $this->revisionRepository->getListByContentId(
-            (int) $contentId,
+            (int) $content->getId(),
             $statuses,
-            $limit
-        );
+            $limit,
+            $currentPage
+        )->getItems();
+    }
+
+    /**
+     * @param ContentInterface $content
+     * @return RevisionInterface|null
+     */
+    public function getLastRevisionByContent(ContentInterface $content)
+    {
+        return $this->revisionRepository->getLastRevisionByContentId((int) $content->getId());
     }
 
 
@@ -94,12 +103,49 @@ class Content extends AbstractHelper
     }
 
     /**
-     * @param $contentId
+     * @param string|int $contentId
      * @return ContentInterface|null
      */
     public function get($contentId)
     {
-        return $this->contentRegistry->getById((int) $contentId);
+        return $this->contentRegistry->getByIdentifier( (string) $contentId );
+    }
+
+    /**
+     * Save content as revision, then It won't affect to the main version
+     *
+     * @param ContentInterface $content
+     * @param string $status
+     * @return null|RevisionInterface
+     * @throws LocalizedException
+     */
+    public function saveAsRevision(ContentInterface $content, string $status = BuildableContentInterface::STATUS_REVISION) : ?RevisionInterface
+    {
+        return $this->contentManagement->createRevision($content , $status);
+    }
+
+    /**
+     * Save content
+     *
+     * @param ContentInterface $content
+     * @return null|ContentInterface
+     * @throws LocalizedException
+     */
+    public function saveContent(ContentInterface $content) : ?ContentInterface
+    {
+        return $this->contentRepository->save($content);
+    }
+
+    /**
+     * Save revision
+     *
+     * @param RevisionInterface $revision
+     * @return null|RevisionInterface
+     * @throws LocalizedException
+     */
+    public function saveRevision(RevisionInterface $revision) : ?RevisionInterface
+    {
+        return $this->revisionRepository->save($revision);
     }
 
     /**
@@ -113,21 +159,17 @@ class Content extends AbstractHelper
     }
 
     /**
-     * @param ContentInterface $content
+     * @param BuildableContentInterface $content
      * @param bool $createRevision
-     * @return void
+     * @return BuildableContentInterface|null
      * @throws LocalizedException
      */
-    public function save(ContentInterface $content, bool $createRevision = true)
+    public function save(BuildableContentInterface $content, bool $createRevision = true)
     {
-        if (false === $createRevision) {
-            $content->setRevisionFlag(false);
-        }
-        /** @var \Goomento\PageBuilder\Model\Content $content */
-        $this->contentRepository->save($content);
-        if (false === $createRevision) {
-            $content->setRevisionFlag(true);
-            $content->setDataChanges(false);
+        if ($content instanceof ContentInterface) {
+            return $this->saveContent($content);
+        } elseif ($content instanceof RevisionInterface) {
+            return $this->saveRevision($content);
         }
     }
 

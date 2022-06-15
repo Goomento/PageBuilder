@@ -37,4 +37,17 @@ class Collection extends AbstractCollection
         $this->_init(\Goomento\PageBuilder\Model\Revision::class,
             \Goomento\PageBuilder\Model\ResourceModel\Revision::class);
     }
+
+    /**
+     * @inheriDoc
+     */
+    protected function _afterLoad()
+    {
+        parent::_afterLoad();
+        $resource = $this->getResource();
+        foreach ($this as $item) {
+            $resource->unserializeData($item);
+        }
+        return $this;
+    }
 }

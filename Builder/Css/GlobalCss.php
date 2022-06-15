@@ -49,7 +49,7 @@ class GlobalCss extends AbstractCss
      * GlobalCss constructor.
      * @param string $fileName
      */
-    public function __construct($fileName = 'global.css')
+    public function __construct($fileName = 'pagebuilder-global.css')
     {
         parent::__construct($fileName);
     }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Controller\Content;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Controller\AbstractAction;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Traits\TraitHttpPage;
@@ -27,20 +28,20 @@ class Published extends AbstractAction
     public function execute()
     {
         try {
-            $this->registry->register('pagebuilder_content', $this->getContent(true));
-            HooksHelper::doAction('pagebuilder/content/published');
+            $this->validateContent();
+            HooksHelper::doAction('pagebuilder/content/published', $this->getContent(true));
             return $this->renderPage();
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage(
                 $e->getMessage()
             );
         } catch (\Exception $e) {
+            $this->logger->error($e);
             $this->messageManager->addErrorMessage(
                 __('Something went wrong when render content view.')
             );
         } finally {
             if (!empty($e)) {
-                $this->logger->error($e);
                 if ($this->dataHelper->isDebugMode()) {
                     throw $e;
                 }
@@ -51,15 +52,26 @@ class Published extends AbstractAction
     }
 
     /**
+     * @return void
+     * @throws LocalizedException
+     */
+    private function validateContent() : void
+    {
+        $content = $this->getContent(true);
+        if (!$content->getIsActive() || $content->getStatus() !== BuildableContentInterface::STATUS_PUBLISHED) {
+            throw new LocalizedException(
+                __('Page Content not found')
+            );
+        }
+    }
+
+    /**
      * @inheritDoc
      */
     protected function getPageConfig()
     {
-        $content = $this->getContent(true);
-        $layout = $content->getSetting('layout') ?: 'pagebuilder_content_fullwidth';
-
         return [
-            'handler' => $layout,
+            'handler' => $this->getContentLayout(false) ?: 'pagebuilder_content_1column',
         ];
     }
 }

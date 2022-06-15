@@ -24,10 +24,14 @@
                 <new_tab>1</new_tab>
             </builder_assistance>
             <editor>
-                <number_of_revision>100</number_of_revision>
+                <number_of_revision>200</number_of_revision>
                 <is_rtl>0</is_rtl>
                 <resources_globally>0</resources_globally>
                 <debug>0</debug>
+                <js_debug>0</js_debug>
+                <media>
+                    <url />
+                </media>
                 <style>
                     <use_inline_css>1</use_inline_css>
                     <local_font>0</local_font>

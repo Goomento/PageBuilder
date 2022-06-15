@@ -10,6 +10,7 @@ namespace Goomento\PageBuilder\Builder\Managers;
 
 use Exception;
 use Goomento\PageBuilder\Builder\Base\AbstractControlGroup;
+use Goomento\PageBuilder\Builder\Base\AbstractCss;
 use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Animation;
 use Goomento\PageBuilder\Builder\Base\AbstractControl;
@@ -56,6 +57,7 @@ use Goomento\PageBuilder\Builder\Controls\Textarea;
 use Goomento\PageBuilder\Builder\Controls\TextShadow;
 use Goomento\PageBuilder\Builder\Controls\Url;
 use Goomento\PageBuilder\Builder\Controls\Wysiwyg;
+use Goomento\PageBuilder\Builder\Css\ContentCss;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\LoggerHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
@@ -619,19 +621,14 @@ class Controls
     }
 
     /**
-     * @param $post_css
+     * @param ContentCss $contentCss
      */
-    public function addPageSettingsCss($post_css)
+    public function addPageSettingsCustomCss(ContentCss $contentCss)
     {
-        /** @var Documents $documentManager */
-        $documentManager = ObjectManagerHelper::get(Documents::class);
-        $document = $documentManager->get($post_css->getContentId());
-        /** @var Settings $settingsManager */
-        $settingsManager = ObjectManagerHelper::get(Settings::class);
-        /** @var PageSettings $page */
-        $page = $settingsManager->getSettingsManagers(PageSettings::NAME);
-        $page = $page->getSettingModel($post_css->getContentId());
-        $customCss = (string) $page->getSettings('custom_css');
+        $customCss = (string) $contentCss->getModel()->getSetting('custom_css');
+
+        $documentManager = ObjectManagerHelper::getDocumentsManager();
+        $document = $documentManager->getByContent( $contentCss->getModel() );
 
         $customCss = trim($customCss);
 
@@ -641,7 +638,7 @@ class Controls
 
         $customCss = str_replace('selector', $document->getCssWrapperSelector(), $customCss);
 
-        $post_css->getStylesheet()->addRawCss($customCss);
+        $contentCss->getStylesheet()->addRawCss($customCss);
     }
 
     /**
@@ -650,6 +647,6 @@ class Controls
     public function __construct()
     {
         HooksHelper::addAction('pagebuilder/element/parse_css', [$this, 'addContentCss']);
-        HooksHelper::addAction('pagebuilder/css-file/content/parse', [$this, 'addPageSettingsCss']);
+        HooksHelper::addAction('pagebuilder/css-file/content/parse', [$this, 'addPageSettingsCustomCss']);
     }
 }

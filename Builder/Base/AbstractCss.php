@@ -125,13 +125,14 @@ abstract class AbstractCss extends AbstractFile
             $meta['status'] = self::CSS_STATUS_EMPTY;
             $meta['css'] = '';
         } else {
-            $use_external_file = $this->useExternalFile();
+            $useExternalFile = $this->useExternalFile();
 
-            if ($use_external_file) {
+            $meta['css'] = $content;
+
+            if ($useExternalFile) {
                 $meta['status'] = self::CSS_STATUS_FILE;
             } else {
                 $meta['status'] = self::CSS_STATUS_INLINE;
-                $meta['css'] = $content;
             }
         }
 
@@ -156,13 +157,13 @@ abstract class AbstractCss extends AbstractFile
      */
     public function enqueue()
     {
-        $handle_id = $this->getFileHandleId();
+        $handleId = $this->getFileHandleId();
 
-        if (isset(self::$printed[ $handle_id ])) {
+        if (isset(self::$printed[ $handleId ])) {
             return;
         }
 
-        self::$printed[ $handle_id ] = true;
+        self::$printed[ $handleId ] = true;
 
         $meta = $this->getMeta();
 
@@ -437,12 +438,12 @@ abstract class AbstractCss extends AbstractFile
      * @param array $values Values array.
      * @param array $placeholders Placeholders.
      * @param array $replacements Replacements.
-     * @param array|null $all_controls All controls.
+     * @param array|null $allControls All controls.
      */
-    public function addControlsStackStyleRules(ControlsStack $controls_stack, array $controls, array $values, array $placeholders, array $replacements, array $all_controls = null)
+    public function addControlsStackStyleRules(ControlsStack $controls_stack, array $controls, array $values, array $placeholders, array $replacements, array $allControls = null)
     {
-        if (!$all_controls) {
-            $all_controls = $controls_stack->getControls();
+        if (!$allControls) {
+            $allControls = $controls_stack->getControls();
         }
 
         $parsed_dynamic_settings = $controls_stack->parseDynamicSettings($values, $controls);
@@ -468,7 +469,7 @@ abstract class AbstractCss extends AbstractFile
                 continue;
             }
 
-            $this->addControlStyleRules($control, $parsed_dynamic_settings, $all_controls, $placeholders, $replacements);
+            $this->addControlStyleRules($control, $parsed_dynamic_settings, $allControls, $placeholders, $replacements);
         }
     }
 

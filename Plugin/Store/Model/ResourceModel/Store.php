@@ -7,11 +7,13 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Plugin\Store\Model\ResourceModel;
 
+use Exception;
 use Goomento\PageBuilder\Api\ContentRepositoryInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Logger\Logger;
 use Goomento\PageBuilder\Model\PageBuilderUrlRewriteGenerator;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Store\Model\ResourceModel\Store as ResourceStore;
 use Magento\UrlRewrite\Model\Exception\UrlAlreadyExistsException;
@@ -77,7 +79,7 @@ class Store
                     $this->generatePageBuilderUrls((int)$store->getId())
                 );
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logger->error($e);
         }
     }
@@ -87,6 +89,7 @@ class Store
      *
      * @param int $storeId
      * @return array
+     * @throws LocalizedException
      */
     private function generatePageBuilderUrls(int $storeId): array
     {

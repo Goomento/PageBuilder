@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Helper;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
 
@@ -34,20 +35,16 @@ class EncryptorHelper
 
     /**
      * Token will be expired in 3 hours
-     * @param null $content
+     * @param BuildableContentInterface $content
      * @param int|null $userId
      * @param int|null $timeExpired
      * @return string
      */
-    public static function createAccessToken($content = null, ?int $userId = 0, ?int $timeExpired = self::DEFAULT_EXPIRED_SECONDS)
+    public static function createAccessToken(BuildableContentInterface $content, ?int $userId = 0, ?int $timeExpired = self::DEFAULT_EXPIRED_SECONDS)
     {
-        if (empty($content)) {
-            $content = RequestHelper::getParam(ContentInterface::CONTENT_ID);
-        } elseif ($content instanceof ContentInterface) {
-            $content = $content->getId();
-        }
+        $contentId = $content->getOriginContent()->getId();
 
-        $data = sprintf('c_%s_u_%s_t_%s', $content, $userId, ($timeExpired ? time() + $timeExpired : 0));
+        $data = sprintf('c_%s_u_%s_t_%s', $contentId, $userId, ($timeExpired ? time() + $timeExpired : 0));
         return self::encrypt($data);
     }
 
@@ -62,11 +59,11 @@ class EncryptorHelper
 
     /**
      * @param string|null $token
-     * @param ContentInterface|int $content
+     * @param ContentInterface $content
      * @param int|null $userId
      * @return bool
      */
-    public static function isAllowed(?string $token, $content, ?int $userId = 0)
+    public static function isAllowed(?string $token, BuildableContentInterface $content, ?int $userId = 0)
     {
         if (null === $token) {
             $token = (string) RequestHelper::getParam(self::ACCESS_TOKEN);
@@ -83,16 +80,12 @@ class EncryptorHelper
                 ++$i;
             }
 
-            if ($content instanceof ContentInterface) {
-                $content = $content->getId();
-            }
-
             $createdTime = (int) $data['t'];
             if (!$createdTime || $createdTime < time()) {
                 return false;
             }
 
-            if ($data['c'] == $content) {
+            if ($data['c'] == $content->getOriginContent()->getId()) {
                 if ($userId && $userId != $data['u']) {
                     return false;
                 }

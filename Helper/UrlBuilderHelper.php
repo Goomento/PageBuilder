@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Helper;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\Url;
 use Magento\Framework\UrlInterface;
@@ -96,9 +97,9 @@ class UrlBuilderHelper
      * @param int $userId
      * @return string
      */
-    public static function getContentPreviewUrl(ContentInterface $content, int $userId = 0)
+    public static function getEditorPreviewUrl(ContentInterface $content, int $userId = 0)
     {
-        return self::getFrontendUrl('pagebuilder/content/preview', [
+        return self::getFrontendUrl('pagebuilder/content/editorpreview', [
             'content_id' => $content->getId(),
             'store_id' => self::getStoreId($content),
             '_query' => [
@@ -109,17 +110,14 @@ class UrlBuilderHelper
     }
 
     /**
-     * @param ContentInterface|int $content
+     * @param BuildableContentInterface $content
      * @param int $userId
      * @return string
      */
-    public static function getContentViewUrl($content, int $userId = 0)
+    public static function getContentViewUrl(BuildableContentInterface $content, int $userId = 0)
     {
-        if ($content instanceof ContentInterface) {
-            $content = $content->getId();
-        }
         return self::getFrontendUrl('pagebuilder/content/view', [
-            'content_id' => $content,
+            'content_id' => $content->getOriginContent()->getId(),
             'store_id' => self::getStoreId($content),
             '_query' => [
                 EncryptorHelper::ACCESS_TOKEN => EncryptorHelper::createAccessToken($content, $userId)
@@ -128,15 +126,11 @@ class UrlBuilderHelper
     }
 
     /**
-     * @param ContentInterface|int $content
+     * @param ContentInterface $content
      * @return string
      */
-    public static function getPublishedContentUrl($content)
+    public static function getPublishedContentUrl(ContentInterface $content)
     {
-        if (!($content instanceof ContentInterface)) {
-            $content = ContentHelper::get((int) $content);
-        }
-
         return self::getFrontendUrl($content->getIdentifier(), [
             'store_id' => self::getStoreId($content)
         ]);
@@ -166,28 +160,22 @@ class UrlBuilderHelper
     }
 
     /**
-     * @param ContentInterface|int $content
+     * @param ContentInterface $content
      * @return string
      */
-    public static function getContentExportUrl($content)
+    public static function getContentExportUrl(ContentInterface $content)
     {
-        if ($content instanceof ContentInterface) {
-            $content = $content->getId();
-        }
         return self::getUrl('pagebuilder/content/export', [
-            'content_id' => $content
+            'content_id' => $content->getId()
         ]);
     }
 
     /**
-     * @param ContentInterface|int $content
+     * @param ContentInterface $content
      * @return string
      */
-    public static function getContentEditUrl($content)
+    public static function getContentEditUrl(ContentInterface $content)
     {
-        if (!($content instanceof ContentInterface)) {
-            $content = ContentHelper::get((int) $content);
-        }
         return self::getUrl('pagebuilder/content/edit', [
             'type' => $content->getType(),
             'content_id' => $content->getId(),
@@ -195,30 +183,24 @@ class UrlBuilderHelper
     }
 
     /**
-     * @param ContentInterface|int $content
+     * @param ContentInterface $content
      * @return string
      */
-    public static function getContentDeleteUrl($content)
+    public static function getContentDeleteUrl(ContentInterface $content)
     {
-        if ($content instanceof ContentInterface) {
-            $content = $content->getId();
-        }
         return self::getUrl('pagebuilder/content/delete', [
-            'content_id' => $content,
+            'content_id' => $content->getId(),
         ]);
     }
 
     /**
      * Get Live Editor Url
      *
-     * @param ContentInterface|int $content
+     * @param ContentInterface $content
      * @return string
      */
-    public static function getLiveEditorUrl($content)
+    public static function getLiveEditorUrl(ContentInterface $content)
     {
-        if (!($content instanceof ContentInterface)) {
-            $content = ContentHelper::get((int) $content);
-        }
         return self::getUrl('pagebuilder/content/editor', [
             'content_id' => $content->getId(),
             'store' => self::getStoreId($content),

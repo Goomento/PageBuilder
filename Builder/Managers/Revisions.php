@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Managers;
 
 use Exception;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractDocument;
 use Goomento\PageBuilder\Builder\Modules\Ajax as Ajax;
@@ -30,30 +31,29 @@ class Revisions
     {
         HooksHelper::addAction('pagebuilder/ajax/register_actions', [ __CLASS__,'registerAjaxActions' ]);
 
-        if (RequestHelper::isAjax()) {
+        if (RequestHelper::isAjax() === true) {
             HooksHelper::addFilter('pagebuilder/documents/ajax_save/return_data', [ __CLASS__,'onAjaxSaveBuilderData' ]);
         }
     }
 
     /**
-     * @param $contentId
+     * @param BuildableContentInterface $buildableContent
      * @return array
      * @throws Exception
      */
-    public static function getRevisions($contentId)
+    public static function getRevisions( BuildableContentInterface $buildableContent )
     {
-        $content = ContentHelper::get($contentId);
-        $revisions =  ContentHelper::getRevisionsByContent($content);
+        $revisions =  ContentHelper::getRevisionsByContent( $buildableContent->getOriginContent() );
         $revisionData = [];
 
-        foreach ($revisions->getItems() as $revision) {
+        foreach ($revisions as $revision) {
             $author = $revision->getAuthor();
             $author = $author && $author->getId() ? $author->getName() : __('Anonymous');
 
             $revisionData[] = [
                 'id' => $revision->getId(),
                 'author' => $author,
-                'timestamp' => $content->getUpdateTime(),
+                'timestamp' => $buildableContent->getUpdateTime(),
                 'type' => $revision->getStatus(),
                 'date' => DataHelper::timeElapsedString($revision->getCreationTime()),
             ];
@@ -99,29 +99,25 @@ class Revisions
      * @return array
      * @throws Exception
      */
-    public static function onAjaxSaveBuilderData($returnData, $document)
+    public static function onAjaxSaveBuilderData($returnData, AbstractDocument $document)
     {
-        $contentId = $document->getId();
+        $latestRevisions = self::getRevisions( $document->getModel() );
 
-        $latestRevisions = self::getRevisions($contentId);
-
-        $allRevisionIds = array_column($latestRevisions, 'id');
+        $lastRevisionId = null;
+        foreach ($latestRevisions as $revision) {
+            if ($revision['type'] !== BuildableContentInterface::STATUS_AUTOSAVE) {
+                $lastRevisionId = $revision['id'];
+                break;
+            }
+        }
 
         if (!empty($latestRevisions)) {
-            $currentRevisionId = null;
-            foreach ($latestRevisions as $revision) {
-                if ($revision['type'] === RevisionInterface::STATUS_AUTOSAVE) {
-                    $currentRevisionId = $revision['id'];
-                    break;
-                }
-            }
-
             $returnData = array_replace_recursive($returnData, [
                 'config' => [
-                    'current_revision_id' => $currentRevisionId,
+                    'current_revision_id' => $lastRevisionId, // get last
                 ],
                 'latest_revisions' => $latestRevisions,
-                'revisions_ids' => $allRevisionIds,
+                'revisions_ids' => array_column($latestRevisions, 'id'),
             ]);
         }
 
@@ -129,13 +125,14 @@ class Revisions
     }
 
     /**
-     * @param $data
+     * @param array $data
+     * @param BuildableContentInterface $buildableContent
      * @return array
      * @throws Exception
      */
-    public static function ajaxGetRevisions($data)
+    public static function ajaxGetRevisions(array $data, BuildableContentInterface $buildableContent)
     {
-        return self::getRevisions($data['content_id']);
+        return self::getRevisions( $buildableContent );
     }
 
 

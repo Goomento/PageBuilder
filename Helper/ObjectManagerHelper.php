@@ -16,6 +16,7 @@ use Goomento\PageBuilder\Builder\Managers\Widgets;
 use Goomento\PageBuilder\Builder\Managers\Settings;
 use Goomento\PageBuilder\Builder\Managers\Documents;
 use Goomento\PageBuilder\Builder\Managers\Sources;
+use Goomento\PageBuilder\Builder\Modules\Editor;
 use Goomento\PageBuilder\Builder\Modules\Frontend;
 use Magento\Store\Model\StoreManager;
 
@@ -106,6 +107,14 @@ class ObjectManagerHelper extends \Goomento\Core\Helper\ObjectManagerHelper
     public static function getFrontend() : Frontend
     {
         return self::getSubject(Frontend::class);
+    }
+
+    /**
+     * @return Editor
+     */
+    public static function getEditor() : Editor
+    {
+        return self::getSubject(Editor::class);
     }
 
     /**

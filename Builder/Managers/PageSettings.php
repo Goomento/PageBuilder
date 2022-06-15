@@ -8,17 +8,15 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Managers;
 
-use Exception;
-use Goomento\PageBuilder\Builder\Modules\Editor;
+
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractCss;
 use Goomento\PageBuilder\Builder\Css\ContentCss;
 use Goomento\PageBuilder\Builder\Base\AbstractSettingsManager;
-use Goomento\PageBuilder\Builder\Base\AbstractSettings as BaseModel;
+use Goomento\PageBuilder\Builder\Base\AbstractSettings;
 use Goomento\PageBuilder\Builder\Settings\Page;
-use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
-use Goomento\PageBuilder\Model\Content;
 
 class PageSettings extends AbstractSettingsManager
 {
@@ -29,64 +27,17 @@ class PageSettings extends AbstractSettingsManager
      *
      * Retrieve the model for settings configuration.
      *
-     * @return BaseModel The model object.
+     * @return AbstractSettings|null The model object.
      */
     public function getModelForConfig()
     {
-        /** @var Editor $editor */
-        $editor = ObjectManagerHelper::get(Editor::class);
-
         if (!StateHelper::isEditorMode()) {
             return null;
         }
 
-        /** @var Documents $documentManager */
-        $documentManager = ObjectManagerHelper::get(Documents::class);
+        $editor = ObjectManagerHelper::getEditor();
 
-        $content_id = $editor->getContentId();
-        $document = $documentManager->get($content_id);
-
-        if (!$document) {
-            return null;
-        }
-
-        return $this->getSettingModel($content_id);
-    }
-
-    /**
-     * Ajax before saving settings.
-     *
-     * Validate the data before saving it and updating the data in the database.
-     *
-     *
-     * @param array $data Content data.
-     * @param int   $id   Content ID.
-     *
-     * @throws Exception If invalid post returned using the `$id`.
-     * @throws Exception If current user don't have permissions to edit the post.
-     */
-    public function beforeSaveSettings(array $data, $id)
-    {
-        /** @var Content $model */
-        $model = ContentHelper::get($id);
-
-        if (empty($model) || ! $model->getId()) {
-            throw new Exception('Invalid content.');
-        }
-
-        if (!empty($data['title'])) {
-            $model->setTitle($data['title']);
-        }
-
-        if (!empty($data['status'])) {
-            $model->setData('status', $data['status']);
-        }
-
-        if (isset($data['is_active'])) {
-            $model->setIsActive((bool) $data['is_active']);
-        }
-
-        return $this;
+        return $editor->getBuildableContent() ? $this->getSettingModel( $editor->getBuildableContent() ) : null;
     }
 
     /**
@@ -96,18 +47,10 @@ class PageSettings extends AbstractSettingsManager
      *
      *
      * @param array $settings Settings.
-     * @param int $id ContentCss ID.
+     * @param BuildableContentInterface|null $buildableContent
      */
-    protected function saveSettingsToDb(array $settings, $id)
+    protected function saveSettingsToDb(array $settings, ?BuildableContentInterface $buildableContent = null)
     {
-        $content = ContentHelper::get($id);
-        if (!empty($settings)) {
-            foreach ($settings as $name => $value) {
-                $content->setSetting($name, $value);
-            }
-        } else {
-            $content->setSettings([]);
-        }
     }
 
     /**
@@ -133,18 +76,18 @@ class PageSettings extends AbstractSettingsManager
      * Retrieve the saved settings from the post meta.
      *
      *
-     * @param int $id ContentCss ID.
-     *
+     * @param BuildableContentInterface|null $buildableContent
      * @return array Saved settings.
      */
-    protected function getSavedSettings($id)
+    protected function getSavedSettings(?BuildableContentInterface $buildableContent = null)
     {
-        $content = ContentHelper::get($id);
-        $settings = $content->getSettings();
+        $settings = $buildableContent->getSettings();
 
         if (!$settings) {
             $settings = [];
         }
+
+        $settings['origin_status'] = $buildableContent->getOriginContent()->getStatus();
 
         return $settings;
     }
@@ -168,9 +111,9 @@ class PageSettings extends AbstractSettingsManager
      * Retrieve the model for the CSS file.
      *
      *
-     * @param \Goomento\PageBuilder\Builder\Base\AbstractCss $cssFile The requested CSS file.
+     * @param AbstractCss $cssFile The requested CSS file.
      *
-     * @return BaseModel The model object.
+     * @return AbstractSettings The model object.
      */
     protected function getModelForCssFile(AbstractCss $cssFile)
     {
@@ -178,39 +121,21 @@ class PageSettings extends AbstractSettingsManager
             return null;
         }
 
-        $contentId = $cssFile->getContentId();
-
-        return $this->getSettingModel($contentId);
+        return $this->getSettingModel( $cssFile->getModel() );
     }
 
     /**
-     * Get special settings names.
-     *
-     * Retrieve the names of the special settings that are not saved as regular
-     * settings. Those settings have a separate saving process.
-     *
-     *
-     * @return array Special settings names.
+     * @inheritDoc
      */
-    protected function getSpecialSettingsNames()
-    {
-        return [
-            'id',
-            'title',
-            'status',
-            'content_id',
-            'is_active',
-        ];
-    }
-
-    public function createModel(?int $id): BaseModel
+    public function createModel(?BuildableContentInterface $buildableContent = null): AbstractSettings
     {
         return ObjectManagerHelper::create(
             Page::class,
             [
                 'data' => [
-                    'id' => $id,
-                    'settings' => $this->getSavedSettings($id),
+                    'id' => $buildableContent ? $buildableContent->getId() : 0,
+                    'model' => $buildableContent,
+                    'settings' => $this->getSavedSettings($buildableContent),
                 ]
             ]
         );

@@ -92,7 +92,7 @@ class ContentRegistry implements ContentRegistryInterface
     {
         $content = null;
         if (!empty($value)) {
-            $field = is_int($value) ? ContentInterface::CONTENT_ID : ContentInterface::IDENTIFIER;
+            $field = filter_var($value, FILTER_VALIDATE_INT) ? ContentInterface::CONTENT_ID : ContentInterface::IDENTIFIER;
             $actions = [
                 [$this, 'getFromInstance'],
                 [$this, 'getFromCache'],

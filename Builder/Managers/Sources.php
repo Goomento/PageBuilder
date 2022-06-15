@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Managers;
 
 use Exception;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractSource;
 use Goomento\PageBuilder\Builder\Sources\Local;
 use Goomento\PageBuilder\Builder\Modules\Ajax;
@@ -89,19 +90,17 @@ class Sources
      * @return array Library data.
      * @throws Exception
      */
-    public function getLibraryData(array $args)
+    public function getLibraryData(array $args, BuildableContentInterface $buildableContent)
     {
-        $content = ContentHelper::get($args['content_id']);
-        if (!AuthorizationHelper::isCurrentUserCan($content->getRoleName('view'))) {
+        if (!AuthorizationHelper::isCurrentUserCan($buildableContent->getRoleName('view'))) {
             throw new Exception(
                 'Sorry, you need permissions to view this content'
             );
         }
 
         // Ensure all document are registered.
-        /** @var Documents $documentManager */
-        $documentManager = ObjectManagerHelper::get(Documents::class);
-        $documentManager->get($content->getId());
+        $documentManager = ObjectManagerHelper::getDocumentsManager();
+        $documentManager->getByContent( $buildableContent );
 
         $templates = $this->getTemplates();
 
@@ -119,22 +118,21 @@ class Sources
 
     /**
      * @param array $args
+     * @param BuildableContentInterface $buildableContent
      * @return mixed
-     * @throws LocalizedException
      * @throws Exception
      */
-    public function saveTemplate(array $args)
+    public function saveTemplate(array $args, BuildableContentInterface $buildableContent)
     {
-        $content = ContentHelper::get($args['content_id']);
-        if (!AuthorizationHelper::isCurrentUserCan($content->getRoleName('save'))) {
+        if (!AuthorizationHelper::isCurrentUserCan($buildableContent->getRoleName('save'))) {
             throw new Exception(
                 'Sorry, you need permissions to save this content'
             );
         }
 
-        $validate_args = $this->ensureArgs([ 'content_id', 'source', 'content', 'type' ], $args);
+        $validateArgs = $this->ensureArgs([ 'content_id', 'source', 'content', 'type' ], $args);
 
-        if (!$validate_args) {
+        if (!$validateArgs) {
             throw new Exception('Invalid template');
         }
 
@@ -144,22 +142,22 @@ class Sources
             throw new Exception('Template source not found');
         }
 
-        $args['content'] = json_decode($args['content'], true);
+        try {
+            $args['content'] = \Zend_Json::decode($args['content']);
+        } catch (\Exception $e) {
+            $args['content'] = [];
+        }
 
-        /** @var SettingsManager $settingsManager */
-        $settingsManager = ObjectManagerHelper::get(SettingsManager::class);
-        /** @var PageSettings $pageSettingsManager */
-        $pageSettingsManager = $settingsManager->getSettingsManagers(PageSettings::NAME);
+        $pageSettingsManager = ObjectManagerHelper::getSettingsManager()
+            ->getSettingsManagers(PageSettings::NAME);
 
-        $page = $pageSettingsManager->getSettingModel($args['content_id']);
+        $page = $pageSettingsManager->getSettingModel( $buildableContent );
 
         $args['page_settings'] = $page->getData('settings');
 
-        $template_id = $source->saveItem($args);
+        $templateId = $source->saveItem($args);
 
-        $template = ContentHelper::get($template_id);
-
-        return $source->getItem($template);
+        return $source->getItem( (int) $templateId );
     }
 
     /**
@@ -168,22 +166,21 @@ class Sources
      * Update template on the database.
      *
      *
-     * @param array $template_data New template data.
+     * @param array $templateData New template data.
      *
      * @throws Exception
      */
-    public function updateTemplate(array $template_data)
+    public function updateTemplate(array $templateData, BuildableContentInterface $buildableContent)
     {
-        $content = ContentHelper::get($template_data['content_id']);
-        if (!AuthorizationHelper::isCurrentUserCan($content->getRoleName('delete'))) {
+        if (!AuthorizationHelper::isCurrentUserCan($buildableContent->getRoleName('delete'))) {
             throw new Exception(
                 'Sorry, you need permissions to update this template'
             );
         }
 
-        $this->ensureArgs([ 'source', 'content', 'type' ], $template_data);
+        $this->ensureArgs([ 'source', 'content', 'type' ], $templateData);
 
-        $source = $this->getSource($template_data['source']);
+        $source = $this->getSource($templateData['source']);
 
         if (!$source) {
             throw new Exception(
@@ -191,11 +188,11 @@ class Sources
             );
         }
 
-        $template_data['content'] = json_decode($template_data['content'], true);
+        $templateData['content'] = json_decode($templateData['content'], true);
 
-        $source->updateItem($template_data);
+        $source->updateItem($templateData);
 
-        return $source->getItem($template_data['id']);
+        return $source->getItem($templateData['id']);
     }
 
     /**
@@ -208,10 +205,10 @@ class Sources
      * @return bool
      * @throws Exception
      */
-    public function updateTemplates(array $args)
+    public function updateTemplates(array $args, BuildableContentInterface $buildableContent)
     {
-        foreach ($args['templates'] as $template_data) {
-            $this->updateTemplate($template_data);
+        foreach ($args['templates'] as $templateData) {
+            $this->updateTemplate($templateData, $buildableContent);
         }
 
         return true;
@@ -227,10 +224,9 @@ class Sources
      *
      * @throws Exception
      */
-    public function getTemplateData(array $args)
+    public function getTemplateData(array $args, BuildableContentInterface $buildableContent)
     {
-        $content = ContentHelper::get($args['content_id']);
-        if (!AuthorizationHelper::isCurrentUserCan($content->getType() . '_view')) {
+        if (!AuthorizationHelper::isCurrentUserCan($buildableContent->getType() . '_view')) {
             throw new Exception(
                 'Sorry, you need permissions to view this content'
             );
@@ -266,19 +262,18 @@ class Sources
      * @return bool|null
      * @throws Exception
      */
-    public function deleteTemplate(array $args)
+    public function deleteTemplate(array $args, BuildableContentInterface $buildableContent)
     {
-        $content = ContentHelper::get($args['content_id']);
-        if (!AuthorizationHelper::isCurrentUserCan($content->getRoleName('delete'))) {
+        if (!AuthorizationHelper::isCurrentUserCan($buildableContent->getRoleName('delete'))) {
             throw new Exception(
                 'Sorry, you need permissions to delete template'
             );
         }
 
-        $validate_args = $this->ensureArgs([ 'source', 'template_id' ], $args);
+        $validateArgs = $this->ensureArgs([ 'source', 'template_id' ], $args);
 
-        if (!$validate_args) {
-            return $validate_args;
+        if (!$validateArgs) {
+            return $validateArgs;
         }
 
         $source = $this->getSource($args['source']);
@@ -289,7 +284,7 @@ class Sources
             );
         }
 
-        return $source->deleteTemplate($args['template_id']);
+        return $source->deleteTemplate((int) $args['template_id']);
     }
 
     /**
@@ -303,7 +298,7 @@ class Sources
      * @return mixed Whether the export succeeded or failed.
      * @throws Exception
      */
-    public function exportTemplate(array $args)
+    public function exportTemplate(array $args, BuildableContentInterface $buildableContent)
     {
         $validate_args = $this->ensureArgs([ 'source', 'template_id' ], $args);
 
@@ -327,7 +322,7 @@ class Sources
      * @return array|null
      * @throws Exception
      */
-    public function directImportTemplate($filename = 'file')
+    public function directImportTemplate(string $filename = 'file')
     {
         /** @var Local $source */
         $source = $this->getSource(Local::NAME);
@@ -395,34 +390,6 @@ class Sources
     }
 
     /**
-     * Handle ajax request.
-     *
-     * Fire authenticated ajax actions for any given ajax request.
-     *
-     *
-     * @param callable $ajaxRequest Ajax request.
-     *
-     * @param array $data
-     *
-     * @return mixed
-     * @throws Exception
-     */
-    private function handleAjaxRequest($ajaxRequest, array $data)
-    {
-        if (!empty($data['content_id'])) {
-            $contentId = (int) $data['content_id'];
-
-            if (!ContentHelper::get($contentId)) {
-                throw new Exception(
-                    'Content Not Found.'
-                );
-            }
-        }
-
-        return call_user_func($ajaxRequest, $data);
-    }
-
-    /**
      * Init ajax calls.
      *
      * Initialize template library ajax calls for allowed ajax requests.
@@ -433,7 +400,7 @@ class Sources
      */
     public function registerAjaxActions(Ajax $ajax)
     {
-        $library_ajax_requests = [
+        $libraryAjaxRequests = [
             'get_library_data' => [$this, 'getLibraryData'],
             'get_template_data' => [$this, 'getTemplateData'],
             'save_template' => [$this, 'saveTemplate'],
@@ -442,26 +409,24 @@ class Sources
             'import_template' => [$this, 'importTemplate'],
         ];
 
-        foreach ($library_ajax_requests as $ajax_request => $callback) {
-            $ajax->registerAjaxAction($ajax_request, function ($data) use ($callback) {
-                return $this->handleAjaxRequest($callback, $data);
-            });
+        foreach ($libraryAjaxRequests as $ajaxRequest => $callback) {
+            $ajax->registerAjaxAction($ajaxRequest, $callback);
         }
     }
 
     /**
-     * @param array $required_args
-     * @param array $specified_args
+     * @param array $requiredArgs
+     * @param array $specifiedArgs
      * @return bool
      * @throws Exception
      */
-    private function ensureArgs(array $required_args, array $specified_args)
+    private function ensureArgs(array $requiredArgs, array $specifiedArgs)
     {
-        $not_specified_args = array_diff($required_args, array_keys(array_filter($specified_args)));
+        $notSpecifiedArgs = array_diff($requiredArgs, array_keys(array_filter($specifiedArgs)));
 
-        if ($not_specified_args) {
+        if ($notSpecifiedArgs) {
             throw new Exception(
-                sprintf('The required argument(s) "%s" not specified.', implode(', ', $not_specified_args))
+                sprintf('The required argument(s) "%s" not specified.', implode(', ', $notSpecifiedArgs))
             );
         }
 

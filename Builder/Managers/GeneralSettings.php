@@ -8,16 +8,17 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Managers;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Managers\Controls as ControlsManager;
 use Goomento\PageBuilder\Builder\Base\AbstractCss;
 use Goomento\PageBuilder\Builder\Css\GlobalCss;
-use Goomento\PageBuilder\Builder\Base\AbstractSettingsManager as BaseManager;
-use Goomento\PageBuilder\Builder\Base\AbstractSettings as BaseModel;
+use Goomento\PageBuilder\Builder\Base\AbstractSettingsManager;
+use Goomento\PageBuilder\Builder\Base\AbstractSettings;
 use Goomento\PageBuilder\Builder\Settings\General;
 use Goomento\PageBuilder\Helper\ConfigHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
-class GeneralSettings extends BaseManager
+class GeneralSettings extends AbstractSettingsManager
 {
     const NAME = 'general';
 
@@ -50,11 +51,11 @@ class GeneralSettings extends BaseManager
      * Retrieve the model for settings configuration.
      *
      *
-     * @return BaseModel The model object.
+     * @return AbstractSettings The model object.
      */
     public function getModelForConfig()
     {
-        return $this->getSettingModel();
+        return $this->getSettingModel(null);
     }
 
     /**
@@ -63,23 +64,22 @@ class GeneralSettings extends BaseManager
      * Retrieve the saved settings from the site options.
      *
      *
-     * @param int $id ContentCss ID.
-     *
+     * @param BuildableContentInterface|null $buildableContent
      * @return array Saved settings.
      */
-    protected function getSavedSettings($id)
+    protected function getSavedSettings(?BuildableContentInterface $buildableContent = null)
     {
-        $model_controls = General::getControlsList();
+        $modelControls = General::getControlsList();
 
         $settings = [];
 
-        foreach ($model_controls as $tab_name => $sections) {
-            foreach ($sections as $section_name => $section_data) {
-                foreach ($section_data['controls'] as $control_name => $control_data) {
-                    $saved_setting = ConfigHelper::getValue($control_name);
+        foreach ($modelControls as $sections) {
+            foreach ($sections as $sectionData) {
+                foreach ($sectionData['controls'] as $controlName => $controlData) {
+                    $savedSetting = ConfigHelper::getValue($controlName);
 
-                    if (null !== $saved_setting) {
-                        $settings[ $control_name ] = ConfigHelper::getValue($control_name);
+                    if (null !== $savedSetting) {
+                        $settings[ $controlName ] = ConfigHelper::getValue($controlName);
                     }
                 }
             }
@@ -109,30 +109,30 @@ class GeneralSettings extends BaseManager
      *
      *
      * @param array $settings Settings.
-     * @param int $id ContentCss ID.
+     * @param BuildableContentInterface|null $buildableContent
      */
-    protected function saveSettingsToDb(array $settings, $id)
+    protected function saveSettingsToDb(array $settings, ?BuildableContentInterface $buildableContent = null)
     {
-        $model_controls = General::getControlsList();
+        $modelControls = General::getControlsList();
 
-        $one_list_settings = [];
+        $oneListSettings = [];
 
-        foreach ($model_controls as $tab_name => $sections) {
-            foreach ($sections as $section_name => $section_data) {
-                foreach ($section_data['controls'] as $control_name => $control_data) {
-                    if (isset($settings[ $control_name ])) {
-                        $one_list_settings[ $control_name ] = $settings[ $control_name ];
-                        ConfigHelper::setValue($control_name, $settings[$control_name]);
+        foreach ($modelControls as $sections) {
+            foreach ($sections as $sectionData) {
+                foreach ($sectionData['controls'] as $controlName => $control_data) {
+                    if (isset($settings[ $controlName ])) {
+                        $oneListSettings[ $controlName ] = $settings[ $controlName ];
+                        ConfigHelper::setValue($controlName, $settings[$controlName]);
                     } else {
-                        ConfigHelper::deleteValue($control_name);
+                        ConfigHelper::deleteValue($controlName);
                     }
                 }
             }
         }
 
         // Save all settings in one list for a future usage
-        if (!empty($one_list_settings)) {
-            ConfigHelper::setValue(self::META_KEY, $one_list_settings);
+        if (!empty($oneListSettings)) {
+            ConfigHelper::setValue(self::META_KEY, $oneListSettings);
         } else {
             ConfigHelper::deleteValue(self::META_KEY);
         }
@@ -146,11 +146,11 @@ class GeneralSettings extends BaseManager
      *
      * @param AbstractCss $cssFile The requested CSS file.
      *
-     * @return BaseModel The model object.
+     * @return AbstractSettings The model object.
      */
     protected function getModelForCssFile(AbstractCss $cssFile)
     {
-        return $this->getSettingModel();
+        return $this->getSettingModel(null);
     }
 
     /**
@@ -182,14 +182,14 @@ class GeneralSettings extends BaseManager
     /**
      * @inheirtDoc
      */
-    public function createModel(?int $id): BaseModel
+    public function createModel(?BuildableContentInterface $buildableContent = null): AbstractSettings
     {
         return ObjectManagerHelper::create(
             General::class,
             [
                 'data' => [
-                    'id' => $id,
-                    'settings' => $this->getSavedSettings($id),
+                    'id' => $buildableContent ? implode('_', $buildableContent->getIdentities()) : null,
+                    'settings' => $this->getSavedSettings($buildableContent),
                 ]
             ]
         );

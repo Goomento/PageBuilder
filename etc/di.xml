@@ -184,7 +184,12 @@
             </argument>
         </arguments>
     </type>
-    <type name="Goomento\PageBuilder\Logger\Handler">
+    <type name="Goomento\PageBuilder\Logger\DebugHandler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Goomento\PageBuilder\Logger\ErrorHandler">
         <arguments>
             <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
         </arguments>
@@ -193,8 +198,14 @@
         <arguments>
             <argument name="name" xsi:type="string">pagebuilder</argument>
             <argument name="handlers"  xsi:type="array">
-                <item name="system" xsi:type="object">Goomento\PageBuilder\Logger\Handler</item>
+                <item name="debug" xsi:type="object">Goomento\PageBuilder\Logger\DebugHandler</item>
+                <item name="error" xsi:type="object">Goomento\PageBuilder\Logger\ErrorHandler</item>
             </argument>
+        </arguments>
+    </type>
+    <type name="Goomento\Core\Plugin\Framework\Controller\ResultInterface\ModifyResponse">
+        <arguments>
+            <argument name="logger" xsi:type="object">Goomento\PageBuilder\Logger\Logger</argument>
         </arguments>
     </type>
     <type name="Goomento\Core\SubSystem">
@@ -218,7 +229,7 @@
                 <item name="frontend" xsi:type="string">Goomento\PageBuilder\Builder\Modules\Frontend</item>
                 <item name="template-library" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Sources</item>
                 <item name="tags-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Tags</item>
-                <item name="history" xsi:type="string">Goomento\PageBuilder\Builder\Modules\History</item>
+<!--                <item name="history" xsi:type="string">Goomento\PageBuilder\Builder\Modules\History</item>-->
                 <item name="revisions-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Revisions</item>
                 <item name="documents-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Documents</item>
                 <item name="settings-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Settings</item>
@@ -240,14 +251,10 @@
             </argument>
         </arguments>
     </type>
-    <type name="Goomento\PageBuilder\Api\ContentRepositoryInterface">
-        <plugin name="createRevision"
-                type="Goomento\PageBuilder\Plugin\PageBuilder\Api\ContentRepositoryInterface\CreateRevision" />
-    </type>
     <type name="Goomento\PageBuilder\Controller\Content\View">
         <plugin name="validateAccess" type="Goomento\PageBuilder\Plugin\PageBuilder\Controller\ValidateAccess" />
     </type>
-    <type name="Goomento\PageBuilder\Controller\Content\Preview">
+    <type name="Goomento\PageBuilder\Controller\Content\EditorPreview">
         <plugin name="validateAccess" type="Goomento\PageBuilder\Plugin\PageBuilder\Controller\ValidateAccess" />
     </type>
     <type name="Goomento\PageBuilder\Controller\Actions\Actions">

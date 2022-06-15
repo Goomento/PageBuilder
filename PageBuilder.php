@@ -101,7 +101,7 @@ class PageBuilder implements SubSystemInterface
             HooksHelper::doAction('pagebuilder/enqueue_scripts');
             HooksHelper::doAction("pagebuilder/{$areaCode}/enqueue_scripts");
 
-            ThemeHelper::doHeader();
+            ThemeHelper::onDoHeader();
         });
 
         // FOOTER
@@ -112,7 +112,7 @@ class PageBuilder implements SubSystemInterface
         HooksHelper::addAction('pagebuilder/footer', function () use ($areaCode) {
             HooksHelper::doAction("pagebuilder/{$areaCode}/footer");
 
-            ThemeHelper::doFooter();
+            ThemeHelper::onDoFooter();
         });
 
         // DEFAULT
@@ -120,13 +120,7 @@ class PageBuilder implements SubSystemInterface
         HooksHelper::doAction("pagebuilder/{$areaCode}/init");
 
         HooksHelper::addFilter('body_classes', [ThemeHelper::class, 'getBodyClass']);
-
-        HooksHelper::addFilter('style_loader_src', function ($src = '') {
-            if (strpos($src, 'http') === false) {
-                $src = Helper\UrlBuilderHelper::urlStaticBuilder($src);
-            }
-            return $src;
-        });
+        HooksHelper::addFilter('style_loader_src', [ThemeHelper::class, 'onStyleLoaderSource']);
     }
 
     /**

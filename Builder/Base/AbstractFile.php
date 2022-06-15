@@ -14,15 +14,16 @@ use Goomento\PageBuilder\Helper\ConfigHelper;
 
 abstract class AbstractFile extends AbstractEntity
 {
-    const UPLOADS_DIR = 'media/goomento/';
+    // Saved in media folder
+    const UPLOADS_DIR = 'media/';
 
-    const DEFAULT_FILES_DIR = 'css/';
+    const DEFAULT_FILES_DIR = '';
 
     const META_KEY = '';
 
-    private $files_dir;
+    private $filesDir;
 
-    private $file_name;
+    private $fileName;
 
     const NAME = 'file';
 
@@ -86,21 +87,21 @@ abstract class AbstractFile extends AbstractEntity
     }
 
     /**
-     * @param $files_dir
+     * @param $filesDir
      * @return void
      */
-    public function setFilesDir($files_dir)
+    public function setFilesDir($filesDir)
     {
-        $this->files_dir = $files_dir;
+        $this->filesDir = $filesDir;
     }
 
     /**
-     * @param $file_name
+     * @param $fileName
      * @return void
      */
-    public function setFileName($file_name)
+    public function setFileName($fileName)
     {
-        $this->file_name = $file_name;
+        $this->fileName = $fileName;
     }
 
     /**
@@ -108,7 +109,7 @@ abstract class AbstractFile extends AbstractEntity
      */
     public function getFileName()
     {
-        return $this->file_name;
+        return $this->fileName;
     }
 
     /**
@@ -116,7 +117,7 @@ abstract class AbstractFile extends AbstractEntity
      */
     public function getUrl()
     {
-        return self::getBaseUploadsUrl() . $this->files_dir . $this->file_name;
+        return self::getBaseUploadsUrl() . $this->filesDir . $this->fileName;
     }
 
     /**
@@ -164,7 +165,7 @@ abstract class AbstractFile extends AbstractEntity
      */
     public function write()
     {
-        AssetsHelper::save($this->path . ltrim($this->file_name), $this->content);
+        AssetsHelper::save($this->path . ltrim($this->fileName), $this->content);
     }
 
 
@@ -173,7 +174,7 @@ abstract class AbstractFile extends AbstractEntity
      */
     public function delete()
     {
-        AssetsHelper::delete($this->path . ltrim($this->file_name, '\\/'));
+        AssetsHelper::delete($this->path . ltrim($this->fileName, '\\/'));
 
         $this->deleteMeta();
     }
@@ -260,7 +261,7 @@ abstract class AbstractFile extends AbstractEntity
 
     private function setPath()
     {
-        $dir_path = self::getBaseUploadsDir() . $this->files_dir;
+        $dir_path = self::getBaseUploadsDir() . $this->filesDir;
 
         $this->path = $dir_path;
     }

@@ -27,8 +27,10 @@ class View extends AbstractAction
     public function execute()
     {
         try {
-            $this->registry->register('pagebuilder_content', $this->getContent(true));
-            HooksHelper::doAction('pagebuilder/content/view');
+            /**
+             *
+             */
+            HooksHelper::doAction('pagebuilder/content/view', $this->getContent(true));
             return $this->renderPage();
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage(
@@ -38,9 +40,9 @@ class View extends AbstractAction
             $this->messageManager->addErrorMessage(
                 __('Something went wrong when render content view.')
             );
+            $this->logger->error($e);
         } finally {
             if (!empty($e)) {
-                $this->logger->error($e);
                 if ($this->dataHelper->isDebugMode()) {
                     throw $e;
                 }
@@ -55,12 +57,9 @@ class View extends AbstractAction
      */
     protected function getPageConfig()
     {
-        $content = $this->getContent(true);
-        $layout = $content->getSetting('layout') ?: 'pagebuilder_content_1column';
-
         return [
             'editable_title' => '%1',
-            'handler' => $layout,
+            'handler' => $this->getContentLayout(true) ?: 'pagebuilder_content_1column',
         ];
     }
 }

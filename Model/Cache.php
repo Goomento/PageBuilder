@@ -20,7 +20,9 @@ use Zend_Json;
 
 class Cache
 {
-    const DEFAULT_LIFE_TIME = 86400; // 01 day
+    const DAY_LIFE_TIME = 86400; // 01 day
+
+    const HOUR_LIFE_TIME = 3600; // 01 hour
 
     const CACHE_TAG = PageBuilder::CACHE_TAG;
 
