@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Sources;
 
 use Exception;
+use Goomento\PageBuilder\Api\ContentManagementInterface;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractSource;
 use Goomento\PageBuilder\Builder\Managers\Documents;
@@ -23,6 +25,7 @@ use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Goomento\PageBuilder\Model\ContentManagement;
+use Magento\Framework\Exception\LocalizedException;
 use Zend_Json;
 
 class Local extends AbstractSource
@@ -53,13 +56,13 @@ class Local extends AbstractSource
      * Retrieve the template type from the post meta.
      *
      *
-     * @param int $template_id The template ID.
+     * @param int $templateId The template ID.
      *
      * @return mixed The value of meta data field.
      */
-    public static function getTemplateType($template_id)
+    public static function getTemplateType(int $templateId)
     {
-        $content = ContentHelper::get($template_id);
+        $content = ContentHelper::get($templateId);
         return $content->getType();
     }
 
@@ -71,7 +74,7 @@ class Local extends AbstractSource
      *
      * @param string $type Template type.
      */
-    public static function addTemplateType($type)
+    public static function addTemplateType(string $type)
     {
         self::$template_types[ $type ] = $type;
     }
@@ -85,7 +88,7 @@ class Local extends AbstractSource
      *
      * @param string $type Template type.
      */
-    public static function removeTemplateType($type)
+    public static function removeTemplateType(string $type)
     {
         if (isset(self::$template_types[ $type ])) {
             unset(self::$template_types[ $type ]);
@@ -131,16 +134,16 @@ class Local extends AbstractSource
      *
      * @return array Local templates.
      */
-    public function getItems($args = [])
+    public function getItems(array $args = [])
     {
-        /** @var ContentManagement $contentManager */
-        $contentManager = ObjectManagerHelper::get(ContentManagement::class);
+        /** @var ContentManagementInterface $contentManager */
+        $contentManager = ObjectManagerHelper::get(ContentManagementInterface::class);
         $contents = $contentManager->getBuildableContents();
         $templates = [];
 
         if ($contents) {
             foreach ($contents->getItems() as $content) {
-                $templates[] = $this->getItem($content);
+                $templates[] = $this->getItem( (int) $content->getId() );
             }
         }
 
@@ -153,38 +156,37 @@ class Local extends AbstractSource
      * Save new or update existing template on the database.
      *
      *
-     * @param array $template_data Local template data.
+     * @param array $templateData Local template data.
      *
-     * @return mixed
+     * @return int
      * @throws Exception
      */
-    public function saveItem($template_data)
+    public function saveItem(array $templateData)
     {
         $defaults = [
             'title' => __('(no title)'),
             'page_settings' => [],
-            'status' => ContentInterface::STATUS_PENDING,
+            'status' => BuildableContentInterface::STATUS_PENDING,
         ];
 
-        $template_data = array_merge($defaults, $template_data);
+        $templateData = array_merge($defaults, $templateData);
 
-        /** @var Documents $documentManager */
-        $documentManager = ObjectManagerHelper::get(Documents::class);
+        $documentManager = ObjectManagerHelper::getDocumentsManager();
 
         $document = $documentManager->create(
-            $template_data['type'],
+            $templateData['type'],
             [
-                'title' => $template_data['title'],
-                'status' => ContentInterface::STATUS_PENDING,
+                'title' => $templateData['title'],
+                'status' => BuildableContentInterface::STATUS_PENDING,
             ]
         );
 
         $document->save([
-            'elements' => $template_data['content'],
-            'settings' => $template_data['page_settings'],
+            'elements' => $templateData['content'],
+            'settings' => $templateData['page_settings'],
         ]);
 
-        $template_id = $document->getId();
+        $templateId = (int) $document->getId();
 
         /**
          * After template library save.
@@ -192,10 +194,10 @@ class Local extends AbstractSource
          * Fires after SagoTheme template library was saved.
          *
          *
-         * @param int   $template_id   The ID of the template.
-         * @param array $template_data The template data.
+         * @param int   $templateId   The ID of the template.
+         * @param array $templateData The template data.
          */
-        HooksHelper::doAction('pagebuilder/template-library/after_save_template', $template_id, $template_data);
+        HooksHelper::doAction('pagebuilder/template-library/after_save_template', $templateId, $templateData);
 
         /**
          * After template library update.
@@ -203,12 +205,12 @@ class Local extends AbstractSource
          * Fires after SagoTheme template library was updated.
          *
          *
-         * @param int   $template_id   The ID of the template.
-         * @param array $template_data The template data.
+         * @param int   $templateId   The ID of the template.
+         * @param array $templateData The template data.
          */
-        HooksHelper::doAction('pagebuilder/template-library/after_update_template', $template_id, $template_data);
+        HooksHelper::doAction('pagebuilder/template-library/after_update_template', $templateId, $templateData);
 
-        return $template_id;
+        return $templateId;
     }
 
     /**
@@ -217,13 +219,16 @@ class Local extends AbstractSource
      * Update template on the database.
      *
      *
-     * @param array $new_data New template data.
+     * @param array $newData New template data.
      *
      * @return true
+     * @throws LocalizedException
      */
-    public function updateItem($new_data)
+    public function updateItem(array $newData)
     {
-        $document = ObjectManagerHelper::get(Documents::class)->get($new_data['id']);
+        $document = ObjectManagerHelper::getDocumentsManager()->getByContent(
+            ContentHelper::get((int) $newData['id'])
+        );
 
         if (!$document) {
             throw new Exception(
@@ -232,7 +237,7 @@ class Local extends AbstractSource
         }
 
         $document->save([
-            'elements' => $new_data['content'],
+            'elements' => $newData['content'],
         ]);
 
         /**
@@ -242,36 +247,38 @@ class Local extends AbstractSource
          *
          *
          * @param int   $new_data_id The ID of the new template.
-         * @param array $new_data    The new template data.
+         * @param array $newData    The new template data.
          */
-        HooksHelper::doAction('pagebuilder/template-library/after_update_template', $new_data['id'], $new_data);
+        HooksHelper::doAction('pagebuilder/template-library/after_update_template', $newData['id'], $newData);
 
         return true;
     }
 
     /**
-     * @param ContentInterface $model
+     * @param int $templateId
      * @return array
      * @throws Exception
      */
-    public function getItem($model)
+    public function getItem(int $templateId)
     {
-        $page_settings = $model->getSettings();
+        $buildableContent = ContentHelper::get( $templateId );
 
-        $author = $model->getAuthor();
+        $pageSettings = $buildableContent->getSettings();
+
+        $author = $buildableContent->getAuthor();
 
         return [
-            'template_id' => $model->getId(),
-            'content_id' => $model->getId(),
+            'template_id' => $buildableContent->getId(),
+            'content_id' => $buildableContent->getId(),
             'source' => $this->getName(),
-            'type' => $model->getType(),
-            'title' => $model->getTitle(),
-            'date' => DataHelper::timeElapsedString($model->getCreationTime(), false),
+            'type' => $buildableContent->getType(),
+            'title' => $buildableContent->getTitle(),
+            'date' => DataHelper::timeElapsedString($buildableContent->getCreationTime(), false),
             'author' => $author ? $author->getName() : null,
-            'hasPageSettings' => ! empty($page_settings),
-            'export_link' => UrlBuilderHelper::getContentExportUrl($model),
-            'url' => UrlBuilderHelper::getContentViewUrl($model),
-            'edit_url' => UrlBuilderHelper::getContentEditUrl($model),
+            'hasPageSettings' => ! empty($pageSettings),
+            'export_link' => UrlBuilderHelper::getContentExportUrl($buildableContent),
+            'url' => UrlBuilderHelper::getContentViewUrl($buildableContent),
+            'edit_url' => UrlBuilderHelper::getContentEditUrl($buildableContent),
         ];
     }
 
@@ -287,11 +294,14 @@ class Local extends AbstractSource
      */
     public function getData(array $args)
     {
-        /** @var Documents $documentManager */
-        $documentManager = ObjectManagerHelper::get(Documents::class);
+        $documentManager = ObjectManagerHelper::getDocumentsManager();
 
-        $template_id = $args['template_id'];
-        $document = $documentManager->get($template_id);
+        $templateId = (int) $args['template_id'];
+
+        $buildableContent = ContentHelper::get($templateId);
+
+        $document = $documentManager->getByContent( $buildableContent );
+
         if (!empty($args['display'])) {
             $content = $document ? $document->getElementsRawData(null, true) : [];
         } else {
@@ -307,11 +317,10 @@ class Local extends AbstractSource
         ];
 
         if (!empty($args['page_settings'])) {
-            /** @var SettingsManager $settingsManager */
-            $settingsManager = ObjectManagerHelper::get(SettingsManager::class);
-            /** @var PageSettings $pageSettingsManager */
-            $pageSettingsManager = $settingsManager->getSettingsManagers(PageSettings::NAME);
-            $page = $pageSettingsManager->getSettingModel((int) $args['template_id']);
+            $pageSettingsManager = ObjectManagerHelper::getSettingsManager()
+                ->getSettingsManagers(PageSettings::NAME);
+
+            $page = $pageSettingsManager->getSettingModel( $buildableContent );
 
             $data['page_settings'] = $page->getData('settings');
         }
@@ -320,27 +329,27 @@ class Local extends AbstractSource
     }
 
     /**
-     * @param int $template_id
+     * @param int $templateId
      * @return bool
      * @throws Exception
      */
-    public function deleteTemplate($template_id)
+    public function deleteTemplate(int $templateId)
     {
-        $content = ContentHelper::get($template_id);
+        $content = ContentHelper::get($templateId);
         if ($content) {
-            ContentHelper::delete($template_id);
+            ContentHelper::delete($templateId);
         }
         return true;
     }
 
     /**
-     * @param int $template_id
+     * @param int $templateId
      * @return array|null
      * @throws Exception
      */
-    public function exportTemplate(int $template_id)
+    public function exportTemplate(int $templateId)
     {
-        $file_data = $this->prepareTemplateExport($template_id);
+        $file_data = $this->prepareTemplateExport($templateId);
 
         if (!$file_data) {
             return $file_data;
@@ -393,14 +402,14 @@ class Local extends AbstractSource
      * Import template from a file to the database.
      *
      *
-     * @param string $file_name File name.
+     * @param string $fileName File name.
      *
      * @return array Local template array, or template ID
      * @throws Exception
      */
-    private function importSingleTemplate($file_name)
+    private function importSingleTemplate($fileName)
     {
-        $data = json_decode(file_get_contents($file_name), true);
+        $data = \Zend_Json::decode(file_get_contents($fileName));
 
         if (empty($data)) {
             throw new Exception('Invalid file');
@@ -429,22 +438,20 @@ class Local extends AbstractSource
             }
         }
 
-        $content_id = $this->saveItem([
+        $contentId = $this->saveItem([
             'content' => $content,
             'title' => $data['title'] ?? '',
             'type' => $data['type'],
             'page_settings' => $page_settings,
         ]);
 
-        if (!$content_id) {
+        if (!$contentId) {
             throw new Exception(
                 'Import error'
             );
         }
 
-        $template = ContentHelper::get($content_id);
-
-        return $this->getItem($template);
+        return $this->getItem((int) $contentId);
     }
 
     /**
@@ -453,16 +460,17 @@ class Local extends AbstractSource
      * Retrieve the relevant template data and return them as an array.
      *
      *
-     * @param int $template_id The template ID.
+     * @param int $templateId The template ID.
      *
      * @return array
      * @throws Exception
      */
-    private function prepareTemplateExport(int $template_id)
+    private function prepareTemplateExport(int $templateId)
     {
-        $content = ContentHelper::get($template_id);
+        $content = ContentHelper::get($templateId);
+
         $templateData = $this->getData([
-            'template_id' => $template_id,
+            'template_id' => $templateId,
         ]);
 
         if (empty($templateData['content'])) {
@@ -471,21 +479,21 @@ class Local extends AbstractSource
 
         $templateData['content'] = $this->processExportContent($templateData['content']);
 
-        if ($settings = $this->getExportSettings($template_id)) {
+        if ($settings = $this->getExportSettings($templateId)) {
             $templateData['page_settings'] = $settings;
         }
 
-        $export_data = [
+        $exportData = [
             'version' => Configuration::version(),
             'title' => $content->getTitle(),
-            'type' => self::getTemplateType($template_id),
+            'type' => self::getTemplateType($templateId),
         ];
 
-        $export_data += $templateData;
+        $exportData += $templateData;
 
         return [
-            'name' => $this->getJsonName($export_data),
-            'content' => Zend_Json::encode($export_data),
+            'name' => $this->getJsonName($exportData),
+            'content' => Zend_Json::encode($exportData),
         ];
     }
 
@@ -497,12 +505,9 @@ class Local extends AbstractSource
      */
     private function getExportSettings(int $templateId)
     {
-        /** @var SettingsManager $settingsManager */
-        $settingsManager = ObjectManagerHelper::get(SettingsManager::class);
-        /** @var PageSettings $pageSettingsManager */
-        $pageSettingsManager = $settingsManager->getSettingsManagers(PageSettings::NAME);
-
-        $page = $pageSettingsManager->getSettingModel($templateId);
+        $pageSettingsManager = ObjectManagerHelper::getSettingsManager()->getSettingsManagers(PageSettings::NAME);
+        $template = ContentHelper::get( $templateId );
+        $page = $pageSettingsManager->getSettingModel( $template );
         $pageData = $page->getData();
         $newPageData = $this->processExportElement($page);
 
@@ -514,12 +519,12 @@ class Local extends AbstractSource
     }
 
     /**
-     * @param $export_data
+     * @param $exportData
      * @return string
      */
-    private function getJsonName($export_data)
+    private function getJsonName($exportData)
     {
-        $title = $export_data['title'];
+        $title = $exportData['title'];
         $time  = date('Y-m-d-H-i-s');
         return sprintf('Goomento-Pagebuilder-%s-%s.json', EscaperHelper::slugify($title, '-'), $time);
     }

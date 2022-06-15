@@ -13,7 +13,7 @@
              translate="title"
              sortOrder="50"
              parent="Goomento_Core::menu"
-             resource="Goomento_PageBuilder::hidden"/>
+             resource="Goomento_PageBuilder::menu"/>
         <add id="Goomento_PageBuilder::menu"
              title="Page Builder"
              module="Goomento_PageBuilder"
@@ -28,7 +28,7 @@
              sortOrder="10"
              action="pagebuilder/content/grid/type/page"
              parent="Goomento_PageBuilder::menu"
-             resource="Goomento_PageBuilder::page_grid"/>
+             resource="Goomento_PageBuilder::page_view"/>
         <add id="Goomento_PageBuilder::template"
              title="Templates"
              module="Goomento_PageBuilder"
@@ -36,7 +36,7 @@
              sortOrder="20"
              action="pagebuilder/content/grid/type/template"
              parent="Goomento_PageBuilder::menu"
-             resource="Goomento_PageBuilder::template_grid"/>
+             resource="Goomento_PageBuilder::template_view"/>
         <add id="Goomento_PageBuilder::section"
              title="Sections"
              module="Goomento_PageBuilder"
@@ -44,7 +44,7 @@
              sortOrder="30"
              action="pagebuilder/content/grid/type/section"
              parent="Goomento_PageBuilder::menu"
-             resource="Goomento_PageBuilder::section_grid"/>
+             resource="Goomento_PageBuilder::section_view"/>
         <add id="Goomento_PageBuilder::action"
              title="Builder Actions"
              module="Goomento_PageBuilder"

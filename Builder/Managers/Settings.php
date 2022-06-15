@@ -43,7 +43,7 @@ class Settings
      * exist, or `null` otherwise.
      *
      *
-     * @param string $name Optional. Settings manager name. Default is
+     * @param string|null $name Optional. Settings manager name. Default is
      *                             null.
      *
      * @return AbstractSettingsManager|AbstractSettingsManager[] Single settings manager, if it exists,
@@ -51,7 +51,7 @@ class Settings
      *                                     the settings managers if no parameter
      *                                     defined.
      */
-    public function getSettingsManagers($name = null)
+    public function getSettingsManagers(?string $name = null)
     {
         return $this->getComponent($name);
     }
@@ -75,19 +75,22 @@ class Settings
     public function getSettingsManagersConfig()
     {
         $config = [];
-
+        /**
+         * @var string $name
+         * @var AbstractSettingsManager $manager
+         */
         foreach ($this->getComponents() as $name => $manager) {
-            $settings_model = $manager->getModelForConfig();
+            $settingsModel = $manager->getModelForConfig();
 
-            $tabs = $settings_model->getTabsControls();
+            $tabs = $settingsModel->getTabsControls();
 
             $config[ $name ] = [
                 'name' => $manager::NAME,
-                'panelPage' => $settings_model->getPanelPageSettings(),
-                'cssWrapperSelector' => $settings_model->getCssWrapperSelector(),
-                'controls' => $settings_model->getControls(),
+                'panelPage' => $settingsModel->getPanelPageSettings(),
+                'cssWrapperSelector' => $settingsModel->getCssWrapperSelector(),
+                'controls' => $settingsModel->getControls(),
                 'tabs' => $tabs,
-                'settings' => $settings_model->getSettings(),
+                'settings' => $settingsModel->getSettings(),
             ];
         }
 

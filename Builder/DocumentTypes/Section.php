@@ -32,14 +32,12 @@ class Section extends AbstractDocumentType
 
     /**
      * @param AbstractDocumentType $section
+     * @throws \Exception
      */
     public static function registerLayoutControl(AbstractDocumentType $section)
     {
         $section->startInjection([
-            'of' => 'is_active',
-            'fallback' => [
-                'of' => 'title',
-            ],
+            'of' => 'title'
         ]);
 
         $section->addControl('layout', [

@@ -8,11 +8,13 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Modules;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Fonts;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Base\AbstractApp;
 use Goomento\PageBuilder\Builder\Css\ContentCss;
 use Goomento\PageBuilder\Builder\Css\GlobalCss;
+use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
@@ -23,11 +25,6 @@ use Goomento\PageBuilder\Helper\ThemeHelper;
 
 class Frontend extends AbstractApp
 {
-    /**
-     * The priority of the content filter.
-     */
-    const THE_CONTENT_FILTER_PRIORITY = 9;
-
     const NAME = 'frontend';
 
     /**
@@ -38,7 +35,7 @@ class Frontend extends AbstractApp
      *
      * @var array Used fonts. Default is an empty array.
      */
-    public $fonts_to_enqueue = [];
+    public $fontsToEnqueue = [];
 
     /**
      * Registered fonts.
@@ -47,21 +44,14 @@ class Frontend extends AbstractApp
      *
      * @var array Registered fonts. Default is an empty array.
      */
-    private $registered_fonts = [];
+    private $registeredFonts = [];
 
     /**
      * Filters removed from the content.
      *
      * @var array Filters removed from the content. Default is an empty array.
      */
-    private $content_removed_filters = [];
-
-    /**
-     * @var string[]
-     */
-    private $body_classes = [
-        'goomento-default',
-    ];
+    private $contentRemovedFilters = [];
 
     /**
      * Frontend constructor.
@@ -100,7 +90,7 @@ class Frontend extends AbstractApp
      */
     public function addContentFilter()
     {
-        HooksHelper::addFilter('pagebuilder/content/html', [ $this, 'applyBuilderInContent' ], self::THE_CONTENT_FILTER_PRIORITY);
+        HooksHelper::addFilter('pagebuilder/content/html', [ $this, 'applyBuilderInContent' ], 9);
     }
 
     /**
@@ -112,7 +102,7 @@ class Frontend extends AbstractApp
      */
     public function removeContentFilter()
     {
-        HooksHelper::removeFilter('pagebuilder/content/html', [ $this, 'applyBuilderInContent' ], self::THE_CONTENT_FILTER_PRIORITY);
+        HooksHelper::removeFilter('pagebuilder/content/html', [ $this, 'applyBuilderInContent' ], 9);
     }
 
     /**
@@ -271,7 +261,7 @@ class Frontend extends AbstractApp
          */
         HooksHelper::doAction('pagebuilder/frontend/after_enqueue_styles');
 
-        if (!StateHelper::isPreviewMode()) {
+        if (!StateHelper::isEditorPreviewMode()) {
             $this->parseGlobalCssCode();
         }
     }
@@ -309,7 +299,7 @@ class Frontend extends AbstractApp
             'early' => [],
         ];
 
-        foreach ($this->fonts_to_enqueue as $key => $font) {
+        foreach ($this->fontsToEnqueue as $key => $font) {
             $font_type = Fonts::getFontType($font);
 
             switch ($font_type) {
@@ -337,7 +327,7 @@ class Frontend extends AbstractApp
                     HooksHelper::doAction("pagebuilder/fonts/print_font_links/{$font_type}", $font);
             }
         }
-        $this->fonts_to_enqueue = [];
+        $this->fontsToEnqueue = [];
 
         $this->enqueueGoogleFonts($google_fonts);
     }
@@ -426,12 +416,12 @@ class Frontend extends AbstractApp
      */
     public function enqueueFont($font)
     {
-        if (in_array($font, $this->registered_fonts)) {
+        if (in_array($font, $this->registeredFonts)) {
             return;
         }
 
-        $this->fonts_to_enqueue[] = $font;
-        $this->registered_fonts[] = $font;
+        $this->fontsToEnqueue[] = $font;
+        $this->registeredFonts[] = $font;
     }
 
     /**
@@ -451,26 +441,21 @@ class Frontend extends AbstractApp
      *
      * Used to apply the SagoTheme page editor on the post content.
      *
-     * @param string $content The post content.
+     * @param BuildableContentInterface $content The content.
      *
-     * @return string The post content.
+     * @return BuildableContentInterface The post content.
      */
-    public function applyBuilderInContent($content)
+    public function applyBuilderInContent(BuildableContentInterface $content)
     {
         $this->restoreContentFilters();
 
-        if (StateHelper::isPreviewMode()) {
+        if (StateHelper::isEditorPreviewMode()) {
             return $content;
         }
 
         $this->removeContentFilter();
 
-        $contentId = HooksHelper::applyFilters('pagebuilder/current/content_id');
-        $builderContent = $this->getBuilderContent($contentId);
-
-        if (!empty($builderContent)) {
-            $content = $builderContent;
-        }
+        $content->setRenderContent((string) $this->getBuilderContent( $content ));
 
         $this->addContentFilter();
 
@@ -484,15 +469,14 @@ class Frontend extends AbstractApp
      *
      * Note that this method is an internal method, please use `get_builder_content_for_display()`.
      *
-     * @param int $contentId The content ID.
-     * @param bool $with_css Optional. Whether to retrieve the content with CSS
-     *                       or not. Default is false.
-     *
+     * @param BuildableContentInterface $buildableContent
      * @return string The post content.
      */
-    public function getBuilderContent(int $contentId, $with_css = false)
+    public function getBuilderContent(BuildableContentInterface $buildableContent)
     {
-        $document = ObjectManagerHelper::getDocumentsManager()->get($contentId);
+        $document = ObjectManagerHelper::getDocumentsManager()->getByContent(
+            $buildableContent
+        );
 
         $data = $document->getElementsData();
 
@@ -505,25 +489,25 @@ class Frontend extends AbstractApp
          * @param array $data    The builder content.
          * @param int   $contentId The conent ID.
          */
-        $data = HooksHelper::applyFilters('pagebuilder/frontend/builder_content_data', $data, $contentId);
+        $data = HooksHelper::applyFilters('pagebuilder/frontend/builder_content_data', $data, $buildableContent);
 
         if (empty($data)) {
             return '';
         }
 
-        $css_file = new ContentCss($document->getModel()->getId());
+        $cssFile = new ContentCss($document->getModel());
 
         ob_start();
 
-        HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$css_file, 'enqueue']);
+        HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$cssFile, 'enqueue']);
 
-        if (!empty($css_file) && RequestHelper::isAjax()) {
-            $css_file->printCss();
+        if (!empty($cssFile) && RequestHelper::isAjax()) {
+            $cssFile->printCss();
         }
 
         $document->printElementsWithWrapper($data);
 
-        $content = ob_get_clean();
+        $html = ob_get_clean();
 
         /**
          * Frontend content.
@@ -533,7 +517,7 @@ class Frontend extends AbstractApp
          *
          * @param string $content The content.
          */
-        return HooksHelper::applyFilters('pagebuilder/the_content', $content);
+        return HooksHelper::applyFilters('pagebuilder/the_content', $html);
     }
 
     /**
@@ -546,7 +530,7 @@ class Frontend extends AbstractApp
      */
     protected function getInitSettings()
     {
-        $isPreviewMode = StateHelper::isPreviewMode();
+        $isPreviewMode = StateHelper::isEditorPreviewMode();
 
         $settings = [
             'environmentMode' => [
@@ -583,10 +567,10 @@ class Frontend extends AbstractApp
      */
     private function restoreContentFilters()
     {
-        foreach ($this->content_removed_filters as $filter) {
+        foreach ($this->contentRemovedFilters as $filter) {
             HooksHelper::addFilter('pagebuilder/content/html', $filter);
         }
 
-        $this->content_removed_filters = [];
+        $this->contentRemovedFilters = [];
     }
 }

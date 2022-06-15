@@ -54,6 +54,15 @@ class Data extends AbstractHelper
     }
 
     /**
+     * @param string $name
+     * @return mixed
+     */
+    public function getEditorConfig(string $name)
+    {
+        return $this->getBuilderConfig('editor/' . $name);
+    }
+
+    /**
      * @return bool
      */
     public function getAllowedDownloadImage()
@@ -97,9 +106,7 @@ class Data extends AbstractHelper
      */
     public function isDebugMode()
     {
-        return (bool) $this->getBuilderConfig(
-            'editor/debug'
-        );
+        return (bool) $this->getEditorConfig('debug');
     }
 
     /**
@@ -109,9 +116,7 @@ class Data extends AbstractHelper
      */
     public function isLocalFont()
     {
-        return (bool) $this->getBuilderConfig(
-            'editor/style/local_font'
-        );
+        return (bool) $this->getEditorConfig('style/local_font');
     }
 
     /**
@@ -121,19 +126,16 @@ class Data extends AbstractHelper
      */
     public function useInlineCss()
     {
-        return (bool) $this->getBuilderConfig(
-            'editor/style/use_inline_css'
-        );
+        return (bool) $this->getEditorConfig('style/use_inline_css');
     }
 
     /**
      * @return int
+     * @deprecated
      */
     public function getAllowedNumberOfRevision()
     {
-        return (int) $this->getBuilderConfig(
-            'editor/number_of_revision'
-        );
+        return (int) $this->getEditorConfig('number_of_revision');
     }
     /**
      * Should add resources globally
@@ -141,9 +143,7 @@ class Data extends AbstractHelper
      */
     public function addResourceGlobally()
     {
-        return (bool) $this->getBuilderConfig(
-            'editor/resources_globally'
-        );
+        return (bool) $this->getEditorConfig('resources_globally');
     }
 
     /**
@@ -186,5 +186,25 @@ class Data extends AbstractHelper
     public function isJsMinifyFilesEnabled()
     {
         return (bool) $this->getConfig(self::DEV_JS_MINIFY_FILES_XML_PATH);
+    }
+
+    /**
+     * Is JavaScript debug mode
+     *
+     * @return bool
+     */
+    public function isJsDebugMode()
+    {
+        return (bool) $this->getEditorConfig('js_debug');
+    }
+
+    /**
+     * Get user-defined custom media URL
+     *
+     * @return string
+     */
+    public function getCustomMediaUrl()
+    {
+        return (string) $this->getEditorConfig('media/url');
     }
 }

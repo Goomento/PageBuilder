@@ -37,7 +37,6 @@ class Common extends AbstractApp
         HooksHelper::addAction('pagebuilder/init', [$this, 'initComponents']);
         HooksHelper::addAction('pagebuilder/editor/before_enqueue_scripts', [ $this, 'registerScriptsEditorBefore']);
         HooksHelper::addAction('pagebuilder/register_styles', [ $this, 'registerStyles' ]);
-        HooksHelper::addAction('pagebuilder/editor/footer', [ $this, 'printTemplates' ]);
     }
 
     /**
@@ -101,17 +100,6 @@ class Common extends AbstractApp
             [],
             Configuration::version()
         );
-    }
-
-    /**
-     * Print Templates
-     *
-     * Prints all registered templates.
-     *
-     */
-    public function printTemplates()
-    {
-        echo TemplateHelper::getHtml('Goomento_PageBuilder::templates/library_layout.phtml');
     }
 
     /**

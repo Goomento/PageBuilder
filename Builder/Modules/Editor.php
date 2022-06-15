@@ -8,13 +8,13 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Modules;
 
-use Goomento\PageBuilder\Api\Data\ContentInterface;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
+use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Builder\Managers\Icons;
 use Goomento\PageBuilder\Builder\Managers\Schemes;
 use Goomento\PageBuilder\Builder\Shapes;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Base\AbstractDocument;
-use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
@@ -30,11 +30,7 @@ use Magento\Framework\RequireJs\Config;
 class Editor
 {
     /**
-     * @var int
-     */
-    private $contentId = null;
-    /**
-     * @var ContentInterface|null
+     * @var BuildableContentInterface|null
      */
     private $content;
 
@@ -44,11 +40,18 @@ class Editor
     private $document;
 
     /**
+     * @var RevisionInterface|null
+     */
+    private $lastRevision;
+
+    /**
      * Init the editor
      * This function trigger in editor only, otherwise, will make confused system
      */
-    public function init()
+    public function initByContent(BuildableContentInterface $buildableContent)
     {
+        $this->content = $buildableContent;
+
         // Init document
         $this->getDocument();
 
@@ -89,7 +92,9 @@ class Editor
                 'pagebuilder/actions/actions',
                 [
                     '_query' => [
-                        EncryptorHelper::ACCESS_TOKEN => EncryptorHelper::createAccessToken(),
+                        EncryptorHelper::ACCESS_TOKEN => EncryptorHelper::createAccessToken(
+                            $this->getContent()
+                        ),
                     ],
                     'store_id' => $storeId
                 ]
@@ -99,30 +104,32 @@ class Editor
     }
 
     /**
-     * Retrieve content ID.
-     *
-     * Get the ID of the current post.
-     *
-     *
-     * @return int ContentCss ID.
+     * @return BuildableContentInterface|null
      */
-    public function getContentId()
+    private function getContent()
     {
-        if ($this->contentId === null) {
-            $this->contentId = (int) RequestHelper::getParam('content_id');
-        }
-        return $this->contentId;
+        return $this->content;
     }
 
     /**
-     * @return ContentInterface|null
+     * @return BuildableContentInterface|null
      */
-    public function getContent()
+    private function getLastRevision()
     {
-        if ($this->content === null) {
-            $this->content = ContentHelper::get($this->getContentId());
+        if (!$this->lastRevision && $this->getContent()) {
+            $lastRevision = $this->getContent()->getLastRevision();
+            $this->lastRevision = $lastRevision ?: false;
         }
-        return $this->content;
+
+        return $this->lastRevision ?: null;
+    }
+
+    /**
+     * @return BuildableContentInterface|null
+     */
+    public function getBuildableContent()
+    {
+        return $this->getLastRevision() ? $this->getLastRevision() : $this->getContent();
     }
 
     /**
@@ -132,7 +139,7 @@ class Editor
     {
         if ($this->document === null) {
             $this->document = ObjectManagerHelper::getDocumentsManager()
-                ->get($this->getContentId());
+                ->getByContent( $this->getBuildableContent() );
         }
 
         return $this->document;
@@ -264,7 +271,6 @@ class Editor
                 'jquery/jstree/jquery.hotkeys' => ['jquery'],
                 'jquery/hover-intent' => ['jquery'],
                 'mage/adminhtml/backup' => ['prototype'],
-                'mage/captcha' => ['prototype'],
                 'mage/new-gallery' => ['jquery'],
                 'mage/webapi' => ['jquery'],
                 'jquery/ui' => ['jquery'],
@@ -296,7 +302,7 @@ class Editor
             'paths' => [
                 'jquery/validate' => 'jquery/jquery.validate',
                 'jquery/hover-intent' => 'jquery/jquery.hoverIntent',
-                'jquery/file-uploader' => 'jquery/fileUploader/jquery.fileupload',
+                'jquery/file-uploader' => 'jquery/fileUploader/jquery.fileupload-fp',
                 'prototype' => 'legacy-build.min',
                 'jquery/jquery-storageapi' => 'Magento_Cookie/js/jquery.storageapi.extended',
                 'text' => 'mage/requirejs/text',
@@ -325,6 +331,9 @@ class Editor
 
         $magentoVersion = Configuration::magentoVersion();
         if ($magentoVersion) {
+            if (version_compare($magentoVersion, '2.4.3', '>=')) {
+                $requirejs['paths']['jquery/file-uploader'] = 'jquery/fileUploader/jquery.fileuploader';
+            }
             if (version_compare($magentoVersion, '2.4.4', '>=')) {
                 $requirejs['shim']['tiny_mce_5/tinymce.min'] = [
                     'exports' => 'tinyMCE'
@@ -387,10 +396,10 @@ class Editor
 
         $config = [
             'version' => Configuration::version(),
+            'debug' => DataHelper::isJsDebugMode(),
             'data' => $document->getElementsRawData(),
             'document' => $document->getConfig(),
-            'current_revision_id' => null,
-            'autosave_interval' => ConfigHelper::getValue('autosave_interval') ?: 60,
+            'current_revision_id' => $this->getLastRevision() ? $this->getLastRevision()->getId() : null,
             'tabs' => ObjectManagerHelper::getControlsManager()->getTabs(),
             'controls' => ObjectManagerHelper::getControlsManager()->getControlsData(),
             'elements' => ObjectManagerHelper::getElementsManager()->getElementTypesConfig(),
@@ -414,19 +423,18 @@ class Editor
             'user' => [
                 'roles' => [
                     'view' => AuthorizationHelper::isCurrentUserCan(
-                        $document->getModel()->getRoleName('view')),
+                        $document->getModel()->getOriginContent()->getRoleName('view')),
                     'save' => AuthorizationHelper::isCurrentUserCan(
-                        $document->getModel()->getRoleName('save')),
-                    'design' => AuthorizationHelper::isCurrentUserCan(
-                        $document->getModel()->getRoleName('design')),
+                        $document->getModel()->getOriginContent()->getRoleName('save')),
                     'publish' => AuthorizationHelper::isCurrentUserCan(
-                        $document->getModel()->getRoleName('publish')),
+                        $document->getModel()->getOriginContent()->getRoleName('publish')),
                     'export' => AuthorizationHelper::isCurrentUserCan(
-                        $document->getModel()->getRoleName('export')),
+                        $document->getModel()->getOriginContent()->getRoleName('export')),
                     'delete' => AuthorizationHelper::isCurrentUserCan(
-                        $document->getModel()->getRoleName('delete')),
-                ],
-                'is_administrator' => AuthorizationHelper::isCurrentUserCan('config'),
+                        $document->getModel()->getOriginContent()->getRoleName('delete')),
+                    'import' => AuthorizationHelper::isCurrentUserCan('import'),
+                    'manage_config' => AuthorizationHelper::isCurrentUserCan('manage_config')
+                ]
             ],
             'rich_editing_enabled' => true,
             'dynamicTags' => ObjectManagerHelper::getTagsManager()->getConfig(),
@@ -580,6 +588,6 @@ EDITOR_WAPPER;
      */
     public function __construct()
     {
-        HooksHelper::addAction('pagebuilder/editor/index', [ $this, 'init' ]); // catch trigger in controller
+        HooksHelper::addAction('pagebuilder/editor/index', [ $this, 'initByContent']); // catch trigger in controller
     }
 }

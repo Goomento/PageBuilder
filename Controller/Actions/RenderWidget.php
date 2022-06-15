@@ -10,6 +10,8 @@ namespace Goomento\PageBuilder\Controller\Actions;
 
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Model\BetterCaching;
+use Goomento\PageBuilder\Model\ContentRegistry;
 use Goomento\PageBuilder\PageBuilder;
 use Magento\Cms\Model\Template\FilterProvider;
 use Magento\Framework\View\Result\PageFactory;
@@ -30,18 +32,32 @@ class RenderWidget extends AbstractActions
      * @var FilterProvider
      */
     private $filterProvider;
+    /**
+     * @var BetterCaching
+     */
+    private $betterCaching;
+    /**
+     * @var ContentRegistry
+     */
+    private $contentRegistry;
 
     /**
      * @param PageFactory $pageFactory
      * @param FilterProvider $filterProvider
+     * @param BetterCaching $betterCaching
+     * @param ContentRegistry $contentRegistry
      */
     public function __construct(
         PageFactory $pageFactory,
-        FilterProvider $filterProvider
+        FilterProvider $filterProvider,
+        BetterCaching $betterCaching,
+        ContentRegistry $contentRegistry
     )
     {
         $this->pageFactory = $pageFactory;
         $this->filterProvider = $filterProvider;
+        $this->betterCaching = $betterCaching;
+        $this->contentRegistry = $contentRegistry;
     }
 
     /**
@@ -63,14 +79,32 @@ class RenderWidget extends AbstractActions
      */
     public function doAction($actionData, $params = [])
     {
-        $this->init();
-        HooksHelper::doAction('pagebuilder/editor/render_widget');
-        $documentManager = ObjectManagerHelper::getDocumentsManager();
-        $document = $documentManager->get($params['content_id']);
-        $rendered = $document->renderElement($actionData['data']);
-        if (!empty($rendered)) {
-            $rendered = $this->filterProvider->getBlockFilter()->filter($rendered);
-        }
+        $collect = function () use ($actionData, $params) {
+
+            $this->init();
+
+            HooksHelper::doAction('pagebuilder/editor/render_widget');
+
+            $contentId = (int) $params['content_id'];
+
+            $result = '';
+
+            if ($contentId && $content = $this->contentRegistry->getById($contentId)) {
+                $documentManager = ObjectManagerHelper::getDocumentsManager();
+
+                $document = $documentManager->getByContent( $content );
+                $result = $document->renderElement($actionData['data']);
+
+                if (!empty($result)) {
+                    $result = $this->filterProvider->getBlockFilter()->filter($result);
+                }
+            }
+
+            return $result;
+        };
+
+        $rendered = $this->betterCaching->resolve($actionData, $collect);
+
         return [
             'render' => $rendered
         ];

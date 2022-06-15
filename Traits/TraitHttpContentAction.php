@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Traits;
 
 use Goomento\Core\Traits\TraitHttpAction;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -21,24 +22,26 @@ trait TraitHttpContentAction
     use TraitHttpAction;
 
     /**
-     * @var ContentInterface|null
+     * @var BuildableContentInterface|null
      */
     protected $content;
 
     /**
-     * @return ContentInterface|null
+     * @var BuildableContentInterface|null
+     */
+    protected $contentRevision;
+
+    /**
+     * @return BuildableContentInterface|null
      * @throws LocalizedException
      */
-    public function getContent(bool $force = false)
+    protected function getContent(bool $force = false)
     {
         if (null === $this->content) {
             $this->content = false;
-            $contentId = $this->getRequest()->getParam('content_id');
-            $contentId = (int) $contentId;
+            $contentId = (int) $this->getRequest()->getParam('content_id');
             if ($contentId !== 0) {
-                $this->content = ContentHelper::get(
-                    $contentId
-                );
+                $this->content = ContentHelper::get($contentId);
             }
         }
 
@@ -49,5 +52,21 @@ trait TraitHttpContentAction
         }
 
         return $this->content;
+    }
+
+    /**
+     * @param $inLastRevision
+     * @return string|null
+     * @throws LocalizedException
+     */
+    protected function getContentLayout($inLastRevision = false)
+    {
+        if ($inLastRevision && $this->getContent(true)->getLastRevision()) {
+            return $this->getContent(true)->getLastRevision()->getSetting('layout');
+        } elseif(!$inLastRevision) {
+            return $this->getContent(true)->getSetting('layout');
+        }
+
+        return null;
     }
 }

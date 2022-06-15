@@ -423,11 +423,11 @@ class TextEditor extends AbstractWidget
     {
         ?>
 		<#
-		view.addRenderAttribute( 'editor', 'class', [ 'gmt-text-editor', 'gmt-clearfix' ] );
+		view.addRenderAttribute( 'text-editor_editor', 'class', [ 'gmt-text-editor', 'gmt-clearfix' ] );
 
-		view.addInlineEditingAttributes( 'editor', 'advanced' );
+		view.addInlineEditingAttributes( 'text-editor_editor', 'advanced' );
 		#>
-		<div {{{ view.getRenderAttributeString( 'editor' ) }}}>{{{ settings['text-editor_editor'] }}}</div>
+		<div {{{ view.getRenderAttributeString( 'text-editor_editor' ) }}}>{{{ settings['text-editor_editor'] }}}</div>
 		<?php
     }
 }

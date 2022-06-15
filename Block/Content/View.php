@@ -6,11 +6,11 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\Block\Editor;
+namespace Goomento\PageBuilder\Block\Content;
 
 use Goomento\PageBuilder\Block\Content;
 
-class Preview extends Content
+class View extends Content
 {
     /**
      * @inheritdoc
@@ -25,5 +25,14 @@ class Preview extends Content
         }
 
         return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBuildableContent()
+    {
+        $content = parent::getBuildableContent();
+        return $content->getLastRevision() ?: $content;
     }
 }

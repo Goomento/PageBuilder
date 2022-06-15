@@ -6,11 +6,11 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\Block\Editor;
+namespace Goomento\PageBuilder\Block\Content;
 
 use Goomento\PageBuilder\Helper\EscaperHelper;
 
-class View extends Preview
+class Published extends Preview
 {
     /**
      * @inheritDoc
@@ -18,8 +18,9 @@ class View extends Preview
     protected function _prepareLayout()
     {
         $this->isValidContent();
-        $content = $this->getContent();
-        $this->pageConfig->addBodyClass('gmt-' . EscaperHelper::slugify($content->getIdentifier()));
+        $content = $this->getBuildableContent();
+        $this->pageConfig->addBodyClass('gmt-' .
+            EscaperHelper::slugify($content->getOriginContent()->getIdentifier()));
         $metaTitle = $content->getMetaTitle();
         $this->pageConfig->getTitle()->set(!empty($metaTitle) ? $metaTitle : $content->getTitle());
         $this->pageConfig->setKeywords($content->getMetaKeywords());

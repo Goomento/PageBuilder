@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Base;
 
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Builder\Managers\Elements;
 use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
@@ -24,8 +23,6 @@ abstract class AbstractSource extends AbstractEntity
      * Get template title.
      *
      * Retrieve the template title.
-     *
-     * @abstract
      */
     abstract public function getTitle();
 
@@ -34,8 +31,6 @@ abstract class AbstractSource extends AbstractEntity
      *
      * Used to register custom template data like a post type, a taxonomy or any
      * other data.
-     *
-     * @abstract
      */
     abstract public function registerData();
 
@@ -44,30 +39,26 @@ abstract class AbstractSource extends AbstractEntity
      *
      * Retrieve templates from the template library.
      *
-     * @abstract
-     *
      * @param array $args Optional. Filter templates list based on a set of
      *                    arguments. Default is an empty array.
      */
-    abstract public function getItems($args = []);
+    abstract public function getItems(array $args = []);
 
     /**
      * Get template.
      *
      * Retrieve a single template from the template library.
      *
-     * @abstract
      *
-     * @param int $template_id The template ID.
+     * @param int $templateId The template ID.
      */
-    abstract public function getItem($template_id);
+    abstract public function getItem(int $templateId);
 
     /**
      * Get template data.
      *
      * Retrieve a single template data from the template library.
      *
-     * @abstract
      *
      * @param array $args Custom template arguments.
      */
@@ -78,33 +69,30 @@ abstract class AbstractSource extends AbstractEntity
      *
      * Delete template from the database.
      *
-     * @abstract
      *
-     * @param int $template_id The template ID.
+     * @param int $templateId The template ID.
      */
-    abstract public function deleteTemplate($template_id);
+    abstract public function deleteTemplate(int $templateId);
 
     /**
      * Save template.
      *
      * Save new or update existing template on the database.
      *
-     * @abstract
      *
-     * @param array $template_data The template data.
+     * @param array $templateData The template data.
      */
-    abstract public function saveItem($template_data);
+    abstract public function saveItem(array $templateData);
 
     /**
      * Update template.
      *
      * Update template on the database.
      *
-     * @abstract
      *
-     * @param array $new_data New template data.
+     * @param array $newData New template data.
      */
-    abstract public function updateItem($new_data);
+    abstract public function updateItem(array $newData);
 
     /**
      * Export template.
@@ -113,9 +101,9 @@ abstract class AbstractSource extends AbstractEntity
      *
      * @abstract
      *
-     * @param int $template_id The template ID.
+     * @param int $templateId The template ID.
      */
-    abstract public function exportTemplate(int $template_id);
+    abstract public function exportTemplate(int $templateId);
 
     /**
      * Template library source base constructor.
@@ -136,13 +124,13 @@ abstract class AbstractSource extends AbstractEntity
      * generated IDs.
      *
      *
-     * @param array $content Any type of SagoTheme data.
+     * @param array $contentData Any type of SagoTheme data.
      *
      * @return mixed Iterated data.
      */
-    protected function replaceElementsIds($content)
+    protected function replaceElementsIds(array $contentData)
     {
-        return ContentHelper::iterateData($content, function ($element) {
+        return ContentHelper::iterateData($contentData, function ($element) {
             $element['id'] = DataHelper::generateRandomString();
 
             return $element;
@@ -156,17 +144,17 @@ abstract class AbstractSource extends AbstractEntity
      * elements data for export/import.
      *
      *
-     * @param array $content A set of elements.
+     * @param array $contentData A set of elements.
      * @return mixed Processed content data.
      */
-    protected function processExportContent($content)
+    protected function processExportContent(array $contentData)
     {
+        $elementsManager = ObjectManagerHelper::getElementsManager();
+
         return ContentHelper::iterateData(
-            $content,
-            function ($element_data) {
-                /** @var Elements $elementsManager */
-                $elementsManager = ObjectManagerHelper::get(Elements::class);
-                $element = $elementsManager->createElementInstance($element_data);
+            $contentData,
+            function ($elementData) use ($elementsManager) {
+                $element = $elementsManager->createElementInstance($elementData);
 
                 if (!$element) {
                     return null;
@@ -185,17 +173,17 @@ abstract class AbstractSource extends AbstractEntity
      * elements data for export/import.
      *
      *
-     * @param array $content A set of elements.
+     * @param array $contentData A set of elements.
      * @return mixed Processed content data.
      */
-    protected function processImportContent($content)
+    protected function processImportContent(array $contentData)
     {
+        $elementsManager = ObjectManagerHelper::getElementsManager();
+
         return ContentHelper::iterateData(
-            $content,
-            function ($element_data) {
-                /** @var Elements $elementsManager */
-                $elementsManager = ObjectManagerHelper::get(Elements::class);
-                $element = $elementsManager->createElementInstance($element_data);
+            $contentData,
+            function ($elementData) use ($elementsManager) {
+                $element = $elementsManager->createElementInstance($elementData);
 
                 // If the widget/element isn't exist, like a plugin that creates a widget but deactivated
                 if (!$element) {
@@ -259,9 +247,9 @@ abstract class AbstractSource extends AbstractEntity
             $elementData = $element->onImport($elementData);
         }
 
+        $managersControls = ObjectManagerHelper::getControlsManager();
+
         foreach ($element->getControls() as $control) {
-            /** @var Controls $managersControls */
-            $managersControls = ObjectManagerHelper::get(Controls::class);
             $controlClass = $managersControls->getControl($control['type']);
 
             if ($controlClass instanceof ImportInterface) {

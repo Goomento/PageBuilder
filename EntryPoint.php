@@ -239,9 +239,6 @@ class EntryPoint extends BuilderRegister
      */
     public function registerStyles()
     {
-        $minSuffix = Configuration::debug() ? '.css' : '.min.css';
-        $directionSuffix = DataHelper::isRtl() ? '-rtl' : '';
-
         ThemeHelper::registerStyle(
             'fontawesome',
             'Goomento_PageBuilder/lib/font-awesome/css/all.min.css'
@@ -259,7 +256,7 @@ class EntryPoint extends BuilderRegister
 
         ThemeHelper::registerStyle(
             'flatpickr',
-            'Goomento_PageBuilder/lib/flatpickr/flatpickr'  . $minSuffix
+            'Goomento_PageBuilder/lib/flatpickr/flatpickr.min.css'
         );
 
         ThemeHelper::registerStyle(
@@ -272,11 +269,9 @@ class EntryPoint extends BuilderRegister
             'Goomento_PageBuilder/lib/e-select2/css/e-select2.min.css'
         );
 
-        $mustMinify = DataHelper::isJsMinifyFilesEnabled() && StateHelper::isProductionMode();
-
         ThemeHelper::registerStyle(
             'goomento-widgets',
-            'Goomento_PageBuilder/css/widgets' . $directionSuffix . ($mustMinify ? '.min' : '') . '.css',
+            ThemeHelper::getProductionResourceUrl('Goomento_PageBuilder/css/widgets', '.css'),
             ['goomento-frontend'],
             Configuration::version()
         );

@@ -30,10 +30,7 @@ class Page extends AbstractDocumentType
     public static function registerStatusControl(AbstractDocumentType $page)
     {
         $page->startInjection([
-            'of' => 'is_active',
-            'fallback' => [
-                'of' => 'title',
-            ],
+            'of' => 'title'
         ]);
 
         $page->addControl('layout', [
@@ -46,16 +43,6 @@ class Page extends AbstractDocumentType
                 'pagebuilder_content_empty' => __('Empty'),
             ],
         ]);
-
-        $page->addControl(
-            'status',
-            [
-                'label' => __('Status'),
-                'type' => Controls::SELECT,
-                'default' => $page->getModel()->getStatus(),
-                'options' => Content::getAvailableStatuses(),
-            ]
-        );
 
         $page->endInjection();
     }

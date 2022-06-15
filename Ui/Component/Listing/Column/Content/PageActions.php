@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Ui\Component\Listing\Column\Content;
 
+use Goomento\PageBuilder\Api\ContentRegistryInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
@@ -28,11 +29,16 @@ class PageActions extends Column
      * @var Escaper|mixed
      */
     private $escaper;
+    /**
+     * @var ContentRegistryInterface
+     */
+    private $contentRegistry;
 
     /**
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
      * @param UrlInterface $urlBuilder
+     * @param ContentRegistryInterface $contentRegistry
      * @param array $components
      * @param array $data
      */
@@ -40,10 +46,12 @@ class PageActions extends Column
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
         UrlInterface $urlBuilder,
+        ContentRegistryInterface $contentRegistry,
         array $components = [],
         array $data = []
     ) {
         $this->urlBuilder = $urlBuilder;
+        $this->contentRegistry = $contentRegistry;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
@@ -57,45 +65,47 @@ class PageActions extends Column
                 $name = $this->getData('name');
                 if (isset($item['content_id'])) {
                     $type = (string) $item['type'];
+                    $content = $this->contentRegistry->getById((int) $item['content_id']);
 
                     if (AuthorizationHelper::isCurrentUserCan($type)) {
-                        if (AuthorizationHelper::isCurrentUserCan($type . '_save')) {
+                        if (AuthorizationHelper::isCurrentUserCan($content->getRoleName('save'))) {
                             $item[$name]['edit'] = [
-                                'href' => UrlBuilderHelper::getContentEditUrl($item['content_id']),
+                                'href' => UrlBuilderHelper::getContentEditUrl( $content ),
                                 'label' => __('Edit')
                             ];
                             $item[$name]['editor'] = [
-                                'href' => UrlBuilderHelper::getLiveEditorUrl($item['content_id']),
+                                'href' => UrlBuilderHelper::getLiveEditorUrl( $content ),
                                 'label' => __('Editor')
                             ];
                         }
-                        if (AuthorizationHelper::isCurrentUserCan($type . '_view')) {
+
+                        if (AuthorizationHelper::isCurrentUserCan($content->getRoleName('view'))) {
                             $item[$name]['preview'] = [
-                                'href' => UrlBuilderHelper::getContentViewUrl($item['content_id']),
+                                'href' => UrlBuilderHelper::getContentViewUrl( $content ),
                                 'label' => __('Preview'),
                                 'target' => '_blank'
                             ];
 
                             if ($item['status'] === ContentInterface::STATUS_PUBLISHED) {
                                 $item[$name]['view'] = [
-                                    'href' => UrlBuilderHelper::getPublishedContentUrl($item['content_id']),
+                                    'href' => UrlBuilderHelper::getPublishedContentUrl( $content ),
                                     'label' => __('View'),
                                     'target' => '_blank'
                                 ];
                             }
                         }
 
-                        if (AuthorizationHelper::isCurrentUserCan($type . '_export') === true) {
+                        if (AuthorizationHelper::isCurrentUserCan($content->getRoleName('export'))) {
                             $item[$name]['export'] = [
-                                'href' => UrlBuilderHelper::getContentExportUrl($item['content_id']),
+                                'href' => UrlBuilderHelper::getContentExportUrl( $content ),
                                 'label' => __('Export')
                             ];
                         }
 
-                        if (AuthorizationHelper::isCurrentUserCan($type . '_delete') === true) {
+                        if (AuthorizationHelper::isCurrentUserCan($content->getRoleName('delete'))) {
                             $title = $this->getEscaper()->escapeHtml($item['title']);
                             $item[$name]['delete'] = [
-                                'href' => UrlBuilderHelper::getContentDeleteUrl($item['content_id']),
+                                'href' => UrlBuilderHelper::getContentDeleteUrl( $content ),
                                 'label' => __('Delete'),
                                 'confirm' => [
                                     'title' => __('Delete %1', $title),

@@ -70,7 +70,7 @@ class Grid extends Action implements HttpGetActionInterface
     {
         try {
             return $this->_authorization->isAllowed(
-                $this->getContentResourceName('grid')
+                $this->getContentResourceName('view')
             );
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage(

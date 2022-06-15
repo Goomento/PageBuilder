@@ -38,12 +38,19 @@ interface RevisionRepositoryInterface
      * Retrieve revisions of content.
      *
      * @param int $contentId
-     * @param null $statuses
-     * @param null $limit
+     * @param array|null $statuses
+     * @param int|null $limit
+     * @param int|null $currentPage
      * @return RevisionSearchResultsInterface
      * @throws LocalizedException
      */
-    public function getListByContentId(int $contentId, $statuses = null, $limit = null);
+    public function getListByContentId(int $contentId, ?array $statuses, ?int $limit, ?int $currentPage);
+
+    /**
+     * @param int $contentId
+     * @return mixed
+     */
+    public function getLastRevisionByContentId(int $contentId) : ?RevisionInterface;
 
     /**
      * Retrieve contents matching the specified criteria.

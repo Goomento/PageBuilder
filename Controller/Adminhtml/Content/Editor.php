@@ -25,6 +25,7 @@ class Editor extends AbstractContent implements HttpGetActionInterface
         try {
             $content = $this->getContent(true);
             $this->getRequest()->setParam('type', $content->getType());
+
             if (!$this->_authorization->isAllowed($this->getContentResourceName('view'))) {
                 throw new LocalizedException(
                     __('Sorry, you need permissions to view this content.')
@@ -37,15 +38,17 @@ class Editor extends AbstractContent implements HttpGetActionInterface
             );
 
             ThemeHelper::registerContentToPage($content);
+
             /**
              * Start to hook the live editor.
              */
-            HooksHelper::doAction('pagebuilder/editor/index');
+            HooksHelper::doAction('pagebuilder/editor/index', $content);
 
             return $resultPage;
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
         } catch (\Exception $e) {
+            $this->logger->error($e);
             $this->messageManager->addErrorMessage(
                 __('Something went wrong when entering the Page Builder.')
             );

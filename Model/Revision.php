@@ -8,16 +8,21 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model;
 
+use Goomento\PageBuilder\Api\ContentRegistryInterface;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
+use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
-use Goomento\PageBuilder\Helper\ObjectManagerHelper;
-use Goomento\PageBuilder\Helper\AdminUser;
+use Goomento\PageBuilder\Traits\BuildableModelTrait;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
 use Magento\User\Model\User;
-use Magento\User\Model\UserFactory;
 
 class Revision extends AbstractModel implements RevisionInterface, IdentityInterface
 {
+
+    use BuildableModelTrait;
+
     /**
      * Cache tag
      */
@@ -34,14 +39,19 @@ class Revision extends AbstractModel implements RevisionInterface, IdentityInter
     protected $_eventPrefix = 'pagebuilder_content_revision';
 
     /**
-     * @var User
+     * @var User|null
      */
-    protected $author = null;
+    protected $author;
 
     /**
-     * @var object
+     * @var ContentInterface
      */
-    protected $userHelper = null;
+    private $content;
+
+    /**
+     * @var string
+     */
+    private $contentHtml = '';
 
     /**
      * @inheridoc
@@ -56,228 +66,21 @@ class Revision extends AbstractModel implements RevisionInterface, IdentityInter
      */
     public static function getAvailableStatuses()
     {
-        return [
-            self::STATUS_DRAFT => __('Draft'),
-            self::STATUS_AUTOSAVE => __('Autosave'),
-            self::STATUS_REVISION => __('Revision')
-        ];
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function getIdentities()
-    {
-        return [self::CACHE_TAG . '_' . $this->getId()];
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function getId()
-    {
-        return parent::getData(self::REVISION_ID);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function getCreationTime()
-    {
-        return $this->getData(self::CREATION_TIME);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setId($id)
-    {
-        return $this->setData(self::CONTENT_ID, $id);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setCreationTime($creationTime)
-    {
-        return $this->setData(self::CREATION_TIME, $creationTime);
-    }
-
-
-    /**
-     * @inheridoc
-     */
-    public function getElements()
-    {
-        $element = $this->getData(self::ELEMENTS);
-        if (!is_array($element)) {
-            try {
-                $element = json_decode((string) $element, true);
-                if (!$element) {
-                    $element = [];
-                }
-            } catch (\Exception $e) {
-                $element = [];
-            }
-        }
-
-        return $element;
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function getSettings()
-    {
-        $settings = $this->getData(self::SETTINGS);
-        if ($settings && !is_array($settings)) {
-            try {
-                $settings = json_decode($settings, true);
-                if (!$settings) {
-                    $settings = [];
-                }
-            } catch (\Exception $e) {
-                $settings = [];
-            }
-        }
-
-        return $settings;
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setElements($elements)
-    {
-        if (is_array($elements)) {
-            $elements = json_encode($elements);
-        }
-        return $this->setData(self::ELEMENTS, $elements);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setSettings($settings)
-    {
-        if (is_array($settings)) {
-            $settings = json_encode($settings);
-        }
-        return $this->setData(self::SETTINGS, $settings);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function getAuthorId()
-    {
-        return $this->getData(self::AUTHOR_ID);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setAuthorId($authorId)
-    {
-        return $this->setData(self::AUTHOR_ID, $authorId);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function getStatus()
-    {
-        return $this->getData(self::STATUS);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setStatus($status)
-    {
-        return $this->setData(self::STATUS, $status);
-    }
-
-    /**
-     * @return AdminUser
-     */
-    protected function getUserHelper()
-    {
-        if (is_null($this->userHelper)) {
-            /** @var AdminUser userHelper */
-            $this->userHelper = ObjectManagerHelper::get(AdminUser::class);
-        }
-
-        return $this->userHelper;
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function hasSetting($name)
-    {
-        return (bool) $this->getSetting($name);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function getSetting($name)
-    {
-        $settings = $this->getSettings();
-        return $settings[$name] ?? null;
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setSetting($name, $value)
-    {
-        $settings = $this->getSettings();
-        $settings[$name] = $value;
-        return $this->setSettings($settings);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function deleteSetting($name)
-    {
-        if ($this->hasSetting($name)) {
-            $settings = $this->getSettings();
-            unset($settings[$name]);
-            $this->setSettings($settings);
-        }
-
-        return $this;
+        return array_merge(
+            Content::getAvailableStatuses(),
+            [
+                self::STATUS_AUTOSAVE => __('Autosave'),
+                self::STATUS_REVISION => __('Revision')
+            ]
+        );
     }
 
     /**
      * @inheritDoc
      */
-    public function getAuthor()
+    public function getContentId() : int
     {
-        if (is_null($this->author) && $this->getAuthorId()) {
-            $this->author = false;
-            /** @var UserFactory $userFactory */
-            $userFactory = ObjectManagerHelper::get(UserFactory::class);
-            try {
-                $this->author = $userFactory->create()->load(
-                    $this->getAuthorId()
-                );
-            } catch (\Exception $e) {
-            }
-        }
-
-        return $this->author;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getContentId()
-    {
-        return $this->getData(self::CONTENT_ID);
+        return (int) $this->getData(self::CONTENT_ID);
     }
 
     /**
@@ -286,5 +89,90 @@ class Revision extends AbstractModel implements RevisionInterface, IdentityInter
     public function setContentId($contentId)
     {
         return $this->setData(self::CONTENT_ID, $contentId);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getType() : string
+    {
+        return self::REVISION;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setUpdateTime(string $updateTime) : BuildableContentInterface
+    {
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUpdateTime() : string
+    {
+        return (string) $this->getData(self::CREATION_TIME);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setType(string $type) : BuildableContentInterface
+    {
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getOriginContent(): BuildableContentInterface
+    {
+        if (!$this->content) {
+            $this->content = ObjectManager::getInstance()->get(ContentRegistryInterface::class)->getById(
+                $this->getContentId()
+            );
+        }
+
+        return $this->content;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setOriginContent(BuildableContentInterface $content): BuildableContentInterface
+    {
+        $this->content = $content;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLastRevision(): ?BuildableContentInterface
+    {
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLastRevision(BuildableContentInterface $content): BuildableContentInterface
+    {
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSpecialSettingKeys(): array
+    {
+        return [
+            'id',
+            self::STATUS,
+            self::CONTENT_ID,
+            self::REVISION_ID,
+            ContentInterface::IS_ACTIVE,
+        ];
     }
 }

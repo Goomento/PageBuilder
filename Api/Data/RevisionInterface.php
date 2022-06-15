@@ -10,69 +10,20 @@ namespace Goomento\PageBuilder\Api\Data;
 
 use Magento\User\Model\User;
 
-interface RevisionInterface
+interface RevisionInterface extends BuildableContentInterface
 {
     const REVISION_ID              = 'revision_id';
-    const CONTENT_ID               = 'content_id';
-    const ELEMENTS                 = 'elements';
-    const SETTINGS                 = 'settings';
-    const CREATION_TIME            = 'creation_time';
-    const AUTHOR_ID                = 'author_id';
-    const STATUS                   = 'status';
+    const REVISION                 = 'revision';
 
-    const STATUS_AUTOSAVE          = ContentInterface::STATUS_AUTOSAVE;
-    const STATUS_DRAFT             = ContentInterface::STATUS_DRAFT;
-    const STATUS_REVISION          = 'revision';
-
-    /**
-     * Get ID
-     *
-     * @return int|null
-     */
-    public function getId();
+    const CONTENT_ID               = ContentInterface::CONTENT_ID;
+    const AUTHOR_ID                = ContentInterface::AUTHOR_ID;
 
     /**
      * Get Content ID
      *
      * @return int|null
      */
-    public function getContentId();
-
-    /**
-     * Get elements
-     *
-     * @return array
-     */
-    public function getElements();
-
-    /**
-     * Set settings
-     *
-     * @return array
-     */
-    public function getSettings();
-
-    /**
-     * Has setting
-     * @param $name
-     * @return mixed
-     */
-    public function hasSetting($name);
-
-    /**
-     * Has setting
-     * @param $name
-     * @return mixed
-     */
-    public function getSetting($name);
-
-    /**
-     * Set setting
-     * @param $name
-     * @param $value
-     * @return mixed
-     */
-    public function setSetting($name, $value);
+    public function getContentId() : int;
 
     /**
      * Get author ID
@@ -87,65 +38,12 @@ interface RevisionInterface
     public function getAuthor();
 
     /**
-     * Get creation time
-     *
-     * @return string|null
-     */
-    public function getCreationTime();
-
-    /**
-     * Set ID
-     *
-     * @param int $id
-     * @return RevisionInterface
-     */
-    public function setId($id);
-
-    /**
-     * Set creation time
-     *
-     * @param string $creationTime
-     * @return RevisionInterface
-     */
-    public function setCreationTime($creationTime);
-
-
-    /**
-     * Set elements
-     *
-     * @param array|string $elements
-     * @return RevisionInterface
-     */
-    public function setElements($elements);
-
-    /**
-     * Set elements
-     *
-     * @param array $settings
-     * @return RevisionInterface
-     */
-    public function setSettings($settings);
-
-    /**
      * Set author Id
      *
      * @param int $authorId
      * @return RevisionInterface
      */
     public function setAuthorId($authorId);
-
-    /**
-     * @return string
-     */
-    public function getStatus();
-
-    /**
-     * Set status
-     *
-     * @param string $status
-     * @return RevisionInterface
-     */
-    public function setStatus($status);
 
     /**
      * Set status

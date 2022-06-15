@@ -9,15 +9,17 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Block;
 
 use Exception;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
-use Goomento\PageBuilder\Helper\HooksHelper;
-use Goomento\PageBuilder\Helper\ThemeHelper;
 use Goomento\PageBuilder\Logger\Logger;
+use Goomento\PageBuilder\Helper\ThemeHelper;
+use Goomento\PageBuilder\Model\ContentHtmlProcessor;
 use Goomento\PageBuilder\Model\ContentRegistry;
 use Goomento\PageBuilder\Helper\Data;
 use Magento\Cms\Model\Template\FilterProvider;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Profiler;
 use Magento\Framework\View\Element\Template;
 use Magento\Widget\Block\BlockInterface;
 
@@ -25,9 +27,6 @@ class Content extends Template implements BlockInterface
 {
     const CONTENT_ID = ContentInterface::CONTENT_ID;
     const IDENTIFIER = ContentInterface::IDENTIFIER;
-
-    const BLOCK_CONTENT_KEY = 'pagebuilder_content_html';
-    const BLOCK_CONTENT_RENDER_ORDER = 2021;
 
     /**
      * @var null|ContentInterface
@@ -38,7 +37,6 @@ class Content extends Template implements BlockInterface
      * @var null|bool
      */
     private $validated = null;
-
     /**
      * @inheritdoc
      */
@@ -65,9 +63,9 @@ class Content extends Template implements BlockInterface
     private $dataHelper;
 
     /**
-     * @var string
+     * @var ContentHtmlProcessor
      */
-    private $currentContentId;
+    private $contentHtmlProcessor;
 
     /**
      * Content constructor.
@@ -76,6 +74,7 @@ class Content extends Template implements BlockInterface
      * @param FilterProvider $filterProvider
      * @param ContentRegistry $contentRegistry
      * @param Logger $logger
+     * @param ContentHtmlProcessor $contentHtmlProcessor
      * @param array $data
      */
     public function __construct(
@@ -84,27 +83,17 @@ class Content extends Template implements BlockInterface
         FilterProvider $filterProvider,
         ContentRegistry $contentRegistry,
         Logger $logger,
+        ContentHtmlProcessor $contentHtmlProcessor,
         array $data = []
     )
     {
-        parent::__construct($context, $data);
+        $this->logger = $logger;
         $this->dataHelper = $dataHelper;
         $this->filterProvider = $filterProvider;
         $this->contentRegistry = $contentRegistry;
-        $this->logger = $logger;
-    }
+        $this->contentHtmlProcessor = $contentHtmlProcessor;
 
-    /**
-     * @param $html
-     * @return mixed|string
-     * @throws Exception
-     */
-    public function applyDefaultFilter($html)
-    {
-        if (trim($html)) {
-            $html = $this->filterProvider->getPageFilter()->filter($html);
-        }
-        return $html;
+        parent::__construct($context, $data);
     }
 
     /**
@@ -136,27 +125,28 @@ class Content extends Template implements BlockInterface
     }
 
     /**
-     * @param ContentInterface $content
+     * @param BuildableContentInterface $content
      * @return Content
      */
-    public function setContent(ContentInterface $content)
+    public function setContent(BuildableContentInterface $content)
     {
         $this->content = $content;
         return $this;
     }
 
     /**
-     * @return ContentInterface|null
+     * @return BuildableContentInterface|null
      */
-    public function getContent()
+    public function getBuildableContent()
     {
         if ($this->content === null) {
             $content = null;
-            if (!$content && $this->getContentId()) {
+            if ($this->getContentId()) {
                 $content = $this->contentRegistry->getById(
                     (int) $this->getContentId()
                 );
             }
+
             if (!$content && $this->getIdentifier()) {
                 $content = $this->contentRegistry->getByIdentifier(
                     (string) $this->getIdentifier()
@@ -164,7 +154,7 @@ class Content extends Template implements BlockInterface
             }
 
             $this->content = false;
-            if ($content instanceof ContentInterface && $content->getId()) {
+            if ($content instanceof BuildableContentInterface && $content->getId()) {
                 $this->content = $content;
             }
         }
@@ -188,7 +178,7 @@ class Content extends Template implements BlockInterface
     {
         if ($this->validated === null) {
             $this->validated = false;
-            if ($content = $this->getContent()) {
+            if ($content = $this->getBuildableContent()) {
                 $this->setContentId($content->getId());
                 if ($content->getIsActive() && $this->isContentInStore($content)) {
                     $this->validated = true;
@@ -200,13 +190,13 @@ class Content extends Template implements BlockInterface
     }
 
     /**
-     * @param ContentInterface $content
+     * @param BuildableContentInterface $content
      * @return bool
      * @throws NoSuchEntityException
      */
-    protected function isContentInStore(ContentInterface $content)
+    protected function isContentInStore(BuildableContentInterface $content)
     {
-        $storeIds = $content->getStoreIds();
+        $storeIds = $content->getOriginContent()->getStoreIds();
         if (!empty($storeIds)) {
             return in_array(0, $storeIds) || in_array($this->_storeManager->getStore()->getId(), $storeIds);
         }
@@ -215,57 +205,34 @@ class Content extends Template implements BlockInterface
     }
 
     /**
-     * Use for re-hook
-     * @return mixed
-     */
-    public function getCurrentContentId()
-    {
-        return $this->currentContentId;
-    }
-
-    /**
-     * @param string|null $html
      * @return string
-     * @throws Exception
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
-    public function getContentHtml(string $html = '')
+    public function getContentHtml()
     {
-        $html = (string) $html;
+        $html = '';
+
+        Profiler::start('PAGEBUILDER:BLOCK');
+
+        $this->isValidContent();
+
+        $this->logger->debug(sprintf('Render content: %s', $this->getContentId()));
+
         if ($this->isValidContent()) {
             try {
-                HooksHelper::addFilter(
-                    'pagebuilder/content/html',
-                    [$this, 'applyDefaultFilter'],
-                    self::BLOCK_CONTENT_RENDER_ORDER
-                );
+                ThemeHelper::registerContentToPage($this->getBuildableContent());
 
-                $currentProcessingContentId = HooksHelper::applyFilters('pagebuilder/current/content_id');
+                Profiler::start('PAGEBUILDER:RENDER');
+                $html = $this->contentHtmlProcessor->getHtml( $this->getBuildableContent() );
+                Profiler::stop('PAGEBUILDER:RENDER');
 
-                if ($currentProcessingContentId) {
-                    HooksHelper::removeFilter('pagebuilder/current/content_id');
-                }
+                $this->logger->debug(sprintf('Render content: %s EMPTY', empty($html) ? 'IS' : 'IS NOT'));
 
-                HooksHelper::addFilter(
-                    'pagebuilder/current/content_id',
-                    [$this, 'getContentId'],
-                    self::BLOCK_CONTENT_RENDER_ORDER
-                );
+                Profiler::start('PAGEBUILDER:CMS_FILTER');
+                $html = $this->filterProvider->getPageFilter()->filter($html);
+                Profiler::stop('PAGEBUILDER:CMS_FILTER');
 
-                ThemeHelper::registerContentToPage($this->getContent());
-
-                /**
-                 * Get HTML content
-                 */
-                $html = HooksHelper::applyFilters('pagebuilder/content/html', $html);
-
-                if ($currentProcessingContentId) {
-                    $this->currentContentId = $currentProcessingContentId;
-                    HooksHelper::addFilter(
-                        'pagebuilder/current/content_id',
-                        [$this, 'getCurrentContentId'],
-                        self::BLOCK_CONTENT_RENDER_ORDER
-                    );
-                }
             } catch (Exception $e) {
                 $this->logger->error($e);
                 if ($this->dataHelper->isDebugMode()) {
@@ -273,6 +240,8 @@ class Content extends Template implements BlockInterface
                 }
             }
         }
+
+        Profiler::stop('PAGEBUILDER:BLOCK');
 
         return $html;
     }
@@ -282,13 +251,13 @@ class Content extends Template implements BlockInterface
      */
     public function getCacheKey()
     {
-        $content = $this->getContent();
-        if ($content instanceof ContentInterface) {
-            $contentId = (int) $content->getId();
-            return self::BLOCK_CONTENT_KEY . '_' . $contentId;
+        $key = parent::getCacheKey();
+        $content = $this->getBuildableContent();
+        if ($content instanceof BuildableContentInterface) {
+            return $key . '_' . $content->getUniqueIdentity();
         }
 
-        return self::BLOCK_CONTENT_KEY;
+        return $key;
     }
 
     /**

@@ -8,9 +8,11 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Api\Data\RevisionSearchResultsInterfaceFactory;
 use Goomento\PageBuilder\Api\RevisionRepositoryInterface;
+use Goomento\PageBuilder\Helper\AdminUser;
 use Goomento\PageBuilder\Model\ResourceModel\Revision as ResourceRevision;
 use Goomento\PageBuilder\Model\ResourceModel\Revision\CollectionFactory as RevisionCollectionFactory;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
@@ -53,6 +55,10 @@ class RevisionRepository implements RevisionRepositoryInterface
      * @var SortOrderBuilder
      */
     private $sortOrderBuilder;
+    /**
+     * @var AdminUser
+     */
+    private $adminUser;
 
     /**
      * RevisionRepository constructor.
@@ -63,6 +69,7 @@ class RevisionRepository implements RevisionRepositoryInterface
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param SortOrderBuilder $sortOrderBuilder
      * @param CollectionProcessorInterface|null $collectionProcessor
+     * @param AdminUser $adminUser
      */
     public function __construct(
         ResourceRevision $resource,
@@ -71,7 +78,8 @@ class RevisionRepository implements RevisionRepositoryInterface
         RevisionSearchResultsInterfaceFactory $searchResultsFactory,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         SortOrderBuilder $sortOrderBuilder,
-        CollectionProcessorInterface $collectionProcessor
+        CollectionProcessorInterface $collectionProcessor,
+        AdminUser $adminUser
     ) {
         $this->resource = $resource;
         $this->revisionFactory = $revisionFactory;
@@ -80,15 +88,18 @@ class RevisionRepository implements RevisionRepositoryInterface
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->sortOrderBuilder = $sortOrderBuilder;
         $this->collectionProcessor = $collectionProcessor;
+        $this->adminUser = $adminUser;
     }
 
     /**
      * @inheritDoc
      */
-    public function save(RevisionInterface $revision)
+    public function save(RevisionInterface $revision) : RevisionInterface
     {
         try {
             $this->validateStatus($revision);
+            $currentAdminUser = $this->adminUser->getCurrentAdminUser();
+            $revision->setAuthorId($currentAdminUser ? $currentAdminUser->getId() : 0);
             $this->resource->save($revision);
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
@@ -130,20 +141,23 @@ class RevisionRepository implements RevisionRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function getListByContentId(int $contentId, $statuses = null, $limit = null)
+    public function getListByContentId(int $contentId, ?array $statuses, ?int $limit, ?int $currentPage)
     {
         $this->searchCriteriaBuilder->addFilter(RevisionInterface::CONTENT_ID, $contentId);
         $statuses = (array) $statuses;
         if (!empty($statuses)) {
-            $this->searchCriteriaBuilder->addFilter(RevisionInterface::STATUS, ['in' => $statuses]);
+            $this->searchCriteriaBuilder->addFilter(BuildableContentInterface::STATUS, $statuses, 'in');
         }
         $sortOrder = $this->sortOrderBuilder->setField(RevisionInterface::REVISION_ID)->setDirection(
             SortOrder::SORT_DESC
         )->create();
         $this->searchCriteriaBuilder->setSortOrders([$sortOrder]);
         $searchCriteria = $this->searchCriteriaBuilder->create();
-        if (is_int($limit)) {
+        if ($limit !== null) {
             $searchCriteria->setPageSize($limit);
+        }
+        if ($currentPage !== null) {
+            $searchCriteria->setCurrentPage($currentPage);
         }
         return $this->getList($searchCriteria);
     }
@@ -193,8 +207,23 @@ class RevisionRepository implements RevisionRepositoryInterface
      */
     public function deleteByContentId($contentId)
     {
-        foreach ($this->getListByContentId($contentId)->getItems() as $revision) {
+        foreach ($this->getListByContentId((int) $contentId, null, null, null)->getItems() as $revision) {
             $this->delete($revision);
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLastRevisionByContentId(int $contentId) : ?RevisionInterface
+    {
+        $statuses = Revision::getAvailableStatuses();
+        unset($statuses[BuildableContentInterface::STATUS_AUTOSAVE]);
+        $items = $this->getListByContentId( $contentId, array_keys($statuses), 1, 1)->getItems();
+        if (!empty($items)) {
+            return end($items);
+        }
+
+        return null;
     }
 }

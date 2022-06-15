@@ -9,8 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Base;
 
 use Exception;
-use Goomento\PageBuilder\Api\Data\ContentInterface;
-use Goomento\PageBuilder\Builder\Modules\Frontend;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Elements;
 use Goomento\PageBuilder\Builder\Managers\PageSettings;
@@ -25,7 +24,6 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\RequestHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
-use Goomento\PageBuilder\Model\Content;
 use Magento\Framework\Exception\LocalizedException;
 
 abstract class AbstractDocument extends ControlsStack
@@ -36,8 +34,14 @@ abstract class AbstractDocument extends ControlsStack
      * Stores the Content ID
      *
      * @var mixed
+     * @deprecated
      */
     protected $contentId;
+
+    /**
+     * @var BuildableContentInterface
+     */
+    protected $model;
 
     /**
      * @return mixed
@@ -125,6 +129,22 @@ abstract class AbstractDocument extends ControlsStack
     }
 
     /**
+     * Get model id
+     */
+    public function getMainModelId()
+    {
+        return $this->getMainModel()->getId();
+    }
+
+    /**
+     * @return BuildableContentInterface
+     */
+    public function getMainModel()
+    {
+        return $this->getModel()->getOriginContent();
+    }
+
+    /**
      *
      * @param $data
      *
@@ -137,8 +157,7 @@ abstract class AbstractDocument extends ControlsStack
         // Start buffering
         ob_start();
 
-        /** @var Elements $elementManager */
-        $elementManager = ObjectManagerHelper::get(Elements::class);
+        $elementManager = ObjectManagerHelper::getElementsManager();
         /** @var AbstractWidget $widget */
         $widget = $elementManager->createElementInstance($data);
 
@@ -153,46 +172,42 @@ abstract class AbstractDocument extends ControlsStack
         return ob_get_clean();
     }
 
-    /**
-     * @deprecated
-     * @return ContentInterface
-     */
-    public function getMainContent()
-    {
-        return $this->getModel();
-    }
-
     public function getContainerAttributes()
     {
         $attributes = [
             'data-gmt-type' => $this->getName(),
             'data-gmt-id' => $this->getId(),
-            'class' => 'goomento gmt gmt-' . $this->getId(),
+            'class' => 'goomento gmt gmt-' . $this->getModel()->getStatus() . '-' . $this->getModel()->getId(),
         ];
 
-        if (!StateHelper::isPreviewMode()) {
-            $attributes['data-gmt-settings'] = json_encode($this->getFrontendSettings());
+        if (!StateHelper::isEditorPreviewMode()) {
+            $attributes['data-gmt-settings'] = \Zend_Json::encode($this->getFrontendSettings());
         }
 
         return $attributes;
     }
 
     /**
-     * Get view url
+     * Get view url, which is related to revision view for content view
      */
     public function getSystemPreviewUrl()
     {
-        $url = UrlBuilderHelper::getContentViewUrl($this->getMainContent());
+        static $url;
+        if ($url === null) {
+            $url = UrlBuilderHelper::getContentViewUrl( $this->getModel() );
 
-        /**
-         *
-         * Filters the preview URL.
-         *
-         *
-         * @param string   $url  Preview URL.
-         * @param AbstractDocument $this The document instance.
-         */
-        return HooksHelper::applyFilters('pagebuilder/document/urls/system_preview', $url, $this);
+            /**
+             *
+             * Filters the preview URL.
+             *
+             *
+             * @param string   $url  Preview URL.
+             * @param AbstractDocument $this The document instance.
+             */
+            $url = HooksHelper::applyFilters('pagebuilder/document/urls/system_preview', $url, $this);
+        }
+
+        return $url;
     }
 
 
@@ -201,7 +216,7 @@ abstract class AbstractDocument extends ControlsStack
         $settingManager = ObjectManagerHelper::getSettingsManager();
         $settings = $settingManager->getSettingsManagersConfig();
         return [
-            'id' => $this->getModelId(),
+            'id' => $this->getMainModelId(),
             'type' => $this->getName(),
             'settings' => $settings['page'],
             'version' => $this->getModel()->getSetting('GOOMENTO_VER'),
@@ -232,11 +247,7 @@ abstract class AbstractDocument extends ControlsStack
             }
         }
         if (!$backUrl) {
-            $content = $this->getModel();
-            $backUrl = UrlBuilderHelper::getUrl('pagebuilder/content/edit', [
-                'content_id' => $content->getId(),
-                'type' => $content->getType()
-            ]);
+            $backUrl = UrlBuilderHelper::getContentEditUrl($this->getModel()->getOriginContent());
         }
 
         return $backUrl;
@@ -268,19 +279,6 @@ abstract class AbstractDocument extends ControlsStack
             ]
         );
 
-        $this->addControl(
-            'is_active',
-            [
-                'label' => __('Enabled'),
-                'type' => Controls::SELECT,
-                'default' => (int) $this->getModel()->getIsActive(),
-                'options' => [
-                    '1' => __('Enabled'),
-                    '0' => __('Disabled'),
-                ],
-            ]
-        );
-
         $this->endControlsSection();
 
         /**
@@ -295,17 +293,17 @@ abstract class AbstractDocument extends ControlsStack
     }
 
     /**
+     * Default save data
      *
-     * @param $data
-     *
+     * @param array $data
      * @return bool
-     * @throws Exception
+     * @throws LocalizedException
      */
-    public function save($data)
+    public function save(array $data)
     {
         if (!AuthorizationHelper::isCurrentUserCan($this->getModel()->getRoleName('save'))) {
             throw new LocalizedException(
-                __('Sorry, you need permissions to view this content')
+                __('Sorry, you need permissions to save this content')
             );
         }
 
@@ -320,20 +318,34 @@ abstract class AbstractDocument extends ControlsStack
          */
         HooksHelper::doAction('pagebuilder/document/before_save', $this, $data);
 
-        if (!empty($data['settings'])) {
-            $this->saveSettings($data['settings']);
+        if (!empty($data['settings']) && is_array($data['settings'])) {
+            // Validate state
+            if ($this->getModel()->getId() && !AuthorizationHelper::isCurrentUserCan($this->getModel()->getRoleName('publish'))) {
+                $originModel = $this->getModel()->getOriginContent();
+                if ((isset($data['settings']['status']) && $data['settings']['status'] !== $originModel->getStatus()) ||
+                    (isset($data['settings']['is_active']) && $data['settings']['is_active'] !== $originModel->getIsActive())) {
+                    throw new LocalizedException(
+                        __('Sorry, you need permissions to save this content')
+                    );
+                }
+            }
+
+            $this->setModelSettings($data['settings']);
         }
 
         if (isset($data['elements']) && is_array($data['elements'])) {
-            $this->saveElements($data['elements']);
+            $this->setModelElements($data['elements']);
         }
 
-        $this->saveVersion();
+        $this->setModelVersion();
 
-        $this->saveModel();
+        $model = $this->saveModelAsRevision();
 
-        // Remove ContentCss CSS
-        $contentCss = new ContentCss($this->getModel()->getId());
+        if ( ContentHelper::isContentStatus( $this->getModel() ) ) {
+            $this->saveModel();
+        }
+
+        $contentCss = new ContentCss( $model );
 
         $contentCss->update();
 
@@ -349,6 +361,18 @@ abstract class AbstractDocument extends ControlsStack
         HooksHelper::doAction('pagebuilder/document/after_save', $this, $data);
 
         return true;
+    }
+
+    /**
+     * Save data as permanent
+     *
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function publishSave(array $data)
+    {
+        return $this->save($data, true);
     }
 
     /**
@@ -370,7 +394,11 @@ abstract class AbstractDocument extends ControlsStack
         return HooksHelper::applyFilters('pagebuilder/document/urls/edit', $url, $this);
     }
 
-
+    /**
+     * Get preview URL, which is the URL of origin content
+     *
+     * @return mixed|null
+     */
     public function getPreviewUrl()
     {
         /**
@@ -378,8 +406,11 @@ abstract class AbstractDocument extends ControlsStack
          */
         static $url;
 
-        if (empty($url)) {
-            $url = UrlBuilderHelper::getContentPreviewUrl($this->getModel());
+        if (null === $url) {
+
+            $url = UrlBuilderHelper::getEditorPreviewUrl(
+                $this->getModel()->getOriginContent()
+            );
 
             /**
              * Document preview URL.
@@ -399,11 +430,11 @@ abstract class AbstractDocument extends ControlsStack
     /**
      *
      * @param null $data
-     * @param bool $with_html_content
+     * @param bool $withHtmlContent
      *
      * @return array
      */
-    public function getElementsRawData($data = null, $with_html_content = false)
+    public function getElementsRawData($data = null, $withHtmlContent = false)
     {
         if (is_null($data)) {
             $data = $this->getElementsData();
@@ -411,16 +442,16 @@ abstract class AbstractDocument extends ControlsStack
 
         $editor_data = [];
 
+        $elementManager = ObjectManagerHelper::getElementsManager();
+
         foreach ($data as $element_data) {
-            /** @var Elements $elementManager */
-            $elementManager = ObjectManagerHelper::get(Elements::class);
             $element = $elementManager->createElementInstance($element_data);
 
             if (!$element) {
                 continue;
             }
 
-            $editor_data[] = $element->getRawData($with_html_content);
+            $editor_data[] = $element->getRawData($withHtmlContent);
         }
 
         return $editor_data;
@@ -468,44 +499,59 @@ abstract class AbstractDocument extends ControlsStack
     }
 
     /**
-     * @return Content
+     * @return BuildableContentInterface
      */
     public function getModel()
     {
-        return ContentHelper::get(
-            $this->contentId
+        return $this->model;
+    }
+
+    /**
+     * @return BuildableContentInterface
+     */
+    public function setModel(BuildableContentInterface $model)
+    {
+        return $this->model = $model;
+    }
+
+    /**
+     * @return BuildableContentInterface|null
+     */
+    public function saveModelAsRevision()
+    {
+        return ContentHelper::saveAsRevision(
+            $this->getModel()->getOriginContent(),
+            $this->getModel()->getStatus()
         );
     }
 
     /**
-     * Save model
+     * @return BuildableContentInterface
      */
     public function saveModel()
     {
-        ContentHelper::save(
-            $this->getModel()
-        );
+        return ContentHelper::save( $this->getModel() );
     }
 
     /**
+     * Get permanent link, which is related to the Published or Draft content
+     *
      * @return string
      */
     public function getPermalink()
     {
-        return $this->getModel()->getStatus() === ContentInterface::STATUS_PUBLISHED
-            ? UrlBuilderHelper::getPublishedContentUrl($this->getModel())
-            : UrlBuilderHelper::getContentViewUrl($this->getModel());
+        return $this->getModel()->getStatus() === BuildableContentInterface::STATUS_PUBLISHED
+            ? UrlBuilderHelper::getPublishedContentUrl($this->getModel()->getOriginContent())
+            : UrlBuilderHelper::getContentViewUrl($this->getModel()->getOriginContent());
     }
 
     /**
-     * @param $with_css
      * @return string
      */
-    public function getContent($with_css = false)
+    public function getContent()
     {
-        /** @var Frontend $frontend */
-        $frontend = ObjectManagerHelper::get(Frontend::class);
-        return $frontend->getBuilderContent($this->getModel()->getId(), $with_css);
+        $frontend = ObjectManagerHelper::getFrontend();
+        return $frontend->getBuilderContent($this->getModel()->getId());
     }
 
     /**
@@ -523,9 +569,8 @@ abstract class AbstractDocument extends ControlsStack
      *
      *
      * @param array $elements
-     * @throws Exception
      */
-    protected function saveElements($elements)
+    protected function setModelElements(array $elements)
     {
         $editor_data = $this->getElementsRawData($elements);
 
@@ -554,7 +599,7 @@ abstract class AbstractDocument extends ControlsStack
         HooksHelper::doAction('pagebuilder/editor/after_save', $this->getModel()->getId(), $editor_data);
     }
 
-    public function saveVersion()
+    public function setModelVersion()
     {
         // Save per revision.
         $this->updateMeta('version', Configuration::version());
@@ -589,7 +634,7 @@ abstract class AbstractDocument extends ControlsStack
      * @param string $key   Meta data key.
      * @param string $value Meta data value.
      *
-     * @return Content|ContentInterface
+     * @return BuildableContentInterface
      */
     public function updateContentData($key, $value)
     {
@@ -642,11 +687,11 @@ abstract class AbstractDocument extends ControlsStack
     public function __construct(array $data = [])
     {
         if (!empty($data)) {
-            $this->contentId = $data['id'];
+            $this->model = $data['model'] ?? [];
 
-            if (!$this->getModel()) {
+            if (! $this->model ) {
                 throw new Exception(
-                    'Content ID #%s does not exist.', $data['id']
+                    'Content ID #%s does not exist.'
                 );
             }
 
@@ -668,23 +713,35 @@ abstract class AbstractDocument extends ControlsStack
     }
 
     /**
-     * @param $settings
-     * @throws Exception
+     * @param array $settings
      */
-    protected function saveSettings($settings)
+    protected function setModelSettings(array $settings)
     {
-        $settingsManager = ObjectManagerHelper::getSettingsManager();
-        $pageSettingsManager = $settingsManager->getSettingsManagers(PageSettings::NAME);
-        $pageSettingsManager
-            ->beforeSaveSettings($settings, $this->getModel()->getId())
-            ->saveSettings($settings, $this->getModel()->getId());
+//        ObjectManagerHelper::getSettingsManager()
+//            ->getSettingsManagers(PageSettings::NAME)
+//            ->beforeSaveSettings($settings, $this->getModel() )
+//            ->saveSettings($settings, $this->getModel() );
+        $specialSettingKeys = $this->getModel()->getSpecialSettingKeys();
+        foreach ($specialSettingKeys as $key) {
+            if (isset($settings[$key])) {
+                unset($settings[$key]);
+            }
+        }
+
+        foreach ($settings as $key => $value) {
+            $this->getModel()->setSetting($key, $value);
+        }
     }
 
-
-    protected function printElements($elements_data)
+    /**
+     * @param $elementsData
+     * @return void
+     */
+    protected function printElements($elementsData)
     {
-        foreach ($elements_data as $element_data) {
-            $element = ObjectManagerHelper::get(Elements::class)->createElementInstance($element_data);
+        $elementManager = ObjectManagerHelper::getElementsManager();
+        foreach ($elementsData as $elementData) {
+            $element = $elementManager->createElementInstance($elementData);
 
             if (!$element) {
                 continue;

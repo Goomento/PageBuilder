@@ -8,8 +8,21 @@ declare(strict_types=1);
 ?>
 <script type="text/template" id="tmpl-gmt-panel-history-page">
 	<div id="gmt-panel-elements-navigation" class="gmt-panel-navigation">
-        <div class="gmt-component-tab gmt-panel-navigation-tab" data-tab="actions"><?= __( 'Actions' ); ?></div>
-        <div class="gmt-component-tab gmt-panel-navigation-tab" data-tab="revisions"><?= __( 'Revisions' ); ?></div>
+        <div class="gmt-component-tab gmt-panel-navigation-tab gmt-tab-control-close" data-tab="close">
+            <a href="#">
+                <?= __( 'Close' ); ?>
+            </a>
+        </div>
+        <div class="gmt-component-tab gmt-panel-navigation-tab gmt-tab-control-actions" data-tab="actions">
+            <a href="#">
+                <?= __( 'Actions' ); ?>
+            </a>
+        </div>
+        <div class="gmt-component-tab gmt-panel-navigation-tab gmt-tab-control-revisions" data-tab="revisions">
+            <a href="#">
+                <?= __( 'Revisions' ); ?>
+            </a>
+        </div>
 	</div>
 	<div id="gmt-panel-history-content"></div>
 </script>

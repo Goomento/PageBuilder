@@ -11,21 +11,25 @@
         <remove src="extjs/resources/css/ext-all.css"/>
         <remove src="extjs/resources/css/ytheme-magento.css"/>
         <remove src="css/styles-old.css"/>
+        <remove src="Goomento_PageBuilder::css/ui/form/element/builder_assistance.css"/>
+        <remove src="Goomento_PageBuilder::css/style.css"/>
     </head>
     <body>
         <referenceContainer name="content">
-            <block name="pagebuilder.editor" template="Goomento_PageBuilder::editor/live_editor.phtml" />
-            <block name="pagebuilder.media_bucket" template="Goomento_PageBuilder::editor/media_bucket.phtml" />
-
-            <block name="pagebuilder.editor.templates.global" template="Goomento_PageBuilder::templates/global.phtml" />
-            <block name="pagebuilder.editor.templates.panel" template="Goomento_PageBuilder::templates/panel.phtml" />
-            <block name="pagebuilder.editor.templates.panel_elements" template="Goomento_PageBuilder::templates/panel_elements.phtml" />
-            <block name="pagebuilder.editor.templates.repeater" template="Goomento_PageBuilder::templates/repeater.phtml" />
-            <block name="pagebuilder.editor.templates.templates" template="Goomento_PageBuilder::templates/templates.phtml" />
-            <block name="pagebuilder.editor.templates.navigator" template="Goomento_PageBuilder::templates/navigator.phtml" />
-            <block name="pagebuilder.editor.templates.hotkeys" template="Goomento_PageBuilder::templates/hotkeys.phtml" />
+            <block name="pagebuilder.editor" template="Goomento_PageBuilder::editor/live_editor.phtml">
+                <block name="pagebuilder.media_bucket" template="Goomento_PageBuilder::editor/templates/media_bucket.phtml" />
+                <block name="pagebuilder.editor.templates.brand" template="Goomento_PageBuilder::editor/templates/brand.phtml" />
+                <block name="pagebuilder.editor.templates.panel" template="Goomento_PageBuilder::editor/templates/panel.phtml" />
+                <block name="pagebuilder.editor.templates.panel_elements" template="Goomento_PageBuilder::editor/templates/panel_elements.phtml" />
+                <block name="pagebuilder.editor.templates.repeater" template="Goomento_PageBuilder::editor/templates/repeater.phtml" />
+                <block name="pagebuilder.editor.templates.templates" template="Goomento_PageBuilder::editor/templates/templates.phtml" />
+                <block name="pagebuilder.editor.templates.navigator" template="Goomento_PageBuilder::editor/templates/navigator.phtml" />
+                <block name="pagebuilder.editor.templates.hotkeys" template="Goomento_PageBuilder::editor/templates/hotkeys.phtml" />
+                <block name="pagebuilder.editor.templates.revision_panel" template="Goomento_PageBuilder::editor/templates/revisions_panel_template.phtml" />
+                <block name="pagebuilder.editor.templates.history_panel" template="Goomento_PageBuilder::editor/templates/history_panel_template.phtml" />
+                <block name="pagebuilder.editor.templates.library_layout" template="Goomento_PageBuilder::editor/templates/library_layout.phtml" />
+            </block>
         </referenceContainer>
-
 
         <attribute name="class" value="gmt-editor-active"/>
         <attribute name="class" value="gmt-editor-page"/>

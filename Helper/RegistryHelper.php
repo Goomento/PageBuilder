@@ -19,7 +19,9 @@ use Goomento\Core\Model\Registry;
  * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
  *
  * @method static registry($key);
+ * @see \Goomento\Core\Model\Registry::registry()
  * @method static register($key, $value, $graceful = false);
+ * @see \Goomento\Core\Model\Registry::register()
  */
 class RegistryHelper
 {

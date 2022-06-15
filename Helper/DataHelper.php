@@ -11,7 +11,6 @@ namespace Goomento\PageBuilder\Helper;
 use Goomento\Core\Traits\TraitStaticCaller;
 use Goomento\Core\Traits\TraitStaticInstances;
 use Magento\Store\Model\ScopeInterface;
-use Goomento\PageBuilder\Helper\Data;
 
 /**
  * @see \Goomento\PageBuilder\Helper\Data
@@ -41,6 +40,10 @@ use Goomento\PageBuilder\Helper\Data;
  * @see Data::isCssMinifyFilesEnabled()
  * @method static bool isJsMinifyFilesEnabled()
  * @see Data::isJsMinifyFilesEnabled()
+ * @method static string getCustomMediaUrl()
+ * @see Data::getCustomMediaUrl()
+ * @method static bool isJsDebugMode()
+ * @see Data::isJsDebugMode()
  */
 class DataHelper
 {

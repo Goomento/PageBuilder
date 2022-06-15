@@ -8,10 +8,13 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
-use Goomento\PageBuilder\Helper\DataHelper;
+use Goomento\PageBuilder\Developer;
+use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Traits\BuildableModelTrait;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
@@ -20,10 +23,10 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\User\Model\User;
 use Magento\User\Model\UserFactory;
 
-class Content extends AbstractModel implements
-    ContentInterface,
-    IdentityInterface
+class Content extends AbstractModel implements ContentInterface, IdentityInterface
 {
+    use BuildableModelTrait;
+
     /**
      * Cache tag
      */
@@ -40,20 +43,16 @@ class Content extends AbstractModel implements
     protected $_eventPrefix = 'pagebuilder_content';
 
     /**
-     * @var User
+     * @var User|null
      */
-    protected $author = null;
+    protected $author;
     /**
-     * @var User
+     * @var User|null
      */
-    protected $lastEditor = null;
-    /**
-     * @var object
-     */
-    protected $userHelper = null;
+    protected $lastEditor;
 
     /**
-     * @var StoreManagerInterface
+     * @var StoreManagerInterface|null
      */
     protected $storeManager;
 
@@ -62,12 +61,21 @@ class Content extends AbstractModel implements
      */
     protected $stores;
 
-    /**
-     * @var RevisionInterface[]
-     */
-    protected $revisions = [];
+    private $revisionFlag;
 
-    private $revisionFlag = true;
+    /**
+     * @var RevisionInterface|null
+     */
+    private $lastContentVersion;
+
+    /**
+     * @var string
+     */
+    private $contentHtml = '';
+
+    const VERSION = Developer::VERSION;
+
+    const CSS = 'css';
 
     /**
      * @inheridoc
@@ -115,25 +123,26 @@ class Content extends AbstractModel implements
     /**
      * @inheridoc
      */
-    public function getIdentities()
-    {
-        return [self::CACHE_TAG . '_' . $this->getId()];
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function getId()
-    {
-        return parent::getData(self::CONTENT_ID);
-    }
-
-    /**
-     * @inheridoc
-     */
     public function isPublished()
     {
         return $this->getStatus() === self::STATUS_PUBLISHED;
+    }
+
+
+    /**
+     * @inheridoc
+     */
+    public function getUpdateTime() : string
+    {
+        return (string) $this->getData(self::UPDATE_TIME);
+    }
+
+    /**
+     * @inheridoc
+     */
+    public function setUpdateTime(string $updateTime) : BuildableContentInterface
+    {
+        return $this->setData(self::UPDATE_TIME, $updateTime);
     }
 
     /**
@@ -147,30 +156,6 @@ class Content extends AbstractModel implements
     /**
      * @inheridoc
      */
-    public function getCreationTime()
-    {
-        return $this->getData(self::CREATION_TIME);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function getUpdateTime()
-    {
-        return $this->getData(self::UPDATE_TIME);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setId($id)
-    {
-        return $this->setData(self::CONTENT_ID, $id);
-    }
-
-    /**
-     * @inheridoc
-     */
     public function setTitle($title)
     {
         return $this->setData(self::TITLE, $title);
@@ -179,63 +164,15 @@ class Content extends AbstractModel implements
     /**
      * @inheridoc
      */
-    public function setCreationTime($creationTime)
+    public function getType() : string
     {
-        return $this->setData(self::CREATION_TIME, $creationTime);
+        return (string) $this->getData(self::TYPE);
     }
 
     /**
      * @inheridoc
      */
-    public function setUpdateTime($updateTime)
-    {
-        return $this->setData(self::UPDATE_TIME, $updateTime);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function getElements()
-    {
-        return (array) $this->getData(self::ELEMENTS);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function getSettings()
-    {
-        return (array) $this->getData(self::SETTINGS);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function getType()
-    {
-        return $this->getData(self::TYPE);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setElements(array $elements)
-    {
-        return $this->setData(self::ELEMENTS, $elements);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setSettings(array $settings)
-    {
-        return $this->setData(self::SETTINGS, $settings);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setType($type)
+    public function setType(string $type) : BuildableContentInterface
     {
         if (!in_array($type, array_keys(self::getAvailableTypes()))) {
             throw new LocalizedException(
@@ -244,6 +181,7 @@ class Content extends AbstractModel implements
         }
         return $this->setData(self::TYPE, $type);
     }
+
     /**
      * @inheridoc
      */
@@ -262,106 +200,11 @@ class Content extends AbstractModel implements
     }
 
     /**
-     * @inheridoc
-     */
-    public function getAuthorId()
-    {
-        return $this->getData(self::AUTHOR_ID);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setAuthorId($authorId)
-    {
-        return $this->setData(self::AUTHOR_ID, $authorId);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function getStatus()
-    {
-        return $this->getData(self::STATUS);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setStatus($status)
-    {
-        if (!in_array($status, array_keys(self::getAvailableStatuses()))) {
-            throw new LocalizedException(
-                __('Invalid content status: %1', $status)
-            );
-        }
-        return $this->setData(self::STATUS, $status);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function hasSetting($name)
-    {
-        return (bool) $this->getSetting($name);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function getSetting($name)
-    {
-        $settings = $this->getSettings();
-        return DataHelper::arrayGetValue($settings, $name);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function setSetting($name, $value)
-    {
-        $settings = $this->getSettings();
-        DataHelper::arraySetValue($settings, $name, $value);
-        return $this->setSettings($settings);
-    }
-
-    /**
-     * @inheridoc
-     */
-    public function deleteSetting($name)
-    {
-        if ($this->hasSetting($name)) {
-            $settings = $this->getSettings();
-            DataHelper::arrayUnsetValue($settings, $name);
-            $this->setSettings($settings);
-        }
-
-        return $this;
-    }
-
-    /**
      * @inheritDoc
      */
-    public function getAuthor()
+    public function getLastEditorId() : int
     {
-        if (is_null($this->author) && $this->getAuthorId()) {
-            $this->author = false;
-            /** @var UserFactory $userFactory */
-            $userFactory = ObjectManagerHelper::get(UserFactory::class);
-            $this->author = $userFactory->create()->load(
-                $this->getAuthorId()
-            );
-        }
-
-        return $this->author;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getLastEditorId()
-    {
-        return $this->getData(self::LAST_EDITOR_ID);
+        return (int) $this->getData(self::LAST_EDITOR_ID);
     }
 
     /**
@@ -369,7 +212,7 @@ class Content extends AbstractModel implements
      */
     public function getLastEditorUser()
     {
-        if (is_null($this->lastEditor) && $this->getLastEditorId()) {
+        if ($this->lastEditor === null && $this->getLastEditorId()) {
             if ($this->getLastEditorId() === $this->getAuthorId()) {
                 return $this->getAuthor();
             } else {
@@ -386,7 +229,6 @@ class Content extends AbstractModel implements
 
     /**
      * @inheritDoc
-     * @deplacated Use history
      */
     public function setLastEditorId($editorId)
     {
@@ -415,57 +257,6 @@ class Content extends AbstractModel implements
     public function setIdentifier($value)
     {
         return $this->setData(self::IDENTIFIER, $value);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setRevisionFlag(bool $flag)
-    {
-        $this->revisionFlag = $flag;
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getRevisionFlag()
-    {
-        return (bool) $this->revisionFlag;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getElementDataById(string $elementId): ?array
-    {
-        return self::findElementById($elementId, $this->getElements());
-    }
-
-    /**
-     * @param string $elementId
-     * @param array $elements
-     * @return array
-     */
-    private static function findElementById(string $elementId, array $elements)
-    {
-        $result = [];
-        if (!empty($elements)) {
-            foreach ($elements as $element) {
-                if ($element['id'] === $elementId) {
-                    $result = $element;
-                    break;
-                }
-
-                $check = self::findElementById($elementId, $element['elements']);
-                if (!empty($check)) {
-                    $result = $check;
-                    break;
-                }
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -531,4 +322,57 @@ class Content extends AbstractModel implements
     {
         return (string) $this->getData(self::META_DESCRIPTION);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getOriginContent(): BuildableContentInterface
+    {
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setOriginContent(BuildableContentInterface $content): BuildableContentInterface
+    {
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLastRevision(): ?BuildableContentInterface
+    {
+        if (null === $this->lastContentVersion) {
+            $revision = ContentHelper::getLastRevisionByContent($this);
+            $this->lastContentVersion = $revision ?: false;
+        }
+
+        return $this->lastContentVersion ? $this->lastContentVersion : null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLastRevision(BuildableContentInterface $content): BuildableContentInterface
+    {
+        $this->lastContentVersion = $content;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSpecialSettingKeys(): array
+    {
+        return [
+            'id',
+            self::TITLE,
+            self::STATUS,
+            self::CONTENT_ID,
+            self::IS_ACTIVE,
+        ];
+    }
+
 }

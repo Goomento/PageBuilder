@@ -11,7 +11,7 @@
     <update handle="pagebuilder_content_noindex" />
     <body>
         <referenceContainer name="content">
-            <block class="Goomento\PageBuilder\Block\Editor\View"
+            <block class="Goomento\PageBuilder\Block\Content\View"
                    name="pagebuilder.content.view"
                    cacheable="false"
             />

@@ -77,6 +77,7 @@
         <column xsi:type="int" name="author_id" unsigned="true" identity="false" padding="10" nullable="false"
                 comment="Author ID"/>
         <column xsi:type="varchar" name="status" length="64" nullable="false" default="revision" comment="Revision Status"/>
+        <column xsi:type="varchar" name="label" length="256" nullable="true" comment="Revision Label"/>
         <column xsi:type="timestamp" name="creation_time" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Revision Creation Time"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">

@@ -59,19 +59,19 @@ class StateHelper
     public static function isBuildable()
     {
         return self::isEditorMode()
-            || self::isPreviewMode()
+            || self::isEditorPreviewMode()
             || self::isViewMode();
     }
 
     /**
      * @return bool
      */
-    public static function isPreviewMode()
+    public static function isEditorPreviewMode()
     {
         $isPreviewMode = HooksHelper::didAction('pagebuilder/preview/index');
         if ($isPreviewMode === false) {
             $actionName = RegistryHelper::registry('current_action_name');
-            $isPreviewMode = $actionName === 'pagebuilder_content_preview';
+            $isPreviewMode = $actionName === 'pagebuilder_content_editorpreview';
         }
 
         return $isPreviewMode;

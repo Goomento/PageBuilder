@@ -63,10 +63,9 @@ class TypographyGroup extends AbstractControlGroup
     {
         $fields = [];
 
-        /** @var SettingsManager $settingsManager */
-        $settingsManager = ObjectManagerHelper::get(SettingsManager::class);
+        $settingsManager = ObjectManagerHelper::getSettingsManager();
         $general = $settingsManager->getSettingsManagers(GeneralSettings::NAME);
-        $default_fonts = $general->getSettingModel()->getSettings('default_generic_fonts');
+        $default_fonts = $general->getSettingModel(null)->getSettings('default_generic_fonts');
 
         if ($default_fonts) {
             $default_fonts = ', ' . $default_fonts;

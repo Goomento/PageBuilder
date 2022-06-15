@@ -9,11 +9,11 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Model;
 
 use Goomento\PageBuilder\Api\ContentManagementInterface;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentSearchResultsInterface;
 use Goomento\PageBuilder\Api\ContentRepositoryInterface;
 use Goomento\PageBuilder\Api\RevisionRepositoryInterface;
-use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Api\ConfigInterface;
 use Goomento\PageBuilder\Builder\Css\ContentCss;
 use Goomento\PageBuilder\Builder\Css\GlobalCss;
@@ -21,6 +21,7 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\AdminUser;
 use Goomento\PageBuilder\PageBuilder;
 use Magento\Framework\Api\FilterBuilder;
+use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 
@@ -62,6 +63,10 @@ class ContentManagement implements ContentManagementInterface
      * @var Cache
      */
     private $cache;
+    /**
+     * @var SortOrderBuilder
+     */
+    private $sortOrderBuilder;
 
     /**
      * ContentManagement constructor.
@@ -72,6 +77,7 @@ class ContentManagement implements ContentManagementInterface
      * @param AdminUser $userHelper
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterBuilder $filterBuilder
+     * @param SortOrderBuilder $sortOrderBuilder
      * @param ConfigInterface $config
      * @param Cache $cache
      */
@@ -83,6 +89,7 @@ class ContentManagement implements ContentManagementInterface
         AdminUser $userHelper,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         FilterBuilder $filterBuilder,
+        SortOrderBuilder $sortOrderBuilder,
         ConfigInterface $config,
         Cache $cache
     ) {
@@ -93,6 +100,7 @@ class ContentManagement implements ContentManagementInterface
         $this->revisionRepository = $revisionRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
+        $this->sortOrderBuilder = $sortOrderBuilder;
         $this->config = $config;
         $this->cache = $cache;
     }
@@ -105,11 +113,19 @@ class ContentManagement implements ContentManagementInterface
     public function getBuildableContents(array $filters = [])
     {
         $pageTypes = $this->filterBuilder
-            ->setField(ContentInterface::TYPE)
+            ->setField(BuildableContentInterface::TYPE)
             ->setValue([ContentInterface::TYPE_SECTION, ContentInterface::TYPE_TEMPLATE])
             ->setConditionType('in')
             ->create();
+
+        $sortOrder = $this->sortOrderBuilder
+            ->setField(ContentInterface::CONTENT_ID)
+            ->setDescendingDirection()
+            ->create();
+
         $this->searchCriteriaBuilder->addFilters([$pageTypes]);
+        $this->searchCriteriaBuilder->addSortOrder($sortOrder);
+
         return $this->contentRepository->getList(
             $this->searchCriteriaBuilder->create()
         );
@@ -118,7 +134,7 @@ class ContentManagement implements ContentManagementInterface
     /**
      * @inheritDoc
      */
-    public function createRevision(ContentInterface $content, $status = RevisionInterface::STATUS_REVISION)
+    public function createRevision(ContentInterface $content, $status = BuildableContentInterface::STATUS_REVISION)
     {
         if (!$content->getId()) {
             throw new LocalizedException(
@@ -126,26 +142,23 @@ class ContentManagement implements ContentManagementInterface
             );
         }
 
-        /** @var Content $content */
-        if (!$content->hasDataChanges()) {
-            return false;
-        }
+        $lastRevision = $content->getLastRevision();
 
-        $revision = $this->revisionFactory->create();
+        if ($lastRevision && $lastRevision->getRevisionHash() === $content->getRevisionHash()) {
+            return $lastRevision;
+        } else {
+            $revision = $this->revisionFactory->create();
 
-        $revision->setStatus($status);
-        $revision->setContentId($content->getId());
-        $revision->setAuthorId($content->getLastEditorId() ?: $content->getAuthorId());
+            $revision->setOriginContent($content);
+            $revision->setStatus($status);
+            $revision->setContentId((int) $content->getId());
 
-        if ($status === RevisionInterface::STATUS_AUTOSAVE) {
             $revision->setElements($content->getElements());
             $revision->setSettings($content->getSettings());
-        } else {
-            $revision->setElements($content->getOrigData(ContentInterface::ELEMENTS));
-            $revision->setSettings($content->getOrigData(ContentInterface::SETTINGS));
-        }
+            $revision->setSetting('title', $content->getTitle());
 
-        return $this->revisionRepository->save($revision);
+            return $this->revisionRepository->save($revision);
+        }
     }
 
     /**
@@ -178,15 +191,16 @@ class ContentManagement implements ContentManagementInterface
         PageBuilder::initialize();
 
         $content->setSetting('css/' . Config::CSS_UPDATED_TIME, 0);
-        $flag = $content->getRevisionFlag();
-        /** @var Content $content */
-        $content->setRevisionFlag(false);
         $this->contentRepository->save($content);
-        $content->setRevisionFlag($flag);
         $content->setDataChanges(false);
 
-        $css = new ContentCss($content->getId());
+        $css = new ContentCss( $content );
         $css->update();
+
+        if ($content->getLastRevision()) {
+            $css = new ContentCss( $content->getLastRevision() );
+            $css->update();
+        }
     }
 
     /**
@@ -224,18 +238,17 @@ class ContentManagement implements ContentManagementInterface
 
         $contentResource = $this->contentFactory->create()->getResource();
         $connection = $contentResource->getConnection();
-        $table = $contentResource->getMainTable();
 
         $bind = [
-            ContentInterface::ELEMENTS =>  new \Zend_Db_Expr(
-                'REPLACE(' . $connection->quoteIdentifier(ContentInterface::ELEMENTS) . ',' . $connection->quote(
+            BuildableContentInterface::ELEMENTS =>  new \Zend_Db_Expr(
+                'REPLACE(' . $connection->quoteIdentifier(BuildableContentInterface::ELEMENTS) . ',' . $connection->quote(
                     str_replace('/', '\/', $find)
                 ) . ', ' . $connection->quote(
                     str_replace('/', '\/', $replace)
                 ) . ')'
             ),
-            ContentInterface::SETTINGS =>  new \Zend_Db_Expr(
-                'REPLACE(' . $connection->quoteIdentifier(ContentInterface::SETTINGS) . ',' . $connection->quote(
+            BuildableContentInterface::SETTINGS =>  new \Zend_Db_Expr(
+                'REPLACE(' . $connection->quoteIdentifier(BuildableContentInterface::SETTINGS) . ',' . $connection->quote(
                     str_replace('/', '\/', $find)
                 ) . ', ' . $connection->quote(
                     str_replace('/', '\/', $replace)
@@ -251,13 +264,19 @@ class ContentManagement implements ContentManagementInterface
             }
         }
 
-        $count = (int) $connection->update(
-            $table,
+        $contentCount = $connection->update(
+            $contentResource->getTable('pagebuilder_content'),
             $bind,
             $where
         );
 
-        if ($count) {
+        $revisionCount = $connection->update(
+            $contentResource->getTable('pagebuilder_content_revision'),
+            $bind,
+            $where
+        );
+
+        if ($contentCount || $revisionCount) {
             $this->cache->invalid();
         }
     }

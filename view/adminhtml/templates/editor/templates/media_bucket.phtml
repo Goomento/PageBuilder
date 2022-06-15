@@ -9,27 +9,32 @@ declare(strict_types=1);
  * @var Template $block
  */
 
+use Goomento\PageBuilder\Helper\DataHelper;
 use Magento\Backend\Block\Template;
-use Goomento\PageBuilder\Builder\Modules\Editor;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Magento\Framework\UrlInterface;
 
-/** @var Editor $editor */
-$editor = ObjectManagerHelper::get(Editor::class);
+$editor = ObjectManagerHelper::getEditor();
 $document = $editor->getDocument();
-$storeIds = $document->getModel()->getStoreIds();
+$storeIds = $editor->getBuildableContent()->getOriginContent()->getStoreIds();
+$storeId = $mediaUrl = '';
 if ($storeIds) {
     $storeId = implode(',', $storeIds);
 } else {
     $storeId = '0';
+}
+if (DataHelper::getCustomMediaUrl()) {
+    $mediaUrl = DataHelper::getCustomMediaUrl();
+} else {
+    $mediaUrl = UrlBuilderHelper::getFrontendUrl('', ['_type' => UrlInterface::URL_TYPE_MEDIA]);
 }
 ?>
 <div class="image-bucket" data-bind="scope: 'uploader'" style="height: 0;width: 0">
     <input type="hidden" id="image-bucket">
 </div>
 <script>
-    window.mediaUrl = "<?= UrlBuilderHelper::getFrontendUrl('', ['_type' => UrlInterface::URL_TYPE_MEDIA]); ?>";
+    window.mediaUrl = "<?= $mediaUrl ?>";
 </script>
 <script type="text/x-magento-init">
 {

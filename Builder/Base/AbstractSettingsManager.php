@@ -9,26 +9,27 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Base;
 
 use Exception;
-use Goomento\PageBuilder\Builder\Modules\Ajax as Ajax;
-use Goomento\PageBuilder\Builder\Base\AbstractSettings as BaseModel;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
+use Goomento\PageBuilder\Builder\Modules\Ajax;
+use Goomento\PageBuilder\Helper\ContentHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 
 abstract class AbstractSettingsManager extends AbstractEntity
 {
-
     const NAME = 'base';
 
     const TYPE = 'settings_manager';
+
     /**
      * Models cache.
      *
      * Holds all the models.
      *
      *
-     * @var BaseModel[]
+     * @var AbstractSettings[]
      */
-    private $models_cache = [];
+    private $modelsCache = [];
 
     /**
      * Settings base manager constructor.
@@ -54,13 +55,12 @@ abstract class AbstractSettingsManager extends AbstractEntity
      *
      *
      *
-     * @param Ajax $ajax_manager
+     * @param Ajax $ajaxManager
      * @throws Exception
      */
-    public function registerAjaxActions($ajax_manager)
+    public function registerAjaxActions(Ajax $ajaxManager)
     {
-        $name = static::NAME;
-        $ajax_manager->registerAjaxAction("save_{$name}_settings", [ $this, 'ajaxSaveSettings' ]);
+        $ajaxManager->registerAjaxAction('save_' . static::NAME . '_settings', [ $this, 'ajaxSaveSettings' ]);
     }
 
     /**
@@ -80,16 +80,21 @@ abstract class AbstractSettingsManager extends AbstractEntity
      * Retrieve the model for any given model ID.
      *
      *
-     * @param int $id
-     * @return BaseModel
+     * @param BuildableContentInterface|null $buildableContent
+     * @return AbstractSettings
      */
-    final public function getSettingModel(int $id = 0)
+    final public function getSettingModel(?BuildableContentInterface $buildableContent = null)
     {
-        if (!isset($this->models_cache[$id])) {
-            $this->models_cache[$id] = $this->createModel($id);
+        if ($buildableContent) {
+            $key = $buildableContent->getUniqueIdentity();
+        } else {
+            $key = 0;
+        }
+        if (!isset($this->modelsCache[$key])) {
+            $this->modelsCache[$key] = $this->createModel($buildableContent);
         }
 
-        return $this->models_cache[ $id ];
+        return $this->modelsCache[ $key ];
     }
 
     /**
@@ -102,22 +107,17 @@ abstract class AbstractSettingsManager extends AbstractEntity
      *
      * @return array Ajax response data.
      */
-    final public function ajaxSaveSettings($request)
+    final public function ajaxSaveSettings(array $request, BuildableContentInterface $buildableContent)
     {
         $data = $request['data'];
 
-        $id = 0;
+        $this->beforeSaveSettings($data, $buildableContent);
 
-        if (!empty($request['id'])) {
-            $id = $request['id'];
-        }
+        $this->saveSettings($data, $buildableContent);
 
-        $this->beforeSaveSettings($data, $id);
-        $this->saveSettings($data, $id);
+        $settingsName = static::NAME;
 
-        $settings_name = static::NAME;
-
-        $success_response_data = [];
+        $successResponseData = [];
 
         /**
          * Settings success response data.
@@ -127,11 +127,11 @@ abstract class AbstractSettingsManager extends AbstractEntity
          * The dynamic portion of the hook name, `$settings_name`, refers to the settings name.
          *
          *
-         * @param array $success_response_data Success response data.
+         * @param array $successResponseData Success response data.
          * @param int   $id                    Settings ID.
          * @param array $data                  Settings data.
          */
-        return HooksHelper::applyFilters("pagebuilder/settings/{$settings_name}/success_response_data", $success_response_data, $id, $data);
+        return HooksHelper::applyFilters("pagebuilder/settings/{$settingsName}/success_response_data", $successResponseData, $buildableContent, $data);
     }
 
     /**
@@ -141,22 +141,22 @@ abstract class AbstractSettingsManager extends AbstractEntity
      *
      *
      * @param array $settings Settings.
-     * @param int $id Optional. ContentCss ID. Default is `0`.
+     * @param BuildableContentInterface|null $buildableContent
      * @return AbstractSettingsManager
      */
-    final public function saveSettings(array $settings, $id = 0)
+    final public function saveSettings(array $settings, ?BuildableContentInterface $buildableContent)
     {
-        $special_settings = $this->getSpecialSettingsNames();
+//        $specialSettings = $buildableContent ? $buildableContent->getSpecialSettingKeys() : [];
+//
+//        $settingsToSave = $settings;
+//
+//        foreach ($specialSettings as $specialSetting) {
+//            if (isset($settingsToSave[ $specialSetting ])) {
+//                unset($settingsToSave[ $specialSetting ]);
+//            }
+//        }
 
-        $settings_to_save = $settings;
-
-        foreach ($special_settings as $special_setting) {
-            if (isset($settings_to_save[ $special_setting ])) {
-                unset($settings_to_save[ $special_setting ]);
-            }
-        }
-
-        $this->saveSettingsToDb($settings_to_save, $id);
+        $this->saveSettingsToDb($settings, $buildableContent);
 
         return $this;
     }
@@ -166,13 +166,13 @@ abstract class AbstractSettingsManager extends AbstractEntity
      *
      * Add new CSS rules to the settings manager.
      *
-     * @param AbstractCss $css_file The requested CSS file.
+     * @param AbstractCss $cssFile The requested CSS file.
      */
-    public function addSettingsCssRules(AbstractCss $css_file)
+    public function addSettingsCssRules(AbstractCss $cssFile)
     {
-        $model = $this->getModelForCssFile($css_file);
+        $model = $this->getModelForCssFile($cssFile);
 
-        $css_file->addControlsStackStyleRules(
+        $cssFile->addControlsStackStyleRules(
             $model,
             $model->getStyleControls(),
             $model->getSettings(),
@@ -202,18 +202,15 @@ abstract class AbstractSettingsManager extends AbstractEntity
      *
      * Retrieve the saved settings from the database.
      *
-     * @abstract
-     *
-     * @param int $id ContentCss ID.
+     * @param BuildableContentInterface|null $buildableContent.
      */
-    abstract protected function getSavedSettings($id);
+    abstract protected function getSavedSettings(?BuildableContentInterface $buildableContent = null);
 
     /**
      * Get CSS file name.
      *
      * Retrieve CSS file name for the settings base manager.
      *
-     * @abstract
      */
     abstract protected function getCssFileName();
 
@@ -225,9 +222,9 @@ abstract class AbstractSettingsManager extends AbstractEntity
      * @abstract
      *
      * @param array $settings Settings.
-     * @param int   $id       ContentCss ID.
+     * @param BuildableContentInterface|null $buildableContent
      */
-    abstract protected function saveSettingsToDb(array $settings, $id);
+    abstract protected function saveSettingsToDb(array $settings, ?BuildableContentInterface $buildableContent = null);
 
     /**
      * Get model for CSS file.
@@ -252,29 +249,16 @@ abstract class AbstractSettingsManager extends AbstractEntity
     abstract protected function getCssFileForUpdate($id);
 
     /**
-     * Get special settings names.
-     *
-     * Retrieve the names of the special settings that are not saved as regular
-     * settings. Those settings have a separate saving process.
-     *
-     *
-     * @return array Special settings names.
-     */
-    protected function getSpecialSettingsNames()
-    {
-        return [];
-    }
-
-    /**
      * Ajax before saving settings.
      *
      * Validate the data before saving it and updating the data in the database.
      *
      *
-     * @param array $data ContentCss data.
-     * @param int   $id   ContentCss ID.
+     * @param array $settings ContentCss data.
+     * @param BuildableContentInterface|null $buildableContent
+     * @return AbstractSettingsManager
      */
-    public function beforeSaveSettings(array $data, $id)
+    public function beforeSaveSettings(array $settings, ?BuildableContentInterface $buildableContent = null)
     {
         return $this;
     }
@@ -289,10 +273,13 @@ abstract class AbstractSettingsManager extends AbstractEntity
      *
      * @param string $name Settings panel name.
      */
-    protected function printEditorTemplateContent($name)
+    protected function printEditorTemplateContent(string $name)
     {
         ?>
 		<div class="gmt-panel-navigation">
+            <div class="gmt-component-tab gmt-panel-navigation-tab gmt-tab-control-close" data-tab="close">
+                <a href="#"><?= __('Close') ?></a>
+            </div>
 			<# _.each( goomento.config.settings.<?= EscaperHelper::escapeHtml($name); ?>.tabs, function( tabTitle, tabSlug ) {
 				$e.bc.ensureTab( 'panel/<?= EscaperHelper::escapeHtml($name); ?>-settings', tabSlug );
 			#>
@@ -311,26 +298,5 @@ abstract class AbstractSettingsManager extends AbstractEntity
      * Create a new model object for any given model ID and store the object in
      * models cache property for later use.
      */
-    public abstract function createModel(?int $id) : AbstractSettings;
-
-    /**
-     * Get editor template.
-     *
-     * Retrieve the final HTML for the editor.
-     *
-     *
-     * @return string Settings editor template.
-     */
-    private function getEditorTemplate()
-    {
-        $name = static::NAME;
-
-        ob_start(); ?>
-		<script type="text/template" id="tmpl-gmt-panel-<?= EscaperHelper::escapeHtml($name); ?>-settings">
-			<?php $this->printEditorTemplateContent($name); ?>
-		</script>
-		<?php
-
-        return ob_get_clean();
-    }
+    public abstract function createModel(?BuildableContentInterface $buildableContent = null) : AbstractSettings;
 }

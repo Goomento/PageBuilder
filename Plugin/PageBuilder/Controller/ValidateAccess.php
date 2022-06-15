@@ -9,7 +9,8 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Plugin\PageBuilder\Controller;
 
 use Goomento\PageBuilder\Api\Data\ContentInterface;
-use Goomento\PageBuilder\Helper\ContentHelper;
+use Goomento\PageBuilder\Api\Data\RevisionInterface;
+use Goomento\PageBuilder\Helper\Content;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Magento\Framework\App\ActionInterface;
@@ -20,7 +21,6 @@ use Magento\Framework\Message\ManagerInterface;
 
 class ValidateAccess
 {
-
     /**
      * @var RequestInterface
      */
@@ -33,20 +33,27 @@ class ValidateAccess
      * @var ManagerInterface
      */
     private $messageManager;
+    /**
+     * @var Content
+     */
+    private $contentHelper;
 
     /**
      * @param RequestInterface $request
      * @param ResponseInterface $response
      * @param ManagerInterface $messageManager
+     * @param Content $contentHelper
      */
     public function __construct(
         RequestInterface $request,
         ResponseInterface $response,
-        ManagerInterface $messageManager
+        ManagerInterface $messageManager,
+        Content $contentHelper
     )
     {
         $this->request = $request;
         $this->response = $response;
+        $this->contentHelper = $contentHelper;
         $this->messageManager = $messageManager;
     }
 
@@ -61,17 +68,14 @@ class ValidateAccess
     )
     {
         try {
-            $contentId = $this->request->getParam(ContentInterface::CONTENT_ID);
-            $contentId = (int) $contentId;
+            $contentId = (int) $this->request->getParam(ContentInterface::CONTENT_ID);
             if (empty($contentId)) {
                 throw new LocalizedException(
                     __('Invalid content Id')
                 );
             }
 
-            $content = ContentHelper::get(
-                $contentId
-            );
+            $content = $this->contentHelper->get($contentId);
 
             if (!$content || !$content->getId()) {
                 throw new LocalizedException(
