@@ -40,7 +40,7 @@ Run the following command in Magento 2 root folder:
 
 ```bash
 composer require goomento/module-page-builder
-php bin/magento module:enable Goomento_PageBuilder
+php bin/magento module:enable Goomento_Core Goomento_PageBuilder
 php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy
 ```

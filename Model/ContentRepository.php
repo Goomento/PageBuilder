@@ -93,6 +93,7 @@ class ContentRepository implements ContentRepositoryInterface
     public function save(ContentInterface $content)
     {
         try {
+            $this->setInlineSettings($content);
             $this->validateStatus($content);
             $this->validateContentType($content);
             $this->setStoreId($content);
@@ -113,6 +114,21 @@ class ContentRepository implements ContentRepositoryInterface
             );
         }
         return $content;
+    }
+
+    /**
+     * @param ContentInterface $content
+     * @return void
+     */
+    private function setInlineSettings(ContentInterface $content)
+    {
+        $keys = $content->getInlineSettingKeys();
+        foreach ($keys as $key) {
+            if ($content->hasSetting($key)) {
+                $content->setData($key, $content->getSetting($key));
+                $content->deleteSetting($key);
+            }
+        }
     }
 
     /**

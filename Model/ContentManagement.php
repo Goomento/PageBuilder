@@ -155,7 +155,6 @@ class ContentManagement implements ContentManagementInterface
 
             $revision->setElements($content->getElements());
             $revision->setSettings($content->getSettings());
-            $revision->setSetting('title', $content->getTitle());
 
             return $this->revisionRepository->save($revision);
         }

@@ -127,12 +127,11 @@ abstract class AbstractCss extends AbstractFile
         } else {
             $useExternalFile = $this->useExternalFile();
 
-            $meta['css'] = $content;
-
             if ($useExternalFile) {
                 $meta['status'] = self::CSS_STATUS_FILE;
             } else {
                 $meta['status'] = self::CSS_STATUS_INLINE;
+                $meta['css'] = $content;
             }
         }
 
@@ -433,24 +432,24 @@ abstract class AbstractCss extends AbstractFile
      * This method recursively renders the CSS for all the child elements in the stack.
      *
      *
-     * @param ControlsStack $controls_stack The controls stack.
+     * @param ControlsStack $controlsStack The controls stack.
      * @param array $controls Controls array.
      * @param array $values Values array.
      * @param array $placeholders Placeholders.
      * @param array $replacements Replacements.
      * @param array|null $allControls All controls.
      */
-    public function addControlsStackStyleRules(ControlsStack $controls_stack, array $controls, array $values, array $placeholders, array $replacements, array $allControls = null)
+    public function addControlsStackStyleRules(ControlsStack $controlsStack, array $controls, array $values, array $placeholders, array $replacements, array $allControls = null)
     {
         if (!$allControls) {
-            $allControls = $controls_stack->getControls();
+            $allControls = $controlsStack->getControls();
         }
 
-        $parsed_dynamic_settings = $controls_stack->parseDynamicSettings($values, $controls);
+        $parsed_dynamic_settings = $controlsStack->parseDynamicSettings($values, $controls);
 
         foreach ($controls as $control) {
             if (!empty($control['style_fields'])) {
-                $this->addRepeaterControlStyleRules($controls_stack, $control, $values[ $control['name'] ], $placeholders, $replacements);
+                $this->addRepeaterControlStyleRules($controlsStack, $control, $values[ $control['name'] ], $placeholders, $replacements);
             }
 
             if (!empty($control[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ])) {

@@ -146,12 +146,10 @@ class ContentCss extends AbstractCss
     protected function renderCss()
     {
         $data = $this->getData();
-
+        $elementManager = ObjectManagerHelper::getElementsManager();
         if (!empty($data)) {
             foreach ($data as $elementData) {
-                $element = ObjectManagerHelper::getElementsManager()
-                    ->createElementInstance((array) $elementData);
-
+                $element = $elementManager->createElementInstance((array) $elementData);
                 if (!$element) {
                     continue;
                 }
@@ -180,7 +178,7 @@ class ContentCss extends AbstractCss
      * This method recursively renders the CSS for all the child elements in the stack.
      *
      *
-     * @param ControlsStack $controls_stack The controls stack.
+     * @param ControlsStack $controlsStack The controls stack.
      * @param array $controls Controls array.
      * @param array $values Values array.
      * @param array $placeholders Placeholders.
@@ -188,18 +186,18 @@ class ContentCss extends AbstractCss
      * @param array|null $allControls All controls.
      */
     public function addControlsStackStyleRules(
-        ControlsStack $controls_stack,
-        array $controls,
-        array $values,
-        array $placeholders,
-        array $replacements,
-        array $allControls = null
+        ControlsStack $controlsStack,
+        array         $controls,
+        array         $values,
+        array         $placeholders,
+        array         $replacements,
+        array         $allControls = null
     )
     {
-        parent::addControlsStackStyleRules($controls_stack, $controls, $values, $placeholders, $replacements, $allControls);
+        parent::addControlsStackStyleRules($controlsStack, $controls, $values, $placeholders, $replacements, $allControls);
 
-        if ($controls_stack instanceof AbstractElement) {
-            foreach ($controls_stack->getChildren() as $childElement) {
+        if ($controlsStack instanceof AbstractElement) {
+            foreach ($controlsStack->getChildren() as $childElement) {
                 $this->renderStyles($childElement);
             }
         }

@@ -130,7 +130,8 @@ trait BuildableModelTrait
      */
     public function hasSetting($name) : bool
     {
-        return (bool) $this->getSetting($name);
+        $settings = $this->getSettings();
+        return isset($settings[$name]);
     }
 
     /**
@@ -172,7 +173,14 @@ trait BuildableModelTrait
      */
     public function getRevisionHash(): string
     {
-        return md5(\Zend_Json::encode($this->getElements()));
+        $settings = $this->getSettings();
+        if (isset($settings['css'])) {
+            unset($settings['css']);
+        }
+        $elements = $this->getElements();
+
+        // TODO should change this way
+        return md5(\Zend_Json::encode($elements + $settings));
     }
 
 

@@ -117,15 +117,7 @@ abstract class AbstractDocument extends ControlsStack
      */
     public function getUniqueName()
     {
-        return $this->getName() . '-' . $this->contentId;
-    }
-
-    /**
-     * Get model id
-     */
-    public function getModelId()
-    {
-        return $this->getModel()->getId();
+        return $this->getName() . '-' . $this->getModel()->getOriginContent()->getId();
     }
 
     /**
@@ -176,7 +168,7 @@ abstract class AbstractDocument extends ControlsStack
     {
         $attributes = [
             'data-gmt-type' => $this->getName(),
-            'data-gmt-id' => $this->getId(),
+            'data-gmt-id' => $this->getModel()->getOriginContent()->getId(),
             'class' => 'goomento gmt gmt-' . $this->getModel()->getStatus() . '-' . $this->getModel()->getId(),
         ];
 
@@ -466,16 +458,19 @@ abstract class AbstractDocument extends ControlsStack
         return $this->getModel()->getElements();
     }
 
-
-    public function printElementsWithWrapper($elements_data = null)
+    /**
+     * @param $elementsData
+     * @return void
+     */
+    public function printElementsWithWrapper($elementsData = null)
     {
-        if (!$elements_data) {
-            $elements_data = $this->getElementsData();
+        if (!$elementsData) {
+            $elementsData = $this->getElementsData();
         } ?>
 		<div <?= DataHelper::renderHtmlAttributes($this->getContainerAttributes()); ?>>
 			<div class="gmt-inner">
 				<div class="gmt-section-wrap">
-					<?php $this->printElements($elements_data); ?>
+					<?php $this->printElements($elementsData); ?>
 				</div>
 			</div>
 		</div>
@@ -619,18 +614,6 @@ abstract class AbstractDocument extends ControlsStack
 
     /**
      *
-     * @param string $key Meta data key.
-     *
-     * @return mixed
-     * @deprecated
-     */
-    public function getMainMeta($key)
-    {
-        return $this->getModel()->getData($key);
-    }
-
-    /**
-     *
      * @param string $key   Meta data key.
      * @param string $value Meta data value.
      *
@@ -717,20 +700,7 @@ abstract class AbstractDocument extends ControlsStack
      */
     protected function setModelSettings(array $settings)
     {
-//        ObjectManagerHelper::getSettingsManager()
-//            ->getSettingsManagers(PageSettings::NAME)
-//            ->beforeSaveSettings($settings, $this->getModel() )
-//            ->saveSettings($settings, $this->getModel() );
-        $specialSettingKeys = $this->getModel()->getSpecialSettingKeys();
-        foreach ($specialSettingKeys as $key) {
-            if (isset($settings[$key])) {
-                unset($settings[$key]);
-            }
-        }
-
-        foreach ($settings as $key => $value) {
-            $this->getModel()->setSetting($key, $value);
-        }
+        $this->getModel()->setSettings($settings);
     }
 
     /**

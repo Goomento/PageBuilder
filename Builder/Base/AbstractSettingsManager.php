@@ -170,6 +170,7 @@ abstract class AbstractSettingsManager extends AbstractEntity
      */
     public function addSettingsCssRules(AbstractCss $cssFile)
     {
+        /** @var AbstractSettings $model */
         $model = $this->getModelForCssFile($cssFile);
 
         $cssFile->addControlsStackStyleRules(

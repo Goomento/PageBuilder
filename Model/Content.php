@@ -364,7 +364,7 @@ class Content extends AbstractModel implements ContentInterface, IdentityInterfa
     /**
      * @inheritDoc
      */
-    public function getSpecialSettingKeys(): array
+    public static function getInlineSettingKeys(): array
     {
         return [
             'id',

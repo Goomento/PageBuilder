@@ -229,7 +229,6 @@
                 <item name="frontend" xsi:type="string">Goomento\PageBuilder\Builder\Modules\Frontend</item>
                 <item name="template-library" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Sources</item>
                 <item name="tags-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Tags</item>
-<!--                <item name="history" xsi:type="string">Goomento\PageBuilder\Builder\Modules\History</item>-->
                 <item name="revisions-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Revisions</item>
                 <item name="documents-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Documents</item>
                 <item name="settings-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Settings</item>

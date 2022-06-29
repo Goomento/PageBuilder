@@ -97,6 +97,7 @@ class RevisionRepository implements RevisionRepositoryInterface
     public function save(RevisionInterface $revision) : RevisionInterface
     {
         try {
+            $this->setInlineSettings($revision);
             $this->validateStatus($revision);
             $currentAdminUser = $this->adminUser->getCurrentAdminUser();
             $revision->setAuthorId($currentAdminUser ? $currentAdminUser->getId() : 0);
@@ -108,6 +109,21 @@ class RevisionRepository implements RevisionRepositoryInterface
             );
         }
         return $revision;
+    }
+
+    /**
+     * @param RevisionInterface $revision
+     * @return void
+     */
+    private function setInlineSettings(RevisionInterface $revision)
+    {
+        $keys = $revision->getInlineSettingKeys();
+        foreach ($keys as $key) {
+            if ($revision->hasSetting($key)) {
+                $revision->setData($key, $revision->getSetting($key));
+                $revision->deleteSetting($key);
+            }
+        }
     }
 
     /**
