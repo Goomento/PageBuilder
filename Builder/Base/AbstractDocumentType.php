@@ -35,7 +35,7 @@ abstract class AbstractDocumentType extends AbstractDocument
 
     public function getCssWrapperSelector()
     {
-        return 'div[data-gmt-id="' . $this->getModel()->getId() . '"]';
+        return 'div[data-gmt-id="' . $this->getModel()->getOriginContent()->getId() . '"]';
     }
 
     /**

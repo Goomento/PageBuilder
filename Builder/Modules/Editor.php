@@ -331,7 +331,7 @@ class Editor
 
         $magentoVersion = Configuration::magentoVersion();
         if ($magentoVersion) {
-            if (version_compare($magentoVersion, '2.4.3', '>=')) {
+            if (version_compare($magentoVersion, '2.3.6', '>=')) {
                 $requirejs['paths']['jquery/file-uploader'] = 'jquery/fileUploader/jquery.fileuploader';
             }
             if (version_compare($magentoVersion, '2.4.4', '>=')) {
