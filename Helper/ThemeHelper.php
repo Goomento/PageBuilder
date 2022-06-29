@@ -38,7 +38,7 @@ class ThemeHelper extends \Goomento\Core\Helper\ThemeHelper
 
         if (self::hasContentOnPage()) {
             foreach (self::$contents as $id => $content) {
-                $args['gmt-' . $id] = 'gmt-' . $id;
+                $args['gmt-' . $id] = 'gmt-' . $content->getOriginContent()->getId();
             }
         }
 
