@@ -17,7 +17,7 @@ abstract class AbstractFile extends AbstractEntity
     // Saved in media folder
     const UPLOADS_DIR = 'media/';
 
-    const DEFAULT_FILES_DIR = '';
+    const DEFAULT_FILES_DIR = 'css/';
 
     const META_KEY = '';
 

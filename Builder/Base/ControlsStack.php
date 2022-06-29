@@ -651,21 +651,21 @@ abstract class ControlsStack extends AbstractBase
     {
         $controls = $this->getActiveControls($controls, $settings);
 
-        $style_controls = [];
+        $styleControls = [];
 
-        foreach ($controls as $control_name => $control) {
-            $control_obj = $this->controlManager->getControl($control['type']);
+        foreach ($controls as $controlName => $control) {
+            $controlObj = $this->controlManager->getControl($control['type']);
 
-            if (!$control_obj instanceof AbstractControlData) {
+            if (!$controlObj instanceof AbstractControlData) {
                 continue;
             }
 
-            $control = array_merge($control_obj->getSettings(), $control);
+            $control = array_merge($controlObj->getSettings(), $control);
 
             if (Controls::REPEATER === $control['type']) {
                 $style_fields = [];
 
-                foreach ($this->getSettings($control_name) as $item) {
+                foreach ($this->getSettings($controlName) as $item) {
                     $style_fields[] = $this->getStyleControls($control['fields'], $item);
                 }
 
@@ -673,11 +673,11 @@ abstract class ControlsStack extends AbstractBase
             }
 
             if (!empty($control['selectors']) || ! empty($control['dynamic']) || ! empty($control['style_fields'])) {
-                $style_controls[ $control_name ] = $control;
+                $styleControls[ $controlName ] = $control;
             }
         }
 
-        return $style_controls;
+        return $styleControls;
     }
 
     /**
