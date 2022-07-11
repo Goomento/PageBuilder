@@ -6,28 +6,30 @@
 
 declare(strict_types=1);
 
-use Goomento\PageBuilder\Builder\Modules\Editor;
-use Goomento\PageBuilder\Helper\EscaperHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
-/** @var Editor $editor */
-$editor = ObjectManagerHelper::get(Editor::class);
-$document = $editor->getDocument();
+$document = ObjectManagerHelper::getEditor()->getDocument();
 
 ?>
 <script type="text/template" id="tmpl-gmt-template-library-header-actions">
+    <#  if ( goomento.userCan( 'import' ) ) { #>
 	<div id="gmt-template-library-header-import" class="gmt-templates-modal__header__item">
 		<i class="fas fa-upload" aria-hidden="true" title="<?= __('Import Template'); ?>"></i>
 		<span class="gmt-screen-only"><?= __( 'Import Template' ); ?></span>
 	</div>
+    <#  } #>
+    <#  if ( goomento.userCan( 'view' ) ) { #>
 	<div id="gmt-template-library-header-sync" class="gmt-templates-modal__header__item">
 		<i class="fas fa-sync-alt" aria-hidden="true" title="<?= __('Sync Library'); ?>"></i>
 		<span class="gmt-screen-only"><?= __( 'Sync Library' ); ?></span>
 	</div>
+    <#  } #>
+    <#  if ( goomento.userCan( 'save' ) ) { #>
 	<div id="gmt-template-library-header-save" class="gmt-templates-modal__header__item">
 		<i class="far fa-save" aria-hidden="true" title="<?= __('Save'); ?>"></i>
 		<span class="gmt-screen-only"><?= __( 'Save' ); ?></span>
 	</div>
+    <#  } #>
 </script>
 
 <script type="text/template" id="tmpl-gmt-template-library-header-menu">
@@ -174,29 +176,39 @@ $document = $editor->getDocument();
 	<div class="gmt-template-library-template-meta gmt-template-library-template-author gmt-template-library-local-column-3">{{{ author }}}</div>
 	<div class="gmt-template-library-template-meta gmt-template-library-template-date gmt-template-library-local-column-4">{{{ date }}}</div>
 	<div class="gmt-template-library-template-controls gmt-template-library-local-column-5">
+        <#  if ( goomento.userCan( 'view' ) ) { #>
 		<div class="gmt-template-library-template-preview">
 			<i class="fas fa-eye" aria-hidden="true"></i>
 			<span class="gmt-template-library-template-control-title"><?= __( 'Preview' ); ?></span>
 		</div>
+        <# } #>
+        <#  if ( goomento.userCan( 'save' ) ) { #>
 		<button class="gmt-template-library-template-action gmt-template-library-template-insert gmt-button gmt-button-success">
 			<i class="fas fa-download" aria-hidden="true"></i>
 			<span class="gmt-button-title"><?= __( 'Insert' ); ?></span>
 		</button>
+        <# } #>
+        <#  if ( goomento.userCan( 'delete' ) || goomento.userCan( 'export' ) ) { #>
 		<div class="gmt-template-library-template-more-toggle">
             <i class="fas fa-ellipsis-h"></i>
 			<span class="gmt-screen-only"><?= __( 'More actions' ); ?></span>
 		</div>
+        <# } #>
 		<div class="gmt-template-library-template-more">
+            <#  if ( goomento.userCan( 'delete' ) ) { #>
 			<div class="gmt-template-library-template-delete">
 				<i class="fas fa-trash" aria-hidden="true"></i>
 				<span class="gmt-template-library-template-control-title"><?= __( 'Delete' ); ?></span>
 			</div>
+            <# } #>
+            <#  if ( goomento.userCan( 'export' ) ) { #>
 			<div class="gmt-template-library-template-export">
 				<a href="{{ export_link }}">
 					<i class="fas fa-download" aria-hidden="true"></i>
 					<span class="gmt-template-library-template-control-title"><?= __( 'Export' ); ?></span>
 				</a>
 			</div>
+            <# } #>
 		</div>
 	</div>
 </script>

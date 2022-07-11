@@ -116,12 +116,13 @@ class Content extends AbstractHelper
      *
      * @param ContentInterface $content
      * @param string $status
+     * @param string|null $label
      * @return null|RevisionInterface
      * @throws LocalizedException
      */
-    public function saveAsRevision(ContentInterface $content, string $status = BuildableContentInterface::STATUS_REVISION) : ?RevisionInterface
+    public function saveAsRevision(ContentInterface $content, string $status = BuildableContentInterface::STATUS_REVISION, ?string $label = null) : ?RevisionInterface
     {
-        return $this->contentManagement->createRevision($content , $status);
+        return $this->contentManagement->createRevision($content , $status, $label);
     }
 
     /**

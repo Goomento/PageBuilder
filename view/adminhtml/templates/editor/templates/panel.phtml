@@ -13,57 +13,58 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 ?>
 <script type="text/template" id="tmpl-gmt-panel">
-	<div id="gmt-mode-switcher"></div>
-	<div id="gmt-panel-header-wrapper"></div>
-	<div id="gmt-panel-content-wrapper"></div>
+    <div id="gmt-panel-header-wrapper">
+        <i class="fas fa-ellipsis-h"></i>
+    </div>
+    <div id="gmt-panel-content-wrapper"></div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-menu">
-	<div id="gmt-panel-page-menu-content"></div>
+    <div id="gmt-panel-page-menu-content"></div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-menu-group">
-	<div class="gmt-panel-menu-group-title">{{{ title }}}</div>
-	<div class="gmt-panel-menu-items"></div>
+    <div class="gmt-panel-menu-group-title">{{{ title }}}</div>
+    <div class="gmt-panel-menu-items"></div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-menu-item">
-	<div class="gmt-panel-menu-item-icon">
-		<i class="{{ icon }}"></i>
-	</div>
-	<# if ( 'undefined' === typeof type || 'link' !== type ) { #>
-		<div class="gmt-panel-menu-item-title">{{{ title }}}</div>
-	<# } else {
-		let target = ( 'undefined' !== typeof newTab && newTab ) ? '_blank' : '_self';
-	#>
-		<a href="{{ link }}" target="{{ target }}"><div class="gmt-panel-menu-item-title">{{{ title }}}</div></a>
-	<# } #>
+    <div class="gmt-panel-menu-item-icon">
+        <i class="{{ icon }}"></i>
+    </div>
+    <# if ( 'undefined' === typeof type || 'link' !== type ) { #>
+    <div class="gmt-panel-menu-item-title">{{{ title }}}</div>
+    <# } else {
+    let target = ( 'undefined' !== typeof newTab && newTab ) ? '_blank' : '_self';
+    #>
+    <a href="{{ link }}" target="{{ target }}"><div class="gmt-panel-menu-item-title">{{{ title }}}</div></a>
+    <# } #>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-header">
-	<div id="gmt-panel-header-menu-button" class="gmt-header-button">
-		<i class="gmt-icon fa fa-bars tooltip-target" aria-hidden="true" data-tooltip="<?= __('Menu'); ?>"></i>
-		<span class="gmt-screen-only"><?= __( 'Menu' ); ?></span>
-	</div>
-	<div id="gmt-panel-header-title"></div>
-	<div id="gmt-panel-header-add-button" class="gmt-header-button">
-		<i class="gmt-icon goomento-logo-white tooltip-target" aria-hidden="true" data-tooltip="<?= __('Widgets Panel'); ?>"></i>
-		<span class="gmt-screen-only"><?= __( 'Widgets Panel' ); ?></span>
-	</div>
+    <div id="gmt-panel-header-menu-button" class="gmt-header-button">
+        <i class="gmt-icon fa fa-bars tooltip-target" aria-hidden="true" data-tooltip="<?= __('Menu'); ?>"></i>
+        <span class="gmt-screen-only"><?= __( 'Menu' ); ?></span>
+    </div>
+    <div id="gmt-panel-header-title"></div>
+    <div id="gmt-panel-header-add-button" class="gmt-header-button">
+        <i class="gmt-icon goomento-logo-white tooltip-target" aria-hidden="true" data-tooltip="<?= __('Widgets Panel'); ?>"></i>
+        <span class="gmt-screen-only"><?= __( 'Widgets Panel' ); ?></span>
+    </div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-controls-content">
     <div class="gmt-panel-control-tools gmt-panel-control-tools-start">
+        <div id="gmt-panel-control-panel" class="gmt-panel-control-tool gmt-leave-open tooltip-target active" data-tooltip="<?= __('Widget List'); ?>">
+            <i class="fas fa-th-large" aria-hidden="true"></i>
+        </div>
+        <div id="gmt-panel-control-editing" class="gmt-panel-control-tool gmt-leave-open tooltip-target active" data-tooltip="<?= __('Toggle View'); ?>">
+            <i class="far fa-edit"></i>
+        </div>
     </div>
     <div class="gmt-panel-control-tools gmt-panel-control-tools-center">
         <div class="gmt-panel-control-tool gmt-logo-brand">
             <i class="goomento-logo-white"></i>
-        </div>
-        <div id="gmt-panel-control-widgets" class="gmt-panel-control-tool gmt-leave-open tooltip-target active" data-tooltip="<?= __('Toggle Widgets'); ?>">
-            <i class="fas fa-th-large" aria-hidden="true"></i>
-        </div>
-        <div id="gmt-panel-control-general-settings" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('Global Settings'); ?>">
-            <i class="fas fa-cogs" aria-hidden="true"></i>
         </div>
         <div id="gmt-panel-control-settings" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('Page Settings'); ?>">
             <i class="fas fa-cog" aria-hidden="true"></i>
@@ -127,136 +128,142 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
         </div>
     </div>
     <div class="gmt-panel-control-tools gmt-panel-control-tools-end">
+        <div id="gmt-panel-control-general-settings" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('Global Settings'); ?>">
+            <i class="fas fa-cogs" aria-hidden="true"></i>
+        </div>
+        <div id="gmt-panel-control-back-to-dashboard" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('Back To Magento'); ?>">
+            <i class="fab fa-magento" aria-hidden="true"></i>
+        </div>
     </div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-mode-switcher-content">
-	<input id="gmt-mode-switcher-preview-input" type="checkbox">
-	<label for="gmt-mode-switcher-preview-input" id="gmt-mode-switcher-preview" title="<?= __('Hide Panel'); ?>">
-		<i class="gmt-icon" aria-hidden="true"></i>
-		<span class="gmt-screen-only"><?= __( 'Hide Panel' ); ?></span>
-	</label>
+    <input id="gmt-mode-switcher-preview-input" type="checkbox">
+    <label for="gmt-mode-switcher-preview-input" id="gmt-mode-switcher-preview" title="<?= __('Hide Panel'); ?>">
+        <i class="gmt-icon" aria-hidden="true"></i>
+        <span class="gmt-screen-only"><?= __( 'Hide Panel' ); ?></span>
+    </label>
 </script>
 
 <script type="text/template" id="tmpl-editor-content">
-	<div class="gmt-panel-navigation">
+    <div class="gmt-panel-navigation">
         <div class="gmt-component-tab gmt-panel-navigation-tab gmt-tab-control-close" data-tab="close">
             <a href="#"><?= __('Close') ?></a>
         </div>
-		<# _.each( elementData.tabs_controls, function( tabTitle, tabSlug ) {
-			if ( 'content' !== tabSlug && ! goomento.userCan( 'save' ) ) {
-				return;
-			}
-			$e.bc.ensureTab( 'panel/editor', tabSlug );
-			#>
-			<div class="gmt-component-tab gmt-panel-navigation-tab gmt-tab-control-{{ tabSlug }}" data-tab="{{ tabSlug }}">
-				<a href="#">{{{ tabTitle }}}</a>
-			</div>
-		<# } ); #>
-	</div>
-	<# if ( elementData.reload_preview ) { #>
-		<div class="gmt-update-preview">
-			<div class="gmt-update-preview-title"><?= __( 'Update changes to page' ); ?></div>
-			<div class="gmt-update-preview-button-wrapper">
-				<button class="gmt-update-preview-button gmt-button gmt-button-success"><?= __( 'Apply' ); ?></button>
-			</div>
-		</div>
-	<# } #>
-	<div id="gmt-controls"></div>
+        <# _.each( elementData.tabs_controls, function( tabTitle, tabSlug ) {
+        if ( 'content' !== tabSlug && ! goomento.userCan( 'save' ) ) {
+        return;
+        }
+        $e.bc.ensureTab( 'panel/editor', tabSlug );
+        #>
+        <div class="gmt-component-tab gmt-panel-navigation-tab gmt-tab-control-{{ tabSlug }}" data-tab="{{ tabSlug }}">
+            <a href="#">{{{ tabTitle }}}</a>
+        </div>
+        <# } ); #>
+    </div>
+    <# if ( elementData.reload_preview ) { #>
+    <div class="gmt-update-preview">
+        <div class="gmt-update-preview-title"><?= __( 'Update changes to page' ); ?></div>
+        <div class="gmt-update-preview-button-wrapper">
+            <button class="gmt-update-preview-button gmt-button gmt-button-success"><?= __( 'Apply' ); ?></button>
+        </div>
+    </div>
+    <# } #>
+    <div id="gmt-controls"></div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-schemes-disabled">
-	<i class="gmt-nerd-box-icon fas fa-glasses" aria-hidden="true"></i>
-	<div class="gmt-nerd-box-title">{{{ '<?= __( "%s are disabled" ); ?>'.replace( '%s', disabledTitle ) }}}</div>
-	<div class="gmt-nerd-box-message">You can enable it from the <a href="%s" target="_blank">Goomento settings page.</a></div>
+    <i class="gmt-nerd-box-icon fas fa-glasses" aria-hidden="true"></i>
+    <div class="gmt-nerd-box-title">{{{ '<?= __( "%s are disabled" ); ?>'.replace( '%s', disabledTitle ) }}}</div>
+    <div class="gmt-nerd-box-message">You can enable it from the <a href="%s" target="_blank">Goomento settings page.</a></div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-scheme-color-item">
-	<div class="gmt-panel-scheme-color-input-wrapper">
-		<input type="text" class="gmt-panel-scheme-color-value" value="{{ value }}" data-alpha="true" />
-	</div>
-	<div class="gmt-panel-scheme-color-title">{{{ title }}}</div>
+    <div class="gmt-panel-scheme-color-input-wrapper">
+        <input type="text" class="gmt-panel-scheme-color-value" value="{{ value }}" data-alpha="true" />
+    </div>
+    <div class="gmt-panel-scheme-color-title">{{{ title }}}</div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-scheme-typography-item">
-	<div class="gmt-panel-heading">
-		<div class="gmt-panel-heading-toggle">
-			<i class="gmt-icon" aria-hidden="true"></i>
-		</div>
-		<div class="gmt-panel-heading-title">{{{ title }}}</div>
-	</div>
-	<div class="gmt-panel-scheme-typography-items gmt-panel-box-content">
-		<?php
-		$scheme_fields_keys = TypographyGroup::getSchemeFieldsKeys();
+    <div class="gmt-panel-heading">
+        <div class="gmt-panel-heading-toggle">
+            <i class="gmt-icon" aria-hidden="true"></i>
+        </div>
+        <div class="gmt-panel-heading-title">{{{ title }}}</div>
+    </div>
+    <div class="gmt-panel-scheme-typography-items gmt-panel-box-content">
+        <?php
+        $scheme_fields_keys = TypographyGroup::getSchemeFieldsKeys();
 
-		$typography_group = ObjectManagerHelper::getControlsManager()
+        $typography_group = ObjectManagerHelper::getControlsManager()
             ->getControlGroups( TypographyGroup::NAME );
 
-		$typography_fields = $typography_group->getFields();
+        $typography_fields = $typography_group->getFields();
 
-		$scheme_fields = array_intersect_key( $typography_fields, array_flip( $scheme_fields_keys ) );
+        $scheme_fields = array_intersect_key( $typography_fields, array_flip( $scheme_fields_keys ) );
 
-		foreach ( $scheme_fields as $option_name => $option ) :
-			?>
-			<div class="gmt-panel-scheme-typography-item">
-				<div class="gmt-panel-scheme-item-title gmt-control-title"><?= $option['label']; ?></div>
-				<div class="gmt-panel-scheme-typography-item-value">
-					<?php if ( 'select' === $option['type'] ) : ?>
-						<select name="<?= EscaperHelper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field">
-							<?php foreach ( $option['options'] as $field_key => $field_value ) : ?>
-								<option value="<?= EscaperHelper::escapeHtml($field_key); ?>"><?= $field_value; ?></option>
-							<?php endforeach; ?>
-						</select>
-					<?php elseif ( 'font' === $option['type'] ) : ?>
-						<select name="<?= EscaperHelper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field">
-							<option value=""><?= __( 'Default' ); ?></option>
-							<?php foreach ( Fonts::getFontGroups() as $group_type => $group_label ) : ?>
-								<optgroup label="<?= EscaperHelper::escapeHtml($group_label); ?>">
-									<?php foreach ( Fonts::getFontsByGroups( [ $group_type ] ) as $font_title => $font_type ) : ?>
-										<option value="<?= EscaperHelper::escapeHtml($font_title); ?>"><?= $font_title; ?></option>
-									<?php endforeach; ?>
-								</optgroup>
-							<?php endforeach; ?>
-						</select>
-					<?php elseif ( 'text' === $option['type'] ) : ?>
-						<input name="<?= EscaperHelper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field" />
-					<?php endif; ?>
-				</div>
-			</div>
-		<?php endforeach; ?>
-	</div>
+        foreach ( $scheme_fields as $option_name => $option ) :
+            ?>
+            <div class="gmt-panel-scheme-typography-item">
+                <div class="gmt-panel-scheme-item-title gmt-control-title"><?= $option['label']; ?></div>
+                <div class="gmt-panel-scheme-typography-item-value">
+                    <?php if ( 'select' === $option['type'] ) : ?>
+                        <select name="<?= EscaperHelper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field">
+                            <?php foreach ( $option['options'] as $field_key => $field_value ) : ?>
+                                <option value="<?= EscaperHelper::escapeHtml($field_key); ?>"><?= $field_value; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php elseif ( 'font' === $option['type'] ) : ?>
+                        <select name="<?= EscaperHelper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field">
+                            <option value=""><?= __( 'Default' ); ?></option>
+                            <?php foreach ( Fonts::getFontGroups() as $group_type => $group_label ) : ?>
+                                <optgroup label="<?= EscaperHelper::escapeHtml($group_label); ?>">
+                                    <?php foreach ( Fonts::getFontsByGroups( [ $group_type ] ) as $font_title => $font_type ) : ?>
+                                        <option value="<?= EscaperHelper::escapeHtml($font_title); ?>"><?= $font_title; ?></option>
+                                    <?php endforeach; ?>
+                                </optgroup>
+                            <?php endforeach; ?>
+                        </select>
+                    <?php elseif ( 'text' === $option['type'] ) : ?>
+                        <input name="<?= EscaperHelper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field" />
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-control-responsive-switchers">
-	<div class="gmt-control-responsive-switchers">
-		<#
-			var devices = responsive.devices || [ 'desktop', 'tablet', 'mobile' ];
+    <div class="gmt-control-responsive-switchers">
+        <#
+        var devices = responsive.devices || [ 'desktop', 'tablet', 'mobile' ];
 
-			_.each( devices, function( device ) { #>
-				<a class="gmt-responsive-switcher gmt-responsive-switcher-{{ device }}" data-device="{{ device }}">
-					<i class="fas fa-{{ device }}"></i>
-				</a>
-			<# } );
-		#>
-	</div>
+        _.each( devices, function( device ) { #>
+        <a class="gmt-responsive-switcher gmt-responsive-switcher-{{ device }}" data-device="{{ device }}">
+            <i class="fas fa-{{ device }}"></i>
+        </a>
+        <# } );
+        #>
+    </div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-control-dynamic-switcher">
-	<div class="gmt-control-dynamic-switcher-wrapper">
-		<div class="gmt-control-dynamic-switcher">
+    <div class="gmt-control-dynamic-switcher-wrapper">
+        <div class="gmt-control-dynamic-switcher">
             <i class="far fa-plus-square"></i>
-		</div>
-	</div>
+        </div>
+    </div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-control-dynamic-cover">
-	<div class="gmt-dynamic-cover__settings">
-		<i class="fas fa-{{ hasSettings ? 'wrench' : 'database' }}"></i>
-	</div>
-	<div class="gmt-dynamic-cover__title" title="{{{ title + ' ' + content }}}">{{{ title + ' ' + content }}}</div>
-	<# if ( isRemovable ) { #>
-		<div class="gmt-dynamic-cover__remove">
-			<i class="fas fa-times-circle"></i>
-		</div>
-	<# } #>
+    <div class="gmt-dynamic-cover__settings">
+        <i class="fas fa-{{ hasSettings ? 'wrench' : 'database' }}"></i>
+    </div>
+    <div class="gmt-dynamic-cover__title" title="{{{ title + ' ' + content }}}">{{{ title + ' ' + content }}}</div>
+    <# if ( isRemovable ) { #>
+    <div class="gmt-dynamic-cover__remove">
+        <i class="fas fa-times-circle"></i>
+    </div>
+    <# } #>
 </script>

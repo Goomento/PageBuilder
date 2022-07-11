@@ -19,7 +19,7 @@ interface ContentManagementInterface
      * @return Data\RevisionInterface|null
      * @throws LocalizedException
      */
-    public function createRevision(Data\ContentInterface $content, $status = Data\BuildableContentInterface::STATUS_REVISION);
+    public function createRevision(Data\ContentInterface $content, $status = Data\BuildableContentInterface::STATUS_REVISION, ?string $label = null);
 
     /**
      * Export content via http download

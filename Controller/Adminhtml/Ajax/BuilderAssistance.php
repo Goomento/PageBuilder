@@ -23,7 +23,9 @@ use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Goomento\PageBuilder\Model\Config\Source\PageList;
 use Magento\Backend\App\Action;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
+use Magento\Framework\View\Element\BlockInterface;
 use Magento\Framework\View\LayoutFactory;
 use Magento\Store\Model\StoreManager;
 use Magento\Store\Model\StoreManagerInterface;
@@ -114,22 +116,7 @@ class BuilderAssistance extends AbstractAction
                     ];
                     break;
                 case 'wysiwyg':
-                    $storeId = $data['store_id'] ?? 0;
-                    $elementId = $data['element_id'] ?? EncryptorHelper::uniqueString();
-                    $this->storeManager->setCurrentStore($storeId);
-                    $storeMediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
-                    $wysiwyg = $this->layoutFactory->create()->createBlock(
-                        Wysiwyg::class,
-                        '',
-                        [
-                            'data' => [
-                                'element_id' => $elementId,
-                                'document_base_url' => $storeMediaUrl,
-                                'store_id' => $storeId,
-                            ]
-                        ]
-                    );
-                    $result['html'] = $wysiwyg->toHtml();
+                    $result['html'] = $this->getWysiwygBlock($data)->toHtml();
                     break;
                 default:
                     break;
@@ -137,6 +124,30 @@ class BuilderAssistance extends AbstractAction
         }
 
         return $this->setResponseData($result)->sendResponse();
+    }
+
+    /**
+     * @param array $data
+     * @return BlockInterface
+     * @throws NoSuchEntityException
+     */
+    private function getWysiwygBlock(array $data)
+    {
+        $storeId = $data['store_id'] ?? 0;
+        $elementId = $data['element_id'] ?? EncryptorHelper::uniqueString();
+        $this->storeManager->setCurrentStore($storeId);
+        $storeMediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
+        return $this->layoutFactory->create()->createBlock(
+            Wysiwyg::class,
+            '',
+            [
+                'data' => [
+                    'element_id' => $elementId,
+                    'document_base_url' => $storeMediaUrl,
+                    'store_id' => $storeId,
+                ]
+            ]
+        );
     }
 
     /**
@@ -154,7 +165,7 @@ class BuilderAssistance extends AbstractAction
                     $content = $this->contentRegistry->getByIdentifier($identifier);
                     if ($content) {
                         $result['href'] = UrlBuilderHelper::getLiveEditorUrl($content);
-                        $result['new_tab'] = (bool) $this->dataHelper->getBuilderConfig('builder_assistance/new_tab');
+                        $result['open_in'] = (string) $this->dataHelper->getBuilderConfig('builder_assistance/open_in');
                     }
                     break;
                 case 'list':

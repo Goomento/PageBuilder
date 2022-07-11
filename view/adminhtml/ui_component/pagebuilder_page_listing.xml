@@ -31,7 +31,7 @@
             </storageConfig>
             <updateUrl path="mui/index/render"/>
         </settings>
-        <aclResource>Goomento_PageBuilder::page_grid</aclResource>
+        <aclResource>Goomento_PageBuilder::page_view</aclResource>
         <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="pagebuilder_page_listing_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>

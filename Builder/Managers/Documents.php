@@ -193,7 +193,7 @@ class Documents
      * @throws NoSuchEntityException
      * @throws Exception
      */
-    public function create($type, $data = [])
+    public function create(string $type, array $data = [])
     {
         $class = $this->getDocumentType($type);
 
@@ -212,7 +212,12 @@ class Documents
         $content = ContentHelper::create($data);
 
         /** @var AbstractDocument $document */
-        $document = ObjectManagerHelper::create($class, ['data' => ['id' => $content->getId(), 'model' => $content]]);
+        $document = ObjectManagerHelper::create($class, [
+            'data' => [
+                'id' => $content->getId(),
+                'model' => $content
+            ]]
+        );
 
         $document->save([]);
 

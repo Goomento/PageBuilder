@@ -44,10 +44,10 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Replace the default Magento Editor By Goomento.</comment>
                 </field>
-                <field id="new_tab" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                    <label>Open In New Tab</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Keep the same tab or open the Goomento in new tab.</comment>
+                <field id="open_in" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Open In</label>
+                    <source_model>Goomento\PageBuilder\Model\Config\Source\OpenAssistance</source_model>
+                    <comment>Open editor behavior.</comment>
                 </field>
             </group>
             <group id="integrations" translate="label" type="text" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1">

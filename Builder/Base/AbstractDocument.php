@@ -312,7 +312,7 @@ abstract class AbstractDocument extends ControlsStack
 
         if (!empty($data['settings']) && is_array($data['settings'])) {
             // Validate state
-            if ($this->getModel()->getId() && !AuthorizationHelper::isCurrentUserCan($this->getModel()->getRoleName('publish'))) {
+            if (ContentHelper::isContentStatus($this->getModel()) && !AuthorizationHelper::isCurrentUserCan($this->getModel()->getRoleName('publish'))) {
                 $originModel = $this->getModel()->getOriginContent();
                 if ((isset($data['settings']['status']) && $data['settings']['status'] !== $originModel->getStatus()) ||
                     (isset($data['settings']['is_active']) && $data['settings']['is_active'] !== $originModel->getIsActive())) {

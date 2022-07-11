@@ -39,7 +39,7 @@ use Goomento\PageBuilder\Model\Content as ContentModel;
  * @see \Goomento\PageBuilder\Helper\Content::save()
  * @method static void delete($id)
  * @see \Goomento\PageBuilder\Helper\Content::delete()
- * @method static null|RevisionInterface saveAsRevision(ContentInterface $content, string $status = BuildableContentInterface::STATUS_REVISION)
+ * @method static null|RevisionInterface saveAsRevision(ContentInterface $content, string $status = BuildableContentInterface::STATUS_REVISION, ?string $label = null)
  * @see \Goomento\PageBuilder\Helper\Content::saveAsRevision()
  * @method static null|RevisionInterface saveRevision(RevisionInterface $content)
  * @see \Goomento\PageBuilder\Helper\Content::saveRevision()

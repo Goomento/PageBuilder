@@ -175,4 +175,20 @@ class Revision extends AbstractModel implements RevisionInterface, IdentityInter
             ContentInterface::IS_ACTIVE,
         ];
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLabel(string $label): RevisionInterface
+    {
+        return $this->setData(self::LABEL, $label);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLabel(): string
+    {
+        return (string) $this->getData(self::LABEL);
+    }
 }

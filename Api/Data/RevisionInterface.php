@@ -14,6 +14,7 @@ interface RevisionInterface extends BuildableContentInterface
 {
     const REVISION_ID              = 'revision_id';
     const REVISION                 = 'revision';
+    const LABEL                    = 'label';
 
     const CONTENT_ID               = ContentInterface::CONTENT_ID;
     const AUTHOR_ID                = ContentInterface::AUTHOR_ID;
@@ -52,4 +53,19 @@ interface RevisionInterface extends BuildableContentInterface
      * @return RevisionInterface
      */
     public function setContentId($contentId);
+
+    /**
+     * Set label
+     *
+     * @param string $label
+     * @return RevisionInterface
+     */
+    public function setLabel(string $label) : RevisionInterface;
+
+    /**
+     * Set label
+     *
+     * @return string
+     */
+    public function getLabel() : string;
 }
