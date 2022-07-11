@@ -9,7 +9,9 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 
 use Exception;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
+use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
@@ -116,7 +118,11 @@ class Save extends AbstractContent implements HttpPostActionInterface
                 $content = $this->contentRepository->save($content);
 
                 // Also create a revision
-                $this->contentManagement->createRevision($content);
+                $this->contentManagement->createRevision(
+                    $content,
+                    BuildableContentInterface::STATUS_REVISION,
+                    (string) __('Admin changed content.')
+                );
 
                 $this->messageManager->addSuccessMessage(
                     __('You saved the content.')

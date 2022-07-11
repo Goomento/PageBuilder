@@ -1,4 +1,4 @@
-![Goomento - Free Magento Page Builder Extension](https://i.imgur.com/s5A4AZm.png)
+![Goomento - Free Magento Page Builder Extension](https://i.imgur.com/bHHzngI.png)
 
 # Goomento - The Free Magento Page Builder Extension, allows you to create unique Magento websites, landing pages using advanced animations, custom CSS, responsive designs, and more, without a line of code.
 
@@ -93,14 +93,11 @@ app/design/frontend/<Vendor>/
 │   │   │   │   │   ├── <widget.js>
 ```
 
-- `<widget.phtml>` is `.phtml` file - which copied from [templates directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/templates/widgets), 
-these files will render HTML of widget.
+- `<widget.phtml>` is `.phtml` file - which copied from [templates directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/templates/widgets).
 
-- `<widget.less>` is `.less` file - which copied from [css directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/web/css/widgets),
-these files will render the widget styling.
+- `<widget.less>` is `.less` file - which copied from [css directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/web/css/widgets).
 
-- `<widget.js>` is `.js` file - which copied from [js directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/web/js/widgets), 
-these files bind JavaScript to widget.
+- `<widget.js>` is `.js` file - which copied from [js directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/web/js/widgets).
 
 - For configurable of widget, check out this [Goomento/PageBuilder/Builder/Widgets](https://github.com/Goomento/PageBuilder/tree/master/Builder/Widgets)
 

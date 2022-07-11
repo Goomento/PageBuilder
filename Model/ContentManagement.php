@@ -134,7 +134,7 @@ class ContentManagement implements ContentManagementInterface
     /**
      * @inheritDoc
      */
-    public function createRevision(ContentInterface $content, $status = BuildableContentInterface::STATUS_REVISION)
+    public function createRevision(ContentInterface $content, $status = BuildableContentInterface::STATUS_REVISION, ?string $label = null)
     {
         if (!$content->getId()) {
             throw new LocalizedException(
@@ -152,9 +152,15 @@ class ContentManagement implements ContentManagementInterface
             $revision->setOriginContent($content);
             $revision->setStatus($status);
             $revision->setContentId((int) $content->getId());
-
             $revision->setElements($content->getElements());
             $revision->setSettings($content->getSettings());
+            if (!$revision->getSetting(ContentInterface::TITLE)) {
+                $revision->setSetting(ContentInterface::TITLE, $content->getTitle());
+            }
+
+            if ($label) {
+                $revision->setLabel($label);
+            }
 
             return $this->revisionRepository->save($revision);
         }

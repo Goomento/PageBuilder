@@ -36,7 +36,8 @@ define([
             showWysiwyg: false,
             editorWindow: null,
             wysiwygEditor: '',
-            editorUrl: {href: '', new_tab: false},
+            editorUrl: {href: '', open_in: ''},
+            $iframe: null,
             availableContentIds: [],
             wrapperClasses: [],
             isLoading: assistanceActions.isLoading,
@@ -240,9 +241,10 @@ define([
          */
         onClickEditBtn: function () {
             let cb = function () {
-                if (!this.editorUrl.new_tab) {
+                let openIn = this.editorUrl.open_in;
+                if (openIn === 'same_tab') {
                     window.location.href = this.editorUrl.href;
-                } else {
+                } else if (openIn === 'new_tab') {
                     let editorUrl = null;
                     if (!this.editorWindow) {
                         this.editorWindow = window.open(this.editorUrl.href, '_blank');
@@ -257,8 +259,30 @@ define([
                         this.editorWindow.location.href = this.editorUrl.href;
                     }
                     this.editorWindow.focus();
+                } else if (openIn === 'iframe') {
+                    if (!this.$iframe) {
+                        this.$iframe = $('#builder-assistance-iframe');
+                        if ( !this.$iframe.length ) {
+                            this.$iframe = $('<iframe>', {
+                                src: '',
+                                id:  'builder-assistance-iframe',
+                                frameborder: 0,
+                                scrolling: 'no'
+                            });
+                            this.$iframe.appendTo('body');
+                        }
+
+                        window.closeBuilderAssistanceIFrame = () => {
+                            this.$iframe.remove();
+                            this.$iframe = null;
+                        };
+                    }
+
+                    this.$iframe.attr('src', this.editorUrl.href);
+                    this.$iframe.css('left', $('.admin__menu').width());
                 }
             }.bind(this);
+
             if (!this.editorUrl.href) {
                 assistanceActions.getEditUrl(this.contentId, function (editorUrl) {
                     this.editorUrl = editorUrl;

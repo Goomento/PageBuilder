@@ -1,5 +1,9 @@
 # Magento 2 Goomento Page Builder
 
+## 0.3.2: Fixed minor bugs
+- Fixed minor bugs
+- Change panel layout
+
 ## 0.3.1: Fixed minor bugs
 - Fixed minor bugs
 

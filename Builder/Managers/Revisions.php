@@ -55,6 +55,7 @@ class Revisions
                 'author' => $author,
                 'timestamp' => $buildableContent->getUpdateTime(),
                 'type' => $revision->getStatus(),
+                // TODO should use JS to render this
                 'date' => DataHelper::timeElapsedString($revision->getCreationTime()),
             ];
         }

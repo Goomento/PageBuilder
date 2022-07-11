@@ -69,15 +69,16 @@ class EntryPoint extends BuilderRegister
             'Goomento_PageBuilder/lib/backbone/backbone.min'
         );
 
+        $suffix = Configuration::debug() ? '' : '.min';
         ThemeHelper::registerScript(
             'backbone.radio',
-            'Goomento_PageBuilder/lib/backbone/backbone.radio.min',
+            'Goomento_PageBuilder/lib/backbone/backbone.radio' . $suffix,
             ['backbone']
         );
 
         ThemeHelper::registerScript(
             'backbone.marionette',
-            'Goomento_PageBuilder/lib/backbone/backbone.marionette.min',
+            'Goomento_PageBuilder/lib/backbone/backbone.marionette' . $suffix,
             [
                 'backbone',
                 'backbone.radio'
