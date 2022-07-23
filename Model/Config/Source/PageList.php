@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Model\Config\Source;
 
 use Goomento\PageBuilder\Api\Data\ContentInterface;
-use Goomento\PageBuilder\Helper\ContentHelper;
+use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory;
 use Magento\Framework\Data\OptionSourceInterface;
 
@@ -49,7 +49,7 @@ class PageList implements OptionSourceInterface
             foreach ($collection->getItems() as $content) {
                 $this->options[] = [
                     'value' => $content->getIdentifier(),
-                    'label' => ContentHelper::getContentLabel($content),
+                    'label' => BuildableContentHelper::getContentLabel($content),
                 ];
             }
         }

@@ -43,7 +43,7 @@ interface ContentInterface extends BuildableContentInterface
      *
      * @return string|null
      */
-    public function getTitle();
+    public function getTitle() : string;
 
     /**
      * Get identifier
@@ -95,7 +95,7 @@ interface ContentInterface extends BuildableContentInterface
      * @param string $title
      * @return ContentInterface
      */
-    public function setTitle($title);
+    public function setTitle(string $title);
 
     /**
      * Set store ids

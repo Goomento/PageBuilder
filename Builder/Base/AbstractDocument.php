@@ -10,6 +10,8 @@ namespace Goomento\PageBuilder\Builder\Base;
 
 use Exception;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
+use Goomento\PageBuilder\Api\Data\ContentInterface;
+use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Elements;
 use Goomento\PageBuilder\Builder\Managers\PageSettings;
@@ -19,7 +21,7 @@ use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
-use Goomento\PageBuilder\Helper\ContentHelper;
+use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\RequestHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
@@ -159,6 +161,8 @@ abstract class AbstractDocument extends ControlsStack
             );
         }
 
+        $widget->setBuildableContent($this->getModel()->getOriginContent());
+
         $widget->renderContent();
 
         return ob_get_clean();
@@ -202,7 +206,11 @@ abstract class AbstractDocument extends ControlsStack
         return $url;
     }
 
-
+    /**
+     * Init document data
+     *
+     * @return array
+     */
     protected function _getInitialConfig()
     {
         $settingManager = ObjectManagerHelper::getSettingsManager();
@@ -211,9 +219,10 @@ abstract class AbstractDocument extends ControlsStack
             'id' => $this->getMainModelId(),
             'type' => $this->getName(),
             'settings' => $settings['page'],
-            'version' => $this->getModel()->getSetting('GOOMENTO_VER'),
+            'version' => $this->getModel()->getSetting('version'),
             'remoteLibrary' => $this->getRemoteLibraryConfig(),
-            'last_edited' => $this->getLastEdited(),
+            'last_edited' => $this->getLastEdited(), // TODO remove this
+            'date' => date(DATE_ATOM, strtotime($this->getModel()->getUpdateTime())),
             'panel' => static::getEditorPanelConfig(),
             'container' => 'body',
             'urls' => [
@@ -260,17 +269,6 @@ abstract class AbstractDocument extends ControlsStack
             ]
         );
 
-        $this->addControl(
-            'title',
-            [
-                'label' => __('Title'),
-                'type' => Controls::TEXT,
-                'default' => $this->getModel()->getTitle(),
-                'label_block' => true,
-                'separator' => 'none',
-            ]
-        );
-
         $this->endControlsSection();
 
         /**
@@ -312,7 +310,7 @@ abstract class AbstractDocument extends ControlsStack
 
         if (!empty($data['settings']) && is_array($data['settings'])) {
             // Validate state
-            if (ContentHelper::isContentStatus($this->getModel()) && !AuthorizationHelper::isCurrentUserCan($this->getModel()->getRoleName('publish'))) {
+            if (BuildableContentHelper::isContentStatus($this->getModel()) && !AuthorizationHelper::isCurrentUserCan($this->getModel()->getRoleName('publish'))) {
                 $originModel = $this->getModel()->getOriginContent();
                 if ((isset($data['settings']['status']) && $data['settings']['status'] !== $originModel->getStatus()) ||
                     (isset($data['settings']['is_active']) && $data['settings']['is_active'] !== $originModel->getIsActive())) {
@@ -331,15 +329,7 @@ abstract class AbstractDocument extends ControlsStack
 
         $this->setModelVersion();
 
-        $model = $this->saveModelAsRevision();
-
-        if ( ContentHelper::isContentStatus( $this->getModel() ) ) {
-            $this->saveModel();
-        }
-
-        $contentCss = new ContentCss( $model );
-
-        $contentCss->update();
+        $this->saveModel();
 
         /**
          * After document save.
@@ -361,11 +351,12 @@ abstract class AbstractDocument extends ControlsStack
      * @param array $data
      *
      * @return bool
+     * @TODO remove this
      */
-    public function publishSave(array $data)
-    {
-        return $this->save($data, true);
-    }
+//    public function publishSave(array $data)
+//    {
+//        return $this->save($data, true);
+//    }
 
     /**
      *
@@ -510,22 +501,11 @@ abstract class AbstractDocument extends ControlsStack
     }
 
     /**
-     * @return BuildableContentInterface|null
-     */
-    public function saveModelAsRevision()
-    {
-        return ContentHelper::saveAsRevision(
-            $this->getModel()->getOriginContent(),
-            $this->getModel()->getStatus()
-        );
-    }
-
-    /**
      * @return BuildableContentInterface
      */
     public function saveModel()
     {
-        return ContentHelper::save( $this->getModel() );
+        return BuildableContentHelper::saveBuildableContent( $this->getModel() );
     }
 
     /**
@@ -550,11 +530,13 @@ abstract class AbstractDocument extends ControlsStack
     }
 
     /**
+     * Delete content
+     *
      * @return void
      */
     public function delete()
     {
-        ContentHelper::delete($this->getModel()->getId());
+        BuildableContentHelper::deleteBuildableContent($this->getModel());
     }
 
     /**
@@ -656,9 +638,9 @@ abstract class AbstractDocument extends ControlsStack
         $content = $this->getModel();
 
         $user = $content->getLastEditorUser();
-        $display_name = $user ? $user->getName() : __('Automatic');
+        $displayName = $user ? $user->getName() : __('Automatic');
 
-        return __('Updated %1', DataHelper::timeElapsedString($content->getUpdateTime()), $display_name);
+        return __('Updated %1 by %2', DataHelper::timeElapsedString($content->getUpdateTime()), $displayName);
     }
 
     /**
@@ -716,6 +698,8 @@ abstract class AbstractDocument extends ControlsStack
             if (!$element) {
                 continue;
             }
+
+            $element->setBuildableContent($this->getModel()->getOriginContent());
 
             $element->printElement();
         }

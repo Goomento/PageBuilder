@@ -26,7 +26,7 @@ class MassRefresh extends AbstractMassAction
         /** @var ContentInterface $content */
         foreach ($collection->getItems() as $content) {
             if ($content && $content->getId()) {
-                $this->contentManagement->refreshContentAssets($content);
+                $this->contentManagement->refreshBuildableContentAssets($content);
                 $count++;
             }
         }

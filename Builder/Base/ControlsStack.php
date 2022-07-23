@@ -1774,7 +1774,7 @@ abstract class ControlsStack extends AbstractBase
 
             $tag_text_data = $this->tagsManager->tagTextToTagData($value_to_check);
 
-            if (!$this->tagsManager->getTagInfo($tag_text_data['name'])) {
+            if (!$this->tagsManager->getTag($tag_text_data['name'])) {
                 unset($settings[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ]);
             }
         }

@@ -16,7 +16,8 @@
             "is_active": true,
             "meta_keywords": true,
             "meta_description": true,
-            "meta_title": true
+            "meta_title": true,
+            "revision_hash": true
         },
         "index": {
             "PAGEBUILDER_CONTENT_TITLE_CONTENT_ELEMENTS_IDENTIFIER": true,
@@ -25,7 +26,8 @@
         },
         "constraint": {
             "PRIMARY": true,
-            "PAGEBUILDER_CONTENT_IDENTIFIER": true
+            "PAGEBUILDER_CONTENT_IDENTIFIER": true,
+            "PAGEBUILDER_CONTENT_REVISION_HASH": true
         }
     },
     "pagebuilder_content_store": {
@@ -51,7 +53,8 @@
             "author_id": true,
             "status": true,
             "creation_time": true,
-            "label": true
+            "label": true,
+            "revision_hash": true
         },
         "index": {
             "PAGEBUILDER_CONTENT_REVISION_ELEMENTS": true,
@@ -59,7 +62,8 @@
         },
         "constraint": {
             "PRIMARY": true,
-            "FK_96E4A72797F489CCC8724D28F64FDCEF": true
+            "FK_96E4A72797F489CCC8724D28F64FDCEF": true,
+            "PAGEBUILDER_CONTENT_REVISION_REVISION_HASH": true
         }
     },
     "cms_page": {

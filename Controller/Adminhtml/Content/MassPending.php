@@ -19,7 +19,6 @@ class MassPending extends AbstractMassAction
     /**
      * @param AbstractCollection $collection
      * @return void
-     * @throws LocalizedException
      */
     protected function massAction(AbstractCollection $collection) : void
     {
@@ -28,7 +27,7 @@ class MassPending extends AbstractMassAction
         foreach ($collection->getItems() as $content) {
             if ($content && $content->getId()) {
                 $content->setStatus(ContentInterface::STATUS_PENDING);
-                $this->contentRepository->save($content);
+                $this->contentManagement->saveBuildableContent($content);
                 $count++;
             }
         }

@@ -24,27 +24,21 @@ use Goomento\PageBuilder\Model\Content as ContentModel;
  * HooksHelper::doAction( 'footer' ) ... . Otherwise might cause some issues with classes loader.
  * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
  *
- * @see \Goomento\PageBuilder\Helper\Content
+ * @see \Goomento\PageBuilder\Helper\BuildableContent
  * @method static RevisionInterface[] getRevisionsByContent(ContentInterface $content, ?array $statuses = null, ?int $limit = 200, ?int $currentPage = 1)
- * @see \Goomento\PageBuilder\Helper\Content::getRevisionsByContent()
- * @method static RevisionInterface|null getLastRevisionByContent(ContentInterface $content)
- * @see \Goomento\PageBuilder\Helper\Content::getLastRevisionByContent()
+ * @see \Goomento\PageBuilder\Helper\BuildableContent::getRevisionsByContent()
  * @method static RevisionInterface getRevision($revisionId)
- * @see \Goomento\PageBuilder\Helper\Content::getRevision()
- * @method static ContentInterface|null get($contentId)
- * @see \Goomento\PageBuilder\Helper\Content::get()
- * @method static ContentInterface create(array $data)
- * @see \Goomento\PageBuilder\Helper\Content::create()
- * @method static BuildableContentInterface save(BuildableContentInterface $content, bool $createRevision = true)
- * @see \Goomento\PageBuilder\Helper\Content::save()
- * @method static void delete($id)
- * @see \Goomento\PageBuilder\Helper\Content::delete()
- * @method static null|RevisionInterface saveAsRevision(ContentInterface $content, string $status = BuildableContentInterface::STATUS_REVISION, ?string $label = null)
- * @see \Goomento\PageBuilder\Helper\Content::saveAsRevision()
- * @method static null|RevisionInterface saveRevision(RevisionInterface $content)
- * @see \Goomento\PageBuilder\Helper\Content::saveRevision()
+ * @see \Goomento\PageBuilder\Helper\BuildableContent::getRevision()
+ * @method static ContentInterface|null getContent($contentId)
+ * @see \Goomento\PageBuilder\Helper\BuildableContent::getContent()
+ * @method static ContentInterface createContent(array $data)
+ * @see \Goomento\PageBuilder\Helper\BuildableContent::createContent()
+ * @method static BuildableContentInterface saveBuildableContent(BuildableContentInterface $content, string $saveMassage = '')
+ * @see \Goomento\PageBuilder\Helper\BuildableContent::saveBuildableContent()
+ * @method static void deleteBuildableContent(BuildableContentInterface $content)
+ * @see \Goomento\PageBuilder\Helper\BuildableContent::deleteBuildableContent()
  */
-class ContentHelper
+class BuildableContentHelper
 {
     use TraitStaticInstances;
     use TraitStaticCaller;
@@ -54,7 +48,7 @@ class ContentHelper
      */
     static protected function getStaticInstance()
     {
-        return Content::class;
+        return BuildableContent::class;
     }
 
     /**
@@ -74,44 +68,6 @@ class ContentHelper
     {
         return isset(ContentModel::getAvailableStatuses()[$buildableContent->getStatus()]);
     }
-
-    /**
-     * Create Content with HTML
-     *
-     * @param string $html
-     * @param array $data
-     * @return ContentInterface
-     */
-    public static function createContentWithHtml(string $html, array $data = []) : ContentInterface
-    {
-        $data['elements'] = [[
-            'id' => EncryptorHelper::uniqueString(7),
-            'isInner' => false,
-            'elType' => Section::NAME,
-            'settings' => [],
-            'elements' => [[
-                'id' => EncryptorHelper::uniqueString(7),
-                'isInner' => false,
-                'elType' => Column::NAME,
-                'settings' => [
-                    '_column_size' => 100
-                ],
-                'elements' => [[
-                    'id' => EncryptorHelper::uniqueString(7),
-                    'isInner' => false,
-                    'elType' => TextEditor::TYPE,
-                    'widgetType' => TextEditor::NAME,
-                    'elements' => [],
-                    'settings' => [
-                        TextEditor::NAME . '_editor' => /** @noEscape */ $html
-                    ],
-                ]]
-            ]],
-        ]];
-
-        return self::create($data);
-    }
-
 
     /**
      * Iterate data.

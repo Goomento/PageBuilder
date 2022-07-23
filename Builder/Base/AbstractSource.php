@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Base;
 
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Helper\ContentHelper;
+use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
@@ -130,7 +130,7 @@ abstract class AbstractSource extends AbstractEntity
      */
     protected function replaceElementsIds(array $contentData)
     {
-        return ContentHelper::iterateData($contentData, function ($element) {
+        return BuildableContentHelper::iterateData($contentData, function ($element) {
             $element['id'] = DataHelper::generateRandomString();
 
             return $element;
@@ -151,7 +151,7 @@ abstract class AbstractSource extends AbstractEntity
     {
         $elementsManager = ObjectManagerHelper::getElementsManager();
 
-        return ContentHelper::iterateData(
+        return BuildableContentHelper::iterateData(
             $contentData,
             function ($elementData) use ($elementsManager) {
                 $element = $elementsManager->createElementInstance($elementData);
@@ -180,7 +180,7 @@ abstract class AbstractSource extends AbstractEntity
     {
         $elementsManager = ObjectManagerHelper::getElementsManager();
 
-        return ContentHelper::iterateData(
+        return BuildableContentHelper::iterateData(
             $contentData,
             function ($elementData) use ($elementsManager) {
                 $element = $elementsManager->createElementInstance($elementData);

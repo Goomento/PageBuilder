@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
+use Goomento\PageBuilder\Builder\Managers\Tags as TagsModule;
 
 class Slider extends AbstractBaseUnits
 {
@@ -54,7 +54,7 @@ class Slider extends AbstractBaseUnits
                 'scales' => 0,
                 'handles' => 'default',
                 'dynamic' => [
-                    'categories' => [ TagsModule::NUMBER_CATEGORY ],
+                    'categories' => [TagsModule::NUMBER_CATEGORY],
                     'property' => 'size',
                 ],
             ]

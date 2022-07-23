@@ -11,9 +11,11 @@ namespace Goomento\PageBuilder\Traits;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\User\Model\UserFactory;
 
-trait BuildableModelTrait
+trait TraitBuildableModel
 {
     /**
      * @inheridoc
@@ -122,6 +124,12 @@ trait BuildableModelTrait
      */
     public function setStatus(string $status) : BuildableContentInterface
     {
+        $statuses = self::getAvailableStatuses();
+        if (!isset($statuses[$status])) {
+            throw new LocalizedException(
+                __('Invalid status %1', $status)
+            );
+        }
         return $this->setData(self::STATUS, $status);
     }
 
@@ -131,7 +139,7 @@ trait BuildableModelTrait
     public function hasSetting($name) : bool
     {
         $settings = $this->getSettings();
-        return isset($settings[$name]);
+        return array_key_exists($name, $settings);
     }
 
     /**
@@ -173,16 +181,16 @@ trait BuildableModelTrait
      */
     public function getRevisionHash(): string
     {
-        $settings = $this->getSettings();
-        if (isset($settings['css'])) {
-            unset($settings['css']);
-        }
-        $elements = $this->getElements();
-
-        // TODO should change this way
-        return md5(\Zend_Json::encode($elements + $settings));
+        return (string) $this->getData(self::REVISION_HASH);
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function setRevisionHash(string $hash) : BuildableContentInterface
+    {
+        return $this->setData(self::REVISION_HASH, $hash);
+    }
 
     /**
      * @inheritDoc
@@ -243,4 +251,22 @@ trait BuildableModelTrait
         return $result;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function beforeSave()
+    {
+        if (empty($this->getRevisionHash())) {
+            throw new LocalizedException(
+                __('Wrong content saving method.')
+            );
+        }
+        /** @var \Magento\Framework\Stdlib\DateTime\DateTime $datetime */
+        $datetime = ObjectManager::getInstance()->get(\Magento\Framework\Stdlib\DateTime\DateTime::class);
+        if (!$this->getCreationTime()) {
+            $this->setCreationTime($datetime->gmtDate());
+        }
+        $this->setUpdateTime($datetime->gmtDate());
+        return parent::beforeSave();
+    }
 }

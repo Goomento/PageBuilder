@@ -16,7 +16,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Goomento\PageBuilder\Model\PageBuilderUrlRewriteGenerator;
 use Magento\UrlRewrite\Service\V1\Data\UrlRewrite;
 
-class ProcessUrlRewriteSavingObserver implements ObserverInterface
+class ProcessUrlRewriteDeletingObserver implements ObserverInterface
 {
     /**
      * @var PageBuilderUrlRewriteGenerator
@@ -59,19 +59,11 @@ class ProcessUrlRewriteSavingObserver implements ObserverInterface
             /** @var $content ContentInterface */
             $content = $observer->getEvent()->getObject();
 
-            if ($content->getType() === ContentInterface::TYPE_PAGE &&
-                $content->getUpdatedUrlRewriteFlag() !== true &&
-                ($content->dataHasChangedFor('identifier') || $content->dataHasChangedFor('store_ids'))) {
-                $urls = $this->pageBuilderUrlRewriteGenerator->generate($content);
-
+            if ($content->getType() === ContentInterface::TYPE_PAGE) {
                 $this->urlPersist->deleteByData([
                     UrlRewrite::ENTITY_ID => $content->getId(),
                     UrlRewrite::ENTITY_TYPE => PageBuilderUrlRewriteGenerator::ENTITY_TYPE,
                 ]);
-
-                $this->urlPersist->replace($urls);
-
-                $content->setUpdatedUrlRewriteFlag(true);
             }
         } catch (\Exception $e) {
             $this->logger->error($e);

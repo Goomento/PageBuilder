@@ -9,22 +9,18 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Sources;
 
 use Exception;
-use Goomento\PageBuilder\Api\ContentManagementInterface;
+use Goomento\PageBuilder\Api\BuildableContentManagementInterface;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
-use Goomento\PageBuilder\Api\Data\ContentInterface;
+use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractSource;
-use Goomento\PageBuilder\Builder\Managers\Documents;
 use Goomento\PageBuilder\Builder\Managers\PageSettings;
-use Goomento\PageBuilder\Builder\Managers\Settings as SettingsManager;
 use Goomento\PageBuilder\Builder\Settings\Page;
 use Goomento\PageBuilder\Configuration;
-use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
-use Goomento\PageBuilder\Helper\ContentHelper;
+use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
-use Goomento\PageBuilder\Model\ContentManagement;
 use Magento\Framework\Exception\LocalizedException;
 use Zend_Json;
 
@@ -62,7 +58,7 @@ class Local extends AbstractSource
      */
     public static function getTemplateType(int $templateId)
     {
-        $content = ContentHelper::get($templateId);
+        $content = BuildableContentHelper::getContent($templateId);
         return $content->getType();
     }
 
@@ -136,8 +132,8 @@ class Local extends AbstractSource
      */
     public function getItems(array $args = [])
     {
-        /** @var ContentManagementInterface $contentManager */
-        $contentManager = ObjectManagerHelper::get(ContentManagementInterface::class);
+        /** @var BuildableContentManagementInterface $contentManager */
+        $contentManager = ObjectManagerHelper::get(BuildableContentManagementInterface::class);
         $contents = $contentManager->getBuildableContents();
         $templates = [];
 
@@ -165,7 +161,7 @@ class Local extends AbstractSource
     {
         $defaults = [
             'title' => __('(no title)'),
-            'page_settings' => [],
+            'page_settings' => [], // @TODO remove this, should use `settings`
             'status' => BuildableContentInterface::STATUS_PENDING,
         ];
 
@@ -177,7 +173,7 @@ class Local extends AbstractSource
             $templateData['type'],
             [
                 'title' => $templateData['title'],
-                'status' => BuildableContentInterface::STATUS_PENDING,
+                'status' => BuildableContentInterface::STATUS_PUBLISHED,
             ]
         );
 
@@ -227,7 +223,7 @@ class Local extends AbstractSource
     public function updateItem(array $newData)
     {
         $document = ObjectManagerHelper::getDocumentsManager()->getByContent(
-            ContentHelper::get((int) $newData['id'])
+            BuildableContentHelper::getContent((int) $newData['id'])
         );
 
         if (!$document) {
@@ -261,7 +257,7 @@ class Local extends AbstractSource
      */
     public function getItem(int $templateId)
     {
-        $buildableContent = ContentHelper::get( $templateId );
+        $buildableContent = BuildableContentHelper::getContent( $templateId );
 
         $pageSettings = $buildableContent->getSettings();
 
@@ -273,7 +269,7 @@ class Local extends AbstractSource
             'source' => $this->getName(),
             'type' => $buildableContent->getType(),
             'title' => $buildableContent->getTitle(),
-            'date' => DataHelper::timeElapsedString($buildableContent->getCreationTime(), false),
+            'date' => date(DATE_ATOM, strtotime($buildableContent->getCreationTime())),
             'author' => $author ? $author->getName() : null,
             'hasPageSettings' => ! empty($pageSettings),
             'export_link' => UrlBuilderHelper::getContentExportUrl($buildableContent),
@@ -298,7 +294,7 @@ class Local extends AbstractSource
 
         $templateId = (int) $args['template_id'];
 
-        $buildableContent = ContentHelper::get($templateId);
+        $buildableContent = BuildableContentHelper::getContent($templateId);
 
         $document = $documentManager->getByContent( $buildableContent );
 
@@ -335,9 +331,9 @@ class Local extends AbstractSource
      */
     public function deleteTemplate(int $templateId)
     {
-        $content = ContentHelper::get($templateId);
+        $content = BuildableContentHelper::getContent($templateId);
         if ($content) {
-            ContentHelper::delete($templateId);
+            BuildableContentHelper::deleteBuildableContent($content);
         }
         return true;
     }
@@ -423,26 +419,29 @@ class Local extends AbstractSource
 
         $content = $this->processImportContent($content);
 
-        $page_settings = [];
+        $pageSettings = [];
 
         if (!empty($data['page_settings'])) {
-            $page = new Page([
-                'id' => 0,
-                'settings' => $data['page_settings'],
+            $page = ObjectManagerHelper::create(Page::class, [
+                'data' => [
+                    'id' => 0,
+                    'settings' => $data['page_settings'],
+                ]
             ]);
 
-            $page_settings_data = $this->processImportElement($page);
+            $pageSettingsData = $this->processImportElement($page);
 
-            if (!empty($page_settings_data['settings'])) {
-                $page_settings = $page_settings_data['settings'];
+            if (!empty($pageSettingsData['settings'])) {
+                $pageSettings = $pageSettingsData['settings'];
             }
         }
 
-        $contentId = $this->saveItem([
+        $contentId = (int) $this->saveItem([
             'content' => $content,
             'title' => $data['title'] ?? '',
             'type' => $data['type'],
-            'page_settings' => $page_settings,
+            'label' => (string) __('Imported content.'),
+            'page_settings' => $pageSettings,
         ]);
 
         if (!$contentId) {
@@ -451,7 +450,14 @@ class Local extends AbstractSource
             );
         }
 
-        return $this->getItem((int) $contentId);
+        $content = BuildableContentHelper::getContent( $contentId );
+        $currentRevision = $content->getCurrentRevision(true);
+        if ($currentRevision instanceof RevisionInterface) {
+            $currentRevision->setLabel((string) __('Imported content'));
+            BuildableContentHelper::saveBuildableContent($currentRevision);
+        }
+
+        return $this->getItem($contentId);
     }
 
     /**
@@ -467,7 +473,7 @@ class Local extends AbstractSource
      */
     private function prepareTemplateExport(int $templateId)
     {
-        $content = ContentHelper::get($templateId);
+        $content = BuildableContentHelper::getContent($templateId);
 
         $templateData = $this->getData([
             'template_id' => $templateId,
@@ -506,7 +512,7 @@ class Local extends AbstractSource
     private function getExportSettings(int $templateId)
     {
         $pageSettingsManager = ObjectManagerHelper::getSettingsManager()->getSettingsManagers(PageSettings::NAME);
-        $template = ContentHelper::get( $templateId );
+        $template = BuildableContentHelper::getContent( $templateId );
         $page = $pageSettingsManager->getSettingModel( $template );
         $pageData = $page->getData();
         $newPageData = $this->processExportElement($page);

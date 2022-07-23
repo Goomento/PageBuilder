@@ -9,8 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 
 use Goomento\PageBuilder\Api\ContentRegistryInterface;
-use Goomento\PageBuilder\Api\ContentRepositoryInterface;
-use Goomento\PageBuilder\Api\ContentManagementInterface;
+use Goomento\PageBuilder\Api\BuildableContentManagementInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\Core\Model\Registry;
 use Goomento\PageBuilder\Helper\AdminUser;
@@ -43,11 +42,6 @@ abstract class AbstractContent extends AbstractAction
     protected $contentFactory;
 
     /**
-     * @var ContentRepositoryInterface
-     */
-    protected $contentRepository;
-
-    /**
      * @var AdminUser
      */
     protected $userHelper;
@@ -73,9 +67,9 @@ abstract class AbstractContent extends AbstractAction
     protected $registry;
 
     /**
-     * @var ContentManagementInterface
+     * @var BuildableContentManagementInterface
      */
-    protected $contentManagement;
+    protected $buildableContentManagement;
 
     /**
      * @var ContentRegistryInterface|mixed
@@ -91,23 +85,20 @@ abstract class AbstractContent extends AbstractAction
      * @param PageFactory $pageFactory
      * @param Registry $registry
      * @param ContentFactory|null $contentFactory
-     * @param ContentRepositoryInterface|null $contentRepository
      * @param ContentRegistryInterface|null $contentRegistry
-     * @param ContentManagementInterface|null $contentManagement
+     * @param BuildableContentManagementInterface|null $contentManagement
      * @param Logger|null $logger
      */
     public function __construct(
-        Context                    $context,
-        ContentDataProcessor       $dataProcessor,
-        DataPersistorInterface     $dataPersistor,
-        AdminUser                  $userHelper,
-        PageFactory                $pageFactory,
-        Registry                   $registry,
-        ContentFactory             $contentFactory = null,
-        ContentRepositoryInterface $contentRepository = null,
-        ContentRegistryInterface   $contentRegistry = null,
-        ContentManagementInterface $contentManagement = null,
-        Logger                     $logger = null
+        Context                             $context,
+        ContentDataProcessor                $dataProcessor,
+        DataPersistorInterface              $dataPersistor,
+        AdminUser                           $userHelper,
+        PageFactory                         $pageFactory,
+        Registry                            $registry,
+        ContentRegistryInterface            $contentRegistry = null,
+        BuildableContentManagementInterface $contentManagement = null,
+        Logger                              $logger = null
     ) {
         $this->dataProcessor = $dataProcessor;
         $this->dataPersistor = $dataPersistor;
@@ -115,9 +106,7 @@ abstract class AbstractContent extends AbstractAction
         $this->pageFactory = $pageFactory;
         $this->registry = $registry;
         $objectManager = ObjectManager::getInstance();
-        $this->contentFactory = $contentFactory ?: $objectManager->get(ContentFactory::class);
-        $this->contentRepository = $contentRepository ?: $objectManager->get(ContentRepositoryInterface::class);
-        $this->contentManagement = $contentManagement ?: $objectManager->get(ContentManagementInterface::class);
+        $this->buildableContentManagement = $contentManagement ?: $objectManager->get(BuildableContentManagementInterface::class);
         $this->contentRegistry = $contentRegistry ?: $objectManager->get(ContentRegistryInterface::class);
         $this->logger = $logger ?: $objectManager->get(Logger::class);
 

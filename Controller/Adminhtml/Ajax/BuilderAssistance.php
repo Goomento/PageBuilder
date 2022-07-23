@@ -10,12 +10,14 @@ namespace Goomento\PageBuilder\Controller\Adminhtml\Ajax;
 
 use Goomento\Core\Traits\TraitHttpAction;
 use Goomento\Core\Traits\TraitHttpExecutable;
+use Goomento\PageBuilder\Api\BuildableContentManagementInterface;
 use Goomento\PageBuilder\Api\ContentRegistryInterface;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Block\Adminhtml\Component\Wysiwyg;
 use Goomento\PageBuilder\Controller\Adminhtml\AbstractAction;
-use Goomento\PageBuilder\Helper\ContentHelper;
+use Goomento\PageBuilder\Helper\BuildableContent;
+use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\Data;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
@@ -55,6 +57,10 @@ class BuilderAssistance extends AbstractAction
      * @var Data
      */
     private $dataHelper;
+    /**
+     * @var BuildableContent
+     */
+    private $buildableContentHelper;
 
     /**
      *
@@ -64,6 +70,7 @@ class BuilderAssistance extends AbstractAction
      * @param StoreManagerInterface $storeManager
      * @param Data $dataHelper
      * @param PageList $pageList
+     * @param BuildableContent $buildableContentHelper
      */
     public function __construct(
         Action\Context $context,
@@ -71,9 +78,11 @@ class BuilderAssistance extends AbstractAction
         LayoutFactory $layoutFactory,
         StoreManagerInterface $storeManager,
         Data $dataHelper,
-        PageList $pageList
+        PageList $pageList,
+        BuildableContent $buildableContentHelper
     )
     {
+        $this->buildableContentHelper = $buildableContentHelper;
         $this->pageList = $pageList;
         $this->contentRegistry = $contentRegistry;
         $this->layoutFactory = $layoutFactory;
@@ -105,13 +114,14 @@ class BuilderAssistance extends AbstractAction
                     ];
 
                     if (!empty($data['html'])) {
-                        $content = ContentHelper::createContentWithHtml($data['html'], $contentData);
+                        $contentData = BuildableContent::getContentElementsWithHtml($data['html'], $contentData);
+                        $content = $this->buildableContentHelper->createContent($contentData);
                     } else {
-                        $content = ContentHelper::create($contentData);
+                        $content = $this->buildableContentHelper->createContent($contentData);
                     }
 
                     $result = [
-                        'label' => ContentHelper::getContentLabel($content),
+                        'label' => BuildableContentHelper::getContentLabel($content),
                         'value' => $content->getIdentifier(),
                     ];
                     break;

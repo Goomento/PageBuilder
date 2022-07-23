@@ -88,24 +88,6 @@
                     </item>
                 </argument>
             </action>
-            <action name="pending">
-                <argument name="data" xsi:type="array">
-                    <item name="config" xsi:type="array">
-                        <item name="type" xsi:type="string">pending</item>
-                        <item name="label" xsi:type="string" translate="true">Pending</item>
-                        <item name="url" xsi:type="url" path="pagebuilder/content/massPending/type/section"/>
-                    </item>
-                </argument>
-            </action>
-            <action name="publish">
-                <argument name="data" xsi:type="array">
-                    <item name="config" xsi:type="array">
-                        <item name="type" xsi:type="string">publish</item>
-                        <item name="label" xsi:type="string" translate="true">Publish</item>
-                        <item name="url" xsi:type="url" path="pagebuilder/content/massPublish/type/section"/>
-                    </item>
-                </argument>
-            </action>
             <action name="refresh">
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">

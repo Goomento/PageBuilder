@@ -11,13 +11,14 @@ namespace Goomento\PageBuilder\Builder\Base;
 abstract class AbstractDataTag extends AbstractBaseTag
 {
     /**
-     * @abstract
      *
      * @param array $options
      */
     abstract protected function getValue(array $options = []);
 
-
+    /**
+     * @return string
+     */
     final public function getContentType()
     {
         return 'plain';

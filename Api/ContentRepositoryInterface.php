@@ -23,6 +23,7 @@ interface ContentRepositoryInterface
 {
     /**
      * Save page.
+     * Save content alongside with revision, please use BuildableContentManagementInterface::save
      *
      * @param ContentInterface $content
      * @return ContentInterface

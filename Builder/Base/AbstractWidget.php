@@ -372,26 +372,25 @@ abstract class AbstractWidget extends AbstractElement
         try {
             ob_start();
 
-            $widget_return = $this->render();
+            $widgetReturn = $this->render();
 
         } catch (\Exception $e) {
             if (DataHelper::isDebugMode() && StateHelper::isBuildable()) {
                 $this->addRenderAttribute('_container', 'class', 'gmt-widget-debug');
                 printf('<pre class="gmt-debugging">%s</pre>', $e->__toString());
-            } else {
-                // Don't need to handle this case
             }
         } finally {
-            $widget_content = ob_get_clean();
+            $widgetContent = ob_get_clean();
         }
 
-        if (empty($widget_content) && !empty($widget_return)) {
-            $widget_content = $widget_return;
+        if (empty($widgetContent) && !empty($widgetReturn)) {
+            $widgetContent = $widgetReturn;
         }
 
-        if (empty($widget_content)) {
+        if (empty($widgetContent)) {
             return;
         }
+
         $settings = $this->getSettingsForDisplay();
 
         $this->addRenderAttribute('_container', 'class', 'gmt-widget-container');
@@ -411,12 +410,12 @@ abstract class AbstractWidget extends AbstractElement
              * Filters the widget content before it's rendered.
              *
              *
-             * @param string      $widget_content The content of the widget.
+             * @param string      $widgetContent The content of the widget.
              * @param AbstractWidget $this           The widget.
              */
-            $widget_content = HooksHelper::applyFilters('pagebuilder/widget/render_content', $widget_content, $this);
+            $widgetContent = HooksHelper::applyFilters('pagebuilder/widget/render_content', $widgetContent, $this);
 
-            echo $widget_content; // XSS ok.
+            echo $widgetContent; // XSS ok.
             ?>
 		</div>
 		<?php

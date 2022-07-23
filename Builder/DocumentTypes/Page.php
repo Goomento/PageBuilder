@@ -30,7 +30,7 @@ class Page extends AbstractDocumentType
     public static function registerStatusControl(AbstractDocumentType $page)
     {
         $page->startInjection([
-            'of' => 'title'
+            'of' => 'document_settings'
         ]);
 
         $page->addControl('layout', [

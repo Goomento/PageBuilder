@@ -11,10 +11,11 @@ namespace Goomento\PageBuilder\Model;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
+use Goomento\PageBuilder\Api\RevisionRepositoryInterface;
 use Goomento\PageBuilder\Developer;
-use Goomento\PageBuilder\Helper\ContentHelper;
+use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
-use Goomento\PageBuilder\Traits\BuildableModelTrait;
+use Goomento\PageBuilder\Traits\TraitBuildableModel;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
@@ -25,7 +26,7 @@ use Magento\User\Model\UserFactory;
 
 class Content extends AbstractModel implements ContentInterface, IdentityInterface
 {
-    use BuildableModelTrait;
+    use TraitBuildableModel;
 
     /**
      * Cache tag
@@ -66,7 +67,7 @@ class Content extends AbstractModel implements ContentInterface, IdentityInterfa
     /**
      * @var RevisionInterface|null
      */
-    private $lastContentVersion;
+    private $lastVersion;
 
     /**
      * @var string
@@ -76,6 +77,10 @@ class Content extends AbstractModel implements ContentInterface, IdentityInterfa
     const VERSION = Developer::VERSION;
 
     const CSS = 'css';
+    /**
+     * @var BuildableContentInterface|null
+     */
+    private $currentRevision;
 
     /**
      * @inheridoc
@@ -100,7 +105,7 @@ class Content extends AbstractModel implements ContentInterface, IdentityInterfa
     /**
      * @return array
      */
-    public static function getAvailableStatuses()
+    public static function getAvailableStatuses() : array
     {
         return [
             self::STATUS_PENDING => __('Pending'),
@@ -148,15 +153,15 @@ class Content extends AbstractModel implements ContentInterface, IdentityInterfa
     /**
      * @inheridoc
      */
-    public function getTitle()
+    public function getTitle() : string
     {
-        return $this->getData(self::TITLE);
+        return (string) $this->getData(self::TITLE);
     }
 
     /**
      * @inheridoc
      */
-    public function setTitle($title)
+    public function setTitle(string $title)
     {
         return $this->setData(self::TITLE, $title);
     }
@@ -342,14 +347,17 @@ class Content extends AbstractModel implements ContentInterface, IdentityInterfa
     /**
      * @inheritDoc
      */
-    public function getLastRevision(): ?BuildableContentInterface
+    public function getLastRevision($forceLoad = false): ?BuildableContentInterface
     {
-        if (null === $this->lastContentVersion) {
-            $revision = ContentHelper::getLastRevisionByContent($this);
-            $this->lastContentVersion = $revision ?: false;
+        if (!$this->lastVersion && $forceLoad === true && $this->getId()) {
+            /** @var RevisionRepositoryInterface $revisionRepo */
+            $revisionRepo = ObjectManagerHelper::get(RevisionRepositoryInterface::class);
+            try {
+                $this->lastVersion = $revisionRepo->getLastRevisionByContentId((int) $this->getId());
+            } catch (\Exception $e) {}
         }
 
-        return $this->lastContentVersion ? $this->lastContentVersion : null;
+        return $this->lastVersion ?: null;
     }
 
     /**
@@ -357,22 +365,32 @@ class Content extends AbstractModel implements ContentInterface, IdentityInterfa
      */
     public function setLastRevision(BuildableContentInterface $content): BuildableContentInterface
     {
-        $this->lastContentVersion = $content;
+        $this->lastVersion = $content;
         return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public static function getInlineSettingKeys(): array
+    public function getCurrentRevision($forceLoad = false): ?BuildableContentInterface
     {
-        return [
-            'id',
-            self::TITLE,
-            self::STATUS,
-            self::CONTENT_ID,
-            self::IS_ACTIVE,
-        ];
+        if (!$this->currentRevision && $forceLoad === true && $this->getRevisionHash()) {
+            /** @var RevisionRepositoryInterface $revisionRepo */
+            $revisionRepo = ObjectManagerHelper::get(RevisionRepositoryInterface::class);
+            try {
+                $this->currentRevision = $revisionRepo->getByRevisionHash($this->getRevisionHash());
+            } catch (\Exception $e) {}
+        }
+
+        return $this->currentRevision;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function setCurrentRevision(BuildableContentInterface $content): BuildableContentInterface
+    {
+        $this->currentRevision = $content;
+        return $this;
+    }
 }

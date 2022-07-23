@@ -11,8 +11,10 @@ namespace Goomento\PageBuilder\Model;
 use Goomento\PageBuilder\Api\Data;
 use Goomento\PageBuilder\Api\ContentRepositoryInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
+use Goomento\PageBuilder\Api\Data\ContentSearchResultsInterface;
 use Goomento\PageBuilder\Helper\AdminUser;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
+use Goomento\PageBuilder\Traits\TraitBuildableRepository;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\CouldNotDeleteException;
@@ -25,6 +27,7 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class ContentRepository implements ContentRepositoryInterface
 {
+    use TraitBuildableRepository;
     /**
      * @var ResourceContent
      */
@@ -38,7 +41,7 @@ class ContentRepository implements ContentRepositoryInterface
     /**
      * @var ContentCollectionFactory
      */
-    private $contentCollectionFactory;
+    private $collectionFactory;
 
     /**
      * @var Data\ContentSearchResultsInterfaceFactory
@@ -58,6 +61,10 @@ class ContentRepository implements ContentRepositoryInterface
      * @var AdminUser
      */
     private $adminUser;
+    /**
+     * @var ContentInterface[]|[]
+     */
+    private $objectInstances = [];
 
     /**
      * ContentRepository constructor.
@@ -80,7 +87,7 @@ class ContentRepository implements ContentRepositoryInterface
     ) {
         $this->resource = $resource;
         $this->contentFactory = $contentFactory;
-        $this->contentCollectionFactory = $contentCollectionFactory;
+        $this->collectionFactory = $contentCollectionFactory;
         $this->searchResultsFactory = $searchResultsFactory;
         $this->storeManager = $storeManager;
         $this->collectionProcessor = $collectionProcessor;
@@ -93,20 +100,15 @@ class ContentRepository implements ContentRepositoryInterface
     public function save(ContentInterface $content)
     {
         try {
-            $this->setInlineSettings($content);
             $this->validateStatus($content);
             $this->validateContentType($content);
             $this->setStoreId($content);
             $this->setIdentifier($content);
             $this->validateIdentifier($content);
-            $currentAdminUser = $this->adminUser->getCurrentAdminUser();
-            if ( !$content->getId() ) {
-                $content->setAuthorId($currentAdminUser ? $currentAdminUser->getId() : 0);
-                $content->setLastEditorId($content->getAuthorId());
-            } else {
-                $content->setLastEditorId($currentAdminUser ? $currentAdminUser->getId() : 0);
-            }
+            $this->setAuthor($content);
+            $content->setRevisionHash(BuildableContentManagement::generateRevisionHash());
             $this->resource->save($content);
+            $this->checkObjectInstance($content, true);
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
                 __('Could not save the page: %1', $exception->getMessage()),
@@ -120,14 +122,14 @@ class ContentRepository implements ContentRepositoryInterface
      * @param ContentInterface $content
      * @return void
      */
-    private function setInlineSettings(ContentInterface $content)
+    private function setAuthor(ContentInterface $content)
     {
-        $keys = $content->getInlineSettingKeys();
-        foreach ($keys as $key) {
-            if ($content->hasSetting($key)) {
-                $content->setData($key, $content->getSetting($key));
-                $content->deleteSetting($key);
-            }
+        $currentAdminUser = $this->adminUser->getCurrentAdminUser();
+        if ( !$content->getId() ) {
+            $content->setAuthorId($currentAdminUser ? $currentAdminUser->getId() : 0);
+            $content->setLastEditorId($content->getAuthorId());
+        } else {
+            $content->setLastEditorId($currentAdminUser ? $currentAdminUser->getId() : 0);
         }
     }
 
@@ -138,7 +140,7 @@ class ContentRepository implements ContentRepositoryInterface
     private function validateIdentifier(ContentInterface $content)
     {
         if ($identifier = $content->getIdentifier()) {
-            $collection = $this->contentCollectionFactory->create();
+            $collection = $this->collectionFactory->create();
             $collection->addFieldToFilter(ContentInterface::IDENTIFIER, $identifier);
             /** @var ContentInterface $testedContent */
             $testedContent = $collection->getFirstItem();
@@ -214,12 +216,18 @@ class ContentRepository implements ContentRepositoryInterface
      */
     public function getById(int $contentId) : ContentInterface
     {
+        if ($instance = $this->checkObjectInstance($contentId)) {
+            return $instance;
+        }
         $content = $this->contentFactory->create();
         $this->resource->load($content, $contentId);
         if (!$content->getId()) {
             throw new NoSuchEntityException(
                 __('The content with the ID: "%1" doesn\'t exist.', $contentId)
             );
+        }
+        if ($instance = $this->checkObjectInstance($content)) {
+            return $instance;
         }
         return $content;
     }
@@ -236,21 +244,10 @@ class ContentRepository implements ContentRepositoryInterface
                 __('The content with the Identifier: "%1" doesn\'t exist.', $identifier)
             );
         }
+        if ($instance = $this->checkObjectInstance($content)) {
+            return $instance;
+        }
         return $content;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getList(SearchCriteriaInterface $searchCriteria)
-    {
-        $collection = $this->contentCollectionFactory->create();
-        $this->collectionProcessor->process($searchCriteria, $collection);
-        $searchResults = $this->searchResultsFactory->create();
-        $searchResults->setSearchCriteria($searchCriteria);
-        $searchResults->setItems($collection->getItems() ?: []);
-        $searchResults->setTotalCount($collection->getSize());
-        return $searchResults;
     }
 
     /**

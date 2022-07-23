@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
+use Goomento\PageBuilder\Builder\Managers\Tags as TagsModule;
 
 class Wysiwyg extends AbstractControlData
 {
@@ -49,7 +49,7 @@ class Wysiwyg extends AbstractControlData
         return [
             'label_block' => true,
             'dynamic' => [
-                'categories' => [ TagsModule::TEXT_CATEGORY ],
+                'categories' => [TagsModule::TEXT_CATEGORY],
             ],
         ];
     }

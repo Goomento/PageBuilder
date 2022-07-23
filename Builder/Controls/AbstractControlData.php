@@ -86,10 +86,9 @@ abstract class AbstractControlData extends AbstractControl
             $dynamic_settings = array_merge($current_dynamic_settings, $dynamic_settings);
         }
 
-        /** @var Tags $tagsManager */
-        $tagsManager = ObjectManagerHelper::get(Tags::class);
+        $tagsManager = ObjectManagerHelper::getTagsManager();
 
-        return $tagsManager->parseTagsText($dynamic_value, $dynamic_settings, [ $tagsManager, 'getTagDataContent' ]);
+        return ObjectManagerHelper::getTagsManager()->parseTagsText($dynamic_value, $dynamic_settings, [ $tagsManager, 'getTagDataContent' ]);
     }
 
     /**

@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Block;
 
 use Exception;
+use Goomento\PageBuilder\Api\ContentRegistryInterface;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Logger\Logger;
@@ -81,9 +82,9 @@ class Content extends Template implements BlockInterface
         Template\Context $context,
         Data $dataHelper,
         FilterProvider $filterProvider,
-        ContentRegistry $contentRegistry,
-        Logger $logger,
+        ContentRegistryInterface $contentRegistry,
         ContentHtmlProcessor $contentHtmlProcessor,
+        Logger $logger,
         array $data = []
     )
     {

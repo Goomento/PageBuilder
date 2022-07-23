@@ -11,7 +11,7 @@ namespace Goomento\PageBuilder\Controller\Adminhtml\Manage;
 use Goomento\PageBuilder\Controller\Adminhtml\AbstractAction;
 use Goomento\PageBuilder\Logger\Logger;
 use Goomento\PageBuilder\Model\Config;
-use Goomento\PageBuilder\Api\ContentManagementInterface;
+use Goomento\PageBuilder\Api\BuildableContentManagementInterface;
 use Goomento\PageBuilder\Traits\TraitHttpPost;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
@@ -39,7 +39,7 @@ abstract class AbstractManage extends AbstractAction implements HttpPostActionIn
     protected $config;
 
     /**
-     * @var ContentManagementInterface
+     * @var BuildableContentManagementInterface
      */
     protected $contentManagement;
 
@@ -58,17 +58,17 @@ abstract class AbstractManage extends AbstractAction implements HttpPostActionIn
      * @param Context $context
      * @param PageFactory $resultPageFactory
      * @param Config $config
-     * @param ContentManagementInterface $contentManagement
+     * @param BuildableContentManagementInterface $contentManagement
      * @param DataPersistorInterface $dataPersistor
      * @param Logger $logger
      */
     public function __construct(
-        Action\Context $context,
-        PageFactory $resultPageFactory,
-        Config $config,
-        ContentManagementInterface $contentManagement,
-        DataPersistorInterface $dataPersistor,
-        Logger $logger
+        Action\Context                      $context,
+        PageFactory                         $resultPageFactory,
+        Config                              $config,
+        BuildableContentManagementInterface $contentManagement,
+        DataPersistorInterface              $dataPersistor,
+        Logger                              $logger
     ) {
         $this->resultPageFactory = $resultPageFactory;
         $this->config = $config;

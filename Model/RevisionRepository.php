@@ -15,6 +15,7 @@ use Goomento\PageBuilder\Api\RevisionRepositoryInterface;
 use Goomento\PageBuilder\Helper\AdminUser;
 use Goomento\PageBuilder\Model\ResourceModel\Revision as ResourceRevision;
 use Goomento\PageBuilder\Model\ResourceModel\Revision\CollectionFactory as RevisionCollectionFactory;
+use Goomento\PageBuilder\Traits\TraitBuildableRepository;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SearchCriteriaInterface;
@@ -27,6 +28,7 @@ use Magento\Framework\Exception\CouldNotSaveException;
 
 class RevisionRepository implements RevisionRepositoryInterface
 {
+    use TraitBuildableRepository;
     /**
      * @var CollectionProcessorInterface|mixed
      */
@@ -38,7 +40,7 @@ class RevisionRepository implements RevisionRepositoryInterface
     /**
      * @var RevisionCollectionFactory
      */
-    private $revisionCollectionFactory;
+    private $collectionFactory;
     /**
      * @var RevisionFactory
      */
@@ -59,6 +61,11 @@ class RevisionRepository implements RevisionRepositoryInterface
      * @var AdminUser
      */
     private $adminUser;
+
+    /**
+     * @var RevisionInterface[]|[]
+     */
+    private $objectInstances = [];
 
     /**
      * RevisionRepository constructor.
@@ -83,7 +90,7 @@ class RevisionRepository implements RevisionRepositoryInterface
     ) {
         $this->resource = $resource;
         $this->revisionFactory = $revisionFactory;
-        $this->revisionCollectionFactory = $revisionCollectionFactory;
+        $this->collectionFactory = $revisionCollectionFactory;
         $this->searchResultsFactory = $searchResultsFactory;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->sortOrderBuilder = $sortOrderBuilder;
@@ -97,11 +104,12 @@ class RevisionRepository implements RevisionRepositoryInterface
     public function save(RevisionInterface $revision) : RevisionInterface
     {
         try {
-            $this->setInlineSettings($revision);
             $this->validateStatus($revision);
+            $this->validateLabel($revision);
             $currentAdminUser = $this->adminUser->getCurrentAdminUser();
             $revision->setAuthorId($currentAdminUser ? $currentAdminUser->getId() : 0);
             $this->resource->save($revision);
+            $this->checkObjectInstance($revision, true);
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
                 __('Could not save the revision: %1', $exception->getMessage()),
@@ -109,21 +117,6 @@ class RevisionRepository implements RevisionRepositoryInterface
             );
         }
         return $revision;
-    }
-
-    /**
-     * @param RevisionInterface $revision
-     * @return void
-     */
-    private function setInlineSettings(RevisionInterface $revision)
-    {
-        $keys = $revision->getInlineSettingKeys();
-        foreach ($keys as $key) {
-            if ($revision->hasSetting($key)) {
-                $revision->setData($key, $revision->getSetting($key));
-                $revision->deleteSetting($key);
-            }
-        }
     }
 
     /**
@@ -140,16 +133,54 @@ class RevisionRepository implements RevisionRepositoryInterface
     }
 
     /**
+     * @param RevisionInterface $revision
+     * @throws LocalizedException
+     */
+    private function validateLabel(RevisionInterface $revision)
+    {
+        if (!$revision->getLabel()) {
+            throw new LocalizedException(
+                __('Save message must be specified.')
+            );
+        }
+    }
+
+    /**
      * @inheritDoc
      */
-    public function getById(int $revisionId)
+    public function getById(int $revisionId) : RevisionInterface
     {
+        if ($instance = $this->checkObjectInstance($revisionId)) {
+            return $instance;
+        }
         $revision = $this->revisionFactory->create();
         $this->resource->load($revision, $revisionId);
         if (!$revision->getId()) {
             throw new NoSuchEntityException(
                 __('The revision with the "%1" ID doesn\'t exist.', $revisionId)
             );
+        }
+        if ($instance = $this->checkObjectInstance($revision)) {
+            return $instance;
+        }
+        return $revision;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getByRevisionHash(string $revisionHash)
+    {
+        $revision = $this->revisionFactory->create();
+        $this->resource->load($revision, $revisionHash, BuildableContentInterface::REVISION_HASH);
+        if (!$revision->getId()) {
+            throw new NoSuchEntityException(
+                __('The revision with the "%1" hash doesn\'t exist.', $revisionHash)
+            );
+        }
+        if ($instance = $this->checkObjectInstance($revision)) {
+            return $instance;
         }
         return $revision;
     }
@@ -176,20 +207,6 @@ class RevisionRepository implements RevisionRepositoryInterface
             $searchCriteria->setCurrentPage($currentPage);
         }
         return $this->getList($searchCriteria);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getList(SearchCriteriaInterface $searchCriteria)
-    {
-        $collection = $this->revisionCollectionFactory->create();
-        $this->collectionProcessor->process($searchCriteria, $collection);
-        $searchResults = $this->searchResultsFactory->create();
-        $searchResults->setSearchCriteria($searchCriteria);
-        $searchResults->setItems($collection->getItems() ?: []);
-        $searchResults->setTotalCount($collection->getSize());
-        return $searchResults;
     }
 
     /**
@@ -237,7 +254,7 @@ class RevisionRepository implements RevisionRepositoryInterface
         unset($statuses[BuildableContentInterface::STATUS_AUTOSAVE]);
         $items = $this->getListByContentId( $contentId, array_keys($statuses), 1, 1)->getItems();
         if (!empty($items)) {
-            return end($items);
+            return array_values($items)[0];
         }
 
         return null;

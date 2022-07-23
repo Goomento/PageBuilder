@@ -8,24 +8,28 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model;
 
-use Goomento\PageBuilder\Api\ContentManagementInterface;
+use Goomento\PageBuilder\Api\BuildableContentManagementInterface;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentSearchResultsInterface;
 use Goomento\PageBuilder\Api\ContentRepositoryInterface;
+use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Api\RevisionRepositoryInterface;
 use Goomento\PageBuilder\Api\ConfigInterface;
 use Goomento\PageBuilder\Builder\Css\ContentCss;
 use Goomento\PageBuilder\Builder\Css\GlobalCss;
+use Goomento\PageBuilder\Helper\BuildableContentHelper;
+use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\AdminUser;
 use Goomento\PageBuilder\PageBuilder;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 
-class ContentManagement implements ContentManagementInterface
+class BuildableContentManagement implements BuildableContentManagementInterface
 {
     /**
      * @var ContentFactory
@@ -69,7 +73,7 @@ class ContentManagement implements ContentManagementInterface
     private $sortOrderBuilder;
 
     /**
-     * ContentManagement constructor.
+     * BuildableContentManagement constructor.
      * @param ContentFactory $contentFactory
      * @param RevisionFactory $revisionFactory
      * @param ContentRepositoryInterface $contentRepository
@@ -132,42 +136,9 @@ class ContentManagement implements ContentManagementInterface
     }
 
     /**
-     * @inheritDoc
-     */
-    public function createRevision(ContentInterface $content, $status = BuildableContentInterface::STATUS_REVISION, ?string $label = null)
-    {
-        if (!$content->getId()) {
-            throw new LocalizedException(
-                __('Content Id does not specify')
-            );
-        }
-
-        $lastRevision = $content->getLastRevision();
-
-        if ($lastRevision && $lastRevision->getRevisionHash() === $content->getRevisionHash()) {
-            return $lastRevision;
-        } else {
-            $revision = $this->revisionFactory->create();
-
-            $revision->setOriginContent($content);
-            $revision->setStatus($status);
-            $revision->setContentId((int) $content->getId());
-            $revision->setElements($content->getElements());
-            $revision->setSettings($content->getSettings());
-            if (!$revision->getSetting(ContentInterface::TITLE)) {
-                $revision->setSetting(ContentInterface::TITLE, $content->getTitle());
-            }
-
-            if ($label) {
-                $revision->setLabel($label);
-            }
-
-            return $this->revisionRepository->save($revision);
-        }
-    }
-
-    /**
-     * @inheritdoc
+     * @param array $data
+     * @return ContentInterface
+     * @throws LocalizedException
      */
     public function createContent(array $data): ContentInterface
     {
@@ -191,20 +162,32 @@ class ContentManagement implements ContentManagementInterface
     /**
      * @inheritDoc
      */
-    public function refreshContentAssets(ContentInterface $content)
+    public function refreshBuildableContentAssets(BuildableContentInterface $buildableContent)
     {
+        if ($buildableContent->getIsRefreshingAssetsFlag() === true) {
+            return;
+        }
+
+        $buildableContent
+            ->setIgnoreLabelFlag(true)
+            ->setIsRefreshingAssetsFlag(true);
+
         PageBuilder::initialize();
 
-        $content->setSetting('css/' . Config::CSS_UPDATED_TIME, 0);
-        $this->contentRepository->save($content);
-        $content->setDataChanges(false);
+        $buildableContent->setSetting('css/' . Config::CSS_UPDATED_TIME, 0);
+        $this->saveBuildableContent($buildableContent, __('Refreshed Assets')->__toString());
+        $buildableContent->setDataChanges(false);
 
-        $css = new ContentCss( $content );
+        $css = new ContentCss( $buildableContent );
         $css->update();
 
-        if ($content->getLastRevision()) {
-            $css = new ContentCss( $content->getLastRevision() );
-            $css->update();
+        $buildableContent
+            ->setIgnoreLabelFlag(false)
+            ->setIsRefreshingAssetsFlag(false);
+
+        // Update last revision
+        if ($revision = $buildableContent->getLastRevision(true)) {
+            $this->refreshBuildableContentAssets($revision);
         }
     }
 
@@ -311,5 +294,133 @@ class ContentManagement implements ContentManagementInterface
         ObjectManagerHelper::getSourcesManager()
             ->getLocalSource()
             ->exportTemplate((int) $content->getId());
+    }
+
+    /**
+     * @return string
+     */
+    public static function generateRevisionHash() : string
+    {
+        return EncryptorHelper::uniqueString(12);
+    }
+
+    /**
+     * @inheridoc
+     */
+    public function saveBuildableContent(BuildableContentInterface $buildableContent, string $saveMassage = '') : BuildableContentInterface
+    {
+        if ($buildableContent instanceof ContentInterface) {
+            $isContentStatus = BuildableContentHelper::isContentStatus($buildableContent);
+            if ($isContentStatus) {
+                $this->contentRepository->save($buildableContent);
+            }
+            $this->setRevisionOnContent($buildableContent, $saveMassage, $isContentStatus !== true);
+        } elseif ($buildableContent instanceof RevisionInterface) {
+            if ($saveMassage) {
+                $buildableContent->setLabel($saveMassage);
+            }
+            $this->revisionRepository->save($buildableContent);
+        }
+
+        return $buildableContent;
+    }
+
+    /**
+     * @param bool $isLast
+     * @param ContentInterface $buildableContent
+     * @param string $saveMassage
+     * @return RevisionInterface
+     * @throws LocalizedException
+     */
+    private function setRevisionOnContent(ContentInterface $buildableContent, string $saveMassage = '', bool $isLast = true) : RevisionInterface
+    {
+        if (!$buildableContent->getId()) {
+            throw new LocalizedException(
+                __('Content Id does not specify')
+            );
+        }
+
+        if ($isLast) {
+            $revision = $buildableContent->getLastRevision();
+        } else {
+            $revision = $buildableContent->getCurrentRevision();
+        }
+
+        if (!$revision) {
+            $revision = $this->buildBuildableContent(RevisionInterface::REVISION, $buildableContent);
+            if ($isLast) {
+                $buildableContent->setLastRevision($revision);
+            } else {
+                $buildableContent->setCurrentRevision($revision);
+            }
+        }
+
+        $revision->setSettings($buildableContent->getSettings());
+        $revision->setElements($buildableContent->getElements());
+        $revision->setOriginContent($buildableContent);
+
+        if (!isset(Revision::getAvailableStatuses()[$revision->getStatus()])) {
+            $revision->setStatus(BuildableContentInterface::STATUS_REVISION);
+        }
+
+        if ($isLast) {
+            $revision->setRevisionHash(self::generateRevisionHash());
+        } else {
+            $revision->setRevisionHash($buildableContent->getRevisionHash());
+        }
+
+        /** @var Revision $revision */
+        if (!$saveMassage && !$revision->getLabel() && $revision->getIgnoreLabelFlag() !== true) {
+            $revision->setLabel($isLast ? __('Published change')->__toString() : __('Saved change')->__toString());
+        } elseif ($saveMassage) {
+            $revision->setLabel($saveMassage);
+        }
+
+        /** @var RevisionInterface $revision */
+        return $this->revisionRepository->save($revision);
+    }
+
+    /**
+     * @inheridoc
+     */
+    public function buildBuildableContent(string $buildableType = ContentInterface::CONTENT, $params = []): ?BuildableContentInterface
+    {
+        if ($buildableType === ContentInterface::CONTENT) {
+            $model = $this->contentFactory->create();
+        } elseif ($buildableType === RevisionInterface::REVISION) {
+            $model = $this->revisionFactory->create();
+        } else {
+            return null;
+        }
+
+        if ($params instanceof DataObject) {
+            $params = $params->toArray();
+        }
+
+        $privateFields = [
+            BuildableContentInterface::UPDATE_TIME,
+            BuildableContentInterface::CREATION_TIME,
+            BuildableContentInterface::REVISION_HASH,
+        ];
+
+        foreach ($privateFields as $field) {
+            if (array_key_exists($field, $params)) {
+                unset($params[$field]);
+            }
+        }
+
+        return $model->setData($params);
+    }
+
+    /**
+     * @inheridoc
+     */
+    public function deleteBuildableContent(BuildableContentInterface $buildableContent)
+    {
+        if ($buildableContent instanceof ContentInterface) {
+            $this->contentRepository->delete($buildableContent);
+        } elseif ($buildableContent instanceof RevisionInterface) {
+            $this->revisionRepository->delete($buildableContent);
+        }
     }
 }

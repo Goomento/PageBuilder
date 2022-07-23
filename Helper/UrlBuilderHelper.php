@@ -146,7 +146,7 @@ class UrlBuilderHelper
         if ($storeId === null) {
             $storeId = 0;
             if (!($content instanceof ContentInterface)) {
-                $content = ContentHelper::get((int) $content);
+                $content = BuildableContentHelper::getContent((int) $content);
             }
             $storeIds = $content->getStoreIds();
             if (!empty($storeIds)) {
@@ -166,7 +166,8 @@ class UrlBuilderHelper
     public static function getContentExportUrl(ContentInterface $content)
     {
         return self::getUrl('pagebuilder/content/export', [
-            'content_id' => $content->getId()
+            'content_id' => $content->getId(),
+            'type' => $content->getType(),
         ]);
     }
 
@@ -190,6 +191,7 @@ class UrlBuilderHelper
     {
         return self::getUrl('pagebuilder/content/delete', [
             'content_id' => $content->getId(),
+            'type' => $content->getType(),
         ]);
     }
 

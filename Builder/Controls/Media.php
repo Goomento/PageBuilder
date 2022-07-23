@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Controls;
 
 use Goomento\PageBuilder\Builder\Base\ImportInterface;
-use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
+use Goomento\PageBuilder\Builder\Managers\Tags as TagsModule;
 use Goomento\PageBuilder\Helper\MediaHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 
@@ -132,7 +132,7 @@ class Media extends AbstractBaseMultiple implements ImportInterface
             'label_block' => true,
             'media_type' => 'image',
             'dynamic' => [
-                'categories' => [ TagsModule::IMAGE_CATEGORY ],
+                'categories' => [TagsModule::IMAGE_CATEGORY],
                 'returnType' => 'object',
             ],
         ];

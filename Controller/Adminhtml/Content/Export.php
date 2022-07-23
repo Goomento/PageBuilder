@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 
 use Exception;
+use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -23,6 +24,7 @@ class Export extends AbstractContent implements HttpGetActionInterface
     public function execute()
     {
         try {
+            /** @var ContentInterface $content */
             $content = $this->getContent(true);
 
             $this->getRequest()->setParam('type', $content->getType());
@@ -38,7 +40,7 @@ class Export extends AbstractContent implements HttpGetActionInterface
                 );
             }
 
-            $this->contentManagement->httpContentExport($content);
+            $this->buildableContentManagement->httpContentExport($content);
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
         } catch (Exception $e) {

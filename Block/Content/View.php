@@ -33,6 +33,6 @@ class View extends Content
     public function getBuildableContent()
     {
         $content = parent::getBuildableContent();
-        return $content->getLastRevision() ?: $content;
+        return $content->getLastRevision(true) ?: $content;
     }
 }

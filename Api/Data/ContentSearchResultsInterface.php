@@ -15,14 +15,14 @@ interface ContentSearchResultsInterface extends SearchResultsInterface
     /**
      * Get contents list.
      *
-     * @return ContentInterface[]
+     * @return ContentInterface[]|RevisionInterface[]
      */
     public function getItems();
 
     /**
      * Set contents list.
      *
-     * @param ContentInterface[] $items
+     * @param ContentInterface[]||RevisionInterface[] $items
      * @return $this
      */
     public function setItems(array $items);

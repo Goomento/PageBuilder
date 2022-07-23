@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
+use Goomento\PageBuilder\Builder\Managers\Tags as TagsModule;
 
 class Url extends AbstractBaseMultiple
 {
@@ -50,8 +50,9 @@ class Url extends AbstractBaseMultiple
             'placeholder' => __('Paste URL or type'),
             'autocomplete' => true,
             'dynamic' => [
-                'categories' => [ TagsModule::URL_CATEGORY ],
+                'categories' => [TagsModule::URL_CATEGORY],
                 'property' => 'url',
+                'returnType' => 'object',
             ],
         ];
     }

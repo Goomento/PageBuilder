@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model\Config\Backend;
 
-use Goomento\PageBuilder\Api\ContentManagementInterface;
+use Goomento\PageBuilder\Api\BuildableContentManagementInterface;
 use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Value;
@@ -20,7 +20,7 @@ use Magento\Framework\Registry;
 class RefreshStyle extends Value
 {
     /**
-     * @var ContentManagementInterface
+     * @var BuildableContentManagementInterface
      */
     private $contentManagement;
 
@@ -29,20 +29,20 @@ class RefreshStyle extends Value
      * @param Registry $registry
      * @param ScopeConfigInterface $config
      * @param TypeListInterface $cacheTypeList
-     * @param ContentManagementInterface $contentManagement
+     * @param BuildableContentManagementInterface $contentManagement
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
      */
     public function __construct(
-        Context $context,
-        Registry $registry,
-        ScopeConfigInterface $config,
-        TypeListInterface $cacheTypeList,
-        ContentManagementInterface $contentManagement,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
-        array $data = []
+        Context                             $context,
+        Registry                            $registry,
+        ScopeConfigInterface                $config,
+        TypeListInterface                   $cacheTypeList,
+        BuildableContentManagementInterface $contentManagement,
+        AbstractResource                    $resource = null,
+        AbstractDb                          $resourceCollection = null,
+        array                               $data = []
     )
     {
         $this->contentManagement = $contentManagement;

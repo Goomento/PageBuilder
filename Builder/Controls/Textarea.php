@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
+use Goomento\PageBuilder\Builder\Managers\Tags as TagsModule;
 
 class Textarea extends AbstractControlData
 {
@@ -31,7 +31,7 @@ class Textarea extends AbstractControlData
             'rows' => 5,
             'placeholder' => '',
             'dynamic' => [
-                'categories' => [ TagsModule::TEXT_CATEGORY ],
+                'categories' => [TagsModule::TEXT_CATEGORY],
             ],
         ];
     }

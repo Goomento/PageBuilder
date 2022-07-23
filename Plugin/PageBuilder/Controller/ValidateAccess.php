@@ -10,7 +10,7 @@ namespace Goomento\PageBuilder\Plugin\PageBuilder\Controller;
 
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
-use Goomento\PageBuilder\Helper\Content;
+use Goomento\PageBuilder\Helper\BuildableContent;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Magento\Framework\App\ActionInterface;
@@ -34,7 +34,7 @@ class ValidateAccess
      */
     private $messageManager;
     /**
-     * @var Content
+     * @var BuildableContent
      */
     private $contentHelper;
 
@@ -42,13 +42,13 @@ class ValidateAccess
      * @param RequestInterface $request
      * @param ResponseInterface $response
      * @param ManagerInterface $messageManager
-     * @param Content $contentHelper
+     * @param BuildableContent $contentHelper
      */
     public function __construct(
         RequestInterface $request,
         ResponseInterface $response,
         ManagerInterface $messageManager,
-        Content $contentHelper
+        BuildableContent $contentHelper
     )
     {
         $this->request = $request;
@@ -75,7 +75,7 @@ class ValidateAccess
                 );
             }
 
-            $content = $this->contentHelper->get($contentId);
+            $content = $this->contentHelper->getContent($contentId);
 
             if (!$content || !$content->getId()) {
                 throw new LocalizedException(
