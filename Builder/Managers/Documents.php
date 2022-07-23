@@ -17,7 +17,7 @@ use Goomento\PageBuilder\Builder\DocumentTypes\Page;
 use Goomento\PageBuilder\Builder\DocumentTypes\Section;
 use Goomento\PageBuilder\Builder\DocumentTypes\Template;
 use Goomento\PageBuilder\Helper\HooksHelper;
-use Goomento\PageBuilder\Helper\ContentHelper;
+use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
@@ -209,7 +209,7 @@ class Documents
 
         $data['type'] = $type;
 
-        $content = ContentHelper::create($data);
+        $content = BuildableContentHelper::createContent($data);
 
         /** @var AbstractDocument $document */
         $document = ObjectManagerHelper::create($class, [
@@ -238,7 +238,7 @@ class Documents
     public function ajaxSave(array $requestData, BuildableContentInterface $buildableContent)
     {
 
-        $buildableContent->setStatus($requestData['status'] ?? BuildableContentInterface::STATUS_REVISION);
+        $buildableContent->setData('status', $requestData['status'] ?? BuildableContentInterface::STATUS_REVISION);
 
         $document = $this->getByContent( $buildableContent );
 
@@ -252,7 +252,8 @@ class Documents
         $return_data = [
             'config' => [
                 'document' => [
-                    'last_edited' => $document->getLastEdited(),
+                    'last_edited' => $document->getLastEdited(), // Should remove this
+                    'date' => date(DATE_ATOM, strtotime($buildableContent->getUpdateTime())),
                     'urls' => [
                         'system_preview' => $document->getSystemPreviewUrl(),
                     ],

@@ -8,13 +8,22 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Managers;
 
-use Goomento\PageBuilder\Builder\Modules\Ajax as Ajax;
+use Exception;
+use Goomento\PageBuilder\Builder\DynamicTags\DataConfig;
+use Goomento\PageBuilder\Builder\DynamicTags\Urls;
+use Goomento\PageBuilder\Builder\DynamicTags\Images;
+use Goomento\PageBuilder\Builder\Modules\Ajax;
 use Goomento\PageBuilder\Builder\Base\AbstractBaseTag;
 use Goomento\PageBuilder\Builder\Base\AbstractTag;
 use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Traits\TraitComponentsLoader;
+use Zend_Json;
 
 class Tags
 {
+    use TraitComponentsLoader;
+
     const TAG_LABEL = 'gmt-tag';
 
     const MODE_RENDER = 'render';
@@ -22,12 +31,37 @@ class Tags
     const MODE_REMOVE = 'remove';
 
     const DYNAMIC_SETTING_KEY = '__dynamic__';
+    /**
+     * Dynamic tags text category.
+     */
+    public const TEXT_CATEGORY = 'text';
+    /**
+     * Dynamic tags URL category.
+     */
+    public const URL_CATEGORY = 'url';
+    /**
+     * Dynamic tags number category.
+     */
+    public const NUMBER_CATEGORY = 'number';
+    /**
+     * Base dynamic tag group.
+     */
+    public const BASE_GROUP = 'base';
+    /**
+     * Dynamic tags image category.
+     */
+    public const IMAGE_CATEGORY = 'image';
 
-    private $tags_groups = [];
+    private $tagsGroups = [];
 
-    private $tags_info = [];
+    private $tagsInfo = [];
 
-    private $parsing_mode = self::MODE_RENDER;
+    private $parsingMode = self::MODE_RENDER;
+
+    /**
+     * @var AbstractTag|string[]
+     */
+    private $components;
 
     /**
      * Dynamic tags manager constructor.
@@ -106,18 +140,18 @@ class Tags
      */
     public function tagTextToTagData($tag_text)
     {
-        preg_match('/id="(.*?(?="))"/', $tag_text, $tag_id_match);
-        preg_match('/name="(.*?(?="))"/', $tag_text, $tag_name_match);
-        preg_match('/settings="(.*?(?="]))/', $tag_text, $tag_settings_match);
+        preg_match('/id="(.*?(?="))"/', $tag_text, $tagIdMatch);
+        preg_match('/name="(.*?(?="))"/', $tag_text, $tagNameMatch);
+        preg_match('/settings="(.*?(?="]))/', $tag_text, $tagSettingsMatch);
 
-        if (!$tag_id_match || ! $tag_name_match || ! $tag_settings_match) {
+        if (!$tagIdMatch || ! $tagNameMatch || ! $tagSettingsMatch) {
             return null;
         }
 
         return [
-            'id' => $tag_id_match[1],
-            'name' => $tag_name_match[1],
-            'settings' => json_decode(urldecode($tag_settings_match[1]), true),
+            'id' => $tagIdMatch[1],
+            'name' => $tagNameMatch[1],
+            'settings' => Zend_Json::decode(urldecode($tagSettingsMatch[1])),
         ];
     }
 
@@ -133,7 +167,7 @@ class Tags
      */
     public function tagToText(AbstractBaseTag $tag)
     {
-        return sprintf('[%1$s id="%2$s" name="%3$s" settings="%4$s"]', self::TAG_LABEL, $tag->getId(), $tag->getName(), urlencode(\Zend_Json::encode($tag->getSettings(), JSON_FORCE_OBJECT)));
+        return sprintf('[%1$s id="%2$s" name="%3$s" settings="%4$s"]', self::TAG_LABEL, $tag->getId(), $tag->getName(), urlencode(Zend_Json::encode($tag->getSettings())));
     }
 
     /**
@@ -155,43 +189,44 @@ class Tags
     }
 
     /**
-     * @param string $tag_id
-     * @param string $tag_name
+     * @param string $id
+     * @param string $name
      * @param array  $settings
-     *
      * @return AbstractTag|null
      */
-    public function createTag($tag_id, $tag_name, array $settings = [])
+    public function createTag($id, $name, array $settings = [])
     {
-        $tag_info = $this->getTagInfo($tag_name);
+        $component = $this->getTag($name);
 
-        if (!$tag_info) {
+        if (!$component) {
             return null;
         }
 
-        $tag_class = $tag_info['class'];
+        $tagClass = get_class($component);
 
-        return new $tag_class([
-            'settings' => $settings,
-            'id' => $tag_id,
+        return ObjectManagerHelper::create($tagClass, [
+            'data' => [
+                'settings' => $settings,
+                'id' => $id,
+            ]
         ]);
     }
 
     /**
      *
-     * @param       $tag_id
-     * @param       $tag_name
+     * @param       $id
+     * @param       $name
      * @param array $settings
      *
      * @return null|string
      */
-    public function getTagDataContent($tag_id, $tag_name, array $settings = [])
+    public function getTagDataContent($id, $name, array $settings = [])
     {
-        if (self::MODE_REMOVE === $this->parsing_mode) {
+        if (self::MODE_REMOVE === $this->parsingMode) {
             return null;
         }
 
-        $tag = $this->createTag($tag_id, $tag_name, $settings);
+        $tag = $this->createTag($id, $name, $settings);
 
         if (!$tag) {
             return null;
@@ -202,22 +237,18 @@ class Tags
 
     /**
      *
-     * @param $tag_name
+     * @param $tagName
      *
-     * @return mixed|null
+     * @return AbstractTag|null
      */
-    public function getTagInfo($tag_name)
+    public function getTag($tagName)
     {
-        $tags = $this->getTags();
-
-        if (empty($tags[ $tag_name ])) {
-            return null;
-        }
-
-        return $tags[ $tag_name ];
+        return $this->getComponent($tagName);
     }
 
-
+    /**
+     * @return AbstractTag[]
+     */
     public function getTags()
     {
         if (! HooksHelper::didAction('goomento/dynamic_tags/register_tags')) {
@@ -232,54 +263,50 @@ class Tags
             HooksHelper::doAction('pagebuilder/dynamic_tags/register_tags', $this);
         }
 
-        return $this->tags_info;
+        return $this->getComponents();
     }
 
     /**
      *
-     * @param string $class
+     * @param string|AbstractTag $tag
      */
-    public function registerTag($class)
+    public function registerTag($tag)
     {
-        /** @var AbstractTag $tag */
-        $tag = new $class();
-
-        $this->tags_info[ $tag->getName() ] = [
-            'class' => $class,
-            'instance' => $tag,
-        ];
+        $this->setComponent($tag->getName(), $tag);
     }
 
     /**
      *
-     * @param string $tag_name
+     * @param string $tagName
      */
-    public function unregisterTag($tag_name)
+    public function unregisterTag($tagName)
     {
-        unset($this->tags_info[ $tag_name ]);
+        $this->removeComponent($tagName);
     }
 
     /**
      *
      * @param       $group_name
-     * @param array $group_settings
+     * @param array $groupSettings
      */
-    public function registerGroup($group_name, array $group_settings)
+    public function registerGroup($group_name, array $groupSettings)
     {
-        $default_group_settings = [
+        $defaultGroupSettings = [
             'title' => '',
         ];
 
-        $group_settings = array_merge($default_group_settings, $group_settings);
+        $groupSettings = array_merge($defaultGroupSettings, $groupSettings);
 
-        $this->tags_groups[ $group_name ] = $group_settings;
+        $this->tagsGroups[ $group_name ] = $groupSettings;
     }
 
 
+    /**
+     * @return void
+     */
     public function printTemplates()
     {
-        foreach ($this->getTags() as $tag_name => $tag_info) {
-            $tag = $tag_info['instance'];
+        foreach ($this->getComponents() as $tag) {
 
             if (!$tag instanceof AbstractTag) {
                 continue;
@@ -289,16 +316,15 @@ class Tags
         }
     }
 
-
+    /**
+     * @return array
+     */
     public function getTagsConfig()
     {
         $config = [];
 
-        foreach ($this->getTags() as $tag_name => $tag_info) {
-            /** @var AbstractTag $tag */
-            $tag = $tag_info['instance'];
-
-            $config[ $tag_name ] = $tag->getEditorConfig();
+        foreach ($this->getTags() as $tag) {
+            $config[ $tag->getName() ] = $tag->getEditorConfig();
         }
 
         return $config;
@@ -309,21 +335,17 @@ class Tags
     {
         return [
             'tags' => $this->getTagsConfig(),
-            'groups' => $this->tags_groups,
+            'groups' => $this->tagsGroups,
         ];
     }
 
     /**
      *
-     * @throws \Exception If content ID is missing.
-     * @throws \Exception If current user don't have permissions to edit the post.
+     * @throws Exception If content ID is missing.
+     * @throws Exception If current user don't have permissions to edit the post.
      */
     public function ajaxRenderTags($data)
     {
-        if (empty($data['content_id'])) {
-            throw new \Exception('Missing content id.');
-        }
-
         /**
          * Before dynamic tags rendered.
          *
@@ -332,18 +354,18 @@ class Tags
          */
         HooksHelper::doAction('pagebuilder/dynamic_tags/before_render');
 
-        $tags_data = [];
+        $tagData = [];
 
         foreach ($data['tags'] as $tag_key) {
             $tag_key_parts = explode('-', $tag_key);
 
             $tag_name = base64_decode($tag_key_parts[0]);
 
-            $tag_settings = json_decode(urldecode(base64_decode($tag_key_parts[1])), true);
+            $tag_settings = \Zend_Json::decode(urldecode(base64_decode($tag_key_parts[1])));
 
             $tag = $this->createTag(null, $tag_name, $tag_settings);
 
-            $tags_data[ $tag_key ] = $tag->getContent();
+            $tagData[ $tag_key ] = $tag->getContent();
         }
 
         /**
@@ -354,7 +376,7 @@ class Tags
          */
         HooksHelper::doAction('pagebuilder/dynamic_tags/after_render');
 
-        return $tags_data;
+        return $tagData;
     }
 
     /**
@@ -363,24 +385,79 @@ class Tags
      */
     public function setParsingMode($mode)
     {
-        $this->parsing_mode = $mode;
+        $this->parsingMode = $mode;
     }
 
 
     public function getParsingMode()
     {
-        return $this->parsing_mode;
+        return $this->parsingMode;
     }
 
-
+    /**
+     * @param Ajax $ajax
+     * @return void
+     * @throws Exception
+     */
     public function registerAjaxActions(Ajax $ajax)
     {
         $ajax->registerAjaxAction('render_tags', [ $this, 'ajaxRenderTags' ]);
     }
 
+    /**
+     * Register tags.
+     *
+     * Add all the available dynamic tags.
+     *
+     *
+     */
+    public function registerTags()
+    {
+        $this->components = [
+            DataConfig::NAME => DataConfig::class,
+            Urls::NAME => Urls::class,
+            Images::NAME => Images::class,
+        ];
+    }
 
+    /**
+     * Get groups.
+     *
+     * Retrieve the dynamic tag groups.
+     *
+     *
+     * @return array Tag dynamic tag groups.
+     */
+    public function getGroups()
+    {
+        $groups = [
+            self::BASE_GROUP => [
+                'title' => 'Base Tags',
+            ],
+            self::URL_CATEGORY => [
+                'title' => __('Url'),
+            ],
+            self::TEXT_CATEGORY => [
+                'title' => __('Text'),
+            ],
+            self::IMAGE_CATEGORY => [
+                'title' => __('Image'),
+            ],
+        ];
+
+        foreach ($groups as $name => $group) {
+            $this->registerGroup($name, $group);
+        }
+    }
+
+    /**
+     * @return void
+     */
     private function addActions()
     {
         HooksHelper::addAction('pagebuilder/ajax/register_actions', [ $this,'registerAjaxActions' ]);
+
+        $this->registerTags();
+        $this->getGroups();
     }
 }

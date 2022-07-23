@@ -10,7 +10,7 @@ namespace Goomento\PageBuilder\Model\ResourceModel;
 
 use Magento\Framework\DataObject;
 
-trait SerializeDataTrait
+trait TraitResourceModel
 {
     /**
      * @param DataObject $object

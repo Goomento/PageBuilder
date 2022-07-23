@@ -27,9 +27,6 @@ class View extends AbstractAction
     public function execute()
     {
         try {
-            /**
-             *
-             */
             HooksHelper::doAction('pagebuilder/content/view', $this->getContent(true));
             return $this->renderPage();
         } catch (LocalizedException $e) {

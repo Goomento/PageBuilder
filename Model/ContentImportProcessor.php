@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model;
 
-use Goomento\PageBuilder\Builder\Managers\Sources;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Api\ContentImportProcessorInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -16,30 +15,11 @@ use Magento\Framework\Exception\LocalizedException;
 class ContentImportProcessor implements ContentImportProcessorInterface
 {
     /**
-     * @var Sources|null
-     */
-    protected $documentsManager = null;
-
-    /**
-     * @return Sources|object
-     */
-    protected function getDocumentsManager()
-    {
-        if (is_null($this->documentsManager)) {
-            $this->documentsManager = ObjectManagerHelper::get(
-                Sources::class
-            );
-        }
-        return $this->documentsManager;
-    }
-
-    /**
      * @inheritdoc
      */
     public function importOnUpload($filename)
     {
-        return $this->getDocumentsManager()
-            ->directImportTemplate($filename);
+        return ObjectManagerHelper::getSourcesManager()->directImportTemplate($filename);
     }
 
     /**
@@ -47,7 +27,7 @@ class ContentImportProcessor implements ContentImportProcessorInterface
      */
     public function import(string $fileData)
     {
-        return $this->getDocumentsManager()->importTemplate([
+        return ObjectManagerHelper::getSourcesManager()->importTemplate([
             'fileData' => base64_encode($fileData),
             'fileName' => ''
         ]);

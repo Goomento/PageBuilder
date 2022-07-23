@@ -28,33 +28,33 @@ class Elements
     private $categories;
 
     /**
-     * @param array $element_data
-     * @param array $element_args
-     * @param AbstractElement|null $element_type
+     * @param array $elementData
+     * @param array $elementArgs
+     * @param AbstractElement|null $elementType
      * @return AbstractElement|mixed|null
      */
-    public function createElementInstance(array $element_data, array $element_args = [], AbstractElement $element_type = null)
+    public function createElementInstance(array $elementData, array $elementArgs = [], AbstractElement $elementType = null)
     {
-        if (null === $element_type) {
+        if (null === $elementType) {
             /** @var Widgets $widgetManager */
             $widgetManager = ObjectManagerHelper::get(Widgets::class);
-            if ('widget' === $element_data['elType']) {
-                $element_type = $widgetManager->getWidgetTypes($element_data['widgetType']);
+            if ('widget' === $elementData['elType']) {
+                $elementType = $widgetManager->getWidgetTypes($elementData['widgetType']);
             } else {
-                $element_type = $this->getElementTypes($element_data['elType']);
+                $elementType = $this->getElementTypes($elementData['elType']);
             }
         }
 
-        if (!$element_type) {
+        if (!$elementType) {
             return null;
         }
 
-        $args = array_merge($element_type->getDefaultArgs(), $element_args);
+        $args = array_merge($elementType->getDefaultArgs(), $elementArgs);
 
-        $element_class = get_class($element_type);
+        $element_class = get_class($elementType);
 
         try {
-            $element = new $element_class($element_data, $args);
+            $element = new $element_class($elementData, $args);
         } catch (\Exception $e) {
             return null;
         }

@@ -172,6 +172,7 @@ class ContentRegistry implements ContentRegistryInterface
                 $content->setIsCaching(true);
                 $content->setOrigData();
                 $content->setHasDataChanges(false);
+                $content->afterLoad();
                 $this->processing = $content;
             }
         }

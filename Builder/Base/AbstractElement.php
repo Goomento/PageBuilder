@@ -8,10 +8,10 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Base;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Managers\Elements;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
-use Goomento\PageBuilder\Helper\ConfigHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 use Zend_Json;
@@ -79,6 +79,11 @@ abstract class AbstractElement extends ControlsStack
      * @var array
      */
     private $depended_styles = [];
+
+    /**
+     * @var BuildableContentInterface|null
+     */
+    private $buildableContent;
 
     /**
      * Add script depends.
@@ -748,6 +753,7 @@ abstract class AbstractElement extends ControlsStack
     protected function _printContent()
     {
         foreach ($this->getChildren() as $child) {
+            $child->setBuildableContent($this->getBuildableContent());
             $child->printElement();
         }
     }
@@ -829,6 +835,25 @@ abstract class AbstractElement extends ControlsStack
 
             $this->addChild($child_data);
         }
+    }
+
+    /**
+     * @return BuildableContentInterface|null
+     */
+    public function getBuildableContent() : ?BuildableContentInterface
+    {
+        return $this->buildableContent;
+    }
+
+    /**
+     * Set buildable content, which available in template only
+     *
+     * @param BuildableContentInterface|null $buildableContent
+     * @return BuildableContentInterface|null
+     */
+    public function setBuildableContent(?BuildableContentInterface $buildableContent = null)
+    {
+        return $this->buildableContent = $buildableContent;
     }
 
     /**

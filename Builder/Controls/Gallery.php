@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Controls;
 
 use Goomento\PageBuilder\Builder\Base\ImportInterface;
-use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
 use Goomento\PageBuilder\Helper\MediaHelper;
 
 class Gallery extends AbstractControlData implements ImportInterface
@@ -94,7 +93,6 @@ class Gallery extends AbstractControlData implements ImportInterface
             'label_block' => true,
             'separator' => 'none',
             'dynamic' => [
-                'categories' => [ TagsModule::GALLERY_CATEGORY ],
                 'returnType' => 'object',
             ],
         ];

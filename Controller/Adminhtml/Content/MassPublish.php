@@ -28,7 +28,7 @@ class MassPublish extends MassPending
         foreach ($collection->getItems() as $content) {
             if ($content && $content->getId()) {
                 $content->setStatus(ContentInterface::STATUS_PUBLISHED);
-                $this->contentRepository->save($content);
+                $this->contentManagement->saveBuildableContent($content);
                 $count++;
             }
         }

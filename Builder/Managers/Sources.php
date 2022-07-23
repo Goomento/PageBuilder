@@ -16,7 +16,7 @@ use Goomento\PageBuilder\Builder\Modules\Ajax;
 use Goomento\PageBuilder\Builder\Managers\Settings as SettingsManager;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
-use Goomento\PageBuilder\Helper\ContentHelper;
+use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Traits\TraitComponentsLoader;
 use Magento\Framework\Exception\LocalizedException;

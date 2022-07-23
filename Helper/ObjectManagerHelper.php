@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Helper;
 
+use Goomento\PageBuilder\Api\BuildableContentManagementInterface;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Schemes;
 use Goomento\PageBuilder\Builder\Managers\Elements;
@@ -115,6 +116,14 @@ class ObjectManagerHelper extends \Goomento\Core\Helper\ObjectManagerHelper
     public static function getEditor() : Editor
     {
         return self::getSubject(Editor::class);
+    }
+
+    /**
+     * @return BuildableContentManagementInterface
+     */
+    public static function getBuildableContentManagement() : BuildableContentManagementInterface
+    {
+        return self::getSubject(BuildableContentManagementInterface::class);
     }
 
     /**

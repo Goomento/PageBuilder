@@ -13,7 +13,7 @@ use Goomento\PageBuilder\Builder\Controls\Groups\CssFilterGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\TextShadowGroup;
 use Goomento\PageBuilder\Builder\Embed;
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
+use Goomento\PageBuilder\Builder\Managers\Tags as TagsModule;
 use Goomento\PageBuilder\Helper\DataHelper;
 
 class Video extends AbstractWidget
@@ -97,7 +97,6 @@ class Video extends AbstractWidget
                 'dynamic' => [
                     'active' => true,
                     'categories' => [
-                        TagsModule::POST_META_CATEGORY,
                         TagsModule::URL_CATEGORY,
                     ],
                 ],
@@ -118,7 +117,6 @@ class Video extends AbstractWidget
                 'dynamic' => [
                     'active' => true,
                     'categories' => [
-                        TagsModule::POST_META_CATEGORY,
                         TagsModule::URL_CATEGORY,
                     ],
                 ],
@@ -139,7 +137,6 @@ class Video extends AbstractWidget
                 'dynamic' => [
                     'active' => true,
                     'categories' => [
-                        TagsModule::POST_META_CATEGORY,
                         TagsModule::URL_CATEGORY,
                     ],
                 ],
@@ -160,7 +157,6 @@ class Video extends AbstractWidget
                 'dynamic' => [
                     'active' => true,
                     'categories' => [
-                        TagsModule::POST_META_CATEGORY,
                         TagsModule::URL_CATEGORY,
                     ],
                 ],

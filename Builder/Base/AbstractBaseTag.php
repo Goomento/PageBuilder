@@ -78,15 +78,15 @@ abstract class AbstractBaseTag extends ControlsStack
 
     public function printPanelTemplate()
     {
-        $panel_template_setting_key = $this->getPanelTemplateSettingKey();
+        $panelTemplateSettingKey = $this->getPanelTemplateSettingKey();
 
-        if (!$panel_template_setting_key) {
+        if (!$panelTemplateSettingKey) {
             return;
         } ?><#
-		var key = <?= EscaperHelper::escapeHtml($panel_template_setting_key); ?>;
+		var key = <?= EscaperHelper::escapeHtml($panelTemplateSettingKey); ?>;
 
 		if ( key ) {
-			var settingsKey = "<?= EscaperHelper::escapeHtml($panel_template_setting_key); ?>";
+			var settingsKey = "<?= EscaperHelper::escapeHtml($panelTemplateSettingKey); ?>";
 
 			/*
 			 * If the tag has controls,
@@ -120,15 +120,20 @@ abstract class AbstractBaseTag extends ControlsStack
         return 'tag-' . $this->getName();
     }
 
-
+    /**
+     * @return void
+     */
     protected function registerAdvancedSection()
     {
     }
 
-
+    /**
+     * @return void
+     */
     final protected function initControls()
     {
-        ObjectManagerHelper::get(Controls::class)->openStack($this);
+        $controlManager = ObjectManagerHelper::getControlsManager();
+        $controlManager->openStack($this);
 
         $this->startControlsSection('settings', [
             'label' => __('Settings'),
@@ -139,8 +144,8 @@ abstract class AbstractBaseTag extends ControlsStack
         $this->endControlsSection();
 
         // If in fact no controls were registered, empty the stack
-        if (1 === count(ObjectManagerHelper::get(Controls::class)->getStacks($this->getUniqueName())['controls'])) {
-            ObjectManagerHelper::get(Controls::class)->openStack($this);
+        if (1 === count($controlManager->getStacks($this->getUniqueName())['controls'])) {
+            $controlManager->openStack($this);
         }
 
         $this->registerAdvancedSection();

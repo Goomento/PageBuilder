@@ -43,6 +43,10 @@ class Editor
      * @var RevisionInterface|null
      */
     private $lastRevision;
+    /**
+     * @var BuildableContentInterface|null
+     */
+    private $currentRevision;
 
     /**
      * Init the editor
@@ -117,7 +121,7 @@ class Editor
     private function getLastRevision()
     {
         if (!$this->lastRevision && $this->getContent()) {
-            $lastRevision = $this->getContent()->getLastRevision();
+            $lastRevision = $this->getContent()->getLastRevision(true);
             $this->lastRevision = $lastRevision ?: false;
         }
 
@@ -127,9 +131,22 @@ class Editor
     /**
      * @return BuildableContentInterface|null
      */
+    private function getCurrentRevision()
+    {
+        if (!$this->currentRevision && $this->getContent()) {
+            $currentRevision = $this->getContent()->getCurrentRevision(true);
+            $this->currentRevision = $currentRevision ?: false;
+        }
+
+        return $this->currentRevision ?: null;
+    }
+
+    /**
+     * @return BuildableContentInterface|null
+     */
     public function getBuildableContent()
     {
-        return $this->getLastRevision() ? $this->getLastRevision() : $this->getContent();
+        return $this->getContent();
     }
 
     /**
@@ -394,12 +411,15 @@ class Editor
 
         $document = $this->getDocument();
 
+        $currentRevisionId = $this->getCurrentRevision() ? $this->getCurrentRevision()->getId() : null;
+
         $config = [
             'version' => Configuration::version(),
             'debug' => DataHelper::isJsDebugMode(),
             'data' => $document->getElementsRawData(),
             'document' => $document->getConfig(),
-            'current_revision_id' => $this->getLastRevision() ? $this->getLastRevision()->getId() : null,
+            'current_revision_id' => $currentRevisionId,
+            'last_revision_id' => $currentRevisionId, // Display the current version instead of last
             'tabs' => ObjectManagerHelper::getControlsManager()->getTabs(),
             'controls' => ObjectManagerHelper::getControlsManager()->getControlsData(),
             'elements' => ObjectManagerHelper::getElementsManager()->getElementTypesConfig(),

@@ -11,7 +11,6 @@ namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 use Exception;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
-use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
@@ -49,7 +48,7 @@ class Save extends AbstractContent implements HttpPostActionInterface
                 }
 
                 if (!$content) {
-                    $content = $this->contentFactory->create();
+                    $content = $this->buildableContentManagement->buildBuildableContent();
                 } elseif (empty($contentType) || $content->getType() !== $contentType) {
                     throw new LocalizedException(
                         __('Invalid content type: %1', $contentType)
@@ -95,9 +94,6 @@ class Save extends AbstractContent implements HttpPostActionInterface
                 }
 
                 $identifier = isset($data['identifier']) ? trim($data['identifier']) : '';
-                if (empty($identifier)) {
-                    $identifier = $content->getType() . '-' . EncryptorHelper::uniqueString();
-                }
 
                 if ($content->getIdentifier() !== $identifier) {
                     $content->setIdentifier($identifier);
@@ -114,15 +110,8 @@ class Save extends AbstractContent implements HttpPostActionInterface
                     );
                 }
 
-                $this->contentManagement->refreshContentAssets($content);
-                $content = $this->contentRepository->save($content);
-
-                // Also create a revision
-                $this->contentManagement->createRevision(
-                    $content,
-                    BuildableContentInterface::STATUS_REVISION,
-                    (string) __('Admin changed content.')
-                );
+                $this->buildableContentManagement->saveBuildableContent($content,
+                    $isNewObject ? (string) __('Admin created content') : (string) __('Admin saved content'));
 
                 $this->messageManager->addSuccessMessage(
                     __('You saved the content.')
@@ -209,16 +198,16 @@ class Save extends AbstractContent implements HttpPostActionInterface
     }
 
     /**
-     * @param ContentInterface $model
+     * @param BuildableContentInterface $model
      * @param $resultRedirect
      * @param $data
      * @return mixed
      * @throws LocalizedException
      */
-    protected function processResultRedirect($model, $resultRedirect, $data)
+    protected function processResultRedirect(BuildableContentInterface $model, $resultRedirect, $data)
     {
         if ($this->getRequest()->getParam('back', false) === 'duplicate') {
-            $content = $this->contentFactory->create(['data' => $data]);
+            $content = $this->buildableContentManagement->buildBuildableContent( ContentInterface::CONTENT,$data);
             $content->setId(null);
             $title = $content->getTitle();
             $title .= ' ' .  __('(Duplicated)');
@@ -230,7 +219,7 @@ class Save extends AbstractContent implements HttpPostActionInterface
             $this->proceedContent($content, $data);
             $content->setStatus(ContentInterface::STATUS_PENDING);
 
-            $this->contentRepository->save($content);
+            $this->buildableContentManagement->saveBuildableContent($content, __('Admin duplicated content')->__toString());
             $this->messageManager->addSuccessMessage(__('You duplicated the content.'));
             return $resultRedirect->setPath(
                 '*/*/edit',

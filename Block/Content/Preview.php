@@ -10,6 +10,9 @@ namespace Goomento\PageBuilder\Block\Content;
 
 use Goomento\PageBuilder\Block\Content;
 
+/**
+ * This is using for Editor preview during building page
+ */
 class Preview extends Content
 {
     /**

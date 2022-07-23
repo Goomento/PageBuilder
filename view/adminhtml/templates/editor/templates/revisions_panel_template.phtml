@@ -45,8 +45,12 @@ declare(strict_types=1);
 <script type="text/template" id="tmpl-gmt-panel-revisions-revision-item">
 	<div class="gmt-revision-item__wrapper {{ type }}" data-revision-id="{{ id }}">
 		<div class="gmt-revision-item__details">
-			<div class="gmt-revision-date">{{{ date }}}</div>
-			<div class="gmt-revision-meta"><span>{{{ jQuery.mage.__( type ) }}}</span> <?= __( 'By' ); ?> {{{ author }}}</div>
+			<div class="gmt-revision-date">{{{ goomento.helpers.formatDatetime(date) }}}</div>
+			<div class="gmt-revision-meta">
+                <span class="gmt-revision-label">{{{ label }}}</span> |
+                <span class="gmt-revision-type">{{{ jQuery.mage.__( type ) }}}</span>
+                <span class="gmt-revision-author">{{{ jQuery.mage.__( 'By' ) }}} {{{ author }}}</span>
+            </div>
 		</div>
 		<div class="gmt-revision-item__tools">
 			<# if ( current === true ) { #>

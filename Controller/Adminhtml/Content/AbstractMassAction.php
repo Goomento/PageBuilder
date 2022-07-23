@@ -9,8 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 
 use Exception;
-use Goomento\PageBuilder\Api\ContentRepositoryInterface;
-use Goomento\PageBuilder\Api\ContentManagementInterface;
+use Goomento\PageBuilder\Api\BuildableContentManagementInterface;
 use Goomento\PageBuilder\Api\ContentRegistryInterface;
 use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory;
 use Goomento\PageBuilder\Logger\Logger;
@@ -34,18 +33,12 @@ abstract class AbstractMassAction extends Action implements HttpPostActionInterf
      * @var CollectionFactory
      */
     private $collectionFactory;
-
-    /**
-     * @var ContentRepositoryInterface
-     */
-    protected $contentRepository;
-
     /**
      * @var Logger
      */
     protected $logger;
     /**
-     * @var ContentManagementInterface
+     * @var BuildableContentManagementInterface
      */
     protected $contentManagement;
     /**
@@ -57,24 +50,21 @@ abstract class AbstractMassAction extends Action implements HttpPostActionInterf
      * @param Context $context
      * @param Filter $filter
      * @param CollectionFactory $collectionFactory
-     * @param ContentRepositoryInterface $contentRepository
-     * @param ContentManagementInterface $contentManagement
+     * @param BuildableContentManagementInterface $contentManagement
      * @param ContentRegistryInterface $contentRegistry
      * @param Logger $logger
      */
     public function __construct(
-        Context $context,
-        Filter $filter,
-        CollectionFactory $collectionFactory,
-        ContentRepositoryInterface $contentRepository,
-        ContentManagementInterface $contentManagement,
-        ContentRegistryInterface $contentRegistry,
-        Logger $logger
+        Context                             $context,
+        Filter                              $filter,
+        CollectionFactory                   $collectionFactory,
+        BuildableContentManagementInterface $contentManagement,
+        ContentRegistryInterface            $contentRegistry,
+        Logger                              $logger
     ) {
         parent::__construct($context);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
-        $this->contentRepository = $contentRepository;
         $this->contentManagement = $contentManagement;
         $this->contentRegistry = $contentRegistry;
         $this->logger = $logger;

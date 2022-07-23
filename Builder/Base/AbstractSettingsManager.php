@@ -11,7 +11,7 @@ namespace Goomento\PageBuilder\Builder\Base;
 use Exception;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Modules\Ajax;
-use Goomento\PageBuilder\Helper\ContentHelper;
+use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 

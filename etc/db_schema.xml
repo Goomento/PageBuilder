@@ -29,6 +29,7 @@
                 comment="Content Creation Time"/>
         <column xsi:type="timestamp" name="update_time" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Content Modification Time"/>
+        <column xsi:type="varchar" name="revision_hash" nullable="false" length="32" comment="Revision Hash"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="content_id"/>
         </constraint>
@@ -38,6 +39,12 @@
             <column name="identifier"/>
             <column name="status"/>
         </index>
+        <constraint xsi:type="unique" referenceId="PAGEBUILDER_IDENTIFIER_UNIQUE">
+            <column name="identifier"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="PAGEBUILDER_REVISION_HASH_UNIQUE">
+            <column name="revision_hash"/>
+        </constraint>
     </table>
     <table name="pagebuilder_content_store" resource="default" engine="innodb" comment="Page Builder To Store Linkage Table">
         <column xsi:type="int" name="content_id" padding="11" unsigned="false" nullable="false" identity="false"
@@ -80,6 +87,7 @@
         <column xsi:type="varchar" name="label" length="256" nullable="true" comment="Revision Label"/>
         <column xsi:type="timestamp" name="creation_time" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Revision Creation Time"/>
+        <column xsi:type="varchar" name="revision_hash" nullable="false" length="32" comment="Revision Hash"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="revision_id"/>
         </constraint>
@@ -96,6 +104,9 @@
         <index referenceId="PAGEBUILDER_CONTENT_REVISION_CONTENT_ID" indexType="btree">
             <column name="content_id"/>
         </index>
+        <constraint xsi:type="unique" referenceId="PAGEBUILDER_REVISION_HASH_UNIQUE">
+            <column name="revision_hash"/>
+        </constraint>
     </table>
     <table name="pagebuilder_config_data" resource="default" engine="innodb" comment="PageBuilder Config Data">
         <column xsi:type="int" name="config_id" unsigned="true" nullable="false" identity="true"

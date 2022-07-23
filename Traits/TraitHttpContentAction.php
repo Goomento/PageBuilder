@@ -10,7 +10,7 @@ namespace Goomento\PageBuilder\Traits;
 
 use Goomento\Core\Traits\TraitHttpAction;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
-use Goomento\PageBuilder\Helper\ContentHelper;
+use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Magento\Framework\Exception\LocalizedException;
 
@@ -41,7 +41,7 @@ trait TraitHttpContentAction
             $this->content = false;
             $contentId = (int) $this->getRequest()->getParam('content_id');
             if ($contentId !== 0) {
-                $this->content = ContentHelper::get($contentId);
+                $this->content = BuildableContentHelper::getContent($contentId);
             }
         }
 

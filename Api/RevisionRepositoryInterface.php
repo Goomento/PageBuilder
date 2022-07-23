@@ -32,7 +32,16 @@ interface RevisionRepositoryInterface
      * @return RevisionInterface
      * @throws LocalizedException
      */
-    public function getById(int $revisionId);
+    public function getById(int $revisionId) : RevisionInterface;
+
+    /**
+     * Retrieve revision.
+     *
+     * @param string $revisionHash
+     * @return RevisionInterface
+     * @throws LocalizedException
+     */
+    public function getByRevisionHash(string $revisionHash);
 
     /**
      * Retrieve revisions of content.

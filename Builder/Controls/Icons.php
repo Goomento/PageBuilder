@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Controls;
 
-use Goomento\PageBuilder\Builder\Modules\DynamicTags as TagsModule;
+use Goomento\PageBuilder\Builder\Managers\Tags as TagsModule;
 
 class Icons extends AbstractBaseMultiple
 {
@@ -82,7 +82,7 @@ class Icons extends AbstractBaseMultiple
         return [
             'label_block' => true,
             'dynamic' => [
-                'categories' => [ TagsModule::IMAGE_CATEGORY ],
+                'categories' => [TagsModule::IMAGE_CATEGORY],
                 'returnType' => 'object',
             ],
             'search_bar' => true,

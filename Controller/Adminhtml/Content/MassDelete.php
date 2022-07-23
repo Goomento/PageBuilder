@@ -19,7 +19,6 @@ class MassDelete extends AbstractMassAction
     /**
      * @param AbstractCollection $collection
      * @return void
-     * @throws LocalizedException
      */
     protected function massAction(AbstractCollection $collection) : void
     {
@@ -27,7 +26,7 @@ class MassDelete extends AbstractMassAction
         /** @var ContentInterface $content */
         foreach ($collection->getItems() as $content) {
             if ($content && $content->getId()) {
-                $this->contentRepository->delete($content);
+                $this->contentManagement->deleteBuildableContent($content);
                 $count++;
             }
         }

@@ -9,14 +9,14 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Css;
 
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
+use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractCss;
 use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
-use Goomento\PageBuilder\Helper\ContentHelper;
+use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
-use Goomento\PageBuilder\Helper\StateHelper;
 
 class ContentCss extends AbstractCss
 {
@@ -49,15 +49,7 @@ class ContentCss extends AbstractCss
     {
         $this->model = $content;
 
-        $parts = [
-            'pagebuilder-',
-            $content->getStatus(),
-            '-',
-            $content->getId(),
-            '.css'
-        ];
-
-        parent::__construct(implode('', $parts));
+        parent::__construct($content->getUniqueIdentity() . '.css');
     }
 
     /**
@@ -108,8 +100,10 @@ class ContentCss extends AbstractCss
      */
     protected function updateMeta($meta)
     {
-        $this->model->setSetting(static::META_KEY, $meta);
-        ContentHelper::save( $this->model );
+        $this->getModel()->setSetting(static::META_KEY, $meta);
+        $this->getModel()->setIgnoreLabelFlag(true);
+        BuildableContentHelper::saveBuildableContent( $this->getModel() );
+        $this->getModel()->setIgnoreLabelFlag(false);
     }
 
     /**
@@ -120,8 +114,10 @@ class ContentCss extends AbstractCss
      */
     protected function deleteMeta()
     {
-        $this->model->deleteSetting(static::META_KEY);
-        ContentHelper::save( $this->model );
+        $this->getModel()->deleteSetting(static::META_KEY);
+        $this->getModel()->setIgnoreLabelFlag(true);
+        BuildableContentHelper::saveBuildableContent( $this->getModel() );
+        $this->getModel()->setIgnoreLabelFlag(false);
     }
 
     /**
@@ -289,6 +285,7 @@ class ContentCss extends AbstractCss
      */
     protected function useExternalFile()
     {
-        return !DataHelper::useInlineCss();
+        $useInline = (!$this->getModel() instanceof RevisionInterface);
+        return $useInline && !DataHelper::useInlineCss();
     }
 }

@@ -37,7 +37,7 @@ class Section extends AbstractDocumentType
     public static function registerLayoutControl(AbstractDocumentType $section)
     {
         $section->startInjection([
-            'of' => 'title'
+            'of' => 'document_settings'
         ]);
 
         $section->addControl('layout', [

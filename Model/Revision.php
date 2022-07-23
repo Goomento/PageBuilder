@@ -12,16 +12,17 @@ use Goomento\PageBuilder\Api\ContentRegistryInterface;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
-use Goomento\PageBuilder\Traits\BuildableModelTrait;
+use Goomento\PageBuilder\Traits\TraitBuildableModel;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\DataObject\IdentityInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\User\Model\User;
 
 class Revision extends AbstractModel implements RevisionInterface, IdentityInterface
 {
 
-    use BuildableModelTrait;
+    use TraitBuildableModel;
 
     /**
      * Cache tag
@@ -64,15 +65,12 @@ class Revision extends AbstractModel implements RevisionInterface, IdentityInter
     /**
      * @return array
      */
-    public static function getAvailableStatuses()
+    public static function getAvailableStatuses() : array
     {
-        return array_merge(
-            Content::getAvailableStatuses(),
-            [
-                self::STATUS_AUTOSAVE => __('Autosave'),
-                self::STATUS_REVISION => __('Revision')
-            ]
-        );
+        return [
+            self::STATUS_AUTOSAVE => __('Autosave'),
+            self::STATUS_REVISION => __('Revision')
+        ];
     }
 
     /**
@@ -149,9 +147,9 @@ class Revision extends AbstractModel implements RevisionInterface, IdentityInter
     /**
      * @inheritDoc
      */
-    public function getLastRevision(): ?BuildableContentInterface
+    public function getLastRevision($forceLoad = false): ?BuildableContentInterface
     {
-        return $this;
+        return null;
     }
 
     /**
@@ -160,20 +158,6 @@ class Revision extends AbstractModel implements RevisionInterface, IdentityInter
     public function setLastRevision(BuildableContentInterface $content): BuildableContentInterface
     {
         return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public static function getInlineSettingKeys(): array
-    {
-        return [
-            'id',
-            self::STATUS,
-            self::CONTENT_ID,
-            self::REVISION_ID,
-            ContentInterface::IS_ACTIVE,
-        ];
     }
 
     /**
@@ -190,5 +174,21 @@ class Revision extends AbstractModel implements RevisionInterface, IdentityInter
     public function getLabel(): string
     {
         return (string) $this->getData(self::LABEL);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCurrentRevision($forceLoad = false): ?BuildableContentInterface
+    {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCurrentRevision(BuildableContentInterface $content): BuildableContentInterface
+    {
+        return $this;
     }
 }

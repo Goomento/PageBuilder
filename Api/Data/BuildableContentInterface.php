@@ -8,6 +8,14 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Api\Data;
 
+/**
+ * @method BuildableContentInterface getData($key, $value = null)
+ * @method mixed setData()
+ * @method BuildableContentInterface setIgnoreLabelFlag(bool $flag)
+ * @method bool|null getIgnoreLabelFlag()
+ * @method BuildableContentInterface setIsRefreshingAssetsFlag(bool $flag)
+ * @method bool|null getIsRefreshingAssetsFlag()
+ */
 interface BuildableContentInterface
 {
     const STATUS                   = 'status';
@@ -18,6 +26,7 @@ interface BuildableContentInterface
     const STATUS_REVISION          = 'revision';
     const ELEMENTS                 = 'elements';
     const SETTINGS                 = 'settings';
+    const REVISION_HASH            = 'revision_hash';
     const CREATION_TIME            = 'creation_time';
     const UPDATE_TIME              = 'update_time';
 
@@ -85,13 +94,6 @@ interface BuildableContentInterface
      * @return bool
      */
     public function hasSetting( $name ) : bool;
-
-    /**
-     * Settings that's not allow to save
-     *
-     * @return array
-     */
-    public static function getInlineSettingKeys() : array;
 
     /**
      * Get ID
@@ -193,15 +195,28 @@ interface BuildableContentInterface
     public function setOriginContent(BuildableContentInterface $content) : BuildableContentInterface;
 
     /**
-     * @return BuildableContentInterface
+     * @param bool $forceLoad
+     * @return BuildableContentInterface|null
      */
-    public function getLastRevision() : ?BuildableContentInterface;
+    public function getLastRevision($forceLoad = false) : ?BuildableContentInterface;
 
     /**
      * @param BuildableContentInterface $content
      * @return BuildableContentInterface|null
      */
     public function setLastRevision(BuildableContentInterface $content) : BuildableContentInterface;
+
+    /**
+     * @param bool $forceLoad
+     * @return BuildableContentInterface|null
+     */
+    public function getCurrentRevision($forceLoad = false) : ?BuildableContentInterface;
+
+    /**
+     * @param BuildableContentInterface $content
+     * @return BuildableContentInterface|null
+     */
+    public function setCurrentRevision(BuildableContentInterface $content) : BuildableContentInterface;
 
     /**
      * Get unique hash of the current version
@@ -211,10 +226,24 @@ interface BuildableContentInterface
     public function getRevisionHash() : string;
 
     /**
+     * Set unique hash
+     *
+     * @param string $hash
+     * @return BuildableContentInterface
+     */
+    public function setRevisionHash(string $hash) : BuildableContentInterface;
+
+    /**
      * Find element by id
      *
      * @param string $elementId
      * @return array|null
      */
     public function getElementDataById(string $elementId) : array;
+
+    /**
+     * Get allowed statuses
+     * @return array
+     */
+    public static function getAvailableStatuses() : array;
 }

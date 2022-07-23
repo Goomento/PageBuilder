@@ -16,7 +16,7 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 class Revision extends AbstractDb
 {
-    use SerializeDataTrait;
+    use TraitResourceModel;
 
     /**
      * @inheriDoc
