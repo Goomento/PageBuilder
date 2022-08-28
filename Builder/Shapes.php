@@ -86,24 +86,24 @@ class Shapes
      *
      *
      * @param string $shape       The shape.
-     * @param bool   $is_negative Optional. Whether the file name is negative or
+     * @param bool   $isNegative Optional. Whether the file name is negative or
      *                            not. Default is `false`.
      *
      * @return string Shape file path.
      */
-    public static function getShapePath($shape, $is_negative = false)
+    public static function getShapePath($shape, $isNegative = false)
     {
         if (isset(self::$shapes[ $shape ]) && isset(self::$shapes[ $shape ]['path'])) {
             return self::$shapes[ $shape ]['path'];
         }
 
-        $file_name = $shape;
+        $fileName = $shape;
 
-        if ($is_negative) {
-            $file_name .= '-negative';
+        if ($isNegative) {
+            $fileName .= '-negative';
         }
 
-        return AssetsHelper::getModulePath('Goomento_PageBuilder', 'view') . '/base/web/shapes/' . $file_name . '.svg';
+        return AssetsHelper::getModulePath('Goomento_PageBuilder', 'view') . '/base/web/shapes/' . $fileName . '.svg';
     }
 
     /**
@@ -114,7 +114,7 @@ class Shapes
      */
     private static function initShapes()
     {
-        $native_shapes = [
+        $nativeShapes = [
             'mountains' => [
                 'title' => __('Mountains'),
                 'has_flip' => true,
@@ -196,7 +196,7 @@ class Shapes
             ],
         ];
 
-        self::$shapes = array_merge($native_shapes, self::getAdditionalShapes());
+        self::$shapes = array_merge($nativeShapes, self::getAdditionalShapes());
     }
 
     /**
@@ -209,21 +209,21 @@ class Shapes
      */
     private static function getAdditionalShapes()
     {
-        static $additional_shapes = null;
+        static $additionalShapes = null;
 
-        if (null !== $additional_shapes) {
-            return $additional_shapes;
+        if (null !== $additionalShapes) {
+            return $additionalShapes;
         }
-        $additional_shapes = [];
+        $additionalShapes = [];
         /**
          * Additional shapes.
          *
          * Filters the shapes used by SagoTheme to add additional shapes.
          *
          *
-         * @param array $additional_shapes Additional SagoTheme shapes.
+         * @param array $additionalShapes Additional SagoTheme shapes.
          */
-        return HooksHelper::applyFilters('pagebuilder/shapes/additional_shapes', $additional_shapes);
+        return HooksHelper::applyFilters('pagebuilder/shapes/additional_shapes', $additionalShapes);
     }
 
     /**
@@ -236,23 +236,23 @@ class Shapes
      */
     public static function getAdditionalShapesForConfig()
     {
-        $additional_shapes = self::getAdditionalShapes();
-        if (empty($additional_shapes)) {
+        $additionalShapes = self::getAdditionalShapes();
+        if (empty($additionalShapes)) {
             return false;
         }
 
-        $additional_shapes_config = [];
-        foreach ($additional_shapes as $shape_name => $shape_settings) {
-            if (!isset($shape_settings['url'])) {
+        $additionalShapesConfig = [];
+        foreach ($additionalShapes as $shapeName => $shapeSettings) {
+            if (!isset($shapeSettings['url'])) {
                 continue;
             }
-            $additional_shapes_config[ $shape_name ] = $shape_settings['url'];
+            $additionalShapesConfig[ $shapeName ] = $shapeSettings['url'];
         }
 
-        if (empty($additional_shapes_config)) {
+        if (empty($additionalShapesConfig)) {
             return false;
         }
 
-        return $additional_shapes_config;
+        return $additionalShapesConfig;
     }
 }

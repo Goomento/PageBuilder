@@ -119,7 +119,7 @@ class GeneralSettings extends AbstractSettingsManager
 
         foreach ($modelControls as $sections) {
             foreach ($sections as $sectionData) {
-                foreach ($sectionData['controls'] as $controlName => $control_data) {
+                foreach ($sectionData['controls'] as $controlName => $controlData) {
                     if (isset($settings[ $controlName ])) {
                         $oneListSettings[ $controlName ] = $settings[ $controlName ];
                         ConfigHelper::setValue($controlName, $settings[$controlName]);

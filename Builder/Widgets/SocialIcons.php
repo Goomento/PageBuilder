@@ -367,7 +367,7 @@ class SocialIcons extends AbstractWidget
             ]
         );
 
-        $icon_spacing = DataHelper::isRtl() ? 'margin-left: {{SIZE}}{{UNIT}};' : 'margin-right: {{SIZE}}{{UNIT}};';
+        $iconSpacing = DataHelper::isRtl() ? 'margin-left: {{SIZE}}{{UNIT}};' : 'margin-right: {{SIZE}}{{UNIT}};';
 
         $this->addResponsiveControl(
             'icon_spacing',
@@ -381,7 +381,7 @@ class SocialIcons extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-social-icon:not(:last-child)' => $icon_spacing,
+                    '{{WRAPPER}} .gmt-social-icon:not(:last-child)' => $iconSpacing,
                 ],
             ]
         );

@@ -23,11 +23,11 @@ if (!empty($settings['icon_hover_animation'])) {
     $widget->addRenderAttribute('icon-wrapper', 'class', 'gmt-animation-' . $settings['icon_hover_animation']);
 }
 
-$icon_tag = 'div';
+$iconTag = 'div';
 
 if (!empty($settings['icon_link']['url'])) {
     $widget->addRenderAttribute('icon-wrapper', 'href', $settings['icon_link']['url']);
-    $icon_tag = 'a';
+    $iconTag = 'a';
 
     if (!empty($settings['icon_link']['is_external'])) {
         $widget->addRenderAttribute('icon-wrapper', 'target', '_blank');
@@ -40,7 +40,7 @@ if (!empty($settings['icon_link']['url'])) {
 
 ?>
 <div <?= $widget->getRenderAttributeString('wrapper'); ?>>
-    <<?= $icon_tag . ' ' . $widget->getRenderAttributeString('icon-wrapper'); ?>>
+    <<?= $iconTag . ' ' . $widget->getRenderAttributeString('icon-wrapper'); ?>>
     <?php Icons::renderIcon($settings['icon_selected_icon'], [ 'aria-hidden' => 'true' ]) ?>
-    </<?= $icon_tag; ?>>
+    </<?= $iconTag; ?>>
 </div>

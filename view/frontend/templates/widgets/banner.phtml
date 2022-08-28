@@ -39,14 +39,14 @@ if (!empty($settings['banner_image']['url'])) :
     if ($settings['banner_hover_animation']) {
         $widget->addRenderAttribute('image', 'class', 'gmt-animation-' . $settings['banner_hover_animation']);
     }
-    $image_html = '<img ' . $widget->getRenderAttributeString('image') . '/>';
+    $imageHtml = '<img ' . $widget->getRenderAttributeString('image') . '/>';
 
     if (!empty($settings['banner_link']['url'])) {
-        $image_html = '<a ' . $widget->getRenderAttributeString('link') . '>' . $image_html . '</a>';
+        $imageHtml = '<a ' . $widget->getRenderAttributeString('link') . '>' . $imageHtml . '</a>';
     }
     ?>
     <div class="gmt-banner-wrapper">
-        <figure class="gmt-banner-img"><?= /** @noEscape  */ $image_html ?></figure>
+        <figure class="gmt-banner-img"><?= /** @noEscape  */ $imageHtml ?></figure>
         <?php
         if ($hasContent) :
             $widget->addRenderAttribute('box-content', 'class', 'gmt-banner-content');

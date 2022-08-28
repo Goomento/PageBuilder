@@ -92,7 +92,7 @@ class ColorPicker extends Color
     {
         $schemes = parent::_initSystemSchemes();
 
-        $additional_schemes = [
+        $additionalSchemes = [
             'joker' => [
                 'items' => [
                     self::COLOR_5 => '#4b4646',
@@ -149,7 +149,7 @@ class ColorPicker extends Color
             ],
         ];
 
-        $schemes = array_replace_recursive($schemes, $additional_schemes);
+        $schemes = array_replace_recursive($schemes, $additionalSchemes);
 
         foreach ($schemes as & $scheme) {
             $scheme['items'] += [
@@ -173,7 +173,7 @@ class ColorPicker extends Color
     {
         $schemes = $this->getSystemSchemes();
 
-        $items_to_print = [
+        $itemsToPrint = [
             self::COLOR_1,
             self::COLOR_5,
             self::COLOR_2,
@@ -182,10 +182,10 @@ class ColorPicker extends Color
             self::COLOR_4,
         ];
 
-        $items_to_print = array_flip($items_to_print);
+        $itemsToPrint = array_flip($itemsToPrint);
 
-        foreach ($schemes as $scheme_key => $scheme) {
-            $schemes[ $scheme_key ]['items'] = array_replace($items_to_print, array_intersect_key($scheme['items'], $items_to_print));
+        foreach ($schemes as $schemeKey => $scheme) {
+            $schemes[ $schemeKey ]['items'] = array_replace($itemsToPrint, array_intersect_key($scheme['items'], $itemsToPrint));
         }
 
         return $schemes;

@@ -20,24 +20,24 @@ $hasIcon = ! empty($settings['accordion_selected_icon']['value']);
 $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
     <div class="gmt-accordion" role="tablist">
     <?php foreach ($settings['accordion_tabs'] as $index => $item) :
-        $tab_count = $index + 1;
+        $tabCount = $index + 1;
         $tabTitleSettingKey = 'accordion_tabs.' . $index . '.tab_title';
         $tabContentSettingKey = 'accordion_tabs.' . $index . '.accordion_tab_content';
 
         $widget->addRenderAttribute($tabTitleSettingKey, [
-            'id' => 'gmt-tab-title-' . $idInt . $tab_count,
+            'id' => 'gmt-tab-title-' . $idInt . $tabCount,
             'class' => [ 'gmt-tab-title' ],
-            'data-tab' => $tab_count,
+            'data-tab' => $tabCount,
             'role' => 'tab',
-            'aria-controls' => 'gmt-tab-content-' . $idInt . $tab_count,
+            'aria-controls' => 'gmt-tab-content-' . $idInt . $tabCount,
         ]);
 
         $widget->addRenderAttribute($tabContentSettingKey, [
-            'id' => 'gmt-tab-content-' . $idInt . $tab_count,
+            'id' => 'gmt-tab-content-' . $idInt . $tabCount,
             'class' => [ 'gmt-tab-content', 'gmt-clearfix' ],
-            'data-tab' => $tab_count,
+            'data-tab' => $tabCount,
             'role' => 'tabpanel',
-            'aria-labelledby' => 'gmt-tab-title-' . $idInt . $tab_count,
+            'aria-labelledby' => 'gmt-tab-title-' . $idInt . $tabCount,
         ]);
 
         $widget->addInlineEditingAttributes($tabContentSettingKey, 'advanced'); ?>

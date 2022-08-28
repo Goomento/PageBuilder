@@ -75,6 +75,7 @@ class ProcessUrlRewriteSavingObserver implements ObserverInterface
             }
         } catch (\Exception $e) {
             $this->logger->error($e);
+            throw $e;
         }
     }
 }

@@ -109,7 +109,7 @@ class Preview
     }
 
     /**
-     *
+     * Enqueue scripts
      */
     public function enqueueScripts()
     {

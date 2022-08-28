@@ -14,18 +14,18 @@ use Goomento\PageBuilder\Block\View\Element\Widget;
 $widget = $block->getWidget();
 $tabs = $widget->getSettingsForDisplay('tabs');
 
-$id_int = substr((string) $widget->getIdInt(), 0, 3); ?>
+$idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
 <div class="gmt-tabs" role="tablist">
     <div class="gmt-tabs-wrapper">
         <?php
         foreach ($tabs as $index => $item) :
-            $tab_count = $index + 1;
+            $tabCount = $index + 1;
             $widget->addRenderAttribute('tab_title' . $index, [
-                'id' => 'gmt-tab-title-' . $id_int . $tab_count,
+                'id' => 'gmt-tab-title-' . $idInt . $tabCount,
                 'class' => [ 'gmt-tab-title', 'gmt-tab-desktop-title' ],
-                'data-tab' => $tab_count,
+                'data-tab' => $tabCount,
                 'role' => 'tab',
-                'aria-controls' => 'gmt-tab-content-' . $id_int . $tab_count,
+                'aria-controls' => 'gmt-tab-content-' . $idInt . $tabCount,
             ]); ?>
             <div <?= $widget->getRenderAttributeString('tab_title' . $index); ?>><a href=""><?= /** @noEscape */ $item['tab_title']; ?></a></div>
         <?php endforeach; ?>
@@ -33,22 +33,22 @@ $id_int = substr((string) $widget->getIdInt(), 0, 3); ?>
     <div class="gmt-tabs-content-wrapper">
         <?php
         foreach ($tabs as $index => $item) :
-            $tab_count = $index + 1;
+            $tabCount = $index + 1;
 
             $tabContentSettingKey = 'tabs.' . $index . '.tab_content';
             $tabTitleMobileSettingKey = 'mobile.tabs.' . $index . '.tab_content';
 
             $widget->addRenderAttribute($tabContentSettingKey, [
-                'id' => 'gmt-tab-content-' . $id_int . $tab_count,
+                'id' => 'gmt-tab-content-' . $idInt . $tabCount,
                 'class' => [ 'gmt-tab-content', 'gmt-clearfix' ],
-                'data-tab' => $tab_count,
+                'data-tab' => $tabCount,
                 'role' => 'tabpanel',
-                'aria-labelledby' => 'gmt-tab-title-' . $id_int . $tab_count,
+                'aria-labelledby' => 'gmt-tab-title-' . $idInt . $tabCount,
             ]);
 
             $widget->addRenderAttribute($tabTitleMobileSettingKey, [
                 'class' => [ 'gmt-tab-title', 'gmt-tab-mobile-title' ],
-                'data-tab' => $tab_count,
+                'data-tab' => $tabCount,
                 'role' => 'tab',
             ]);
 

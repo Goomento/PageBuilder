@@ -80,13 +80,13 @@ class Documents
      */
     public function registerDefaultTypes()
     {
-        $default_types = [
+        $defaultTypes = [
             'page' => Page::class,
             'template' => Template::class,
             'section' => Section::class,
         ];
 
-        foreach ($default_types as $type => $class) {
+        foreach ($defaultTypes as $type => $class) {
             $this->registerDocumentType($type, $class);
         }
     }
@@ -172,12 +172,12 @@ class Documents
      */
     public function getTypesProperties()
     {
-        $types_properties = [];
+        $typesProperties = [];
 
         foreach ($this->getDocumentTypes() as $type => $class) {
-            $types_properties[ $type ] = $class::getProperties();
+            $typesProperties[ $type ] = $class::getProperties();
         }
-        return $types_properties;
+        return $typesProperties;
     }
 
     /**
@@ -249,7 +249,7 @@ class Documents
 
         $document->save( $data );
 
-        $return_data = [
+        $returnData = [
             'config' => [
                 'document' => [
                     'last_edited' => $document->getLastEdited(), // Should remove this
@@ -267,10 +267,10 @@ class Documents
          * Filters the ajax data returned when saving the post on the builder.
          *
          *
-         * @param array    $return_data The returned data.
+         * @param array    $returnData The returned data.
          * @param AbstractDocument $document    The document instance.
          */
-        return HooksHelper::applyFilters('pagebuilder/documents/ajax_save/return_data', $return_data, $document);
+        return HooksHelper::applyFilters('pagebuilder/documents/ajax_save/return_data', $returnData, $document);
     }
 
     /**

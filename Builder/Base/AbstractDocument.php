@@ -10,13 +10,8 @@ namespace Goomento\PageBuilder\Builder\Base;
 
 use Exception;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
-use Goomento\PageBuilder\Api\Data\ContentInterface;
-use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Builder\Managers\Elements;
-use Goomento\PageBuilder\Builder\Managers\PageSettings;
 use Goomento\PageBuilder\Configuration;
-use Goomento\PageBuilder\Builder\Css\ContentCss;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
@@ -346,19 +341,6 @@ abstract class AbstractDocument extends ControlsStack
     }
 
     /**
-     * Save data as permanent
-     *
-     * @param array $data
-     *
-     * @return bool
-     * @TODO remove this
-     */
-//    public function publishSave(array $data)
-//    {
-//        return $this->save($data, true);
-//    }
-
-    /**
      *
      * @return mixed
      */
@@ -423,21 +405,21 @@ abstract class AbstractDocument extends ControlsStack
             $data = $this->getElementsData();
         }
 
-        $editor_data = [];
+        $editorData = [];
 
         $elementManager = ObjectManagerHelper::getElementsManager();
 
-        foreach ($data as $element_data) {
-            $element = $elementManager->createElementInstance($element_data);
+        foreach ($data as $elementData) {
+            $element = $elementManager->createElementInstance($elementData);
 
             if (!$element) {
                 continue;
             }
 
-            $editor_data[] = $element->getRawData($withHtmlContent);
+            $editorData[] = $element->getRawData($withHtmlContent);
         }
 
-        return $editor_data;
+        return $editorData;
     }
 
     /**
@@ -549,7 +531,7 @@ abstract class AbstractDocument extends ControlsStack
      */
     protected function setModelElements(array $elements)
     {
-        $editor_data = $this->getElementsRawData($elements);
+        $editorData = $this->getElementsRawData($elements);
 
         $this->getModel()->setElements($elements);
 
@@ -560,7 +542,7 @@ abstract class AbstractDocument extends ControlsStack
          *
          *
          * @param string   $status          ContentCss status.
-         * @param int|bool $is_meta_updated Meta ID if the key didn't exist, true on successful update, false on failure.
+         * @param int|bool $isMetaUpdated Meta ID if the key didn't exist, true on successful update, false on failure.
          */
         HooksHelper::doAction('pagebuilder/db/before_save', $this->getModel()->getStatus());
 
@@ -570,10 +552,10 @@ abstract class AbstractDocument extends ControlsStack
          * Fires after SagoTheme saves data to the database.
          *
          *
-         * @param int   $post_id     The ID of the post.
-         * @param array $editor_data Sanitize posted data.
+         * @param int   $postId     The ID of the post.
+         * @param array $editorData Sanitize posted data.
          */
-        HooksHelper::doAction('pagebuilder/editor/after_save', $this->getModel()->getId(), $editor_data);
+        HooksHelper::doAction('pagebuilder/editor/after_save', $this->getModel()->getId(), $editorData);
     }
 
     public function setModelVersion()
@@ -631,7 +613,7 @@ abstract class AbstractDocument extends ControlsStack
     }
 
     /**
-     *
+     * @return string
      */
     public function getLastEdited()
     {
@@ -640,7 +622,7 @@ abstract class AbstractDocument extends ControlsStack
         $user = $content->getLastEditorUser();
         $displayName = $user ? $user->getName() : __('Automatic');
 
-        return __('Updated %1 by %2', DataHelper::timeElapsedString($content->getUpdateTime()), $displayName);
+        return __('Updated %1 by %2', DataHelper::timeElapsedString($content->getUpdateTime()), $displayName)->__toString();
     }
 
     /**

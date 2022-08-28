@@ -18,25 +18,25 @@ $widget = $block->getWidget();
 
 $settings = $widget->getSettingsForDisplay();
 
-$svg_code = $widget->buildSvg();
-$has_icon = 'line_icon' === ($settings['look']) && ! empty($settings['icon']);
-$has_text = 'line_text' === ($settings['look']) && ! empty($settings['text']);
+$svgCode = $widget->buildSvg();
+$hasIcon = 'line_icon' === ($settings['look']) && ! empty($settings['icon']);
+$hasText = 'line_text' === ($settings['look']) && ! empty($settings['text']);
 
 $widget->addRenderAttribute('wrapper', 'class', 'gmt-divider');
 
-if (!empty($svg_code)) {
-    $widget->addRenderAttribute('wrapper', 'style', '--divider-pattern-url: url("data:image/svg+xml,' . $widget->svgToDataUri($svg_code) . '");');
+if (!empty($svgCode)) {
+    $widget->addRenderAttribute('wrapper', 'style', '--divider-pattern-url: url("data:image/svg+xml,' . $widget->svgToDataUri($svgCode) . '");');
 } ?>
 <div <?= $widget->getRenderAttributeString('wrapper'); ?>>
         <span class="gmt-divider-separator">
-        <?php if ($has_icon) : ?>
+        <?php if ($hasIcon) : ?>
             <div class="gmt-icon gmt-divider__element">
                 <?php
                 Icons::renderIcon($settings['icon'], [
                     'aria-hidden' => 'true',
                 ]); ?>
             </div>
-        <?php elseif ($has_text) :
+        <?php elseif ($hasText) :
             $widget->addInlineEditingAttributes('text');
             $widget->addRenderAttribute('text', [ 'class' => [ 'gmt-divider__text', 'gmt-divider__element' ] ]); ?>
             <span <?= $widget->getRenderAttributeString('text'); ?>><?= $settings['text']; ?></span>

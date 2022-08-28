@@ -41,11 +41,11 @@ class Icon extends AbstractControlData
      */
     public function contentTemplate()
     {
-        $control_uid = $this->getControlUid(); ?>
+        $controlUid = $this->getControlUid(); ?>
 		<div class="gmt-control-field">
-			<label for="<?= $control_uid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+			<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
 			<div class="gmt-control-input-wrapper">
-				<select id="<?= $control_uid; ?>" class="gmt-control-icon" data-setting="{{ data.name }}" data-placeholder="<?= __('Select Icon'); ?>">
+				<select id="<?= $controlUid; ?>" class="gmt-control-icon" data-setting="{{ data.name }}" data-placeholder="<?= __('Select Icon'); ?>">
 					<option value=""><?= __('Select Icon'); ?></option>
 					<# _.each( data.options, function( option_title, option_value ) { #>
 					<option value="{{ option_value }}">{{{ option_title }}}</option>

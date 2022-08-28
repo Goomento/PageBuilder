@@ -47,11 +47,11 @@ class Number extends AbstractControlData
      */
     public function contentTemplate()
     {
-        $control_uid = $this->getControlUid(); ?>
+        $controlUid = $this->getControlUid(); ?>
 		<div class="gmt-control-field">
-			<label for="<?= $control_uid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+			<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
 			<div class="gmt-control-input-wrapper">
-				<input id="<?= $control_uid; ?>" type="number" min="{{ data.min }}" max="{{ data.max }}" step="{{ data.step }}" class="tooltip-target gmt-control-tag-area" data-tooltip="{{ data.title }}" title="{{ data.title }}" data-setting="{{ data.name }}" placeholder="{{ data.placeholder }}" />
+				<input id="<?= $controlUid; ?>" type="number" min="{{ data.min }}" max="{{ data.max }}" step="{{ data.step }}" class="tooltip-target gmt-control-tag-area" data-tooltip="{{ data.title }}" title="{{ data.title }}" data-setting="{{ data.name }}" placeholder="{{ data.placeholder }}" />
 			</div>
 		</div>
 		<# if ( data.description ) { #>

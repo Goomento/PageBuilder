@@ -63,21 +63,21 @@ class Divider extends AbstractWidget
      */
     private static function getAdditionalStyles()
     {
-        static $additional_styles = null;
+        static $additionalStyles = null;
 
-        if (null !== $additional_styles) {
-            return $additional_styles;
+        if (null !== $additionalStyles) {
+            return $additionalStyles;
         }
-        $additional_styles = [];
+        $additionalStyles = [];
         /**
          * Additional Styles.
          *
          * Filters the styles used by SagoTheme to add additional divider styles.
          *
          *
-         * @param array $additional_styles Additional SagoTheme divider styles.
+         * @param array $additionalStyles Additional SagoTheme divider styles.
          */
-        return HooksHelper::applyFilters('pagebuilder/divider/styles/additional_styles', $additional_styles);
+        return HooksHelper::applyFilters('pagebuilder/divider/styles/additional_styles', $additionalStyles);
     }
 
     /**
@@ -934,20 +934,20 @@ class Divider extends AbstractWidget
             return '';
         }
 
-        $svg_shapes = self::getSeparatorStyles();
+        $svgShapes = self::getSeparatorStyles();
 
-        $selected_pattern = $svg_shapes[ $settings['style'] ];
-        $preserve_aspect_ratio = $selected_pattern['preserve_aspect_ratio'] ? 'xMidYMid meet' : 'none';
-        $view_box = $selected_pattern['view_box'] ?? '0 0 24 24';
+        $selectedPattern = $svgShapes[ $settings['style'] ];
+        $preserveAspectRatio = $selectedPattern['preserve_aspect_ratio'] ? 'xMidYMid meet' : 'none';
+        $viewBox = $selectedPattern['view_box'] ?? '0 0 24 24';
 
         $attr = [
-            'preserveAspectRatio' => $preserve_aspect_ratio,
+            'preserveAspectRatio' => $preserveAspectRatio,
             'overflow' => 'visible',
             'height' => '100%',
-            'viewBox' => $view_box,
+            'viewBox' => $viewBox,
         ];
 
-        if ('line' !== $selected_pattern['group']) {
+        if ('line' !== $selectedPattern['group']) {
             $attr['fill'] = $settings['color'];
             $attr['stroke'] = 'none';
         } else {
@@ -960,10 +960,10 @@ class Divider extends AbstractWidget
 
         $this->addRenderAttribute('svg', $attr);
 
-        $pattern_attribute_string = $this->getRenderAttributeString('svg');
-        $shape = $selected_pattern['shape'];
+        $patternAttributeString = $this->getRenderAttributeString('svg');
+        $shape = $selectedPattern['shape'];
 
-        return '<svg xmlns="http://www.w3.org/2000/svg" ' . $pattern_attribute_string . '>' . $shape . '</svg>';
+        return '<svg xmlns="http://www.w3.org/2000/svg" ' . $patternAttributeString . '>' . $shape . '</svg>';
     }
 
     /**

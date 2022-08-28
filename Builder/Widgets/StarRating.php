@@ -308,10 +308,10 @@ class StarRating extends AbstractWidget
     public function getRating()
     {
         $settings = $this->getSettingsForDisplay();
-        $rating_scale = (int) $settings['rating_scale'];
-        $rating = (float) $settings['rating'] > $rating_scale ? $rating_scale : $settings['rating'];
+        $ratingScale = (int) $settings['rating_scale'];
+        $rating = (float) $settings['rating'] > $ratingScale ? $ratingScale : $settings['rating'];
 
-        return [ $rating, $rating_scale ];
+        return [ $rating, $ratingScale ];
     }
 
     /**
@@ -324,22 +324,22 @@ class StarRating extends AbstractWidget
      */
     public function renderStars($icon)
     {
-        $rating_data = $this->getRating();
-        $rating = (float) $rating_data[0];
-        $floored_rating = floor($rating);
-        $stars_html = '';
+        $ratingData = $this->getRating();
+        $rating = (float) $ratingData[0];
+        $flooredRating = floor($rating);
+        $starsHtml = '';
 
-        for ($stars = 1.0; $stars <= $rating_data[1]; $stars++) {
-            if ($stars <= $floored_rating) {
-                $stars_html .= '<i class="gmt-star-full">' . $icon . '</i>';
-            } elseif ($floored_rating + 1 === $stars && $rating !== $floored_rating) {
-                $stars_html .= '<i class="gmt-star-' . ($rating - $floored_rating) * 10 . '">' . $icon . '</i>';
+        for ($stars = 1.0; $stars <= $ratingData[1]; $stars++) {
+            if ($stars <= $flooredRating) {
+                $starsHtml .= '<i class="gmt-star-full">' . $icon . '</i>';
+            } elseif ($flooredRating + 1 === $stars && $rating !== $flooredRating) {
+                $starsHtml .= '<i class="gmt-star-' . ($rating - $flooredRating) * 10 . '">' . $icon . '</i>';
             } else {
-                $stars_html .= '<i class="gmt-star-empty">' . $icon . '</i>';
+                $starsHtml .= '<i class="gmt-star-empty">' . $icon . '</i>';
             }
         }
 
-        return $stars_html;
+        return $starsHtml;
     }
 
     /**

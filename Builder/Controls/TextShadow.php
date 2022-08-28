@@ -89,17 +89,17 @@ class TextShadow extends AbstractBaseMultiple
 			</div>
 		</div>
 		<?php
-        foreach ($this->getSliders() as $slider_name => $slider) :
-            $control_uid = $this->getControlUid($slider_name); ?>
+        foreach ($this->getSliders() as $sliderName => $slider) :
+            $controlUid = $this->getControlUid($sliderName); ?>
 			<div class="gmt-shadow-slider gmt-control-type-slider">
-				<label for="<?= EscaperHelper::escapeHtml($control_uid); ?>" class="gmt-control-title"><?= $slider['label']; ?></label>
+				<label for="<?= EscaperHelper::escapeHtml($controlUid); ?>" class="gmt-control-title"><?= $slider['label']; ?></label>
 				<div class="gmt-control-input-wrapper">
-					<div class="gmt-slider" data-input="<?= EscaperHelper::escapeHtml($slider_name); ?>"></div>
+					<div class="gmt-slider" data-input="<?= EscaperHelper::escapeHtml($sliderName); ?>"></div>
 					<div class="gmt-slider-input">
-						<input id="<?= EscaperHelper::escapeHtml($control_uid); ?>" type="number"
+						<input id="<?= EscaperHelper::escapeHtml($controlUid); ?>" type="number"
                                min="<?= EscaperHelper::escapeHtml($slider['min']); ?>"
                                max="<?= EscaperHelper::escapeHtml($slider['max']); ?>"
-                               data-setting="<?= EscaperHelper::escapeHtml($slider_name); ?>"/>
+                               data-setting="<?= EscaperHelper::escapeHtml($sliderName); ?>"/>
 					</div>
 				</div>
 			</div>

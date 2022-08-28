@@ -33,11 +33,11 @@ abstract class AbstractControlData extends AbstractControl
      */
     protected function getDefaultSettings()
     {
-        $default_settings = parent::getDefaultSettings();
+        $defaultSettings = parent::getDefaultSettings();
 
-        $default_settings['dynamic'] = false;
+        $defaultSettings['dynamic'] = false;
 
-        return $default_settings;
+        return $defaultSettings;
     }
 
     /**
@@ -72,23 +72,23 @@ abstract class AbstractControlData extends AbstractControl
      * Iterates through all the controls and renders all the dynamic tags.
      *
      *
-     * @param string $dynamic_value    The dynamic tag text.
-     * @param array  $dynamic_settings The dynamic tag settings.
+     * @param string $dynamicValue    The dynamic tag text.
+     * @param array  $dynamicSettings The dynamic tag settings.
      *
      * @return string|string[]|mixed A string or an array of strings with the
      *                               return value from each tag callback function.
      */
-    public function parseTags($dynamic_value, $dynamic_settings)
+    public function parseTags($dynamicValue, $dynamicSettings)
     {
-        $current_dynamic_settings = $this->getSettings('dynamic');
+        $currentDynamicSettings = $this->getSettings('dynamic');
 
-        if (is_array($current_dynamic_settings)) {
-            $dynamic_settings = array_merge($current_dynamic_settings, $dynamic_settings);
+        if (is_array($currentDynamicSettings)) {
+            $dynamicSettings = array_merge($currentDynamicSettings, $dynamicSettings);
         }
 
         $tagsManager = ObjectManagerHelper::getTagsManager();
 
-        return ObjectManagerHelper::getTagsManager()->parseTagsText($dynamic_value, $dynamic_settings, [ $tagsManager, 'getTagDataContent' ]);
+        return ObjectManagerHelper::getTagsManager()->parseTagsText($dynamicValue, $dynamicSettings, [ $tagsManager, 'getTagDataContent' ]);
     }
 
     /**
@@ -98,19 +98,19 @@ abstract class AbstractControlData extends AbstractControl
      * while extracting CSS from the `selectors` data argument.
      *
      *
-     * @param string $css_property  CSS property.
-     * @param string $control_value Control value.
-     * @param array  $control_data Control Data.
+     * @param string $cssProperty  CSS property.
+     * @param string $controlValue Control value.
+     * @param array  $controlData Control Data.
      *
      * @return string Control style value.
      */
-    public function getStyleValue($css_property, $control_value, array $control_data)
+    public function getStyleValue($cssProperty, $controlValue, array $controlData)
     {
-        if ('DEFAULT' === $css_property) {
-            return $control_data['default'];
+        if ('DEFAULT' === $cssProperty) {
+            return $controlData['default'];
         }
 
-        return $control_value;
+        return $controlValue;
     }
 
     /**
@@ -120,12 +120,12 @@ abstract class AbstractControlData extends AbstractControl
      * element.
      *
      *
-     * @param string $input_type Input type. Default is 'default'.
+     * @param string $inputType Input type. Default is 'default'.
      *
      * @return string Unique ID.
      */
-    protected function getControlUid($input_type = 'default')
+    protected function getControlUid($inputType = 'default')
     {
-        return 'gmt-control-' . $input_type . '-{{{ data._cid }}}';
+        return 'gmt-control-' . $inputType . '-{{{ data._cid }}}';
     }
 }

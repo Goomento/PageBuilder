@@ -120,8 +120,8 @@ class Widgets
     {
         $config = [];
 
-        foreach ($this->getWidgetTypes() as $widget_key => $widget) {
-            $config[ $widget_key ] = $widget->getConfig();
+        foreach ($this->getWidgetTypes() as $widgetKey => $widget) {
+            $config[ $widgetKey ] = $widget->getConfig();
         }
 
         return $config;
@@ -135,12 +135,12 @@ class Widgets
     {
         $config = [];
 
-        foreach ($this->getWidgetTypes() as $widget_key => $widget) {
-            if (isset($data['exclude'][ $widget_key ])) {
+        foreach ($this->getWidgetTypes() as $widgetKey => $widget) {
+            if (isset($data['exclude'][ $widgetKey ])) {
                 continue;
             }
 
-            $config[ $widget_key ] = [
+            $config[ $widgetKey ] = [
                 'controls' => $widget->getStack(false)['controls'],
                 'tabs_controls' => $widget->getTabsControls(),
             ];
@@ -176,11 +176,11 @@ class Widgets
     {
         $keys = [];
 
-        foreach ($this->getWidgetTypes() as $widget_type_name => $widget_type) {
-            $widget_type_keys = $widget_type->getFrontendSettingsKeys();
+        foreach ($this->getWidgetTypes() as $widgetTypeName => $widgetType) {
+            $widgetTypeKeys = $widgetType->getFrontendSettingsKeys();
 
-            if ($widget_type_keys) {
-                $keys[ $widget_type_name ] = $widget_type_keys;
+            if ($widgetTypeKeys) {
+                $keys[ $widgetTypeName ] = $widgetTypeKeys;
             }
         }
 
@@ -230,11 +230,11 @@ class Widgets
      * Add new actions to handle data after an ajax requests returned.
      *
      *
-     * @param Ajax $ajax_manager
+     * @param Ajax $ajaxManager
      * @throws Exception
      */
-    public function registerAjaxActions(Ajax $ajax_manager)
+    public function registerAjaxActions(Ajax $ajaxManager)
     {
-        $ajax_manager->registerAjaxAction('get_widgets_config', [ $this, 'ajaxGetWidgetTypesControlsConfig' ]);
+        $ajaxManager->registerAjaxAction('get_widgets_config', [ $this, 'ajaxGetWidgetTypesControlsConfig' ]);
     }
 }

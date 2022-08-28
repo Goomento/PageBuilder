@@ -95,30 +95,30 @@ abstract class AbstractModule extends AbstractBase
      * Get assets url.
      *
      *
-     * @param string $file_name
-     * @param string $file_extension
-     * @param string $relative_url Optional. Default is null.
-     * @param string $add_min_suffix Optional. Default is 'default'.
+     * @param string $fileName
+     * @param string $fileExtension
+     * @param string $relativeUrl Optional. Default is null.
+     * @param string $addMinSuffix Optional. Default is 'default'.
      *
      * @return string
      */
-    final protected function getAssetsUrl($file_name, $file_extension, $relative_url = null, $add_min_suffix = 'default')
+    final protected function getAssetsUrl($fileName, $fileExtension, $relativeUrl = null, $addMinSuffix = 'default')
     {
-        if (!$relative_url) {
-            $relative_url = $this->getAssetsRelativeUrl() . $file_extension . '/';
+        if (!$relativeUrl) {
+            $relativeUrl = $this->getAssetsRelativeUrl() . $fileExtension . '/';
         }
 
-        $url = $this->getAssetsBaseUrl() . $relative_url . $file_name;
+        $url = $this->getAssetsBaseUrl() . $relativeUrl . $fileName;
 
-        if ('default' === $add_min_suffix) {
-            $add_min_suffix = false;
+        if ('default' === $addMinSuffix) {
+            $addMinSuffix = false;
         }
 
-        if ($add_min_suffix) {
+        if ($addMinSuffix) {
             $url .= '.min';
         }
 
-        $url .= '.' . $file_extension;
+        $url .= '.' . $fileExtension;
 
         return $url;
     }
@@ -127,16 +127,16 @@ abstract class AbstractModule extends AbstractBase
      * Get js assets url
      *
      *
-     * @param string $file_name
-     * @param string $relative_url Optional. Default is null.
-     * @param string $add_min_suffix Optional. Default is 'default'.
+     * @param string $fileName
+     * @param string $relativeUrl Optional. Default is null.
+     * @param string $addMinSuffix Optional. Default is 'default'.
      *
      * @return string
      * @deprecated
      */
-    final protected function getJsAssetsUrl($file_name, $relative_url = null, $add_min_suffix = 'default'): string
+    final protected function getJsAssetsUrl($fileName, $relativeUrl = null, $addMinSuffix = 'default'): string
     {
-        return $this->getAssetsUrl($file_name, 'js', $relative_url, $add_min_suffix);
+        return $this->getAssetsUrl($fileName, 'js', $relativeUrl, $addMinSuffix);
     }
 
     /**

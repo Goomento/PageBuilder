@@ -16,57 +16,62 @@ abstract class AbstractBaseTag extends ControlsStack
 {
 
     /**
-     * @abstract
+     * @return array
      */
     abstract public function getCategories();
 
     /**
-     * @abstract
+     * @return array
      */
     abstract public function getGroup();
 
     /**
-     * @abstract
+     * @return string
      */
     abstract public function getTitle();
 
     /**
-     * @abstract
      *
      * @param array $options
      */
     abstract public function getContent(array $options = []);
 
     /**
-     * @abstract
+     * @return string
      */
     abstract public function getContentType();
 
-
+    /**
+     * @return string
+     */
     public function getPanelTemplateSettingKey()
     {
         return '';
     }
 
-
+    /**
+     * @return bool
+     */
     public function isSettingsRequired()
     {
         return false;
     }
 
-
+    /**
+     * @return array
+     */
     public function getEditorConfig()
     {
         ob_start();
 
         $this->printPanelTemplate();
 
-        $panel_template = ob_get_clean();
+        $panelTemplate = ob_get_clean();
 
         return [
             'name' => $this->getName(),
             'title' => $this->getTitle(),
-            'panel_template' => $panel_template,
+            'panel_template' => $panelTemplate,
             'categories' => $this->getCategories(),
             'group' => $this->getGroup(),
             'controls' => $this->getControls(),
@@ -75,7 +80,9 @@ abstract class AbstractBaseTag extends ControlsStack
         ];
     }
 
-
+    /**
+     * @return void
+     */
     public function printPanelTemplate()
     {
         $panelTemplateSettingKey = $this->getPanelTemplateSettingKey();
@@ -114,7 +121,9 @@ abstract class AbstractBaseTag extends ControlsStack
 		<?php
     }
 
-
+    /**
+     * @return string
+     */
     final public function getUniqueName()
     {
         return 'tag-' . $this->getName();

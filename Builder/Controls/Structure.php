@@ -23,7 +23,7 @@ class Structure extends AbstractControlData
      */
     public function contentTemplate()
     {
-        $preset_control_uid = $this->getControlUid('{{ preset.key }}'); ?>
+        $presetControlUid = $this->getControlUid('{{ preset.key }}'); ?>
 		<div class="gmt-control-field">
 			<div class="gmt-control-input-wrapper">
 				<#
@@ -33,8 +33,8 @@ class Structure extends AbstractControlData
 					<div class="gmt-control-structure-presets">
 						<# _.each( morePresets, function( preset ) { #>
 							<div class="gmt-control-structure-preset-wrapper">
-								<input id="<?= $preset_control_uid; ?>" type="radio" name="gmt-control-structure-preset-{{ data._cid }}" data-setting="structure" value="{{ preset.key }}">
-								<label for="<?= $preset_control_uid; ?>" class="gmt-control-structure-preset">
+								<input id="<?= $presetControlUid; ?>" type="radio" name="gmt-control-structure-preset-{{ data._cid }}" data-setting="structure" value="{{ preset.key }}">
+								<label for="<?= $presetControlUid; ?>" class="gmt-control-structure-preset">
 									{{{ goomento.presetsFactory.getPresetSVG( preset.preset, 102, 42 ).outerHTML }}}
 								</label>
 								<div class="gmt-control-structure-preset-title">{{{ preset.preset.join( ', ' ) }}}</div>

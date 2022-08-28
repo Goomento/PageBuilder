@@ -92,11 +92,11 @@ class Common extends AbstractApp
      */
     public function registerStyles()
     {
-        $min_suffix = Configuration::debug() ? '' : '.min';
+        $minSuffix = Configuration::debug() ? '' : '.min';
 
         ThemeHelper::registerStyle(
             'goomento-common',
-            'Goomento_PageBuilder/build/common' . $min_suffix . '.css',
+            'Goomento_PageBuilder/build/common' . $minSuffix . '.css',
             [],
             Configuration::version()
         );

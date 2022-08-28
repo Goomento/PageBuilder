@@ -74,29 +74,29 @@ abstract class AbstractControlGroup extends AbstractEntity
      *
      *
      * @param ControlsStack $element   The element stack.
-     * @param array          $user_args The control arguments defined by the user.
+     * @param array          $userArgs The control arguments defined by the user.
      * @param array          $options   Optional. The element options. Default is
      *                                  an empty array.
      */
-    final public function addControls(ControlsStack $element, array $user_args, array $options = [])
+    final public function addControls(ControlsStack $element, array $userArgs, array $options = [])
     {
-        $this->initArgs($user_args);
+        $this->initArgs($userArgs);
 
         // Filter which controls to display
-        $filtered_fields = $this->filterFields();
-        $filtered_fields = $this->prepareFields($filtered_fields);
+        $filteredFields = $this->filterFields();
+        $filteredFields = $this->prepareFields($filteredFields);
 
         // For php < 7
-        reset($filtered_fields);
+        reset($filteredFields);
 
         if (isset($this->args['separator'])) {
-            $filtered_fields[ key($filtered_fields) ]['separator'] = $this->args['separator'];
+            $filteredFields[ key($filteredFields) ]['separator'] = $this->args['separator'];
         }
 
-        $has_injection = false;
+        $hasInjection = false;
 
         if (!empty($options['position'])) {
-            $has_injection = true;
+            $hasInjection = true;
 
             $element->startInjection($options['position']);
 
@@ -107,19 +107,19 @@ abstract class AbstractControlGroup extends AbstractEntity
             $this->startPopover($element);
         }
 
-        foreach ($filtered_fields as $field_id => $field_args) {
+        foreach ($filteredFields as $fieldId => $fieldArgs) {
             // Add the global group args to the control
-            $field_args = $this->addGroupArgsToField($field_id, $field_args);
+            $fieldArgs = $this->addGroupArgsToField($fieldId, $fieldArgs);
 
             // Register the control
-            $id = $this->getControlsPrefix() . $field_id;
+            $id = $this->getControlsPrefix() . $fieldId;
 
-            if (!empty($field_args['responsive'])) {
-                unset($field_args['responsive']);
+            if (!empty($fieldArgs['responsive'])) {
+                unset($fieldArgs['responsive']);
 
-                $element->addResponsiveControl($id, $field_args, $options);
+                $element->addResponsiveControl($id, $fieldArgs, $options);
             } else {
-                $element->addControl($id, $field_args, $options);
+                $element->addControl($id, $fieldArgs, $options);
             }
         }
 
@@ -127,7 +127,7 @@ abstract class AbstractControlGroup extends AbstractEntity
             $element->endPopover();
         }
 
-        if ($has_injection) {
+        if ($hasInjection) {
             $element->endInjection();
         }
     }
@@ -257,36 +257,36 @@ abstract class AbstractControlGroup extends AbstractEntity
      * Register field arguments to group control.
      *
      *
-     * @param string $control_id Group control id.
-     * @param array  $field_args Group control field arguments.
+     * @param string $controlId Group control id.
+     * @param array  $fieldArgs Group control field arguments.
      *
      * @return array
      */
-    protected function addGroupArgsToField($control_id, $field_args)
+    protected function addGroupArgsToField($controlId, $fieldArgs)
     {
         $args = $this->getArgs();
 
         if (!empty($args['tab'])) {
-            $field_args['tab'] = $args['tab'];
+            $fieldArgs['tab'] = $args['tab'];
         }
 
         if (!empty($args['section'])) {
-            $field_args['section'] = $args['section'];
+            $fieldArgs['section'] = $args['section'];
         }
 
-        $field_args['classes'] = $this->getBaseGroupClasses() . ' gmt-group-control-' . $control_id;
+        $fieldArgs['classes'] = $this->getBaseGroupClasses() . ' gmt-group-control-' . $controlId;
 
-        foreach ([ 'condition', 'conditions' ] as $condition_type) {
-            if (!empty($args[ $condition_type ])) {
-                if (empty($field_args[ $condition_type ])) {
-                    $field_args[ $condition_type ] = [];
+        foreach ([ 'condition', 'conditions' ] as $conditionType) {
+            if (!empty($args[ $conditionType ])) {
+                if (empty($fieldArgs[ $conditionType ])) {
+                    $fieldArgs[ $conditionType ] = [];
                 }
 
-                $field_args[ $condition_type ] += $args[ $condition_type ];
+                $fieldArgs[ $conditionType ] += $args[ $conditionType ];
             }
         }
 
-        return $field_args;
+        return $fieldArgs;
     }
 
     /**
@@ -301,21 +301,21 @@ abstract class AbstractControlGroup extends AbstractEntity
      */
     protected function prepareFields($fields)
     {
-        $popover_options = $this->getOptions('popover');
+        $popoverOptions = $this->getOptions('popover');
 
-        $popover_name = ! $popover_options ? null : $popover_options['starter_name'];
+        $popoverName = ! $popoverOptions ? null : $popoverOptions['starter_name'];
 
-        foreach ($fields as $field_key => &$field) {
-            if ($popover_name) {
-                $field['condition'][ $popover_name . '!' ] = '';
+        foreach ($fields as $fieldKey => &$field) {
+            if ($popoverName) {
+                $field['condition'][ $popoverName . '!' ] = '';
             }
 
             if (isset($this->args['fields_options']['__all'])) {
                 $field = array_merge($field, $this->args['fields_options']['__all']);
             }
 
-            if (isset($this->args['fields_options'][ $field_key ])) {
-                $field = array_merge($field, $this->args['fields_options'][ $field_key ]);
+            if (isset($this->args['fields_options'][ $fieldKey ])) {
+                $field = array_merge($field, $this->args['fields_options'][ $fieldKey ]);
             }
 
             if (!empty($field['condition'])) {
@@ -331,7 +331,7 @@ abstract class AbstractControlGroup extends AbstractEntity
             }
 
             if (!empty($field['device_args'])) {
-                foreach ($field['device_args'] as $device => $device_arg) {
+                foreach ($field['device_args'] as $device => $deviceArg) {
                     if (!empty($field['device_args'][ $device ]['condition'])) {
                         $field['device_args'][ $device ] = $this->addConditionPrefix($field['device_args'][ $device ]);
                     }
@@ -340,8 +340,8 @@ abstract class AbstractControlGroup extends AbstractEntity
                         $field['device_args'][ $device ]['conditions'] = $this->addConditionsPrefix($field['device_args'][ $device ]['conditions']);
                     }
 
-                    if (!empty($device_arg['selectors'])) {
-                        $field['device_args'][ $device ]['selectors'] = $this->handleSelectors($device_arg['selectors']);
+                    if (!empty($deviceArg['selectors'])) {
+                        $field['device_args'][ $device ]['selectors'] = $this->handleSelectors($deviceArg['selectors']);
                     }
                 }
             }
@@ -358,7 +358,7 @@ abstract class AbstractControlGroup extends AbstractEntity
      */
     private function initOptions()
     {
-        $default_options = [
+        $defaultOptions = [
             'popover' => [
                 'starter_name' => 'popover_toggle',
                 'starter_value' => 'custom',
@@ -366,7 +366,7 @@ abstract class AbstractControlGroup extends AbstractEntity
             ],
         ];
 
-        $this->options = array_replace_recursive($default_options, $this->getDefaultOptions());
+        $this->options = array_replace_recursive($defaultOptions, $this->getDefaultOptions());
     }
 
     /**
@@ -416,17 +416,17 @@ abstract class AbstractControlGroup extends AbstractEntity
      */
     private function addConditionPrefix($field)
     {
-        $controls_prefix = $this->getControlsPrefix();
+        $controlsPrefix = $this->getControlsPrefix();
 
-        $prefixed_condition_keys = array_map(
-            function ($key) use ($controls_prefix) {
-                return $controls_prefix . $key;
+        $prefixedConditionKeys = array_map(
+            function ($key) use ($controlsPrefix) {
+                return $controlsPrefix . $key;
             },
             array_keys($field['condition'])
         );
 
         $field['condition'] = array_combine(
-            $prefixed_condition_keys,
+            $prefixedConditionKeys,
             $field['condition']
         );
 
@@ -435,7 +435,7 @@ abstract class AbstractControlGroup extends AbstractEntity
 
     private function addConditionsPrefix($conditions)
     {
-        $controls_prefix = $this->getControlsPrefix();
+        $controlsPrefix = $this->getControlsPrefix();
 
         foreach ($conditions['terms'] as & $condition) {
             if (isset($condition['terms'])) {
@@ -444,7 +444,7 @@ abstract class AbstractControlGroup extends AbstractEntity
                 continue;
             }
 
-            $condition['name'] = $controls_prefix . $condition['name'];
+            $condition['name'] = $controlsPrefix . $condition['name'];
         }
 
         return $conditions;
@@ -483,12 +483,12 @@ abstract class AbstractControlGroup extends AbstractEntity
             return $selectors;
         }
 
-        $controls_prefix = $this->getControlsPrefix();
+        $controlsPrefix = $this->getControlsPrefix();
 
         foreach ($selectors as &$selector) {
-            $selector = preg_replace_callback('/\{\{\K(.*?)(?=}})/', function ($matches) use ($controls_prefix) {
-                return preg_replace_callback('/[^ ]+(?=\.)/', function ($sub_matches) use ($controls_prefix) {
-                    return $controls_prefix . $sub_matches[0];
+            $selector = preg_replace_callback('/\{\{\K(.*?)(?=}})/', function ($matches) use ($controlsPrefix) {
+                return preg_replace_callback('/[^ ]+(?=\.)/', function ($subMatches) use ($controlsPrefix) {
+                    return $controlsPrefix . $subMatches[0];
                 }, $matches[1]);
             }, $selector);
         }
@@ -505,39 +505,39 @@ abstract class AbstractControlGroup extends AbstractEntity
      */
     private function startPopover(ControlsStack $element)
     {
-        $popover_options = $this->getOptions('popover');
+        $popoverOptions = $this->getOptions('popover');
 
         $settings = $this->getArgs();
 
         if (!empty($settings['label'])) {
             $label = $settings['label'];
         } else {
-            $label = $popover_options['starter_title'];
+            $label = $popoverOptions['starter_title'];
         }
 
-        $control_params = [
+        $controlParams = [
             'type' => Controls::POPOVER_TOGGLE,
             'label' => $label,
-            'return_value' => $popover_options['starter_value'],
+            'return_value' => $popoverOptions['starter_value'],
         ];
 
-        if (!empty($popover_options['settings'])) {
-            $control_params = array_replace_recursive($control_params, $popover_options['settings']);
+        if (!empty($popoverOptions['settings'])) {
+            $controlParams = array_replace_recursive($controlParams, $popoverOptions['settings']);
         }
 
         foreach ([ 'condition', 'conditions' ] as $key) {
             if (!empty($settings[ $key ])) {
-                $control_params[ $key ] = $settings[ $key ];
+                $controlParams[ $key ] = $settings[ $key ];
             }
         }
 
-        $starter_name = $popover_options['starter_name'];
+        $starterName = $popoverOptions['starter_name'];
 
-        if (isset($this->args['fields_options'][ $starter_name ])) {
-            $control_params = array_merge($control_params, $this->args['fields_options'][ $starter_name ]);
+        if (isset($this->args['fields_options'][ $starterName ])) {
+            $controlParams = array_merge($controlParams, $this->args['fields_options'][ $starterName ]);
         }
 
-        $element->addControl($this->getControlsPrefix() . $starter_name, $control_params);
+        $element->addControl($this->getControlsPrefix() . $starterName, $controlParams);
 
         $element->startPopover();
     }

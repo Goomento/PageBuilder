@@ -300,10 +300,10 @@ class Sources
      */
     public function exportTemplate(array $args, BuildableContentInterface $buildableContent)
     {
-        $validate_args = $this->ensureArgs([ 'source', 'template_id' ], $args);
+        $validateArgs = $this->ensureArgs([ 'source', 'template_id' ], $args);
 
-        if (!$validate_args) {
-            return $validate_args;
+        if (!$validateArgs) {
+            return $validateArgs;
         }
 
         $source = $this->getSource($args['source']);
@@ -357,17 +357,17 @@ class Sources
             );
         }
 
-        $file_content = base64_decode($data['fileData']);
+        $fileContent = base64_decode($data['fileData']);
 
-        $tmp_file = tmpfile();
+        $tmpFile = tmpfile();
 
-        fwrite($tmp_file, $file_content);
+        fwrite($tmpFile, $fileContent);
 
         $source = $this->getSource(Local::NAME);
 
-        $result = $source->importTemplate($data['fileName'], stream_get_meta_data($tmp_file)['uri']);
+        $result = $source->importTemplate($data['fileName'], stream_get_meta_data($tmpFile)['uri']);
 
-        fclose($tmp_file);
+        fclose($tmpFile);
 
         return $result;
     }

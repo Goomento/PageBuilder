@@ -15,38 +15,38 @@ use Goomento\PageBuilder\Helper\EscaperHelper;
 $widget = $block->getWidget();
 $settings = $block->getSettingsForDisplay();
 
-$id_int = substr((string) $block->getIdInt(), 0, 3);
+$idInt = substr((string) $block->getIdInt(), 0, 3);
 
-$has_icon = !empty($settings['selected_icon']['value']); ?>
+$hasIcon = !empty($settings['selected_icon']['value']); ?>
 <div class="gmt-toggle" role="tablist">
     <?php
     foreach ($settings['tabs'] as $index => $item) :
-    $tab_count = $index + 1;
+    $tabCount = $index + 1;
 
     $tabTitleSettingKey = 'tabs.' . $index . '.tab_title';
     $tabContentSettingKey = 'tabs.' . $index . '.tab_content';
 
     $widget->addRenderAttribute($tabTitleSettingKey, [
-        'id' => 'gmt-tab-title-' . $id_int . $tab_count,
+        'id' => 'gmt-tab-title-' . $idInt . $tabCount,
         'class' => [ 'gmt-tab-title' ],
-        'data-tab' => $tab_count,
+        'data-tab' => $tabCount,
         'role' => 'tab',
-        'aria-controls' => 'gmt-tab-content-' . $id_int . $tab_count,
+        'aria-controls' => 'gmt-tab-content-' . $idInt . $tabCount,
     ]);
 
     $widget->addRenderAttribute($tabContentSettingKey, [
-        'id' => 'gmt-tab-content-' . $id_int . $tab_count,
+        'id' => 'gmt-tab-content-' . $idInt . $tabCount,
         'class' => [ 'gmt-tab-content', 'gmt-clearfix' ],
-        'data-tab' => $tab_count,
+        'data-tab' => $tabCount,
         'role' => 'tabpanel',
-        'aria-labelledby' => 'gmt-tab-title-' . $id_int . $tab_count,
+        'aria-labelledby' => 'gmt-tab-title-' . $idInt . $tabCount,
     ]);
 
     $widget->addInlineEditingAttributes($tabContentSettingKey, 'advanced'); ?>
     <div class="gmt-toggle-item">
         <<?= EscaperHelper::escapeHtml($settings['title_html_tag']); ?>
         <?= $widget->getRenderAttributeString($tabTitleSettingKey); ?>>
-        <?php if ($has_icon) : ?>
+        <?php if ($hasIcon) : ?>
             <span class="gmt-toggle-icon gmt-toggle-icon-<?= EscaperHelper::escapeHtml($settings['icon_align']); ?>" aria-hidden="true">
                 <span class="gmt-toggle-icon-closed"><?php Icons::renderIcon($settings['selected_icon']); ?></span>
                 <span class="gmt-toggle-icon-opened"><?php Icons::renderIcon($settings['selected_active_icon'], [ 'class' => 'gmt-toggle-icon-opened' ]); ?></span>

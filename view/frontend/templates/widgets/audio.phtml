@@ -21,7 +21,7 @@ if (empty($settings['audio_link'])) {
     return;
 }
 
-$param_keys = [
+$paramKeys = [
     'auto_play',
     'buying',
     'liking',
@@ -40,8 +40,8 @@ $params = [
     'url' => $settings['audio_link']['url']
 ];
 
-foreach ($param_keys as $param_key) {
-    $params[ $param_key ] = 'yes' === $settings[ 'audio_sc_' . $param_key ] ? 'true' : 'false';
+foreach ($paramKeys as $paramKey) {
+    $params[ $paramKey ] = 'yes' === $settings[ 'audio_sc_' . $paramKey ] ? 'true' : 'false';
 }
 
 $params['color'] = str_replace('#', '', $settings['audio_sc_color']);

@@ -95,9 +95,9 @@ class GlobalCss extends AbstractCss
     {
         $widgetsManager = ObjectManagerHelper::getWidgetsManager();
         foreach ($widgetsManager->getWidgetTypes() as $widget) {
-            $scheme_controls = $widget->getSchemeControls();
+            $schemeControls = $widget->getSchemeControls();
 
-            foreach ($scheme_controls as $control) {
+            foreach ($schemeControls as $control) {
                 $this->addControlRules(
                     $control,
                     $widget->getControls(),

@@ -25,12 +25,12 @@ class Animation extends AbstractControlData
      */
     protected function getDefaultSettings()
     {
-        $default_settings = parent::getDefaultSettings();
+        $defaultSettings = parent::getDefaultSettings();
 
-        $default_settings['label_block'] = true;
-        $default_settings['render_type'] = 'none';
+        $defaultSettings['label_block'] = true;
+        $defaultSettings['render_type'] = 'none';
 
-        return $default_settings;
+        return $defaultSettings;
     }
 
     /**
@@ -102,11 +102,11 @@ class Animation extends AbstractControlData
          * Element appearance animations list.
          *
          *
-         * @param array $additional_animations Additional Animations array.
+         * @param array $additionalAnimations Additional Animations array.
          */
-        $additional_animations = HooksHelper::applyFilters('pagebuilder/controls/animations/additional_animations', []);
+        $additionalAnimations = HooksHelper::applyFilters('pagebuilder/controls/animations/additional_animations', []);
 
-        return array_merge($animations, $additional_animations);
+        return array_merge($animations, $additionalAnimations);
     }
 
     /**
@@ -119,17 +119,17 @@ class Animation extends AbstractControlData
      */
     public function contentTemplate()
     {
-        $control_uid = $this->getControlUid(); ?>
+        $controlUid = $this->getControlUid(); ?>
 		<div class="gmt-control-field">
-			<label for="<?= $control_uid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+			<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
 			<div class="gmt-control-input-wrapper">
-				<select id="<?= $control_uid; ?>" data-setting="{{ data.name }}">
+				<select id="<?= $controlUid; ?>" data-setting="{{ data.name }}">
 					<option value=""><?= __('Default'); ?></option>
 					<option value="none"><?= __('None'); ?></option>
-					<?php foreach (static::getAnimations() as $animations_group_name => $animations_group) : ?>
-						<optgroup label="<?= $animations_group_name; ?>">
-							<?php foreach ($animations_group as $animation_name => $animation_title) : ?>
-								<option value="<?= $animation_name; ?>"><?= $animation_title; ?></option>
+					<?php foreach (static::getAnimations() as $animationsGroupName => $animationsGroup) : ?>
+						<optgroup label="<?= $animationsGroupName; ?>">
+							<?php foreach ($animationsGroup as $animationName => $animationTitle) : ?>
+								<option value="<?= $animationName; ?>"><?= $animationTitle; ?></option>
 							<?php endforeach; ?>
 						</optgroup>
 					<?php endforeach; ?>

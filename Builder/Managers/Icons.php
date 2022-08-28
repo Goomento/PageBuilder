@@ -34,34 +34,34 @@ class Icons
     {
         $config = self::getIconManagerTabsConfig();
 
-        $shared_styles = [];
+        $sharedStyles = [];
 
-        foreach ($config as $type => $icon_type) {
-            if (!isset($icon_type['url'])) {
+        foreach ($config as $type => $iconType) {
+            if (!isset($iconType['url'])) {
                 continue;
             }
             $dependencies = [];
-            if (!empty($icon_type['enqueue'])) {
-                foreach ((array) $icon_type['enqueue'] as $font_css_url) {
-                    if (! in_array($font_css_url, array_keys($shared_styles))) {
-                        $style_handle = 'goomento-icons-shared-' . count($shared_styles);
+            if (!empty($iconType['enqueue'])) {
+                foreach ((array) $iconType['enqueue'] as $fontCssUrl) {
+                    if (! in_array($fontCssUrl, array_keys($sharedStyles))) {
+                        $styleHandle = 'goomento-icons-shared-' . count($sharedStyles);
                         ThemeHelper::registerStyle(
-                            $style_handle,
-                            $font_css_url,
+                            $styleHandle,
+                            $fontCssUrl,
                             [],
-                            $icon_type['ver']
+                            $iconType['ver']
                         );
-                        $shared_styles[ $font_css_url ] = $style_handle;
+                        $sharedStyles[ $fontCssUrl ] = $styleHandle;
                     }
-                    $dependencies[] = $shared_styles[ $font_css_url ];
+                    $dependencies[] = $sharedStyles[ $fontCssUrl ];
                 }
             }
 
             ThemeHelper::registerStyle(
-                'goomento-icons-' . $icon_type['name'],
-                $icon_type['url'],
+                'goomento-icons-' . $iconType['name'],
+                $iconType['url'],
                 $dependencies,
-                $icon_type['ver']
+                $iconType['ver']
             );
         }
     }
@@ -118,27 +118,27 @@ class Icons
         if (! self::$tabs) {
             self::initTabs();
         }
-        $additional_tabs = HooksHelper::applyFilters('pagebuilder/icons_manager/additional_tabs', []);
-        return array_merge(self::$tabs, $additional_tabs);
+        $additionalTabs = HooksHelper::applyFilters('pagebuilder/icons_manager/additional_tabs', []);
+        return array_merge(self::$tabs, $additionalTabs);
     }
 
     /**
      * @param $filename
-     * @param string $ext_type
-     * @param bool $add_suffix
+     * @param string $extType
+     * @param bool $addSuffix
      * @return string
      */
-    private static function getFaAssetUrl($filename, $ext_type = 'css', $add_suffix = true)
+    private static function getFaAssetUrl($filename, $extType = 'css', $addSuffix = true)
     {
-        static $is_test_mode = null;
-        if (null === $is_test_mode) {
-            $is_test_mode = !!Configuration::debug();
+        static $isTestMode = null;
+        if (null === $isTestMode) {
+            $isTestMode = !!Configuration::debug();
         }
-        $url = 'Goomento_PageBuilder/lib/font-awesome/' . $ext_type . '/' . $filename;
-        if (!$is_test_mode && $add_suffix) {
+        $url = 'Goomento_PageBuilder/lib/font-awesome/' . $extType . '/' . $filename;
+        if (!$isTestMode && $addSuffix) {
             $url .= '.min';
         }
-        $url .= '.' . $ext_type;
+        $url .= '.' . $extType;
         return UrlBuilderHelper::urlStaticBuilder($url);
     }
 
@@ -168,9 +168,9 @@ class Icons
      */
     private static function renderIconHtml($icon, $attributes = [], $tag = 'i')
     {
-        $icon_types = self::getIconManagerTabs();
-        if (isset($icon_types[ $icon['library'] ]['render_callback']) && is_callable($icon_types[ $icon['library'] ]['render_callback'])) {
-            return call_user_func_array($icon_types[ $icon['library'] ]['render_callback'], [ $icon, $attributes, $tag ]);
+        $iconTypes = self::getIconManagerTabs();
+        if (isset($iconTypes[ $icon['library'] ]['render_callback']) && is_callable($iconTypes[ $icon['library'] ]['render_callback'])) {
+            return call_user_func_array($iconTypes[ $icon['library'] ]['render_callback'], [ $icon, $attributes, $tag ]);
         }
 
         if (empty($attributes['class'])) {

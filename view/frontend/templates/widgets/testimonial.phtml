@@ -30,12 +30,12 @@ if ($settings['testimonial_image_position']) {
     $widget->addRenderAttribute('meta', 'class', 'gmt-testimonial-image-position-' . $settings['testimonial_image_position']);
 }
 
-$has_content = !!$settings['testimonial_content'];
-$has_image = !!$settings['testimonial_image']['url'];
-$has_name = !!$settings['testimonial_name'];
-$has_job = !!$settings['testimonial_job'];
+$hasContent = !!$settings['testimonial_content'];
+$hasImage = !!$settings['testimonial_image']['url'];
+$hasName = !!$settings['testimonial_name'];
+$hasJob = !!$settings['testimonial_job'];
 
-if (! $has_content && ! $has_image && ! $has_name && ! $has_job) {
+if (! $hasContent && ! $hasImage && ! $hasName && ! $hasJob) {
     return;
 }
 
@@ -52,52 +52,52 @@ if (! empty($settings['link']['url'])) {
 } ?>
 <div <?= $widget->getRenderAttributeString('wrapper'); ?>>
     <?php
-    if ($has_content) :
+    if ($hasContent) :
         $widget->addRenderAttribute('testimonial_content', 'class', 'gmt-testimonial-content');
 
         $widget->addInlineEditingAttributes('testimonial_content'); ?>
         <div <?= $widget->getRenderAttributeString('testimonial_content'); ?>><?= $settings['testimonial_content']; ?></div>
     <?php endif; ?>
 
-    <?php if ($has_image || $has_name || $has_job) : ?>
+    <?php if ($hasImage || $hasName || $hasJob) : ?>
         <div <?= $widget->getRenderAttributeString('meta'); ?>>
             <div class="gmt-testimonial-meta-inner">
-                <?php if ($has_image) : ?>
+                <?php if ($hasImage) : ?>
                     <div class="gmt-testimonial-image">
                         <?php
-                        $image_html = ImageSizeGroup::getAttachmentImageHtml($settings, 'testimonial_image');
+                        $imageHtml = ImageSizeGroup::getAttachmentImageHtml($settings, 'testimonial_image');
                         if (! empty($settings['link']['url'])) :
-                            $image_html = '<a ' . $widget->getRenderAttributeString('link') . '>' . $image_html . '</a>';
+                            $imageHtml = '<a ' . $widget->getRenderAttributeString('link') . '>' . $imageHtml . '</a>';
                         endif;
-                        echo $image_html; ?>
+                        echo $imageHtml; ?>
                     </div>
                 <?php endif; ?>
 
-                <?php if ($has_name || $has_job) : ?>
+                <?php if ($hasName || $hasJob) : ?>
                     <div class="gmt-testimonial-details">
                         <?php
-                        if ($has_name) :
+                        if ($hasName) :
                             $widget->addRenderAttribute('testimonial_name', 'class', 'gmt-testimonial-name');
 
                             $widget->addInlineEditingAttributes('testimonial_name', 'none');
 
-                            $testimonial_name_html = $settings['testimonial_name'];
+                            $testimonialNameHtml = $settings['testimonial_name'];
                             if (! empty($settings['link']['url'])) :
-                                $testimonial_name_html = '<a ' . $widget->getRenderAttributeString('link') . '>' . $testimonial_name_html . '</a>';
+                                $testimonialNameHtml = '<a ' . $widget->getRenderAttributeString('link') . '>' . $testimonialNameHtml . '</a>';
                             endif; ?>
-                            <div <?= $widget->getRenderAttributeString('testimonial_name'); ?>><?= $testimonial_name_html; ?></div>
+                            <div <?= $widget->getRenderAttributeString('testimonial_name'); ?>><?= $testimonialNameHtml; ?></div>
                         <?php endif; ?>
                         <?php
-                        if ($has_job) :
+                        if ($hasJob) :
                             $widget->addRenderAttribute('testimonial_job', 'class', 'gmt-testimonial-job');
 
                             $widget->addInlineEditingAttributes('testimonial_job');
 
-                            $testimonial_job_html = $settings['testimonial_job'];
+                            $testimonialJobHtml = $settings['testimonial_job'];
                             if (! empty($settings['link']['url'])) :
-                                $testimonial_job_html = '<a ' . $widget->getRenderAttributeString('link') . '>' . $testimonial_job_html . '</a>';
+                                $testimonialJobHtml = '<a ' . $widget->getRenderAttributeString('link') . '>' . $testimonialJobHtml . '</a>';
                             endif; ?>
-                            <div <?= $widget->getRenderAttributeString('testimonial_job'); ?>><?= $testimonial_job_html; ?></div>
+                            <div <?= $widget->getRenderAttributeString('testimonial_job'); ?>><?= $testimonialJobHtml; ?></div>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>

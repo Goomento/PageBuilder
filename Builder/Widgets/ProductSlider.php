@@ -101,8 +101,8 @@ class ProductSlider extends AbstractWidget
             ]
         );
 
-        $slides_to_show = range(1, 10);
-        $slides_to_show = array_combine($slides_to_show, $slides_to_show);
+        $slidesToShow = range(1, 10);
+        $slidesToShow = array_combine($slidesToShow, $slidesToShow);
 
         $this->addResponsiveControl(
             'slides_to_show',
@@ -111,7 +111,7 @@ class ProductSlider extends AbstractWidget
                 'type' => Controls::SELECT,
                 'options' => [
                         '' => __('Default'),
-                    ] + $slides_to_show,
+                    ] + $slidesToShow,
                 'frontend_available' => true,
             ]
         );
@@ -124,7 +124,7 @@ class ProductSlider extends AbstractWidget
                 'description' => __('Set how many slides are scrolled per swipe.'),
                 'options' => [
                         '' => __('Default'),
-                    ] + $slides_to_show,
+                    ] + $slidesToShow,
                 'condition' => [
                     'slides_to_show!' => '1',
                 ],

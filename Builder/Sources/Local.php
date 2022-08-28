@@ -36,14 +36,14 @@ class Local extends AbstractSource
      *
      * @var array
      */
-    private static $template_types = [];
+    private static $templateTypes = [];
 
     /**
      * @return array
      */
     public static function getTemplateTypes()
     {
-        return self::$template_types;
+        return self::$templateTypes;
     }
 
     /**
@@ -72,7 +72,7 @@ class Local extends AbstractSource
      */
     public static function addTemplateType(string $type)
     {
-        self::$template_types[ $type ] = $type;
+        self::$templateTypes[ $type ] = $type;
     }
 
     /**
@@ -86,8 +86,8 @@ class Local extends AbstractSource
      */
     public static function removeTemplateType(string $type)
     {
-        if (isset(self::$template_types[ $type ])) {
-            unset(self::$template_types[ $type ]);
+        if (isset(self::$templateTypes[ $type ])) {
+            unset(self::$templateTypes[ $type ]);
         }
     }
 
@@ -242,7 +242,7 @@ class Local extends AbstractSource
          * Fires after SagoTheme template library was updated.
          *
          *
-         * @param int   $new_data_id The ID of the new template.
+         * @param int   $newDataId The ID of the new template.
          * @param array $newData    The new template data.
          */
         HooksHelper::doAction('pagebuilder/template-library/after_update_template', $newData['id'], $newData);
@@ -345,13 +345,13 @@ class Local extends AbstractSource
      */
     public function exportTemplate(int $templateId)
     {
-        $file_data = $this->prepareTemplateExport($templateId);
+        $fileData = $this->prepareTemplateExport($templateId);
 
-        if (!$file_data) {
-            return $file_data;
+        if (!$fileData) {
+            return $fileData;
         }
 
-        $this->sendFileHeaders($file_data['name'], strlen($file_data['content']));
+        $this->sendFileHeaders($fileData['name'], strlen($fileData['content']));
 
         // Clear buffering just in case.
         @ob_end_clean();
@@ -359,7 +359,7 @@ class Local extends AbstractSource
         flush();
 
         // Output file contents.
-        echo $file_data['content'];
+        echo $fileData['content'];
 
         die;
     }
@@ -380,13 +380,13 @@ class Local extends AbstractSource
 
         $items = [];
 
-        $import_result = $this->importSingleTemplate($path);
+        $importResult = $this->importSingleTemplate($path);
 
-        if (!$import_result) {
-            return $import_result;
+        if (!$importResult) {
+            return $importResult;
         }
 
-        $items[] = $import_result;
+        $items[] = $importResult;
 
         return $items;
     }
@@ -531,8 +531,8 @@ class Local extends AbstractSource
     private function getJsonName($exportData)
     {
         $title = $exportData['title'];
-        $time  = date('Y-m-d-H-i-s');
-        return sprintf('Goomento-Pagebuilder-%s-%s.json', EscaperHelper::slugify($title, '-'), $time);
+        $time  = date('\[Y-m-d_h.iA\]');
+        return sprintf('Goomento-Pagebuilder_%s_%s.json', EscaperHelper::slugify($title, '-'), $time);
     }
 
     /**
@@ -541,17 +541,17 @@ class Local extends AbstractSource
      * Set the file header when export template data to a file.
      *
      *
-     * @param string $file_name File name.
-     * @param int    $file_size File size.
+     * @param string $fileName File name.
+     * @param int    $fileSize File size.
      */
-    private function sendFileHeaders($file_name, $file_size)
+    private function sendFileHeaders($fileName, $fileSize)
     {
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename=' . $file_name);
+        header('Content-Disposition: attachment; filename=' . $fileName);
         header('Expires: 0');
         header('Cache-AbstractControl: must-revalidate');
         header('Pragma: public');
-        header('Content-Length: ' . $file_size);
+        header('Content-Length: ' . $fileSize);
     }
 
     /**

@@ -90,7 +90,7 @@ abstract class AbstractBase extends AbstractEntity
     }
 
     /**
-     *
+     * Ensure settings
      */
     private function ensureSettings()
     {

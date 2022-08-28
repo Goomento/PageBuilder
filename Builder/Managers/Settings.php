@@ -110,10 +110,10 @@ class Settings
         $config = [];
 
         foreach ($this->getComponents() as $name => $manager) {
-            $settings_model = $manager->getModelForConfig();
+            $settingsModel = $manager->getModelForConfig();
 
-            if ($settings_model) {
-                $config[ $name ] = $settings_model->getFrontendSettings();
+            if ($settingsModel) {
+                $config[ $name ] = $settingsModel->getFrontendSettings();
             }
         }
 

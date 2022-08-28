@@ -77,12 +77,12 @@ class Section extends AbstractElement
      * of all the preset if no parameters passed.
      *
      *
-     * @param int $columns_count Optional. Columns count. Default is null.
-     * @param int $preset_index  Optional. Preset index. Default is null.
+     * @param int $columnsCount Optional. Columns count. Default is null.
+     * @param int $presetIndex  Optional. Preset index. Default is null.
      *
      * @return array Section presets.
      */
-    public static function getPresets($columns_count = null, $preset_index = null)
+    public static function getPresets($columnsCount = null, $presetIndex = null)
     {
         if (! self::$presets) {
             self::initPresets();
@@ -90,12 +90,12 @@ class Section extends AbstractElement
 
         $presets = self::$presets;
 
-        if (null !== $columns_count) {
-            $presets = $presets[ $columns_count ];
+        if (null !== $columnsCount) {
+            $presets = $presets[ $columnsCount ];
         }
 
-        if (null !== $preset_index) {
-            $presets = $presets[ $preset_index ];
+        if (null !== $presetIndex) {
+            $presets = $presets[ $presetIndex ];
         }
 
         return $presets;
@@ -114,7 +114,7 @@ class Section extends AbstractElement
      */
     public static function initPresets()
     {
-        $additional_presets = [
+        $additionalPresets = [
             2 => [
                 [
                     'preset' => [ 33, 66 ],
@@ -139,25 +139,25 @@ class Section extends AbstractElement
             ],
         ];
 
-        foreach (range(1, 10) as $columns_count) {
-            self::$presets[ $columns_count ] = [
+        foreach (range(1, 10) as $columnsCount) {
+            self::$presets[ $columnsCount ] = [
                 [
                     'preset' => [],
                 ],
             ];
 
-            $preset_unit = floor(1 / $columns_count * 100);
+            $presetUnit = floor(1 / $columnsCount * 100);
 
-            for ($i = 0; $i < $columns_count; $i++) {
-                self::$presets[ $columns_count ][0]['preset'][] = $preset_unit;
+            for ($i = 0; $i < $columnsCount; $i++) {
+                self::$presets[ $columnsCount ][0]['preset'][] = $presetUnit;
             }
 
-            if (!empty($additional_presets[ $columns_count ])) {
-                self::$presets[ $columns_count ] = array_merge(self::$presets[ $columns_count ], $additional_presets[ $columns_count ]);
+            if (!empty($additionalPresets[ $columnsCount ])) {
+                self::$presets[ $columnsCount ] = array_merge(self::$presets[ $columnsCount ], $additionalPresets[ $columnsCount ]);
             }
 
-            foreach (self::$presets[ $columns_count ] as $preset_index => & $preset) {
-                $preset['key'] = $columns_count . $preset_index;
+            foreach (self::$presets[ $columnsCount ] as $presetIndex => & $preset) {
+                $preset['key'] = $columnsCount . $presetIndex;
             }
         }
     }
@@ -429,7 +429,7 @@ class Section extends AbstractElement
             ]
         );
 
-        $possible_tags = [
+        $possibleTags = [
             'div',
             'header',
             'footer',
@@ -442,7 +442,7 @@ class Section extends AbstractElement
 
         $options = [
             '' => __('Default'),
-        ] + array_combine($possible_tags, $possible_tags);
+        ] + array_combine($possibleTags, $possibleTags);
 
         $this->addControl(
             'html_tag',
@@ -1016,40 +1016,40 @@ class Section extends AbstractElement
 
         $this->startControlsTabs('tabs_shape_dividers');
 
-        $shapes_options = [
+        $shapesOptions = [
             '' => __('None'),
         ];
 
-        foreach (Shapes::getShapes() as $shape_name => $shape_props) {
-            $shapes_options[ $shape_name ] = $shape_props['title'];
+        foreach (Shapes::getShapes() as $shapeName => $shapeProps) {
+            $shapesOptions[ $shapeName ] = $shapeProps['title'];
         }
 
         foreach ([
             'top' => __('Top'),
             'bottom' => __('Bottom'),
-        ] as $side => $side_label) {
-            $base_control_key = "shape_divider_$side";
+        ] as $side => $sideLabel) {
+            $baseControlKey = "shape_divider_$side";
 
             $this->startControlsTab(
-                "tab_$base_control_key",
+                "tab_$baseControlKey",
                 [
-                    'label' => $side_label,
+                    'label' => $sideLabel,
                 ]
             );
 
             $this->addControl(
-                $base_control_key,
+                $baseControlKey,
                 [
                     'label' => __('Type'),
                     'type' => Controls::SELECT,
-                    'options' => $shapes_options,
+                    'options' => $shapesOptions,
                     'render_type' => 'none',
                     'frontend_available' => true,
                 ]
             );
 
             $this->addControl(
-                $base_control_key . '_color',
+                $baseControlKey . '_color',
                 [
                     'label' => __('Color'),
                     'type' => Controls::COLOR,
@@ -1063,7 +1063,7 @@ class Section extends AbstractElement
             );
 
             $this->addResponsiveControl(
-                $base_control_key . '_width',
+                $baseControlKey . '_width',
                 [
                     'label' => __('Width'),
                     'type' => Controls::SLIDER,
@@ -1092,7 +1092,7 @@ class Section extends AbstractElement
             );
 
             $this->addResponsiveControl(
-                $base_control_key . '_height',
+                $baseControlKey . '_height',
                 [
                     'label' => __('Height'),
                     'type' => Controls::SLIDER,
@@ -1111,7 +1111,7 @@ class Section extends AbstractElement
             );
 
             $this->addControl(
-                $base_control_key . '_flip',
+                $baseControlKey . '_flip',
                 [
                     'label' => __('Flip'),
                     'type' => Controls::SWITCHER,
@@ -1125,7 +1125,7 @@ class Section extends AbstractElement
             );
 
             $this->addControl(
-                $base_control_key . '_negative',
+                $baseControlKey . '_negative',
                 [
                     'label' => __('Invert'),
                     'type' => Controls::SWITCHER,
@@ -1138,7 +1138,7 @@ class Section extends AbstractElement
             );
 
             $this->addControl(
-                $base_control_key . '_above_content',
+                $baseControlKey . '_above_content',
                 [
                     'label' => __('Bring to Front'),
                     'type' => Controls::SWITCHER,
@@ -1549,7 +1549,7 @@ class Section extends AbstractElement
 			<?php
             if ('video' === $settings['background_background']) :
                 if ($settings['background_video_link']) :
-                    $video_properties = Embed::getVideoProperties($settings['background_video_link']);
+                    $videoProperties = Embed::getVideoProperties($settings['background_video_link']);
 
         $this->addRenderAttribute('background-video-container', 'class', 'gmt-background-video-container');
 
@@ -1557,25 +1557,25 @@ class Section extends AbstractElement
             $this->addRenderAttribute('background-video-container', 'class', 'gmt-hidden-phone');
         } ?>
 					<div <?= $this->getRenderAttributeString('background-video-container'); ?>>
-						<?php if ($video_properties) : ?>
+						<?php if ($videoProperties) : ?>
 							<div class="gmt-background-video-embed"></div>
 							<?php
                         else :
-                            $video_tag_attributes = 'autoplay muted playsinline';
+                            $videoTagAttributes = 'autoplay muted playsinline';
         if ('yes' !== $settings['background_play_once']) :
-                                $video_tag_attributes .= ' loop';
+                                $videoTagAttributes .= ' loop';
         endif; ?>
-							<video class="gmt-background-video-hosted gmt-html5-video" <?= $video_tag_attributes; ?>></video>
+							<video class="gmt-background-video-hosted gmt-html5-video" <?= $videoTagAttributes; ?>></video>
 						<?php endif; ?>
 					</div>
 					<?php
                 endif;
         endif;
 
-        $has_background_overlay = in_array($settings['background_overlay_background'], [ 'classic', 'gradient' ], true) ||
+        $hasBackgroundOverlay = in_array($settings['background_overlay_background'], [ 'classic', 'gradient' ], true) ||
                                     in_array($settings['background_overlay_hover_background'], [ 'classic', 'gradient' ], true);
 
-        if ($has_background_overlay) :
+        if ($hasBackgroundOverlay) :
                 ?>
 				<div class="gmt-background-overlay"></div>
 				<?php
@@ -1618,14 +1618,14 @@ class Section extends AbstractElement
     {
         parent::_addRenderAttributes();
 
-        $section_type = $this->getData('isInner') ? 'inner' : 'top';
+        $sectionType = $this->getData('isInner') ? 'inner' : 'top';
 
         $this->addRenderAttribute(
             '_wrapper',
             'class',
             [
                 'gmt-section',
-                'gmt-' . $section_type . '-section',
+                'gmt-' . $sectionType . '-section',
             ]
         );
     }
@@ -1636,9 +1636,9 @@ class Section extends AbstractElement
      * Retrieve the section child type based on element data.
      *
      *
-     * @param array $element_data Element ID.
+     * @param array $elementData Element ID.
      */
-    protected function _getDefaultChildType(array $element_data)
+    protected function _getDefaultChildType(array $elementData)
     {
         /** @var Elements $elements */
         $elements = ObjectManagerHelper::get(Elements::class);
@@ -1655,13 +1655,13 @@ class Section extends AbstractElement
      */
     private function getHtmlTag()
     {
-        $html_tag = $this->getSettings('html_tag');
+        $htmlTag = $this->getSettings('html_tag');
 
-        if (empty($html_tag)) {
-            $html_tag = 'section';
+        if (empty($htmlTag)) {
+            $htmlTag = 'section';
         }
 
-        return $html_tag;
+        return $htmlTag;
     }
 
     /**
@@ -1675,14 +1675,14 @@ class Section extends AbstractElement
     private function printShapeDivider($side)
     {
         $settings = $this->getActiveSettings();
-        $base_setting_key = "shape_divider_$side";
-        $negative = ! empty($settings[ $base_setting_key . '_negative' ]);
-        $shape_path = Shapes::getShapePath($settings[ $base_setting_key ], $negative);
-        if (! is_file($shape_path) || ! is_readable($shape_path)) {
+        $baseSettingKey = "shape_divider_$side";
+        $negative = ! empty($settings[ $baseSettingKey . '_negative' ]);
+        $shapePath = Shapes::getShapePath($settings[ $baseSettingKey ], $negative);
+        if (! is_file($shapePath) || ! is_readable($shapePath)) {
             return;
         } ?>
 		<div class="gmt-shape gmt-shape-<?= EscaperHelper::escapeHtml($side); ?>" data-negative="<?= var_export($negative); ?>">
-			<?= file_get_contents($shape_path); ?>
+			<?= file_get_contents($shapePath); ?>
 		</div>
 		<?php
     }

@@ -114,8 +114,8 @@ class Page extends AbstractSettings
             if ($document) {
                 $controls = $document->getControls();
 
-                foreach ($controls as $control_id => $args) {
-                    $this->addControl($control_id, $args);
+                foreach ($controls as $controlId => $args) {
+                    $this->addControl($controlId, $args);
                 }
             }
         }

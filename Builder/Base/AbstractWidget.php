@@ -62,9 +62,9 @@ abstract class AbstractWidget extends AbstractElement
     {
         parent::__construct($data, $args);
 
-        $is_type_instance = $this->isTypeInstance();
+        $isTypeInstance = $this->isTypeInstance();
 
-        if (!$is_type_instance && null === $args) {
+        if (!$isTypeInstance && null === $args) {
             throw new Exception(
                 '`$args` argument is required when initializing a full widget instance.'
             );
@@ -194,11 +194,11 @@ abstract class AbstractWidget extends AbstractElement
         if ($withCommonControls && Common::NAME !== $this->getUniqueName()) {
             /** @var Widgets $widget */
             $widget = ObjectManagerHelper::get(Widgets::class);
-            $common_widget = $widget->getWidgetTypes(Common::NAME);
+            $commonWidget = $widget->getWidgetTypes(Common::NAME);
 
-            $stack['controls'] = array_merge($stack['controls'], $common_widget->getControls());
+            $stack['controls'] = array_merge($stack['controls'], $commonWidget->getControls());
 
-            $stack['tabs'] = array_merge($stack['tabs'], $common_widget->getTabsControls());
+            $stack['tabs'] = array_merge($stack['tabs'], $commonWidget->getTabsControls());
         }
 
         return $stack;
@@ -217,10 +217,10 @@ abstract class AbstractWidget extends AbstractElement
      */
     public function getPointerIndex()
     {
-        $injection_point = $this->getInjectionPoint();
+        $injectionPoint = $this->getInjectionPoint();
 
-        if (null !== $injection_point) {
-            return $injection_point['index'];
+        if (null !== $injectionPoint) {
+            return $injectionPoint['index'];
         }
 
         return count($this->getStack(false)['controls']);
@@ -287,13 +287,13 @@ abstract class AbstractWidget extends AbstractElement
      * Backbone JavaScript template.
      *
      *
-     * @param string $template_content Template content.
+     * @param string $templateContent Template content.
      */
-    protected function printTemplateContent($template_content)
+    protected function printTemplateContent($templateContent)
     {
         ?>
 		<div class="gmt-widget-container">
-			<?php parent::printTemplateContent($template_content) ?>
+			<?php parent::printTemplateContent($templateContent) ?>
 		</div>
 		<?php
     }
@@ -467,21 +467,21 @@ abstract class AbstractWidget extends AbstractElement
      * again.
      *
      *
-     * @param bool $with_html_content Optional. Whether to return the data with
+     * @param bool $withHtmlContent Optional. Whether to return the data with
      *                                HTML content or without. Used for caching.
      *                                Default is false, without HTML.
      *
      * @return array Element raw data.
      */
-    public function getRawData($with_html_content = false)
+    public function getRawData($withHtmlContent = false)
     {
-        $data = parent::getRawData($with_html_content);
+        $data = parent::getRawData($withHtmlContent);
 
         unset($data['isInner']);
 
         $data['widgetType'] = $this->getData('widgetType');
 
-        if ($with_html_content) {
+        if ($withHtmlContent) {
             if (StateHelper::isFrontend()) {
                 ob_start();
 
@@ -530,11 +530,11 @@ abstract class AbstractWidget extends AbstractElement
      * Retrieve the widget child type based on element data.
      *
      *
-     * @param array $element_data Widget ID.
+     * @param array $elementData Widget ID.
      *
      * @return array|false Child type or false if it's not a valid widget.
      */
-    protected function _getDefaultChildType(array $element_data)
+    protected function _getDefaultChildType(array $elementData)
     {
         /** @var Elements $managersElements */
         $managersElements = ObjectManagerHelper::get(Elements::class);
@@ -579,13 +579,13 @@ abstract class AbstractWidget extends AbstractElement
 
 
     /**
-     * @param string $plugin_title Plugin's title
+     * @param string $pluginTitle Plugin's title
      * @param string $since Plugin version widget was deprecated
      * @param string $last Plugin version in which the widget will be removed
      * @param string $replacement Widget replacement
      * @throws Exception
      */
-    protected function deprecatedNotice($plugin_title, $since, $last = '', $replacement = '')
+    protected function deprecatedNotice($pluginTitle, $since, $last = '', $replacement = '')
     {
         $this->startControlsSection(
             'Deprecated',
@@ -601,7 +601,7 @@ abstract class AbstractWidget extends AbstractElement
                 'widget' => $this->getTitle(),
                 'since' => $since,
                 'last' => $last,
-                'plugin' => $plugin_title,
+                'plugin' => $pluginTitle,
                 'replacement' => $replacement,
             ]
         );

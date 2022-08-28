@@ -196,15 +196,15 @@ abstract class ControlsStack extends AbstractBase
      * Retrieve all the controls or, when requested, a specific control.
      *
      *
-     * @param string $control_id The ID of the requested control. Optional field,
+     * @param string $controlId The ID of the requested control. Optional field,
      *                           when set it will return a specific control.
      *                           Default is null.
      *
      * @return mixed Controls list.
      */
-    public function getControls($control_id = null)
+    public function getControls($controlId = null)
     {
-        return self::getItems($this->getStack()['controls'], $control_id);
+        return self::getItems($this->getStack()['controls'], $controlId);
     }
 
     /**
@@ -233,14 +233,14 @@ abstract class ControlsStack extends AbstractBase
 
         return array_reduce(
             array_keys($controls),
-            function ($active_controls, $control_key) use ($controls, $settings) {
-                $control = $controls[ $control_key ];
+            function ($activeControls, $controlKey) use ($controls, $settings) {
+                $control = $controls[ $controlKey ];
 
                 if ($this->isControlVisible($control, $settings)) {
-                    $active_controls[ $control_key ] = $control;
+                    $activeControls[ $controlKey ] = $control;
                 }
 
-                return $active_controls;
+                return $activeControls;
             },
             []
         );
@@ -272,12 +272,12 @@ abstract class ControlsStack extends AbstractBase
      */
     public function addControl(string $id, array $args, array $options = [])
     {
-        $default_options = [
+        $defaultOptions = [
             'overwrite' => false,
             'position' => null,
         ];
 
-        $options = array_merge($default_options, $options);
+        $options = array_merge($defaultOptions, $options);
 
         if ($options['position']) {
             $this->startInjection($options['position']);
@@ -288,30 +288,30 @@ abstract class ControlsStack extends AbstractBase
         }
 
         if (empty($args['type']) || $args['type'] !== Controls::SECTION) {
-            $target_section_args = $this->currentSection;
+            $targetSectionArgs = $this->currentSection;
 
-            $target_tab = $this->currentTab;
+            $targetTab = $this->currentTab;
 
             if ($this->injectionPoint) {
-                $target_section_args = $this->injectionPoint['section'];
+                $targetSectionArgs = $this->injectionPoint['section'];
 
                 if (!empty($this->injectionPoint['tab'])) {
-                    $target_tab = $this->injectionPoint['tab'];
+                    $targetTab = $this->injectionPoint['tab'];
                 }
             }
             /** @var Controls  $controlsManager */
             $controlsManager = ObjectManagerHelper::get(Controls::class);
-            if (null !== $target_section_args) {
+            if (null !== $targetSectionArgs) {
                 if (!empty($args['section']) || ! empty($args['tab'])) {
                     throw new Exception(
                         sprintf('Cannot redeclare control with `tab` or `section` args inside section "%s".', $id)
                     );
                 }
 
-                $args = array_replace_recursive($target_section_args, $args);
+                $args = array_replace_recursive($targetSectionArgs, $args);
 
-                if (null !== $target_tab) {
-                    $args = array_replace_recursive($target_tab, $args);
+                if (null !== $targetTab) {
+                    $args = array_replace_recursive($targetTab, $args);
                 }
             } elseif (empty($args['section']) && (! $options['overwrite'] || !$controlsManager->getControlFromStack($this->getUniqueName(), $id))) {
                 throw new Exception(
@@ -359,7 +359,7 @@ abstract class ControlsStack extends AbstractBase
      * control you set the `$args` parameter, this method allows you to update
      * the arguments by passing new data.
      *
-     * @param string $control_id Control ID.
+     * @param string $controlId Control ID.
      * @param array $args Control arguments. Only the new fields you want
      *                           to update.
      * @param array $options Optional. Some additional options. Default is
@@ -368,23 +368,23 @@ abstract class ControlsStack extends AbstractBase
      * @return bool
      *
      */
-    public function updateControl($control_id, array $args, array $options = [])
+    public function updateControl($controlId, array $args, array $options = [])
     {
-        $is_updated = $this->controlManager->updateControlInStack($this, $control_id, $args, $options);
+        $isUpdated = $this->controlManager->updateControlInStack($this, $controlId, $args, $options);
 
-        if (!$is_updated) {
+        if (!$isUpdated) {
             return false;
         }
 
-        $control = $this->getControls($control_id);
+        $control = $this->getControls($controlId);
 
         if (Controls::SECTION === $control['type']) {
-            $section_args = $this->getSectionArgs($control_id);
+            $sectionArgs = $this->getSectionArgs($controlId);
 
-            $section_controls = $this->getSectionControls($control_id);
+            $sectionControls = $this->getSectionControls($controlId);
 
-            foreach ($section_controls as $section_control_id => $section_control) {
-                $this->updateControl($section_control_id, $section_args, $options);
+            foreach ($sectionControls as $sectionControlId => $sectionControl) {
+                $this->updateControl($sectionControlId, $sectionArgs, $options);
             }
         }
 
@@ -437,16 +437,16 @@ abstract class ControlsStack extends AbstractBase
      */
     final public function getPositionInfo(array $position)
     {
-        $default_position = [
+        $defaultPosition = [
             'type' => 'control',
             'at' => 'after',
         ];
 
         if (!empty($position['type']) && 'section' === $position['type']) {
-            $default_position['at'] = 'end';
+            $defaultPosition['at'] = 'end';
         }
 
-        $position = array_merge($default_position, $position);
+        $position = array_merge($defaultPosition, $position);
 
         if (
             'control' === $position['type'] && in_array($position['at'], [ 'start', 'end' ], true) ||
@@ -457,9 +457,9 @@ abstract class ControlsStack extends AbstractBase
             );
         }
 
-        $target_control_index = $this->getControlIndex($position['of']);
+        $targetControlIndex = $this->getControlIndex($position['of']);
 
-        if (false === $target_control_index) {
+        if (false === $targetControlIndex) {
             if (!empty($position['fallback'])) {
                 return $this->getPositionInfo($position['fallback']);
             }
@@ -467,49 +467,49 @@ abstract class ControlsStack extends AbstractBase
             return false;
         }
 
-        $target_section_index = $target_control_index;
+        $targetSectionIndex = $targetControlIndex;
 
-        $registered_controls = $this->getControls();
+        $registeredControls = $this->getControls();
 
-        $controls_keys = array_keys($registered_controls);
+        $controlsKeys = array_keys($registeredControls);
 
-        while (Controls::SECTION !== $registered_controls[ $controls_keys[ $target_section_index ] ]['type']) {
-            $target_section_index--;
+        while (Controls::SECTION !== $registeredControls[ $controlsKeys[ $targetSectionIndex ] ]['type']) {
+            $targetSectionIndex--;
         }
 
         if ('section' === $position['type']) {
-            $target_control_index++;
+            $targetControlIndex++;
 
             if ('end' === $position['at']) {
-                while (Controls::SECTION !== $registered_controls[ $controls_keys[ $target_control_index ] ]['type']) {
-                    if (++$target_control_index >= count($registered_controls)) {
+                while (Controls::SECTION !== $registeredControls[ $controlsKeys[ $targetControlIndex ] ]['type']) {
+                    if (++$targetControlIndex >= count($registeredControls)) {
                         break;
                     }
                 }
             }
         }
 
-        $target_control = $registered_controls[ $controls_keys[ $target_control_index ] ];
+        $targetControl = $registeredControls[ $controlsKeys[ $targetControlIndex ] ];
 
         if ('after' === $position['at']) {
-            $target_control_index++;
+            $targetControlIndex++;
         }
 
-        $section_id = $registered_controls[ $controls_keys[ $target_section_index ] ]['name'];
+        $sectionId = $registeredControls[ $controlsKeys[ $targetSectionIndex ] ]['name'];
 
-        $position_info = [
-            'index' => $target_control_index,
-            'section' => $this->getSectionArgs($section_id),
+        $positionInfo = [
+            'index' => $targetControlIndex,
+            'section' => $this->getSectionArgs($sectionId),
         ];
 
-        if (!empty($target_control['tabs_wrapper'])) {
-            $position_info['tab'] = [
-                'tabs_wrapper' => $target_control['tabs_wrapper'],
-                'inner_tab' => $target_control['inner_tab'],
+        if (!empty($targetControl['tabs_wrapper'])) {
+            $positionInfo['tab'] = [
+                'tabs_wrapper' => $targetControl['tabs_wrapper'],
+                'inner_tab' => $targetControl['inner_tab'],
             ];
         }
 
-        return $position_info;
+        return $positionInfo;
     }
 
     /**
@@ -518,17 +518,17 @@ abstract class ControlsStack extends AbstractBase
      * Retrieve the key of the control based on a given index of the control.
      *
      *
-     * @param string $control_index Control index.
+     * @param string $controlIndex Control index.
      *
      * @return int Control key.
      */
-    final public function getControlKey($control_index)
+    final public function getControlKey($controlIndex)
     {
-        $registered_controls = $this->getControls();
+        $registeredControls = $this->getControls();
 
-        $controls_keys = array_keys($registered_controls);
+        $controlsKeys = array_keys($registeredControls);
 
-        return $controls_keys[ $control_index ];
+        return $controlsKeys[ $controlIndex ];
     }
 
     /**
@@ -537,17 +537,17 @@ abstract class ControlsStack extends AbstractBase
      * Retrieve the index of the control based on a given key of the control.
      *
      *
-     * @param string $control_key Control key.
+     * @param string $controlKey Control key.
      *
      * @return false|int Control index.
      */
-    final public function getControlIndex($control_key)
+    final public function getControlIndex($controlKey)
     {
         $controls = $this->getControls();
 
-        $controls_keys = array_keys($controls);
+        $controlsKeys = array_keys($controls);
 
-        return array_search($control_key, $controls_keys);
+        return array_search($controlKey, $controlsKeys);
     }
 
     /**
@@ -556,37 +556,37 @@ abstract class ControlsStack extends AbstractBase
      * Retrieve all controls under a specific section.
      *
      *
-     * @param string $section_id Section ID.
+     * @param string $sectionId Section ID.
      *
      * @return array Section controls
      */
-    final public function getSectionControls($section_id)
+    final public function getSectionControls($sectionId)
     {
-        $section_index = $this->getControlIndex($section_id);
+        $sectionIndex = $this->getControlIndex($sectionId);
 
-        $section_controls = [];
+        $sectionControls = [];
 
-        $registered_controls = $this->getControls();
+        $registeredControls = $this->getControls();
 
-        $controls_keys = array_keys($registered_controls);
+        $controlsKeys = array_keys($registeredControls);
 
         while (true) {
-            $section_index++;
+            $sectionIndex++;
 
-            if (!isset($controls_keys[ $section_index ])) {
+            if (!isset($controlsKeys[ $sectionIndex ])) {
                 break;
             }
 
-            $control_key = $controls_keys[ $section_index ];
+            $controlKey = $controlsKeys[ $sectionIndex ];
 
-            if (Controls::SECTION === $registered_controls[ $control_key ]['type']) {
+            if (Controls::SECTION === $registeredControls[ $controlKey ]['type']) {
                 break;
             }
 
-            $section_controls[ $control_key ] = $registered_controls[ $control_key ];
+            $sectionControls[ $controlKey ] = $registeredControls[ $controlKey ];
         }
 
-        return $section_controls;
+        return $sectionControls;
     }
 
     /**
@@ -625,12 +625,12 @@ abstract class ControlsStack extends AbstractBase
      */
     final public function getSchemeControls()
     {
-        $enabled_schemes = Schemes::getEnabledSchemes();
+        $enabledSchemes = Schemes::getEnabledSchemes();
 
         return array_filter(
             $this->getControls(),
-            function ($control) use ($enabled_schemes) {
-                return (! empty($control['scheme']) && in_array($control['scheme']['type'], $enabled_schemes));
+            function ($control) use ($enabledSchemes) {
+                return (! empty($control['scheme']) && in_array($control['scheme']['type'], $enabledSchemes));
             }
         );
     }
@@ -663,13 +663,13 @@ abstract class ControlsStack extends AbstractBase
             $control = array_merge($controlObj->getSettings(), $control);
 
             if (Controls::REPEATER === $control['type']) {
-                $style_fields = [];
+                $styleFields = [];
 
                 foreach ($this->getSettings($controlName) as $item) {
-                    $style_fields[] = $this->getStyleControls($control['fields'], $item);
+                    $styleFields[] = $this->getStyleControls($control['fields'], $item);
                 }
 
-                $control['style_fields'] = $style_fields;
+                $control['style_fields'] = $styleFields;
             }
 
             if (!empty($control['selectors']) || ! empty($control['dynamic']) || ! empty($control['style_fields'])) {
@@ -730,49 +730,49 @@ abstract class ControlsStack extends AbstractBase
             unset($args['default']);
         }
 
-        foreach ($devices as $device_name) {
-            $control_args = $args;
+        foreach ($devices as $deviceName) {
+            $controlArgs = $args;
 
-            if (isset($control_args['device_args'])) {
-                if (!empty($control_args['device_args'][ $device_name ])) {
-                    $control_args = array_merge($control_args, $control_args['device_args'][ $device_name ]);
+            if (isset($controlArgs['device_args'])) {
+                if (!empty($controlArgs['device_args'][ $deviceName ])) {
+                    $controlArgs = array_merge($controlArgs, $controlArgs['device_args'][ $deviceName ]);
                 }
 
-                unset($control_args['device_args']);
+                unset($controlArgs['device_args']);
             }
 
             if (!empty($args['prefix_class'])) {
-                $device_to_replace = self::RESPONSIVE_DESKTOP === $device_name ? '' : '-' . $device_name;
+                $deviceToReplace = self::RESPONSIVE_DESKTOP === $deviceName ? '' : '-' . $deviceName;
 
-                $control_args['prefix_class'] = sprintf($args['prefix_class'], $device_to_replace);
+                $controlArgs['prefix_class'] = sprintf($args['prefix_class'], $deviceToReplace);
             }
 
-            $control_args['responsive']['max'] = $device_name;
+            $controlArgs['responsive']['max'] = $deviceName;
 
-            if (isset($control_args['min_affected_device'])) {
-                if (!empty($control_args['min_affected_device'][ $device_name ])) {
-                    $control_args['responsive']['min'] = $control_args['min_affected_device'][ $device_name ];
+            if (isset($controlArgs['min_affected_device'])) {
+                if (!empty($controlArgs['min_affected_device'][ $deviceName ])) {
+                    $controlArgs['responsive']['min'] = $controlArgs['min_affected_device'][ $deviceName ];
                 }
 
-                unset($control_args['min_affected_device']);
+                unset($controlArgs['min_affected_device']);
             }
 
-            if (isset($control_args[ $device_name . '_default' ])) {
-                $control_args['default'] = $control_args[ $device_name . '_default' ];
+            if (isset($controlArgs[ $deviceName . '_default' ])) {
+                $controlArgs['default'] = $controlArgs[ $deviceName . '_default' ];
             }
 
-            unset($control_args['desktop_default']);
-            unset($control_args['tablet_default']);
-            unset($control_args['mobile_default']);
+            unset($controlArgs['desktop_default']);
+            unset($controlArgs['tablet_default']);
+            unset($controlArgs['mobile_default']);
 
-            $id_suffix = self::RESPONSIVE_DESKTOP === $device_name ? '' : '_' . $device_name;
+            $idSuffix = self::RESPONSIVE_DESKTOP === $deviceName ? '' : '_' . $deviceName;
 
             if (!empty($options['overwrite'])) {
-                $this->updateControl($id . $id_suffix, $control_args, [
+                $this->updateControl($id . $idSuffix, $controlArgs, [
                     'recursive' => ! empty($options['recursive']),
                 ]);
             } else {
-                $this->addControl($id . $id_suffix, $control_args, $options);
+                $this->addControl($id . $idSuffix, $controlArgs, $options);
             }
         }
     }
@@ -814,10 +814,10 @@ abstract class ControlsStack extends AbstractBase
             self::RESPONSIVE_MOBILE,
         ];
 
-        foreach ($devices as $device_name) {
-            $id_suffix = self::RESPONSIVE_DESKTOP === $device_name ? '' : '_' . $device_name;
+        foreach ($devices as $deviceName) {
+            $idSuffix = self::RESPONSIVE_DESKTOP === $deviceName ? '' : '_' . $deviceName;
 
-            $this->removeControl($id . $id_suffix);
+            $this->removeControl($id . $idSuffix);
         }
     }
 
@@ -923,7 +923,7 @@ abstract class ControlsStack extends AbstractBase
      */
     public function getActiveSettings($settings = null, $controls = null)
     {
-        $is_first_request = ! $settings && ! $this->activeSettings;
+        $isFirstRequest = ! $settings && ! $this->activeSettings;
 
         if (!$settings) {
             if ($this->activeSettings) {
@@ -935,15 +935,15 @@ abstract class ControlsStack extends AbstractBase
             $controls = $this->getControls();
         }
 
-        $active_settings = [];
-        foreach ($settings as $setting_key => $setting) {
-            if (!isset($controls[ $setting_key ])) {
-                $active_settings[ $setting_key ] = $setting;
+        $activeSettings = [];
+        foreach ($settings as $settingKey => $setting) {
+            if (!isset($controls[ $settingKey ])) {
+                $activeSettings[ $settingKey ] = $setting;
 
                 continue;
             }
 
-            $control = $controls[ $setting_key ];
+            $control = $controls[ $settingKey ];
 
             if ($this->isControlVisible($control, $settings)) {
                 if (Controls::REPEATER === $control['type']) {
@@ -952,17 +952,17 @@ abstract class ControlsStack extends AbstractBase
                     }
                 }
 
-                $active_settings[ $setting_key ] = $setting;
+                $activeSettings[ $settingKey ] = $setting;
             } else {
-                $active_settings[ $setting_key ] = null;
+                $activeSettings[ $settingKey ] = null;
             }
         }
 
-        if ($is_first_request) {
-            $this->activeSettings = $active_settings;
+        if ($isFirstRequest) {
+            $this->activeSettings = $activeSettings;
         }
 
-        return $active_settings;
+        return $activeSettings;
     }
 
     /**
@@ -975,18 +975,18 @@ abstract class ControlsStack extends AbstractBase
      * tags.
      *
      *
-     * @param string $setting_key Optional. The key of the requested setting.
+     * @param string $settingKey Optional. The key of the requested setting.
      *                            Default is null.
      *
      * @return mixed The settings.
      */
-    public function getSettingsForDisplay($setting_key = null)
+    public function getSettingsForDisplay($settingKey = null)
     {
         if (!$this->parsedActiveSettings) {
             $this->parsedActiveSettings = $this->getActiveSettings($this->getParsedDynamicSettings(), $this->getControls());
         }
 
-        return self::getItems($this->parsedActiveSettings, $setting_key);
+        return self::getItems($this->parsedActiveSettings, $settingKey);
     }
 
     /**
@@ -997,14 +997,14 @@ abstract class ControlsStack extends AbstractBase
      *
      * @param array $settings     Optional. The requested setting. Default is null.
      * @param array $controls     Optional. The controls array. Default is null.
-     * @param array $all_settings Optional. All the settings. Default is null.
+     * @param array $allSettings Optional. All the settings. Default is null.
      *
      * @return array The settings with rendered dynamic tags.
      */
-    public function parseDynamicSettings($settings, $controls = null, $all_settings = null)
+    public function parseDynamicSettings($settings, $controls = null, $allSettings = null)
     {
-        if (null === $all_settings) {
-            $all_settings = $this->getSettings();
+        if (null === $allSettings) {
+            $allSettings = $this->getSettings();
         }
 
         if (null === $controls) {
@@ -1012,36 +1012,36 @@ abstract class ControlsStack extends AbstractBase
         }
 
         foreach ($controls as $control) {
-            $control_name = $control['name'];
-            $control_obj = $this->controlManager->getControl($control['type']);
+            $controlName = $control['name'];
+            $controlObj = $this->controlManager->getControl($control['type']);
 
-            if (!$control_obj instanceof AbstractControlData) {
+            if (!$controlObj instanceof AbstractControlData) {
                 continue;
             }
 
-            if ('repeater' === $control_obj->getType()) {
-                foreach ($settings[ $control_name ] as & $field) {
+            if ('repeater' === $controlObj->getType()) {
+                foreach ($settings[ $controlName ] as & $field) {
                     $field = $this->parseDynamicSettings($field, $control['fields'], $field);
                 }
 
                 continue;
             }
 
-            if (empty($control['dynamic']) || ! isset($all_settings[ Tags::DYNAMIC_SETTING_KEY ][ $control_name ])) {
+            if (empty($control['dynamic']) || ! isset($allSettings[ Tags::DYNAMIC_SETTING_KEY ][ $controlName ])) {
                 continue;
             }
 
-            $dynamic_settings = array_merge($control_obj->getSettings('dynamic'), $control['dynamic']);
+            $dynamicSettings = array_merge($controlObj->getSettings('dynamic'), $control['dynamic']);
 
-            if (!empty($dynamic_settings['active']) && ! empty($all_settings[ Tags::DYNAMIC_SETTING_KEY ][ $control_name ])) {
-                $parsed_value = $control_obj->parseTags($all_settings[ Tags::DYNAMIC_SETTING_KEY ][ $control_name ], $dynamic_settings);
+            if (!empty($dynamicSettings['active']) && ! empty($allSettings[ Tags::DYNAMIC_SETTING_KEY ][ $controlName ])) {
+                $parsedValue = $controlObj->parseTags($allSettings[ Tags::DYNAMIC_SETTING_KEY ][ $controlName ], $dynamicSettings);
 
-                $dynamic_property = ! empty($dynamic_settings['property']) ? $dynamic_settings['property'] : null;
+                $dynamicProperty = ! empty($dynamicSettings['property']) ? $dynamicSettings['property'] : null;
 
-                if ($dynamic_property) {
-                    $settings[ $control_name ][ $dynamic_property ] = $parsed_value;
+                if ($dynamicProperty) {
+                    $settings[ $controlName ][ $dynamicProperty ] = $parsedValue;
                 } else {
-                    $settings[ $control_name ] = $parsed_value;
+                    $settings[ $controlName ] = $parsedValue;
                 }
             }
         }
@@ -1059,15 +1059,15 @@ abstract class ControlsStack extends AbstractBase
      */
     public function getFrontendSettings()
     {
-        $frontend_settings = array_intersect_key($this->getActiveSettings(), array_flip($this->getFrontendSettingsKeys()));
+        $frontendSettings = array_intersect_key($this->getActiveSettings(), array_flip($this->getFrontendSettingsKeys()));
 
-        foreach ($frontend_settings as $key => $setting) {
+        foreach ($frontendSettings as $key => $setting) {
             if (in_array($setting, [ null, '' ], true)) {
-                unset($frontend_settings[ $key ]);
+                unset($frontendSettings[ $key ]);
             }
         }
 
-        return $frontend_settings;
+        return $frontendSettings;
     }
 
     /**
@@ -1097,16 +1097,16 @@ abstract class ControlsStack extends AbstractBase
 
         return array_reduce(
             array_keys($settings),
-            function ($filtered_settings, $setting_key) use ($controls, $settings, $callback) {
-                if (isset($controls[ $setting_key ])) {
-                    $result = $callback($settings[ $setting_key ], $controls[ $setting_key ]);
+            function ($filteredSettings, $settingKey) use ($controls, $settings, $callback) {
+                if (isset($controls[ $settingKey ])) {
+                    $result = $callback($settings[ $settingKey ], $controls[ $settingKey ]);
 
                     if (null !== $result) {
-                        $filtered_settings[ $setting_key ] = $result;
+                        $filteredSettings[ $settingKey ] = $result;
                     }
                 }
 
-                return $filtered_settings;
+                return $filteredSettings;
             },
             []
         );
@@ -1137,41 +1137,41 @@ abstract class ControlsStack extends AbstractBase
             return true;
         }
 
-        foreach ($control['condition'] as $condition_key => $condition_value) {
-            preg_match('/([a-z_\-0-9]+)(?:\[([a-z_]+)])?(!?)$/i', $condition_key, $condition_key_parts);
+        foreach ($control['condition'] as $conditionKey => $conditionValue) {
+            preg_match('/([a-z_\-0-9]+)(?:\[([a-z_]+)])?(!?)$/i', $conditionKey, $conditionKeyParts);
 
-            $pure_condition_key = $condition_key_parts[1];
-            $condition_sub_key = $condition_key_parts[2];
-            $is_negative_condition = ! ! $condition_key_parts[3];
+            $pureConditionKey = $conditionKeyParts[1];
+            $conditionSubKey = $conditionKeyParts[2];
+            $isNegativeCondition = ! ! $conditionKeyParts[3];
 
-            if (!isset($values[ $pure_condition_key ]) || null === $values[ $pure_condition_key ]) {
+            if (!isset($values[ $pureConditionKey ]) || null === $values[ $pureConditionKey ]) {
                 return false;
             }
 
-            $instance_value = $values[ $pure_condition_key ];
+            $instanceValue = $values[ $pureConditionKey ];
 
-            if ($condition_sub_key && is_array($instance_value)) {
-                if (!isset($instance_value[ $condition_sub_key ])) {
+            if ($conditionSubKey && is_array($instanceValue)) {
+                if (!isset($instanceValue[ $conditionSubKey ])) {
                     return false;
                 }
 
-                $instance_value = $instance_value[ $condition_sub_key ];
+                $instanceValue = $instanceValue[ $conditionSubKey ];
             }
 
             /**
-             * If the $condition_value is a non empty array - check if the $condition_value contains the $instance_value,
-             * If the $instance_value is a non empty array - check if the $instance_value contains the $condition_value
+             * If the $conditionValue is a non empty array - check if the $conditionValue contains the $instanceValue,
+             * If the $instanceValue is a non empty array - check if the $instanceValue contains the $conditionValue
              * otherwise check if they are equal. ( and give the ability to check if the value is an empty array )
              */
-            if (is_array($condition_value) && ! empty($condition_value)) {
-                $is_contains = in_array($instance_value, $condition_value, true);
-            } elseif (is_array($instance_value) && ! empty($instance_value)) {
-                $is_contains = in_array($condition_value, $instance_value, true);
+            if (is_array($conditionValue) && ! empty($conditionValue)) {
+                $isContains = in_array($instanceValue, $conditionValue, true);
+            } elseif (is_array($instanceValue) && ! empty($instanceValue)) {
+                $isContains = in_array($conditionValue, $instanceValue, true);
             } else {
-                $is_contains = $instance_value === $condition_value;
+                $isContains = $instanceValue === $conditionValue;
             }
 
-            if ($is_negative_condition && $is_contains || ! $is_negative_condition && ! $is_contains) {
+            if ($isNegativeCondition && $isContains || ! $isNegativeCondition && ! $isContains) {
                 return false;
             }
         }
@@ -1194,7 +1194,7 @@ abstract class ControlsStack extends AbstractBase
      */
     public function startControlsSection($sectionId, array $args = [])
     {
-        $section_name = $this->getName();
+        $sectionName = $this->getName();
 
         /**
          * Before section start.
@@ -1213,13 +1213,13 @@ abstract class ControlsStack extends AbstractBase
          *
          * Fires before SagoTheme section starts in the editor panel.
          *
-         * The dynamic portions of the hook name, `$section_name` and `$section_id`, refers to the section name and section ID, respectively.
+         * The dynamic portions of the hook name, `$sectionName` and `$sectionId`, refers to the section name and section ID, respectively.
          *
          *
          * @param ControlsStack $this The control.
          * @param array          $args Section arguments.
          */
-        HooksHelper::doAction("pagebuilder/element/{$section_name}/{$sectionId}/before_section_start", $this, $args);
+        HooksHelper::doAction("pagebuilder/element/{$sectionName}/{$sectionId}/before_section_start", $this, $args);
 
         $args['type'] = Controls::SECTION;
 
@@ -1252,13 +1252,13 @@ abstract class ControlsStack extends AbstractBase
          *
          * Fires after SagoTheme section starts in the editor panel.
          *
-         * The dynamic portions of the hook name, `$section_name` and `$section_id`, refers to the section name and section ID, respectively.
+         * The dynamic portions of the hook name, `$sectionName` and `$sectionId`, refers to the section name and section ID, respectively.
          *
          *
          * @param ControlsStack $this The control.
          * @param array          $args Section arguments.
          */
-        HooksHelper::doAction("pagebuilder/element/{$section_name}/{$sectionId}/after_section_start", $this, $args);
+        HooksHelper::doAction("pagebuilder/element/{$sectionName}/{$sectionId}/after_section_start", $this, $args);
     }
 
     /**
@@ -1272,13 +1272,13 @@ abstract class ControlsStack extends AbstractBase
      */
     public function endControlsSection()
     {
-        $stack_name = $this->getName();
+        $stackName = $this->getName();
 
         // Save the current section for the action.
-        $current_section = $this->currentSection;
-        $section_id = $current_section['section'];
+        $currentSection = $this->currentSection;
+        $sectionId = $currentSection['section'];
         $args = [
-            'tab' => $current_section['tab'],
+            'tab' => $currentSection['tab'],
         ];
 
         /**
@@ -1288,23 +1288,23 @@ abstract class ControlsStack extends AbstractBase
          *
          *
          * @param ControlsStack $this       The control.
-         * @param string         $section_id Section ID.
+         * @param string         $sectionId Section ID.
          * @param array          $args       Section arguments.
          */
-        HooksHelper::doAction('pagebuilder/element/before_section_end', $this, $section_id, $args);
+        HooksHelper::doAction('pagebuilder/element/before_section_end', $this, $sectionId, $args);
 
         /**
          * Before section end.
          *
          * Fires before SagoTheme section ends in the editor panel.
          *
-         * The dynamic portions of the hook name, `$stack_name` and `$section_id`, refers to the stack name and section ID, respectively.
+         * The dynamic portions of the hook name, `$stackName` and `$sectionId`, refers to the stack name and section ID, respectively.
          *
          *
          * @param ControlsStack $this The control.
          * @param array          $args Section arguments.
          */
-        HooksHelper::doAction("pagebuilder/element/{$stack_name}/{$section_id}/before_section_end", $this, $args);
+        HooksHelper::doAction("pagebuilder/element/{$stackName}/{$sectionId}/before_section_end", $this, $args);
 
         $this->currentSection = null;
 
@@ -1315,23 +1315,23 @@ abstract class ControlsStack extends AbstractBase
          *
          *
          * @param ControlsStack $this       The control.
-         * @param string         $section_id Section ID.
+         * @param string         $sectionId Section ID.
          * @param array          $args       Section arguments.
          */
-        HooksHelper::doAction('pagebuilder/element/after_section_end', $this, $section_id, $args);
+        HooksHelper::doAction('pagebuilder/element/after_section_end', $this, $sectionId, $args);
 
         /**
          * After section end.
          *
          * Fires after SagoTheme section ends in the editor panel.
          *
-         * The dynamic portions of the hook name, `$stack_name` and `$section_id`, refers to the section name and section ID, respectively.
+         * The dynamic portions of the hook name, `$stackName` and `$sectionId`, refers to the section name and section ID, respectively.
          *
          *
          * @param ControlsStack $this The control.
          * @param array          $args Section arguments.
          */
-        HooksHelper::doAction("pagebuilder/element/{$stack_name}/{$section_id}/after_section_end", $this, $args);
+        HooksHelper::doAction("pagebuilder/element/{$stackName}/{$sectionId}/after_section_end", $this, $args);
     }
 
     /**
@@ -1345,11 +1345,11 @@ abstract class ControlsStack extends AbstractBase
      * This method should be used inside `_register_controls()`.
      *
      *
-     * @param string $tabs_id Tabs ID.
+     * @param string $tabsId Tabs ID.
      * @param array $args Tabs arguments.
      * @throws Exception
      */
-    public function startControlsTabs($tabs_id, array $args = [])
+    public function startControlsTabs($tabsId, array $args = [])
     {
         if (null !== $this->currentTab) {
             throw new Exception(
@@ -1359,10 +1359,10 @@ abstract class ControlsStack extends AbstractBase
 
         $args['type'] = Controls::TABS;
 
-        $this->addControl($tabs_id, $args);
+        $this->addControl($tabsId, $args);
 
         $this->currentTab = [
-            'tabs_wrapper' => $tabs_id,
+            'tabs_wrapper' => $tabsId,
         ];
 
         foreach ([ 'condition', 'conditions' ] as $key) {
@@ -1401,11 +1401,11 @@ abstract class ControlsStack extends AbstractBase
      * This method should be used inside `_register_controls()`.
      *
      *
-     * @param string $tab_id Tab ID.
+     * @param string $tabId Tab ID.
      * @param array $args Tab arguments.
      * @throws Exception
      */
-    public function startControlsTab($tab_id, $args)
+    public function startControlsTab($tabId, $args)
     {
         if (!empty($this->currentTab['inner_tab'])) {
             throw new Exception(
@@ -1416,9 +1416,9 @@ abstract class ControlsStack extends AbstractBase
         $args['type'] = Controls::TAB;
         $args['tabs_wrapper'] = $this->currentTab['tabs_wrapper'];
 
-        $this->addControl($tab_id, $args);
+        $this->addControl($tabId, $args);
 
-        $this->currentTab['inner_tab'] = $tab_id;
+        $this->currentTab['inner_tab'] = $tabId;
 
         if ($this->injectionPoint) {
             $this->injectionPoint['tab']['inner_tab'] = $this->currentTab['inner_tab'];
@@ -1469,7 +1469,7 @@ abstract class ControlsStack extends AbstractBase
     {
         $this->currentPopover = null;
 
-        $last_control_key = $this->getControlKey($this->getPointerIndex() - 1);
+        $lastControlKey = $this->getControlKey($this->getPointerIndex() - 1);
 
         $args = [
             'popover' => [
@@ -1481,7 +1481,7 @@ abstract class ControlsStack extends AbstractBase
             'recursive' => true,
         ];
 
-        $this->updateControl($last_control_key, $args, $options);
+        $this->updateControl($lastControlKey, $args, $options);
     }
 
     /**
@@ -1496,33 +1496,33 @@ abstract class ControlsStack extends AbstractBase
 
         $template = $this->contentTemplate();
 
-        $template_content = ob_get_clean();
+        $templateContent = ob_get_clean();
 
-        if (empty($template_content) && $template) {
-            $template_content = $template;
+        if (empty($templateContent) && $template) {
+            $templateContent = $template;
         }
 
-        $element_type = self::TYPE;
+        $elementType = self::TYPE;
 
         /**
          * Template content.
          *
          * Filters the controls stack template content before it's printed in the editor.
          *
-         * The dynamic portion of the hook name, `$element_type`, refers to the element type.
+         * The dynamic portion of the hook name, `$elementType`, refers to the element type.
          *
          *
-         * @param string         $content_template The controls stack template in the editor.
+         * @param string         $contentTemplate The controls stack template in the editor.
          * @param ControlsStack $this             The controls stack.
          */
-        $template_content = HooksHelper::applyFilters("pagebuilder/{$element_type}/print_template", $template_content, $this);
+        $templateContent = HooksHelper::applyFilters("pagebuilder/{$elementType}/print_template", $templateContent, $this);
 
-        if (empty($template_content)) {
+        if (empty($templateContent)) {
             return;
         }
         ?>
 		<script type="text/html" id="tmpl-gmt-<?= EscaperHelper::escapeHtmlAttr($this->getName()); ?>-content">
-			<?php $this->printTemplateContent($template_content); ?>
+			<?php $this->printTemplateContent($templateContent); ?>
 		</script>
 		<?php
     }
@@ -1617,15 +1617,15 @@ abstract class ControlsStack extends AbstractBase
         $settings = $this->getData('settings');
 
         foreach ($this->getControls() as $control) {
-            $control_obj = $this->controlManager->getControl($control['type']);
+            $controlObj = $this->controlManager->getControl($control['type']);
 
-            if (!$control_obj instanceof AbstractControlData) {
+            if (!$controlObj instanceof AbstractControlData) {
                 continue;
             }
 
-            $control = array_merge_recursive($control_obj->getSettings(), $control);
+            $control = array_merge_recursive($controlObj->getSettings(), $control);
 
-            $settings[ $control['name'] ] = $control_obj->getValue($control, $settings);
+            $settings[ $control['name'] ] = $controlObj->getValue($control, $settings);
         }
 
         return $settings;
@@ -1653,19 +1653,19 @@ abstract class ControlsStack extends AbstractBase
      * Retrieve the section arguments based on section ID.
      *
      *
-     * @param string $section_id Section ID.
+     * @param string $sectionId Section ID.
      *
      * @return array Section arguments.
      */
-    protected function getSectionArgs($section_id)
+    protected function getSectionArgs($sectionId)
     {
-        $section_control = $this->getControls($section_id);
+        $sectionControl = $this->getControls($sectionId);
 
-        $section_args_keys = [ 'tab', 'condition' ];
+        $sectionArgsKeys = [ 'tab', 'condition' ];
 
-        $args = array_intersect_key($section_control, array_flip($section_args_keys));
+        $args = array_intersect_key($sectionControl, array_flip($sectionArgsKeys));
 
-        $args['section'] = $section_id;
+        $args['section'] = $sectionId;
 
         return $args;
     }
@@ -1687,11 +1687,11 @@ abstract class ControlsStack extends AbstractBase
      * Backbone JavaScript template.
      *
      *
-     * @param string $template_content Template content.
+     * @param string $templateContent Template content.
      */
-    protected function printTemplateContent($template_content)
+    protected function printTemplateContent($templateContent)
     {
-        echo $template_content;
+        echo $templateContent;
     }
 
     /**
@@ -1755,26 +1755,26 @@ abstract class ControlsStack extends AbstractBase
                     continue;
                 }
 
-                foreach ($settings[ $control['name'] ] as $index => $repeater_row_data) {
-                    $sanitized_row_data = $this->sanitizeSettings($repeater_row_data, $control['fields']);
+                foreach ($settings[ $control['name'] ] as $index => $repeaterRowData) {
+                    $sanitizedRowData = $this->sanitizeSettings($repeaterRowData, $control['fields']);
 
-                    $settings[ $control['name'] ][ $index ] = $sanitized_row_data;
+                    $settings[ $control['name'] ][ $index ] = $sanitizedRowData;
                 }
 
                 continue;
             }
 
-            $is_dynamic = isset($settings[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ]);
+            $isDynamic = isset($settings[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ]);
 
-            if (!$is_dynamic) {
+            if (!$isDynamic) {
                 continue;
             }
 
-            $value_to_check = $settings[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ];
+            $valueToCheck = $settings[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ];
 
-            $tag_text_data = $this->tagsManager->tagTextToTagData($value_to_check);
+            $tagTextData = $this->tagsManager->tagTextToTagData($valueToCheck);
 
-            if (!$this->tagsManager->getTag($tag_text_data['name'])) {
+            if (!$this->tagsManager->getTag($tagTextData['name'])) {
                 unset($settings[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ]);
             }
         }
@@ -1797,7 +1797,7 @@ abstract class ControlsStack extends AbstractBase
             $this->_init($data);
         }
 
-        $this->controlManager = ObjectManagerHelper::get(Controls::class);
-        $this->tagsManager = ObjectManagerHelper::get(Tags::class);
+        $this->controlManager = ObjectManagerHelper::getControlsManager();
+        $this->tagsManager = ObjectManagerHelper::getTagsManager();
     }
 }

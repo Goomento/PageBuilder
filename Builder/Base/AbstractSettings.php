@@ -17,7 +17,6 @@ abstract class AbstractSettings extends ControlsStack
      *
      * Retrieve the wrapper selector for the current panel.
      *
-     * @abstract
      */
     abstract public function getCssWrapperSelector();
 
@@ -26,7 +25,6 @@ abstract class AbstractSettings extends ControlsStack
      *
      * Retrieve the page setting for the current panel.
      *
-     * @abstract
      */
     abstract public function getPanelPageSettings();
 }

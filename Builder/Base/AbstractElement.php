@@ -41,14 +41,14 @@ abstract class AbstractElement extends ControlsStack
      *
      * @var array
      */
-    private $render_attributes = [];
+    private $renderAttributes = [];
 
     /**
      * Element default arguments.
      *
      * @var array
      */
-    private $default_args = [];
+    private $defaultArgs = [];
 
     /**
      * Is type instance.
@@ -58,7 +58,7 @@ abstract class AbstractElement extends ControlsStack
      *
      * @var bool
      */
-    private $is_type_instance = true;
+    private $isTypeInstance = true;
 
     /**
      * Depended scripts.
@@ -68,7 +68,7 @@ abstract class AbstractElement extends ControlsStack
      *
      * @var array
      */
-    private $depended_scripts = [];
+    private $dependedScripts = [];
 
     /**
      * Depended styles.
@@ -78,7 +78,7 @@ abstract class AbstractElement extends ControlsStack
      *
      * @var array
      */
-    private $depended_styles = [];
+    private $dependedStyles = [];
 
     /**
      * @var BuildableContentInterface|null
@@ -95,7 +95,7 @@ abstract class AbstractElement extends ControlsStack
      */
     public function addScriptDepends($handler)
     {
-        $this->depended_scripts[] = $handler;
+        $this->dependedScripts[] = $handler;
     }
 
     /**
@@ -117,7 +117,7 @@ abstract class AbstractElement extends ControlsStack
      */
     public function addStyleDepends($handler)
     {
-        $this->depended_styles[] = $handler;
+        $this->dependedStyles[] = $handler;
     }
 
     /**
@@ -130,7 +130,7 @@ abstract class AbstractElement extends ControlsStack
      */
     public function getScriptDepends()
     {
-        return $this->depended_scripts;
+        return $this->dependedScripts;
     }
 
     /**
@@ -156,7 +156,7 @@ abstract class AbstractElement extends ControlsStack
      */
     public function getStyleDepends()
     {
-        return $this->depended_styles;
+        return $this->dependedStyles;
     }
 
     /**
@@ -180,13 +180,12 @@ abstract class AbstractElement extends ControlsStack
      *
      * Note that not all elements support children.
      *
-     * @abstract
      *
-     * @param array $element_data Element data.
+     * @param array $elementData Element data.
      *
      * @return AbstractElement
      */
-    abstract protected function _getDefaultChildType(array $element_data);
+    abstract protected function _getDefaultChildType(array $elementData);
 
     /**
      * Before element rendering.
@@ -284,7 +283,7 @@ abstract class AbstractElement extends ControlsStack
      */
     public function getDefaultArgs($item = null)
     {
-        return self::getItems($this->default_args, $item);
+        return self::getItems($this->defaultArgs, $item);
     }
 
     /**
@@ -292,25 +291,25 @@ abstract class AbstractElement extends ControlsStack
      *
      * Register new child element to allow hierarchy.
      *
-     * @param array $child_data Child element data.
-     * @param array $child_args Child element arguments.
+     * @param array $childData Child element data.
+     * @param array $childArgs Child element arguments.
      *
      * @return AbstractElement|false Child element instance, or false if failed.
      */
-    public function addChild(array $child_data, array $child_args = [])
+    public function addChild(array $childData, array $childArgs = [])
     {
         if (null === $this->children) {
             $this->initChildren();
         }
 
-        $child_type = $this->getChildType($child_data);
+        $childType = $this->getChildType($childData);
 
-        if (!$child_type) {
+        if (!$childType) {
             return false;
         }
         /** @var Elements $elementsManager */
         $elementsManager = ObjectManagerHelper::get(Elements::class);
-        $child = $elementsManager->createElementInstance($child_data, $child_args, $child_type);
+        $child = $elementsManager->createElementInstance($childData, $childArgs, $childType);
 
         if ($child) {
             $this->children[] = $child;
@@ -346,31 +345,31 @@ abstract class AbstractElement extends ControlsStack
     public function addRenderAttribute($element, $key = null, $value = null, $overwrite = false)
     {
         if (is_array($element)) {
-            foreach ($element as $element_key => $attributes) {
-                $this->addRenderAttribute($element_key, $attributes, null, $overwrite);
+            foreach ($element as $elementKey => $attributes) {
+                $this->addRenderAttribute($elementKey, $attributes, null, $overwrite);
             }
 
             return $this;
         }
 
         if (is_array($key)) {
-            foreach ($key as $attribute_key => $attributes) {
-                $this->addRenderAttribute($element, $attribute_key, $attributes, $overwrite);
+            foreach ($key as $attributeKey => $attributes) {
+                $this->addRenderAttribute($element, $attributeKey, $attributes, $overwrite);
             }
 
             return $this;
         }
 
-        if (empty($this->render_attributes[ $element ][ $key ])) {
-            $this->render_attributes[ $element ][ $key ] = [];
+        if (empty($this->renderAttributes[ $element ][ $key ])) {
+            $this->renderAttributes[ $element ][ $key ] = [];
         }
 
         settype($value, 'array');
 
         if ($overwrite) {
-            $this->render_attributes[ $element ][ $key ] = $value;
+            $this->renderAttributes[ $element ][ $key ] = $value;
         } else {
-            $this->render_attributes[ $element ][ $key ] = array_merge($this->render_attributes[ $element ][ $key ], $value);
+            $this->renderAttributes[ $element ][ $key ] = array_merge($this->renderAttributes[ $element ][ $key ], $value);
         }
 
         return $this;
@@ -393,7 +392,7 @@ abstract class AbstractElement extends ControlsStack
      */
     public function getRenderAttributes($element = '', $key = '')
     {
-        $attributes = $this->render_attributes;
+        $attributes = $this->renderAttributes;
 
         if ($element) {
             if (!isset($attributes[ $element ])) {
@@ -445,26 +444,26 @@ abstract class AbstractElement extends ControlsStack
      */
     public function removeRenderAttribute($element, $key = null, $values = null)
     {
-        if ($key && ! isset($this->render_attributes[ $element ][ $key ])) {
+        if ($key && ! isset($this->renderAttributes[ $element ][ $key ])) {
             return;
         }
 
         if ($values) {
             $values = (array) $values;
 
-            $this->render_attributes[ $element ][ $key ] = array_diff($this->render_attributes[ $element ][ $key ], $values);
+            $this->renderAttributes[ $element ][ $key ] = array_diff($this->renderAttributes[ $element ][ $key ], $values);
 
             return;
         }
 
         if ($key) {
-            unset($this->render_attributes[ $element ][ $key ]);
+            unset($this->renderAttributes[ $element ][ $key ]);
 
             return;
         }
 
-        if (isset($this->render_attributes[ $element ])) {
-            unset($this->render_attributes[ $element ]);
+        if (isset($this->renderAttributes[ $element ])) {
+            unset($this->renderAttributes[ $element ]);
         }
     }
 
@@ -481,11 +480,11 @@ abstract class AbstractElement extends ControlsStack
      */
     public function getRenderAttributeString($element)
     {
-        if (empty($this->render_attributes[ $element ])) {
+        if (empty($this->renderAttributes[ $element ])) {
             return '';
         }
 
-        return DataHelper::renderHtmlAttributes($this->render_attributes[$element]);
+        return DataHelper::renderHtmlAttributes($this->renderAttributes[$element]);
     }
 
     /**
@@ -509,7 +508,7 @@ abstract class AbstractElement extends ControlsStack
      */
     public function printElement()
     {
-        $element_type = $this->getName();
+        $elementType = $this->getName();
 
         /**
          * Before frontend element render.
@@ -526,18 +525,18 @@ abstract class AbstractElement extends ControlsStack
          *
          * Fires before SagoTheme element is rendered in the frontend.
          *
-         * The dynamic portion of the hook name, `$element_type`, refers to the element type.
+         * The dynamic portion of the hook name, `$elementType`, refers to the element type.
          *
          *
          * @param AbstractElement $this The element.
          */
-        HooksHelper::doAction("pagebuilder/frontend/{$element_type}/before_render", $this);
+        HooksHelper::doAction("pagebuilder/frontend/{$elementType}/before_render", $this);
 
         ob_start();
         $this->_printContent();
         $content = ob_get_clean();
 
-        $should_render = (! empty($content) || $this->shouldPrintEmpty());
+        $shouldRender = (! empty($content) || $this->shouldPrintEmpty());
 
         /**
          * Should the element be rendered for frontend
@@ -548,9 +547,9 @@ abstract class AbstractElement extends ControlsStack
          * @param bool true The element.
          * @param AbstractElement $this The element.
          */
-        $should_render = HooksHelper::applyFilters("pagebuilder/frontend/{$element_type}/should_render", $should_render, $this);
+        $shouldRender = HooksHelper::applyFilters("pagebuilder/frontend/{$elementType}/should_render", $shouldRender, $this);
 
-        if ($should_render) {
+        if ($shouldRender) {
             $this->_addRenderAttributes();
 
             $this->beforeRender();
@@ -566,12 +565,12 @@ abstract class AbstractElement extends ControlsStack
          *
          * Fires after SagoTheme element is rendered in the frontend.
          *
-         * The dynamic portion of the hook name, `$element_type`, refers to the element type.
+         * The dynamic portion of the hook name, `$elementType`, refers to the element type.
          *
          *
          * @param AbstractElement $this The element.
          */
-        HooksHelper::doAction("pagebuilder/frontend/{$element_type}/after_render", $this);
+        HooksHelper::doAction("pagebuilder/frontend/{$elementType}/after_render", $this);
 
         /**
          * After frontend element render.
@@ -607,20 +606,20 @@ abstract class AbstractElement extends ControlsStack
      * again.
      *
      *
-     * @param bool $with_html_content Optional. Whether to return the data with
+     * @param bool $withHtmlContent Optional. Whether to return the data with
      *                                HTML content or without. Used for caching.
      *                                Default is false, without HTML.
      *
      * @return array Element raw data.
      */
-    public function getRawData($with_html_content = false)
+    public function getRawData($withHtmlContent = false)
     {
         $data = $this->getData();
 
         $elements = [];
 
         foreach ($this->getChildren() as $child) {
-            $elements[] = $child->getRawData($with_html_content);
+            $elements[] = $child->getRawData($withHtmlContent);
         }
 
         return [
@@ -657,7 +656,7 @@ abstract class AbstractElement extends ControlsStack
      */
     public function isTypeInstance()
     {
-        return $this->is_type_instance;
+        return $this->isTypeInstance;
     }
 
     /**
@@ -671,7 +670,7 @@ abstract class AbstractElement extends ControlsStack
         $id = $this->getId();
 
         $settings = $this->getSettingsForDisplay();
-        $frontend_settings = $this->getFrontendSettings();
+        $frontendSettings = $this->getFrontendSettings();
         $controls = $this->getControls();
 
         $this->addRenderAttribute('_wrapper', [
@@ -683,20 +682,20 @@ abstract class AbstractElement extends ControlsStack
             'data-element_type' => $this->getType(),
         ]);
 
-        $class_settings = [];
+        $classSettings = [];
 
-        foreach ($settings as $setting_key => $setting) {
-            if (isset($controls[ $setting_key ]['prefix_class'])) {
-                $class_settings[ $setting_key ] = $setting;
+        foreach ($settings as $settingKey => $setting) {
+            if (isset($controls[ $settingKey ]['prefix_class'])) {
+                $classSettings[ $settingKey ] = $setting;
             }
         }
 
-        foreach ($class_settings as $setting_key => $setting) {
+        foreach ($classSettings as $settingKey => $setting) {
             if (empty($setting) && '0' !== $setting) {
                 continue;
             }
 
-            $this->addRenderAttribute('_wrapper', 'class', $controls[ $setting_key ]['prefix_class'] . $setting);
+            $this->addRenderAttribute('_wrapper', 'class', $controls[ $settingKey ]['prefix_class'] . $setting);
         }
 
         if (!empty($settings['animation']) || ! empty($settings['_animation'])) {
@@ -708,8 +707,8 @@ abstract class AbstractElement extends ControlsStack
             $this->addRenderAttribute('_wrapper', 'id', trim($settings['_element_id']));
         }
 
-        if ($frontend_settings) {
-            $this->addRenderAttribute('_wrapper', 'data-settings', Zend_Json::encode($frontend_settings));
+        if ($frontendSettings) {
+            $this->addRenderAttribute('_wrapper', 'data-settings', Zend_Json::encode($frontendSettings));
         }
 
         /**
@@ -786,16 +785,16 @@ abstract class AbstractElement extends ControlsStack
      * Retrieve the element child type based on element data.
      *
      *
-     * @param array $element_data Element ID.
+     * @param array $elementData Element ID.
      *
      * @return AbstractElement|false Child type or false if type not found.
      */
-    private function getChildType($element_data)
+    private function getChildType($elementData)
     {
-        $child_type = $this->_getDefaultChildType($element_data);
+        $childType = $this->_getDefaultChildType($elementData);
 
         // If it's not a valid widget ( like a deactivated plugin )
-        if (!$child_type) {
+        if (!$childType) {
             return false;
         }
 
@@ -805,11 +804,11 @@ abstract class AbstractElement extends ControlsStack
          * Filters the child type of the element.
          *
          *
-         * @param AbstractElement $child_type   The child element.
-         * @param array        $element_data The original element ID.
+         * @param AbstractElement $childType   The child element.
+         * @param array        $elementData The original element ID.
          * @param AbstractElement $this         The original element.
          */
-        return HooksHelper::applyFilters('pagebuilder/element/get_child_type', $child_type, $element_data, $this);
+        return HooksHelper::applyFilters('pagebuilder/element/get_child_type', $childType, $elementData, $this);
     }
 
     /**
@@ -822,18 +821,18 @@ abstract class AbstractElement extends ControlsStack
     {
         $this->children = [];
 
-        $children_data = $this->getData('elements');
+        $childrenData = $this->getData('elements');
 
-        if (!$children_data) {
+        if (!$childrenData) {
             return;
         }
 
-        foreach ($children_data as $child_data) {
-            if (!$child_data) {
+        foreach ($childrenData as $childData) {
+            if (!$childData) {
                 continue;
             }
 
-            $this->addChild($child_data);
+            $this->addChild($childData);
         }
     }
 
@@ -871,9 +870,9 @@ abstract class AbstractElement extends ControlsStack
     public function __construct(array $data = [], array $args = null)
     {
         if ($data) {
-            $this->is_type_instance = false;
+            $this->isTypeInstance = false;
         } elseif ($args) {
-            $this->default_args = $args;
+            $this->defaultArgs = $args;
         }
 
         parent::__construct($data);

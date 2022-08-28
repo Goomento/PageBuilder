@@ -195,18 +195,18 @@ class DataHelper
     /**
      *
      * @param string $handle
-     * @param string $js_var
+     * @param string $jsVar
      * @param mixed $config
      */
-    public static function printJsConfig($handle, $js_var, $config)
+    public static function printJsConfig($handle, $jsVar, $config)
     {
         $config = json_encode($config, JSON_INVALID_UTF8_SUBSTITUTE);
 
         $config = str_replace('}},"', '}},' . PHP_EOL . '"', $config);
 
-        $script_data = 'var ' . $js_var . ' = ' . $config . ';';
+        $scriptData = 'var ' . $jsVar . ' = ' . $config . ';';
 
-        ThemeHelper::inlineScript($handle, $script_data, 'before');
+        ThemeHelper::inlineScript($handle, $scriptData, 'before');
     }
 
     /**
@@ -219,7 +219,7 @@ class DataHelper
      */
     public static function getPlaceholderImageSrc()
     {
-        $placeholder_image = UrlBuilderHelper::urlStaticBuilder('Goomento_PageBuilder::images/placeholder.png');
+        $placeholderImage = UrlBuilderHelper::urlStaticBuilder('Goomento_PageBuilder::images/placeholder.png');
 
         /**
          * Get placeholder image source.
@@ -227,9 +227,9 @@ class DataHelper
          * Filters the source of the default placeholder image used by SagoTheme.
          *
          *
-         * @param string $placeholder_image The source of the default placeholder image.
+         * @param string $placeholderImage The source of the default placeholder image.
          */
-        return HooksHelper::applyFilters('pagebuilder/utils/get_placeholder_image_src', $placeholder_image);
+        return HooksHelper::applyFilters('pagebuilder/utils/get_placeholder_image_src', $placeholderImage);
     }
 
     /**
@@ -288,39 +288,39 @@ class DataHelper
      * Whether the two values comply the comparison operator.
      *
      *
-     * @param mixed  $left_value  First value to compare.
-     * @param mixed  $right_value Second value to compare.
+     * @param mixed  $leftValue  First value to compare.
+     * @param mixed  $rightValue Second value to compare.
      * @param string $operator    Comparison operator.
      *
      * @return bool Whether the two values complies the comparison operator.
      */
-    public static function compare($left_value, $right_value, $operator)
+    public static function compare($leftValue, $rightValue, $operator)
     {
         switch ($operator) {
             case '==':
-                return $left_value == $right_value;
+                return $leftValue == $rightValue;
             case '!=':
-                return $left_value != $right_value;
+                return $leftValue != $rightValue;
             case '!==':
-                return $left_value !== $right_value;
+                return $leftValue !== $rightValue;
             case 'in':
-                return in_array($left_value, $right_value, true);
+                return in_array($leftValue, $rightValue, true);
             case '!in':
-                return !in_array($left_value, $right_value, true);
+                return !in_array($leftValue, $rightValue, true);
             case 'contains':
-                return in_array($right_value, $left_value, true);
+                return in_array($rightValue, $leftValue, true);
             case '!contains':
-                return !in_array($right_value, $left_value, true);
+                return !in_array($rightValue, $leftValue, true);
             case '<':
-                return $left_value < $right_value;
+                return $leftValue < $rightValue;
             case '<=':
-                return $left_value <= $right_value;
+                return $leftValue <= $rightValue;
             case '>':
-                return $left_value > $right_value;
+                return $leftValue > $rightValue;
             case '>=':
-                return $left_value >= $right_value;
+                return $leftValue >= $rightValue;
             default:
-                return $left_value === $right_value;
+                return $leftValue === $rightValue;
         }
     }
 
@@ -337,20 +337,20 @@ class DataHelper
      */
     public static function check(array $conditions, array $comparison)
     {
-        $is_or_condition = isset($conditions['relation']) && 'or' === $conditions['relation'];
+        $isOrCondition = isset($conditions['relation']) && 'or' === $conditions['relation'];
 
-        $condition_succeed = !$is_or_condition;
+        $conditionSucceed = !$isOrCondition;
 
         foreach ($conditions['terms'] as $term) {
             if (!empty($term['terms'])) {
-                $comparison_result = self::check($term, $comparison);
+                $comparisonResult = self::check($term, $comparison);
             } else {
-                preg_match('/(\w+)(?:\[(\w+)])?/', $term['name'], $parsed_name);
+                preg_match('/(\w+)(?:\[(\w+)])?/', $term['name'], $parsedName);
 
-                $value = $comparison[$parsed_name[1]];
+                $value = $comparison[$parsedName[1]];
 
-                if (!empty($parsed_name[2])) {
-                    $value = $value[$parsed_name[2]];
+                if (!empty($parsedName[2])) {
+                    $value = $value[$parsedName[2]];
                 }
 
                 $operator = null;
@@ -359,19 +359,19 @@ class DataHelper
                     $operator = $term['operator'];
                 }
 
-                $comparison_result = self::compare($value, $term['value'], $operator);
+                $comparisonResult = self::compare($value, $term['value'], $operator);
             }
 
-            if ($is_or_condition) {
-                if ($comparison_result) {
+            if ($isOrCondition) {
+                if ($comparisonResult) {
                     return true;
                 }
-            } elseif (!$comparison_result) {
+            } elseif (!$comparisonResult) {
                 return false;
             }
         }
 
-        return $condition_succeed;
+        return $conditionSucceed;
     }
 
     /**

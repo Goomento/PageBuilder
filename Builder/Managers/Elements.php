@@ -20,7 +20,7 @@ class Elements
     /**
      * @var
      */
-    private $_element_types;
+    private $elementTypes;
 
     /**
      * @var
@@ -51,10 +51,10 @@ class Elements
 
         $args = array_merge($elementType->getDefaultArgs(), $elementArgs);
 
-        $element_class = get_class($elementType);
+        $elementClass = get_class($elementType);
 
         try {
-            $element = new $element_class($elementData, $args);
+            $element = new $elementClass($elementData, $args);
         } catch (\Exception $e) {
             return null;
         }
@@ -75,17 +75,17 @@ class Elements
     }
 
     /**
-     * @param $category_name
-     * @param $category_properties
+     * @param $categoryName
+     * @param $categoryProperties
      */
-    public function addCategory($category_name, $category_properties)
+    public function addCategory($categoryName, $categoryProperties)
     {
         if (null === $this->categories) {
             $this->getCategories();
         }
 
-        if (!isset($this->categories[ $category_name ])) {
-            $this->categories[ $category_name ] = $category_properties;
+        if (!isset($this->categories[ $categoryName ])) {
+            $this->categories[ $categoryName ] = $categoryProperties;
         }
     }
 
@@ -95,7 +95,7 @@ class Elements
      */
     public function registerElementType(AbstractElement $element)
     {
-        $this->_element_types[ $element->getName() ] = $element;
+        $this->elementTypes[ $element->getName() ] = $element;
 
         return true;
     }
@@ -106,30 +106,30 @@ class Elements
      */
     public function unregisterElementType($name)
     {
-        if (!isset($this->_element_types[ $name ])) {
+        if (!isset($this->elementTypes[ $name ])) {
             return false;
         }
 
-        unset($this->_element_types[ $name ]);
+        unset($this->elementTypes[ $name ]);
 
         return true;
     }
 
     /**
-     * @param null $element_name
+     * @param null $elementName
      * @return mixed|null
      */
-    public function getElementTypes($element_name = null)
+    public function getElementTypes($elementName = null)
     {
-        if (is_null($this->_element_types)) {
+        if (is_null($this->elementTypes)) {
             $this->initElements();
         }
 
-        if (null !== $element_name) {
-            return $this->_element_types[$element_name] ?? null;
+        if (null !== $elementName) {
+            return $this->elementTypes[$elementName] ?? null;
         }
 
-        return $this->_element_types;
+        return $this->elementTypes;
     }
 
     /**
@@ -148,17 +148,17 @@ class Elements
 
     public function renderElementsContent()
     {
-        foreach ($this->getElementTypes() as $element_type) {
-            $element_type->printTemplate();
+        foreach ($this->getElementTypes() as $elementType) {
+            $elementType->printTemplate();
         }
     }
 
     /**
-     *
+     * Init elements
      */
     private function initElements()
     {
-        $this->_element_types = [];
+        $this->elementTypes = [];
         $this->registerElementType(ObjectManagerHelper::get(Section::class));
         $this->registerElementType(ObjectManagerHelper::get(Column::class));
         $this->registerElementType(ObjectManagerHelper::get(Repeater::class));
@@ -166,7 +166,7 @@ class Elements
     }
 
     /**
-     *
+     * Init categories
      */
     private function initCategories()
     {

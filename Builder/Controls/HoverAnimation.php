@@ -65,15 +65,15 @@ class HoverAnimation extends AbstractControlData
                 'buzz-out' => 'Buzz Out',
             ];
 
-            $additional_animations = [];
+            $additionalAnimations = [];
             /**
              * Element hover animations list.
              *
              *
-             * @param array $additional_animations Additional Animations array.
+             * @param array $additionalAnimations Additional Animations array.
              */
-            $additional_animations = HooksHelper::applyFilters('pagebuilder/controls/hover_animations/additional_animations', $additional_animations);
-            self::$_animations = array_merge(self::$_animations, $additional_animations);
+            $additionalAnimations = HooksHelper::applyFilters('pagebuilder/controls/hover_animations/additional_animations', $additionalAnimations);
+            self::$_animations = array_merge(self::$_animations, $additionalAnimations);
         }
 
         return self::$_animations;
@@ -89,14 +89,14 @@ class HoverAnimation extends AbstractControlData
      */
     public function contentTemplate()
     {
-        $control_uid = $this->getControlUid(); ?>
+        $controlUid = $this->getControlUid(); ?>
 		<div class="gmt-control-field">
-			<label for="<?= $control_uid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+			<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
 			<div class="gmt-control-input-wrapper">
-				<select id="<?= $control_uid; ?>" data-setting="{{ data.name }}">
+				<select id="<?= $controlUid; ?>" data-setting="{{ data.name }}">
 					<option value=""><?= __('None'); ?></option>
-					<?php foreach (self::getAnimations() as $animation_name => $animation_title) : ?>
-						<option value="<?= $animation_name; ?>"><?= $animation_title; ?></option>
+					<?php foreach (self::getAnimations() as $animationName => $animationTitle) : ?>
+						<option value="<?= $animationName; ?>"><?= $animationTitle; ?></option>
 					<?php endforeach; ?>
 				</select>
 			</div>

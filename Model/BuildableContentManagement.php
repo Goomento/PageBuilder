@@ -175,7 +175,8 @@ class BuildableContentManagement implements BuildableContentManagementInterface
         PageBuilder::initialize();
 
         $buildableContent->setSetting('css/' . Config::CSS_UPDATED_TIME, 0);
-        $this->saveBuildableContent($buildableContent, __('Refreshed Assets')->__toString());
+        $this->saveBuildableContent($buildableContent,
+            !$buildableContent->getLabel() ? __('Refreshed Assets')->__toString(): '');
         $buildableContent->setDataChanges(false);
 
         $css = new ContentCss( $buildableContent );
@@ -371,7 +372,7 @@ class BuildableContentManagement implements BuildableContentManagementInterface
 
         /** @var Revision $revision */
         if (!$saveMassage && !$revision->getLabel() && $revision->getIgnoreLabelFlag() !== true) {
-            $revision->setLabel($isLast ? __('Published change')->__toString() : __('Saved change')->__toString());
+            $revision->setLabel($isLast ? __('Saved revision')->__toString() : __('Published change')->__toString());
         } elseif ($saveMassage) {
             $revision->setLabel($saveMassage);
         }
@@ -401,6 +402,9 @@ class BuildableContentManagement implements BuildableContentManagementInterface
             BuildableContentInterface::UPDATE_TIME,
             BuildableContentInterface::CREATION_TIME,
             BuildableContentInterface::REVISION_HASH,
+            'is_caching',
+            'ignore_label_flag',
+            'is_refreshing_assets_flag',
         ];
 
         foreach ($privateFields as $field) {

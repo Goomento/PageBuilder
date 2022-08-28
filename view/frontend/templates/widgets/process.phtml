@@ -14,9 +14,9 @@ use Goomento\PageBuilder\Block\View\Element\Widget;
 $widget = $block->getWidget();
 $settings = $widget->getSettingsForDisplay();
 
-$progress_percentage = is_numeric($settings['progress_percent']['size']) ? $settings['progress_percent']['size'] : '0';
-if (100 < $progress_percentage) {
-    $progress_percentage = 100;
+$progressPercentage = is_numeric($settings['progress_percent']['size']) ? $settings['progress_percent']['size'] : '0';
+if (100 < $progressPercentage) {
+    $progressPercentage = 100;
 }
 
 $widget->addRenderAttribute('wrapper', [
@@ -24,7 +24,7 @@ $widget->addRenderAttribute('wrapper', [
     'role' => 'progressbar',
     'aria-valuemin' => '0',
     'aria-valuemax' => '100',
-    'aria-valuenow' => $progress_percentage,
+    'aria-valuenow' => $progressPercentage,
     'aria-valuetext' => (string) $settings['progress_inner_text'],
 ]);
 
@@ -34,7 +34,7 @@ if (!empty($settings['progress_type'])) {
 
 $widget->addRenderAttribute('progress-bar', [
     'class' => 'gmt-progress-bar',
-    'data-max' => $progress_percentage,
+    'data-max' => $progressPercentage,
 ]);
 
 $widget->addRenderAttribute('inner_text', [
@@ -56,7 +56,7 @@ if (!empty($settings['progress_title'])) { ?>
     <div <?= $widget->getRenderAttributeString('progress-bar'); ?>>
         <span <?= $widget->getRenderAttributeString('inner_text'); ?>><?= $settings['progress_inner_text']; ?></span>
         <?php if ('hide' !== $settings['progress_display_percentage']) { ?>
-            <span class="gmt-progress-percentage"><?= $progress_percentage; ?>%</span>
+            <span class="gmt-progress-percentage"><?= $progressPercentage; ?>%</span>
         <?php } ?>
     </div>
 </div>

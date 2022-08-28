@@ -23,11 +23,11 @@ if (empty($settings['image-carousel_carousel'])) {
 $slides = [];
 
 foreach ($settings['image-carousel_carousel'] as $index => $attachment) {
-    $image_url = $attachment['url'];
+    $imageUrl = $attachment['url'];
 
-    $image_html = '<img class="swiper-slide-image" src="' . EscaperHelper::escapeHtml($image_url) . '" alt="" />';
+    $imageHtml = '<img class="swiper-slide-image" src="' . EscaperHelper::escapeHtml($imageUrl) . '" alt="" />';
 
-    $link_tag = '';
+    $linkTag = '';
 
     $link = [];
 
@@ -41,8 +41,8 @@ foreach ($settings['image-carousel_carousel'] as $index => $attachment) {
 
     if (!empty($link)) {
 
-        $link_key = 'link_' . $index;
-        $widget->addRenderAttribute($link_key, [
+        $linkKey = 'link_' . $index;
+        $widget->addRenderAttribute($linkKey, [
             'href' => $link['url'],
             'data-gmt-open-lightbox' => $settings['image-carousel_open_lightbox'],
             'data-gmt-lightbox-slideshow' => $widget->getId(),
@@ -50,34 +50,34 @@ foreach ($settings['image-carousel_carousel'] as $index => $attachment) {
         ]);
 
         if (StateHelper::isEditorMode()) {
-            $widget->addRenderAttribute($link_key, [
+            $widget->addRenderAttribute($linkKey, [
                 'class' => 'gmt-clickable',
             ]);
         }
 
         if (! empty($link['is_external'])) {
-            $widget->addRenderAttribute($link_key, 'target', '_blank');
+            $widget->addRenderAttribute($linkKey, 'target', '_blank');
         }
 
         if (! empty($link['nofollow'])) {
-            $widget->addRenderAttribute($link_key, 'rel', 'nofollow');
+            $widget->addRenderAttribute($linkKey, 'rel', 'nofollow');
         }
 
-        $link_tag = '<a ' . $widget->getRenderAttributeString($link_key) . '>';
+        $linkTag = '<a ' . $widget->getRenderAttributeString($linkKey) . '>';
     }
 
-    $slide_html = '<div class="swiper-slide">' . $link_tag . '<figure class="swiper-slide-inner">' . $image_html;
+    $slideHtml = '<div class="swiper-slide">' . $linkTag . '<figure class="swiper-slide-inner">' . $imageHtml;
 
 
-    $slide_html .= '</figure>';
+    $slideHtml .= '</figure>';
 
     if ($link) {
-        $slide_html .= '</a>';
+        $slideHtml .= '</a>';
     }
 
-    $slide_html .= '</div>';
+    $slideHtml .= '</div>';
 
-    $slides[] = $slide_html;
+    $slides[] = $slideHtml;
 }
 
 if (!empty($slides)) :
@@ -93,23 +93,23 @@ if (!empty($slides)) :
         ],
     ]);
 
-    $show_dots = (in_array($settings['navigation'], [ 'dots', 'both' ]));
-    $show_arrows = (in_array($settings['navigation'], [ 'arrows', 'both' ]));
+    $showDots = (in_array($settings['navigation'], [ 'dots', 'both' ]));
+    $showArrows = (in_array($settings['navigation'], [ 'arrows', 'both' ]));
 
     if ('yes' === $settings['image-carousel_image_stretch']) {
         $widget->addRenderAttribute('carousel', 'class', 'swiper-image-stretch');
     }
 
-    $slides_count = count($settings['image-carousel_carousel']); ?>
+    $slidesCount = count($settings['image-carousel_carousel']); ?>
     <div <?= $widget->getRenderAttributeString('carousel-wrapper'); ?>>
         <div <?= $widget->getRenderAttributeString('carousel'); ?>>
             <?= implode('', $slides); ?>
         </div>
-        <?php if (1 < $slides_count) : ?>
-            <?php if ($show_dots) : ?>
+        <?php if (1 < $slidesCount) : ?>
+            <?php if ($showDots) : ?>
                 <div class="swiper-pagination"></div>
             <?php endif; ?>
-            <?php if ($show_arrows) : ?>
+            <?php if ($showArrows) : ?>
                 <div class="gmt-swiper-button gmt-swiper-button-prev">
                     <i class="fa fa-chevron-left" aria-hidden="true"></i>
                     <span class="gmt-screen-only"><?php __('Previous'); ?></span>

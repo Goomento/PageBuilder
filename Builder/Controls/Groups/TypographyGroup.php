@@ -11,7 +11,6 @@ namespace Goomento\PageBuilder\Builder\Controls\Groups;
 use Goomento\PageBuilder\Builder\Base\AbstractControlGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\GeneralSettings;
-use Goomento\PageBuilder\Builder\Managers\Settings as SettingsManager;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 class TypographyGroup extends AbstractControlGroup
@@ -36,7 +35,7 @@ class TypographyGroup extends AbstractControlGroup
      *
      * @var array Typography control scheme fields keys.
      */
-    private static $_scheme_fields_keys = [ 'font_family', 'font_weight' ];
+    private static $schemeFieldsKeys = [ 'font_family', 'font_weight' ];
 
     /**
      * Get scheme fields keys.
@@ -48,7 +47,7 @@ class TypographyGroup extends AbstractControlGroup
      */
     public static function getSchemeFieldsKeys()
     {
-        return self::$_scheme_fields_keys;
+        return self::$schemeFieldsKeys;
     }
 
     /**
@@ -65,17 +64,17 @@ class TypographyGroup extends AbstractControlGroup
 
         $settingsManager = ObjectManagerHelper::getSettingsManager();
         $general = $settingsManager->getSettingsManagers(GeneralSettings::NAME);
-        $default_fonts = $general->getSettingModel(null)->getSettings('default_generic_fonts');
+        $defaultFonts = $general->getSettingModel(null)->getSettings('default_generic_fonts');
 
-        if ($default_fonts) {
-            $default_fonts = ', ' . $default_fonts;
+        if ($defaultFonts) {
+            $defaultFonts = ', ' . $defaultFonts;
         }
 
         $fields['font_family'] = [
             'label' => __('Family'),
             'type' => Controls::FONT,
             'default' => '',
-            'selector_value' => 'font-family: {{VALUE}}' . $default_fonts . ';',
+            'selector_value' => 'font-family: {{VALUE}}' . $defaultFonts . ';',
         ];
 
         $fields['font_size'] = [
@@ -97,19 +96,19 @@ class TypographyGroup extends AbstractControlGroup
             'selector_value' => 'font-size: {{SIZE}}{{UNIT}}',
         ];
 
-        $typo_weight_options = [
+        $typoWeightOptions = [
             '' => __('Default'),
         ];
 
         foreach (array_merge([ 'normal', 'bold' ], range(100, 900, 100)) as $weight) {
-            $typo_weight_options[ $weight ] = ucfirst((string) $weight);
+            $typoWeightOptions[ $weight ] = ucfirst((string) $weight);
         }
 
         $fields['font_weight'] = [
             'label' => __('Weight'),
             'type' => Controls::SELECT,
             'default' => '',
-            'options' => $typo_weight_options,
+            'options' => $typoWeightOptions,
         ];
 
         $fields['text_transform'] = [
@@ -203,15 +202,15 @@ class TypographyGroup extends AbstractControlGroup
     {
         array_walk(
             $fields,
-            function (&$field, $field_name) {
-                if (in_array($field_name, [ 'typography', 'popover_toggle' ])) {
+            function (&$field, $fieldName) {
+                if (in_array($fieldName, [ 'typography', 'popover_toggle' ])) {
                     return;
                 }
 
-                $selector_value = ! empty($field['selector_value']) ? $field['selector_value'] : str_replace('_', '-', $field_name) . ': {{VALUE}};';
+                $selectorValue = ! empty($field['selector_value']) ? $field['selector_value'] : str_replace('_', '-', $fieldName) . ': {{VALUE}};';
 
                 $field['selectors'] = [
-                    '{{SELECTOR}}' => $selector_value,
+                    '{{SELECTOR}}' => $selectorValue,
                 ];
             }
         );
@@ -225,26 +224,26 @@ class TypographyGroup extends AbstractControlGroup
      * Register field arguments to typography control.
      *
      *
-     * @param string $control_id Typography control id.
-     * @param array  $field_args Typography control field arguments.
+     * @param string $controlId Typography control id.
+     * @param array  $fieldArgs Typography control field arguments.
      *
      * @return array Field arguments.
      */
-    protected function addGroupArgsToField($control_id, $field_args)
+    protected function addGroupArgsToField($controlId, $fieldArgs)
     {
-        $field_args = parent::addGroupArgsToField($control_id, $field_args);
+        $fieldArgs = parent::addGroupArgsToField($controlId, $fieldArgs);
 
         $args = $this->getArgs();
 
-        if (in_array($control_id, self::getSchemeFieldsKeys()) && ! empty($args['scheme'])) {
-            $field_args['scheme'] = [
+        if (in_array($controlId, self::getSchemeFieldsKeys()) && ! empty($args['scheme'])) {
+            $fieldArgs['scheme'] = [
                 'type' => self::NAME,
                 'value' => $args['scheme'],
-                'key' => $control_id,
+                'key' => $controlId,
             ];
         }
 
-        return $field_args;
+        return $fieldArgs;
     }
 
     /**
