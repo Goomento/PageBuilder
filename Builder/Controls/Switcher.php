@@ -22,12 +22,12 @@ class Switcher extends AbstractControlData
      */
     public function contentTemplate()
     {
-        $control_uid = $this->getControlUid(); ?>
+        $controlUid = $this->getControlUid(); ?>
 		<div class="gmt-control-field">
-			<label for="<?= $control_uid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+			<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
 			<div class="gmt-control-input-wrapper">
 				<label class="gmt-switch">
-					<input id="<?= $control_uid; ?>" type="checkbox" data-setting="{{ data.name }}" class="gmt-switch-input" value="{{ data.return_value }}">
+					<input id="<?= $controlUid; ?>" type="checkbox" data-setting="{{ data.name }}" class="gmt-switch-input" value="{{ data.return_value }}">
 					<span class="gmt-switch-label" data-on="{{ data.label_on }}" data-off="{{ data.label_off }}"></span>
 					<span class="gmt-switch-handle"></span>
 				</label>

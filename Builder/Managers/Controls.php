@@ -218,20 +218,20 @@ class Controls
     }
 
     /**
-     * @param $tab_name
-     * @param $tab_label
+     * @param $tabName
+     * @param $tabLabel
      */
-    public static function addTab($tab_name, $tab_label)
+    public static function addTab($tabName, $tabLabel)
     {
         if (! self::$tabs) {
             self::initTabs();
         }
 
-        if (isset(self::$tabs[ $tab_name ])) {
+        if (isset(self::$tabs[ $tabName ])) {
             return;
         }
 
-        self::$tabs[ $tab_name ] = $tab_label;
+        self::$tabs[ $tabName ] = $tabLabel;
     }
 
     /**
@@ -269,12 +269,12 @@ class Controls
     }
 
     /**
-     * @param $control_id
-     * @param AbstractControl $control_instance
+     * @param $controlId
+     * @param AbstractControl $controlInstance
      */
-    public function registerControl($control_id, AbstractControl $control_instance)
+    public function registerControl($controlId, AbstractControl $controlInstance)
     {
-        $this->controls[ $control_id ] = $control_instance;
+        $this->controls[ $controlId ] = $controlInstance;
     }
 
     /**
@@ -320,17 +320,17 @@ class Controls
      */
     public function getControlsData()
     {
-        $controls_data = [];
+        $controlsData = [];
 
         foreach ($this->getControls() as $name => $control) {
-            $controls_data[ $name ] = $control->getSettings();
+            $controlsData[ $name ] = $control->getSettings();
         }
 
-        return $controls_data;
+        return $controlsData;
     }
 
     /**
-     *
+     * Render content
      */
     public function renderControls()
     {
@@ -372,13 +372,13 @@ class Controls
     }
 
     /**
-     * @param ControlsStack $controls_stack
+     * @param ControlsStack $controlsStack
      */
-    public function openStack(ControlsStack $controls_stack)
+    public function openStack(ControlsStack $controlsStack)
     {
-        $stack_id = $controls_stack->getUniqueName();
+        $stackId = $controlsStack->getUniqueName();
 
-        $this->stacks[ $stack_id ] = [
+        $this->stacks[ $stackId ] = [
             'tabs' => [],
             'controls' => [],
         ];
@@ -386,72 +386,72 @@ class Controls
 
     /**
      * @param ControlsStack $element
-     * @param $control_id
-     * @param $control_data
+     * @param $controlId
+     * @param $controlData
      * @param array $options
      * @return bool
      */
-    public function addControlToStack(ControlsStack $element, $control_id, $control_data, array $options = [])
+    public function addControlToStack(ControlsStack $element, $controlId, $controlData, array $options = [])
     {
-        $default_options = [
+        $defaultOptions = [
             'overwrite' => false,
             'index' => null,
         ];
 
-        $options = array_merge($default_options, $options);
+        $options = array_merge($defaultOptions, $options);
 
-        $default_args = [
+        $defaultArgs = [
             'type' => self::TEXT,
             'tab' => self::TAB_CONTENT,
         ];
 
-        $control_data['name'] = $control_id;
+        $controlData['name'] = $controlId;
 
-        $control_data = array_merge($default_args, $control_data);
+        $controlData = array_merge($defaultArgs, $controlData);
 
-        $control_type_instance = $this->getControl($control_data['type']);
+        $controlTypeInstance = $this->getControl($controlData['type']);
 
-        if (!$control_type_instance) {
+        if (!$controlTypeInstance) {
             LoggerHelper::error(
-                sprintf('AbstractControl type "%s" not found.', $control_data['type'])
+                sprintf('AbstractControl type "%s" not found.', $controlData['type'])
             );
             return false;
         }
 
-        if ($control_type_instance instanceof AbstractControlData) {
-            $control_default_value = $control_type_instance::getDefaultValue();
+        if ($controlTypeInstance instanceof AbstractControlData) {
+            $controlDefaultValue = $controlTypeInstance::getDefaultValue();
 
-            if (is_array($control_default_value)) {
-                $control_data['default'] = isset($control_data['default']) ? array_merge($control_default_value, $control_data['default']) : $control_default_value;
+            if (is_array($controlDefaultValue)) {
+                $controlData['default'] = isset($controlData['default']) ? array_merge($controlDefaultValue, $controlData['default']) : $controlDefaultValue;
             } else {
-                $control_data['default'] = $control_data['default'] ?? $control_default_value;
+                $controlData['default'] = $controlData['default'] ?? $controlDefaultValue;
             }
         }
 
-        $stack_id = $element->getUniqueName();
+        $stackId = $element->getUniqueName();
 
-        if (!$options['overwrite'] && isset($this->stacks[ $stack_id ]['controls'][ $control_id ])) {
+        if (!$options['overwrite'] && isset($this->stacks[ $stackId ]['controls'][ $controlId ])) {
             return false;
         }
 
         $tabs = self::getTabs();
 
-        if (!isset($tabs[ $control_data['tab'] ])) {
-            $control_data['tab'] = $default_args['tab'];
+        if (!isset($tabs[ $controlData['tab'] ])) {
+            $controlData['tab'] = $defaultArgs['tab'];
         }
 
-        $this->stacks[ $stack_id ]['tabs'][ $control_data['tab'] ] = $tabs[ $control_data['tab'] ];
+        $this->stacks[ $stackId ]['tabs'][ $controlData['tab'] ] = $tabs[ $controlData['tab'] ];
 
-        $this->stacks[ $stack_id ]['controls'][ $control_id ] = $control_data;
+        $this->stacks[ $stackId ]['controls'][ $controlId ] = $controlData;
 
         if (null !== $options['index']) {
-            $controls = $this->stacks[ $stack_id ]['controls'];
+            $controls = $this->stacks[ $stackId ]['controls'];
 
-            $controls_keys = array_keys($controls);
+            $controlsKeys = array_keys($controls);
 
-            array_splice($controls_keys, $options['index'], 0, $control_id);
+            array_splice($controlsKeys, $options['index'], 0, $controlId);
 
-            $this->stacks[ $stack_id ]['controls'] = array_merge(array_flip($controls_keys), $controls);
+            $this->stacks[ $stackId ]['controls'] = array_merge(array_flip($controlsKeys), $controls);
         }
 
         return true;
@@ -460,76 +460,76 @@ class Controls
     /**
      * @throws Exception
      */
-    public function removeControlFromStack($stack_id, $control_id)
+    public function removeControlFromStack($stackId, $controlId)
     {
-        if (is_array($control_id)) {
-            foreach ($control_id as $id) {
-                $this->removeControlFromStack($stack_id, $id);
+        if (is_array($controlId)) {
+            foreach ($controlId as $id) {
+                $this->removeControlFromStack($stackId, $id);
             }
 
             return true;
         }
 
-        if (empty($this->stacks[ $stack_id ]['controls'][ $control_id ])) {
+        if (empty($this->stacks[ $stackId ]['controls'][ $controlId ])) {
             throw new Exception(
                 'Cannot remove not-exists control.'
             );
         }
 
-        unset($this->stacks[ $stack_id ]['controls'][ $control_id ]);
+        unset($this->stacks[ $stackId ]['controls'][ $controlId ]);
 
         return true;
     }
 
     /**
-     * @param $stack_id
-     * @param $control_id
+     * @param $stackId
+     * @param $controlId
      * @return mixed
      * @throws Exception
      */
-    public function getControlFromStack($stack_id, $control_id)
+    public function getControlFromStack($stackId, $controlId)
     {
-        if (empty($this->stacks[ $stack_id ]['controls'][ $control_id ])) {
+        if (empty($this->stacks[ $stackId ]['controls'][ $controlId ])) {
             throw new Exception(
                 'Cannot get a not-exists control.'
             );
         }
 
-        return $this->stacks[ $stack_id ]['controls'][ $control_id ];
+        return $this->stacks[ $stackId ]['controls'][ $controlId ];
     }
 
     /**
      * @param ControlsStack $element
-     * @param $control_id
-     * @param $control_data
+     * @param $controlId
+     * @param $controlData
      * @param array $options
      * @return bool
      * @throws Exception
      */
-    public function updateControlInStack(ControlsStack $element, $control_id, $control_data, array $options = [])
+    public function updateControlInStack(ControlsStack $element, $controlId, $controlData, array $options = [])
     {
-        $old_control_data = $this->getControlFromStack($element->getUniqueName(), $control_id);
+        $oldControlData = $this->getControlFromStack($element->getUniqueName(), $controlId);
 
         if (!empty($options['recursive'])) {
-            $control_data = array_replace_recursive($old_control_data, $control_data);
+            $controlData = array_replace_recursive($oldControlData, $controlData);
         } else {
-            $control_data = array_merge($old_control_data, $control_data);
+            $controlData = array_merge($oldControlData, $controlData);
         }
 
-        return $this->addControlToStack($element, $control_id, $control_data, [
+        return $this->addControlToStack($element, $controlId, $controlData, [
             'overwrite' => true,
         ]);
     }
 
     /**
-     * @param null $stack_id
+     * @param null $stackId
      * @return array|mixed|null
      */
-    public function getStacks($stack_id = null)
+    public function getStacks($stackId = null)
     {
-        if ($stack_id) {
-            if (isset($this->stacks[ $stack_id ])) {
-                return $this->stacks[ $stack_id ];
+        if ($stackId) {
+            if (isset($this->stacks[ $stackId ])) {
+                return $this->stacks[ $stackId ];
             }
 
             return null;
@@ -539,18 +539,18 @@ class Controls
     }
 
     /**
-     * @param ControlsStack $controls_stack
+     * @param ControlsStack $controlsStack
      * @return mixed|null
      */
-    public function getElementStack(ControlsStack $controls_stack)
+    public function getElementStack(ControlsStack $controlsStack)
     {
-        $stack_id = $controls_stack->getUniqueName();
+        $stackId = $controlsStack->getUniqueName();
 
-        if (!isset($this->stacks[ $stack_id ])) {
+        if (!isset($this->stacks[ $stackId ])) {
             return null;
         }
 
-        return $this->stacks[ $stack_id ];
+        return $this->stacks[ $stackId ];
     }
 
     /**
@@ -599,25 +599,25 @@ class Controls
     }
 
     /**
-     * @param $post_css
+     * @param $postCss
      * @param $element
      */
-    public function addContentCss($post_css, $element)
+    public function addContentCss($postCss, $element)
     {
-        $element_settings = $element->getSettings();
+        $elementSettings = $element->getSettings();
 
-        if (empty($element_settings['custom_css'])) {
+        if (empty($elementSettings['custom_css'])) {
             return;
         }
 
-        $css = trim($element_settings['custom_css']);
+        $css = trim($elementSettings['custom_css']);
 
         if (empty($css)) {
             return;
         }
-        $css = str_replace('selector', $post_css->getElementUniqueSelector($element), $css);
+        $css = str_replace('selector', $postCss->getElementUniqueSelector($element), $css);
 
-        $post_css->getStylesheet()->addRawCss($css);
+        $postCss->getStylesheet()->addRawCss($css);
     }
 
     /**

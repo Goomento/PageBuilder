@@ -75,15 +75,15 @@ class GoogleMaps extends AbstractWidget
             ]
         );
 
-        $default_address = 'Hang Sơn Đoòng';
+        $defaultAddress = 'Hang Sơn Đoòng';
 
         $this->addControl(
             'address',
             [
                 'label' => __('Location'),
                 'type' => Controls::TEXT,
-                'placeholder' => $default_address,
-                'default' => $default_address,
+                'placeholder' => $defaultAddress,
+                'default' => $defaultAddress,
                 'label_block' => true,
             ]
         );

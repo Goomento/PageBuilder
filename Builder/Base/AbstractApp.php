@@ -24,7 +24,7 @@ abstract class AbstractApp extends AbstractModule
     {
         $name = $this->getName();
 
-        $js_var = 'goomento' . str_replace(' ', '', ucwords(str_replace('-', ' ', $name))) . 'Config';
+        $jsVar = 'goomento' . str_replace(' ', '', ucwords(str_replace('-', ' ', $name))) . 'Config';
 
         $config = $this->getSettings() + $this->getComponentsConfig();
 
@@ -32,7 +32,7 @@ abstract class AbstractApp extends AbstractModule
             $handle = 'goomento-' . $name;
         }
 
-        DataHelper::printJsConfig($handle, $js_var, $config);
+        DataHelper::printJsConfig($handle, $jsVar, $config);
     }
 
     /**

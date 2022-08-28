@@ -65,15 +65,15 @@ class ImageDimensions extends AbstractBaseMultiple
 			<label class="gmt-control-title">{{{ data.label }}}</label>
 			<div class="gmt-control-input-wrapper">
 				<div class="gmt-image-dimensions-field">
-					<?php $control_uid = $this->getControlUid('width'); ?>
-					<input id="<?= $control_uid; ?>" type="text" data-setting="width" />
-					<label for="<?= $control_uid; ?>" class="gmt-image-dimensions-field-description"><?= __('Width'); ?></label>
+					<?php $controlUid = $this->getControlUid('width'); ?>
+					<input id="<?= $controlUid; ?>" type="text" data-setting="width" />
+					<label for="<?= $controlUid; ?>" class="gmt-image-dimensions-field-description"><?= __('Width'); ?></label>
 				</div>
 				<div class="gmt-image-dimensions-separator">x</div>
 				<div class="gmt-image-dimensions-field">
-					<?php $control_uid = $this->getControlUid('height'); ?>
-					<input id="<?= $control_uid; ?>" type="text" data-setting="height" />
-					<label for="<?= $control_uid; ?>" class="gmt-image-dimensions-field-description"><?= __('Height'); ?></label>
+					<?php $controlUid = $this->getControlUid('height'); ?>
+					<input id="<?= $controlUid; ?>" type="text" data-setting="height" />
+					<label for="<?= $controlUid; ?>" class="gmt-image-dimensions-field-description"><?= __('Height'); ?></label>
 				</div>
 				<button class="gmt-button gmt-button-success gmt-image-dimensions-apply-button"><?= __('Apply'); ?></button>
 			</div>

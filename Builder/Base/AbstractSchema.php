@@ -24,14 +24,13 @@ abstract class AbstractSchema extends AbstractEntity
      *
      * @var array System schemes.
      */
-    private $_system_schemes;
+    private $systemSchemes;
 
     /**
      * Init system schemes.
      *
      * Initialize the system schemes.
      *
-     * @abstract
      */
     abstract protected function _initSystemSchemes();
 
@@ -58,11 +57,11 @@ abstract class AbstractSchema extends AbstractEntity
      */
     final public function getSystemSchemes()
     {
-        if (null === $this->_system_schemes) {
-            $this->_system_schemes = $this->_initSystemSchemes();
+        if (null === $this->systemSchemes) {
+            $this->systemSchemes = $this->_initSystemSchemes();
         }
 
-        return $this->_system_schemes;
+        return $this->systemSchemes;
     }
 
     /**
@@ -75,15 +74,15 @@ abstract class AbstractSchema extends AbstractEntity
      */
     public function getSchemeValue()
     {
-        $scheme_value = ConfigHelper::getValue('scheme_' . static::NAME);
+        $schemeValue = ConfigHelper::getValue('scheme_' . static::NAME);
 
-        if (empty($scheme_value)) {
-            $scheme_value = $this->getDefaultScheme();
+        if (empty($schemeValue)) {
+            $schemeValue = $this->getDefaultScheme();
 
-            ConfigHelper::setValue('scheme_' . static::NAME, $scheme_value);
+            ConfigHelper::setValue('scheme_' . static::NAME, $schemeValue);
         }
 
-        return $scheme_value;
+        return $schemeValue;
     }
 
     /**
@@ -97,9 +96,9 @@ abstract class AbstractSchema extends AbstractEntity
      */
     public function saveScheme(array $posted)
     {
-        $scheme_value = $this->getSchemeValue();
+        $schemeValue = $this->getSchemeValue();
         ConfigHelper::setValue('scheme_' . static::NAME,
-            array_replace($scheme_value, array_intersect_key($posted, $scheme_value)));
+            array_replace($schemeValue, array_intersect_key($posted, $schemeValue)));
     }
 
     /**
@@ -116,10 +115,10 @@ abstract class AbstractSchema extends AbstractEntity
 
         $titles = $this->getSchemeTitles();
 
-        foreach ($this->getSchemeValue() as $scheme_key => $scheme_value) {
-            $scheme[ $scheme_key ] = [
-                'title' => $titles[$scheme_key] ?? '',
-                'value' => $scheme_value,
+        foreach ($this->getSchemeValue() as $schemeKey => $schemeValue) {
+            $scheme[ $schemeKey ] = [
+                'title' => $titles[$schemeKey] ?? '',
+                'value' => $schemeValue,
             ];
         }
 

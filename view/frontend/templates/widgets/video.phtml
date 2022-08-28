@@ -20,28 +20,28 @@ $widget = $block->getWidget();
 $settings = $widget->getSettingsForDisplay();
 $settings = $widget->getSettingsForDisplay();
 
-$video_url = $settings[ $settings['video_type'] . '_url' ] ?? '';
+$videoUrl = $settings[ $settings['video_type'] . '_url' ] ?? '';
 
 if ('other' === $settings['video_type']) {
-    $video_url = $widget->getExternalVideoUrl();
+    $videoUrl = $widget->getExternalVideoUrl();
 }
 
-if (empty($video_url)) {
+if (empty($videoUrl)) {
     return;
 }
 
 if ('other' === $settings['video_type']) {
     ob_start();
     $widget->renderExternalVideo();
-    $video_html = ob_get_clean();
+    $videoHtml = ob_get_clean();
 } else {
-    $embed_params = $widget->getEmbedParams();
-    $embed_options = $widget->getEmbedOptions();
-    $video_html = Embed::getEmbedHtml($video_url, $embed_params, $embed_options);
+    $embedParams = $widget->getEmbedParams();
+    $embedOptions = $widget->getEmbedOptions();
+    $videoHtml = Embed::getEmbedHtml($videoUrl, $embedParams, $embedOptions);
 }
 
-if (empty($video_html)) {
-    echo $video_url;
+if (empty($videoHtml)) {
+    echo $videoUrl;
 
     return;
 }
@@ -56,7 +56,7 @@ $widget->addRenderAttribute('video-wrapper', 'class', 'gmt-open-' . ($settings['
 <div <?= $widget->getRenderAttributeString('video-wrapper'); ?>>
     <?php
     if (!$settings['lightbox']) {
-        echo $video_html; // XSS ok.
+        echo $videoHtml; // XSS ok.
     }
 
     if ($widget->hasImageOverlay()) :
@@ -64,15 +64,15 @@ $widget->addRenderAttribute('video-wrapper', 'class', 'gmt-open-' . ($settings['
 
         if ($settings['lightbox']) {
             if ('other' === $settings['video_type']) {
-                $lightbox_url = $video_url;
+                $lightboxUrl = $videoUrl;
             } else {
-                $lightbox_url = Embed::getEmbedUrl($video_url, $embed_params, $embed_options);
+                $lightboxUrl = Embed::getEmbedUrl($videoUrl, $embedParams, $embedOptions);
             }
 
-            $lightbox_options = [
+            $lightboxOptions = [
                 'type' => 'video',
                 'videoType' => $settings['video_type'],
-                'url' => $lightbox_url,
+                'url' => $lightboxUrl,
                 'modalOptions' => [
                     'id' => 'gmt-lightbox-' . $widget->getId(),
                     'entranceAnimation' => $settings['lightbox_content_animation'],
@@ -83,12 +83,12 @@ $widget->addRenderAttribute('video-wrapper', 'class', 'gmt-open-' . ($settings['
             ];
 
             if ('other' === $settings['video_type']) {
-                $lightbox_options['videoParams'] = $widget->getExternalParams();
+                $lightboxOptions['videoParams'] = $widget->getExternalParams();
             }
 
             $widget->addRenderAttribute('image-overlay', [
                 'data-gmt-open-lightbox' => 'yes',
-                'data-gmt-lightbox' => Zend_Json::encode($lightbox_options),
+                'data-gmt-lightbox' => Zend_Json::encode($lightboxOptions),
             ]);
 
             if (StateHelper::isEditorMode()) {

@@ -80,23 +80,23 @@ class Dimensions extends AbstractBaseUnits
 			<div class="gmt-control-input-wrapper">
 				<ul class="gmt-control-dimensions">
 					<?php
-                    foreach ($dimensions as $dimension_key => $dimension_title) :
-                        $control_uid = $this->getControlUid($dimension_key); ?>
+                    foreach ($dimensions as $dimensionKey => $dimensionTitle) :
+                        $controlUid = $this->getControlUid($dimensionKey); ?>
 						<li class="gmt-control-dimension">
-							<input id="<?= $control_uid; ?>" type="number" data-setting="<?= EscaperHelper::escapeHtml($dimension_key); ?>"
+							<input id="<?= $controlUid; ?>" type="number" data-setting="<?= EscaperHelper::escapeHtml($dimensionKey); ?>"
 								   placeholder="<#
 							   if ( _.isObject( data.placeholder ) ) {
-								if ( ! _.isUndefined( data.placeholder.<?= $dimension_key; ?> ) ) {
-									print( data.placeholder.<?= $dimension_key; ?> );
+								if ( ! _.isUndefined( data.placeholder.<?= $dimensionKey; ?> ) ) {
+									print( data.placeholder.<?= $dimensionKey; ?> );
 								}
 							   } else {
 								print( data.placeholder );
 							   } #>"
-							<# if ( -1 === _.indexOf( allowed_dimensions, '<?= $dimension_key; ?>' ) ) { #>
+							<# if ( -1 === _.indexOf( allowed_dimensions, '<?= $dimensionKey; ?>' ) ) { #>
 								disabled
 								<# } #>
 									/>
-							<label for="<?= EscaperHelper::escapeHtml($control_uid); ?>" class="gmt-control-dimension-label"><?= $dimension_title; ?></label>
+							<label for="<?= EscaperHelper::escapeHtml($controlUid); ?>" class="gmt-control-dimension-label"><?= $dimensionTitle; ?></label>
 						</li>
 					<?php endforeach; ?>
 					<li>

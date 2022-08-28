@@ -27,7 +27,7 @@ class Schemes
     /**
      * @var \Goomento\PageBuilder\Builder\Base\AbstractSchema[]
      */
-    protected $_registered_schemes = [];
+    protected $registeredSchemes = [];
 
     /**
      * @var AbstractSchema[]|null
@@ -127,20 +127,20 @@ class Schemes
     }
 
     /**
-     * @param $scheme_type
-     * @param $scheme_value
+     * @param $schemeType
+     * @param $schemeValue
      * @return false
      */
-    public function getSchemeValue($scheme_type, $scheme_value)
+    public function getSchemeValue($schemeType, $schemeValue)
     {
         /** @var \Goomento\PageBuilder\Builder\Base\AbstractSchema $scheme */
-        $scheme = $this->getScheme($scheme_type);
+        $scheme = $this->getScheme($schemeType);
 
         if (!$scheme) {
             return false;
         }
 
-        return $scheme->getSchemeValue()[ $scheme_value ];
+        return $scheme->getSchemeValue()[ $schemeValue ];
     }
 
     /**
@@ -160,16 +160,16 @@ class Schemes
             return false;
         }
 
-        /** @var AbstractSchema $scheme_obj */
-        $scheme_obj = $this->getScheme($data['scheme_name']);
+        /** @var AbstractSchema $schemeObj */
+        $schemeObj = $this->getScheme($data['scheme_name']);
 
-        if (!$scheme_obj) {
+        if (!$schemeObj) {
             return false;
         }
 
         $posted = json_decode($data['data'], true);
 
-        $scheme_obj->saveScheme($posted);
+        $schemeObj->saveScheme($posted);
         $globalCss = new GlobalCss;
         $globalCss->update();
 
@@ -177,7 +177,8 @@ class Schemes
     }
 
     /**
-     *
+     * Print template
+     * @return void
      */
     public function printSchemesTemplates()
     {
@@ -201,14 +202,14 @@ class Schemes
     public static function getEnabledSchemes()
     {
         if (null === self::$enabledSchemes) {
-            $enabled_schemes = [];
+            $enabledSchemes = [];
 
-            foreach (self::$schemesTypes as $schemes_type) {
-                $enabled_schemes[] = $schemes_type;
+            foreach (self::$schemesTypes as $schemesType) {
+                $enabledSchemes[] = $schemesType;
             }
-            $enabled_schemes = HooksHelper::applyFilters('pagebuilder/schemes/enabled_schemes', $enabled_schemes);
+            $enabledSchemes = HooksHelper::applyFilters('pagebuilder/schemes/enabled_schemes', $enabledSchemes);
 
-            self::$enabledSchemes = $enabled_schemes;
+            self::$enabledSchemes = $enabledSchemes;
         }
         return self::$enabledSchemes;
     }

@@ -188,7 +188,7 @@ class Column extends AbstractElement
             ]
         );
 
-        $possible_tags = [
+        $possibleTags = [
             'div',
             'header',
             'footer',
@@ -201,7 +201,7 @@ class Column extends AbstractElement
 
         $options = [
             '' => __('Default'),
-        ] + array_combine($possible_tags, $possible_tags);
+        ] + array_combine($possibleTags, $possibleTags);
 
         $this->addControl(
             'html_tag',
@@ -931,18 +931,18 @@ class Column extends AbstractElement
     {
         $settings = $this->getSettingsForDisplay();
 
-        $has_background_overlay = in_array($settings['background_overlay_background'], [ 'classic', 'gradient' ], true) ||
+        $hasBackgroundOverlay = in_array($settings['background_overlay_background'], [ 'classic', 'gradient' ], true) ||
                                   in_array($settings['background_overlay_hover_background'], [ 'classic', 'gradient' ], true);
 
-        $column_wrap_classes = [ 'gmt-column-wrap' ];
+        $columnWrapClasses = [ 'gmt-column-wrap' ];
 
         if ($this->getChildren()) {
-            $column_wrap_classes[] = ' gmt-element-populated';
+            $columnWrapClasses[] = ' gmt-element-populated';
         }
 
         $this->addRenderAttribute([
             '_inner_wrapper' => [
-                'class' => $column_wrap_classes,
+                'class' => $columnWrapClasses,
             ],
             '_widget_wrapper' => [
                 'class' => [ 'gmt-widget-wrap' ],
@@ -953,7 +953,7 @@ class Column extends AbstractElement
         ]); ?>
 		<<?= $this->getHtmlTag() . ' ' . $this->getRenderAttributeString('_wrapper'); ?>>
 			<div <?= $this->getRenderAttributeString('_inner_wrapper'); ?>>
-			<?php if ($has_background_overlay) : ?>
+			<?php if ($hasBackgroundOverlay) : ?>
 				<div <?= $this->getRenderAttributeString('_background_overlay'); ?>></div>
 			<?php endif; ?>
 		<div <?= $this->getRenderAttributeString('_widget_wrapper'); ?>>
@@ -985,9 +985,9 @@ class Column extends AbstractElement
     {
         parent::_addRenderAttributes();
 
-        $is_inner = $this->getData('isInner');
+        $isInner = $this->getData('isInner');
 
-        $column_type = ! empty($is_inner) ? 'inner' : 'top';
+        $columnType = ! empty($isInner) ? 'inner' : 'top';
 
         $settings = $this->getSettings();
 
@@ -997,7 +997,7 @@ class Column extends AbstractElement
             [
                 'gmt-column',
                 'gmt-col-' . $settings['_column_size'],
-                'gmt-' . $column_type . '-column',
+                'gmt-' . $columnType . '-column',
             ]
         );
     }
@@ -1007,19 +1007,19 @@ class Column extends AbstractElement
      *
      * Retrieve the column child type based on element data.
      *
-     * @param array $element_data Element ID.
+     * @param array $elementData Element ID.
      *
      */
-    protected function _getDefaultChildType(array $element_data)
+    protected function _getDefaultChildType(array $elementData)
     {
-        if ('section' === $element_data['elType']) {
+        if ('section' === $elementData['elType']) {
             /** @var Elements $elements */
             $elements = ObjectManagerHelper::get(Elements::class);
             return $elements->getElementTypes('section');
         }
         /** @var Widgets $widgets */
         $widgets = ObjectManagerHelper::get(Widgets::class);
-        return $widgets->getWidgetTypes($element_data['widgetType']);
+        return $widgets->getWidgetTypes($elementData['widgetType']);
     }
 
     /**
@@ -1032,12 +1032,12 @@ class Column extends AbstractElement
      */
     private function getHtmlTag()
     {
-        $html_tag = $this->getSettings('html_tag');
+        $htmlTag = $this->getSettings('html_tag');
 
-        if (empty($html_tag)) {
-            $html_tag = 'div';
+        if (empty($htmlTag)) {
+            $htmlTag = 'div';
         }
 
-        return $html_tag;
+        return $htmlTag;
     }
 }

@@ -68,8 +68,6 @@ abstract class AbstractSettingsManager extends AbstractEntity
      *
      * Retrieve the model for settings configuration.
      *
-     * @abstract
-     *
      * @return AbstractSettings The model object.
      */
     abstract public function getModelForConfig();
@@ -124,7 +122,7 @@ abstract class AbstractSettingsManager extends AbstractEntity
          *
          * Filters the success response data when saving settings using ajax.
          *
-         * The dynamic portion of the hook name, `$settings_name`, refers to the settings name.
+         * The dynamic portion of the hook name, `$settingsName`, refers to the settings name.
          *
          *
          * @param array $successResponseData Success response data.
@@ -220,7 +218,6 @@ abstract class AbstractSettingsManager extends AbstractEntity
      *
      * Save settings to the database.
      *
-     * @abstract
      *
      * @param array $settings Settings.
      * @param BuildableContentInterface|null $buildableContent
@@ -232,7 +229,6 @@ abstract class AbstractSettingsManager extends AbstractEntity
      *
      * Retrieve the model for the CSS file.
      *
-     * @abstract
      *
      * @param AbstractCss $cssFile The requested CSS file.
      */
@@ -242,8 +238,6 @@ abstract class AbstractSettingsManager extends AbstractEntity
      * Get CSS file for update.
      *
      * Retrieve the CSS file before updating it.
-     *
-     * @abstract
      *
      * @param int $id ContentCss ID.
      */

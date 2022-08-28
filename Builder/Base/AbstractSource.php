@@ -99,8 +99,6 @@ abstract class AbstractSource extends AbstractEntity
      *
      * Export template to a file.
      *
-     * @abstract
-     *
      * @param int $templateId The template ID.
      */
     abstract public function exportTemplate(int $templateId);

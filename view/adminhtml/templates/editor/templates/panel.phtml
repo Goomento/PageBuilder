@@ -194,39 +194,39 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
     </div>
     <div class="gmt-panel-scheme-typography-items gmt-panel-box-content">
         <?php
-        $scheme_fields_keys = TypographyGroup::getSchemeFieldsKeys();
+        $schemeFieldsKeys = TypographyGroup::getSchemeFieldsKeys();
 
-        $typography_group = ObjectManagerHelper::getControlsManager()
+        $typographyGroup = ObjectManagerHelper::getControlsManager()
             ->getControlGroups( TypographyGroup::NAME );
 
-        $typography_fields = $typography_group->getFields();
+        $typographyFields = $typographyGroup->getFields();
 
-        $scheme_fields = array_intersect_key( $typography_fields, array_flip( $scheme_fields_keys ) );
+        $schemeFields = array_intersect_key( $typographyFields, array_flip( $schemeFieldsKeys ) );
 
-        foreach ( $scheme_fields as $option_name => $option ) :
+        foreach ( $schemeFields as $optionName => $option ) :
             ?>
             <div class="gmt-panel-scheme-typography-item">
                 <div class="gmt-panel-scheme-item-title gmt-control-title"><?= $option['label']; ?></div>
                 <div class="gmt-panel-scheme-typography-item-value">
                     <?php if ( 'select' === $option['type'] ) : ?>
-                        <select name="<?= EscaperHelper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field">
-                            <?php foreach ( $option['options'] as $field_key => $field_value ) : ?>
-                                <option value="<?= EscaperHelper::escapeHtml($field_key); ?>"><?= $field_value; ?></option>
+                        <select name="<?= EscaperHelper::escapeHtml($optionName); ?>" class="gmt-panel-scheme-typography-item-field">
+                            <?php foreach ( $option['options'] as $fieldKey => $fieldValue ) : ?>
+                                <option value="<?= EscaperHelper::escapeHtml($fieldKey); ?>"><?= $fieldValue; ?></option>
                             <?php endforeach; ?>
                         </select>
                     <?php elseif ( 'font' === $option['type'] ) : ?>
-                        <select name="<?= EscaperHelper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field">
+                        <select name="<?= EscaperHelper::escapeHtml($optionName); ?>" class="gmt-panel-scheme-typography-item-field">
                             <option value=""><?= __( 'Default' ); ?></option>
-                            <?php foreach ( Fonts::getFontGroups() as $group_type => $group_label ) : ?>
-                                <optgroup label="<?= EscaperHelper::escapeHtml($group_label); ?>">
-                                    <?php foreach ( Fonts::getFontsByGroups( [ $group_type ] ) as $font_title => $font_type ) : ?>
-                                        <option value="<?= EscaperHelper::escapeHtml($font_title); ?>"><?= $font_title; ?></option>
+                            <?php foreach ( Fonts::getFontGroups() as $groupType => $groupLabel ) : ?>
+                                <optgroup label="<?= EscaperHelper::escapeHtml($groupLabel); ?>">
+                                    <?php foreach ( Fonts::getFontsByGroups( [ $groupType ] ) as $fontTitle => $fontType ) : ?>
+                                        <option value="<?= EscaperHelper::escapeHtml($fontTitle); ?>"><?= $fontTitle; ?></option>
                                     <?php endforeach; ?>
                                 </optgroup>
                             <?php endforeach; ?>
                         </select>
                     <?php elseif ( 'text' === $option['type'] ) : ?>
-                        <input name="<?= EscaperHelper::escapeHtml($option_name); ?>" class="gmt-panel-scheme-typography-item-field" />
+                        <input name="<?= EscaperHelper::escapeHtml($optionName); ?>" class="gmt-panel-scheme-typography-item-field" />
                     <?php endif; ?>
                 </div>
             </div>

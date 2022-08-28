@@ -64,17 +64,17 @@ class Stylesheet
      */
     public static function parseRules(array $rules)
     {
-        $parsed_rules = '';
+        $parsedRules = '';
 
         foreach ($rules as $selector => $properties) {
-            $selector_content = self::parseProperties($properties);
+            $selectorContent = self::parseProperties($properties);
 
-            if ($selector_content) {
-                $parsed_rules .= $selector . '{' . $selector_content . '}';
+            if ($selectorContent) {
+                $parsedRules .= $selector . '{' . $selectorContent . '}';
             }
         }
 
-        return $parsed_rules;
+        return $parsedRules;
     }
 
     /**
@@ -89,15 +89,15 @@ class Stylesheet
      */
     public static function parseProperties(array $properties)
     {
-        $parsed_properties = '';
+        $parsedProperties = '';
 
-        foreach ($properties as $property_key => $property_value) {
-            if ('' !== $property_value) {
-                $parsed_properties .= $property_key . ':' . $property_value . ';';
+        foreach ($properties as $propertyKey => $propertyValue) {
+            if ('' !== $propertyValue) {
+                $parsedProperties .= $propertyKey . ':' . $propertyValue . ';';
             }
         }
 
-        return $parsed_properties;
+        return $parsedProperties;
     }
 
     /**
@@ -148,56 +148,56 @@ class Stylesheet
      *
      *
      * @param string $selector CSS selector.
-     * @param null $style_rules Optional. Style rules. Default is `null`.
+     * @param null $styleRules Optional. Style rules. Default is `null`.
      * @param array|null $query Optional. Media query. Default is `null`.
      *
      * @return Stylesheet The current stylesheet class instance.
      */
-    public function addRules($selector, $style_rules = null, array $query = null)
+    public function addRules($selector, $styleRules = null, array $query = null)
     {
-        $query_hash = 'all';
+        $queryHash = 'all';
 
         if ($query) {
-            $query_hash = $this->queryToHash($query);
+            $queryHash = $this->queryToHash($query);
         }
 
-        if (!isset($this->rules[ $query_hash ])) {
-            $this->addQueryHash($query_hash);
+        if (!isset($this->rules[ $queryHash ])) {
+            $this->addQueryHash($queryHash);
         }
 
-        if (null === $style_rules) {
-            preg_match_all('/([^\s].+?(?=\{))\{((?s:.)+?(?=}))}/', $selector, $parsed_rules);
+        if (null === $styleRules) {
+            preg_match_all('/([^\s].+?(?=\{))\{((?s:.)+?(?=}))}/', $selector, $parsedRules);
 
-            foreach ($parsed_rules[1] as $index => $selector) {
-                $this->addRules($selector, $parsed_rules[2][ $index ], $query);
+            foreach ($parsedRules[1] as $index => $selector) {
+                $this->addRules($selector, $parsedRules[2][ $index ], $query);
             }
 
             return $this;
         }
 
-        if (!isset($this->rules[ $query_hash ][ $selector ])) {
-            $this->rules[ $query_hash ][ $selector ] = [];
+        if (!isset($this->rules[ $queryHash ][ $selector ])) {
+            $this->rules[ $queryHash ][ $selector ] = [];
         }
 
-        if (is_string($style_rules)) {
-            $style_rules = array_filter(explode(';', trim($style_rules)));
+        if (is_string($styleRules)) {
+            $styleRules = array_filter(explode(';', trim($styleRules)));
 
-            $ordered_rules = [];
+            $orderedRules = [];
 
-            foreach ($style_rules as $rule) {
+            foreach ($styleRules as $rule) {
                 $property = explode(':', $rule, 2);
 
                 if (count($property) < 2) {
                     return $this;
                 }
 
-                $ordered_rules[ trim($property[0]) ] = trim($property[1], ' ;');
+                $orderedRules[ trim($property[0]) ] = trim($property[1], ' ;');
             }
 
-            $style_rules = $ordered_rules;
+            $styleRules = $orderedRules;
         }
 
-        $this->rules[ $query_hash ][ $selector ] = array_merge($this->rules[ $query_hash ][ $selector ], $style_rules);
+        $this->rules[ $queryHash ][ $selector ] = array_merge($this->rules[ $queryHash ][ $selector ], $styleRules);
 
         return $this;
     }
@@ -273,21 +273,21 @@ class Stylesheet
             $styleText .= '}';
         }
 
-        foreach ($this->rules as $query_hash => $rule) {
-            $device_text = self::parseRules($rule);
+        foreach ($this->rules as $queryHash => $rule) {
+            $deviceText = self::parseRules($rule);
 
-            if ('all' !== $query_hash) {
-                $device_text = $this->getQueryHashStyleFormat($query_hash) . '{' . $device_text . '}';
+            if ('all' !== $queryHash) {
+                $deviceText = $this->getQueryHashStyleFormat($queryHash) . '{' . $deviceText . '}';
             }
 
-            $styleText .= $device_text;
+            $styleText .= $deviceText;
         }
 
-        foreach ($this->raw as $device_name => $raw) {
+        foreach ($this->raw as $deviceName => $raw) {
             $raw = implode("\n", $raw);
 
-            if ($raw && isset($this->devices[ $device_name ])) {
-                $raw = '@media(max-width: ' . $this->devices[ $device_name ] . 'px){' . $raw . '}';
+            if ($raw && isset($this->devices[ $deviceName ])) {
+                $raw = '@media(max-width: ' . $this->devices[ $deviceName ] . 'px){' . $raw . '}';
             }
 
             $styleText .= $raw;
@@ -324,23 +324,23 @@ class Stylesheet
      *
      * @throws \RangeException If max value for this device is out of range.
      *
-     * @param string $device_name Device name.
+     * @param string $deviceName Device name.
      *
      * @return int
      */
-    private function getDeviceMaxValue($device_name)
+    private function getDeviceMaxValue($deviceName)
     {
-        $devices_names = array_keys($this->devices);
+        $devicesNames = array_keys($this->devices);
 
-        $device_name_index = array_search($device_name, $devices_names);
+        $deviceNameIndex = array_search($deviceName, $devicesNames);
 
-        $next_index = $device_name_index + 1;
+        $nextIndex = $deviceNameIndex + 1;
 
-        if ($next_index >= count($devices_names)) {
+        if ($nextIndex >= count($devicesNames)) {
             throw new \RangeException('Max value for this device is out of range.');
         }
 
-        return $this->devices[ $devices_names[ $next_index ] ] - 1;
+        return $this->devices[ $devicesNames[ $nextIndex ] ] - 1;
     }
 
     /**
@@ -381,14 +381,14 @@ class Stylesheet
 
         $hash = array_filter(explode('-', $hash));
 
-        foreach ($hash as $single_query) {
-            $query_parts = explode('_', $single_query);
+        foreach ($hash as $singleQuery) {
+            $queryParts = explode('_', $singleQuery);
 
-            $end_point = $query_parts[0];
+            $endPoint = $queryParts[0];
 
-            $device_name = $query_parts[1];
+            $deviceName = $queryParts[1];
 
-            $query[ $end_point ] = 'max' === $end_point ? $this->getDeviceMaxValue($device_name) : $this->devices[ $device_name ];
+            $query[ $endPoint ] = 'max' === $endPoint ? $this->getDeviceMaxValue($deviceName) : $this->devices[ $deviceName ];
         }
 
         return $query;
@@ -402,11 +402,11 @@ class Stylesheet
      * width.
      *
      *
-     * @param string $query_hash Hashed string of the query.
+     * @param string $queryHash Hashed string of the query.
      */
-    private function addQueryHash($query_hash)
+    private function addQueryHash($queryHash)
     {
-        $this->rules[ $query_hash ] = [];
+        $this->rules[ $queryHash ] = [];
 
         uksort(
             $this->rules,
@@ -419,33 +419,33 @@ class Stylesheet
                     return 1;
                 }
 
-                $a_query = $this->hashToQuery($a);
+                $aQuery = $this->hashToQuery($a);
 
-                $b_query = $this->hashToQuery($b);
+                $bQuery = $this->hashToQuery($b);
 
-                if (isset($a_query['min']) xor isset($b_query['min'])) {
+                if (isset($aQuery['min']) xor isset($bQuery['min'])) {
                     return 1;
                 }
 
-                if (isset($a_query['min'])) {
-                    $range = $a_query['min'] - $b_query['min'];
+                if (isset($aQuery['min'])) {
+                    $range = $aQuery['min'] - $bQuery['min'];
 
                     if ($range) {
                         return $range;
                     }
 
-                    $a_has_max = isset($a_query['max']);
+                    $aHasMax = isset($aQuery['max']);
 
-                    if ($a_has_max xor isset($b_query['max'])) {
-                        return $a_has_max ? 1 : -1;
+                    if ($aHasMax xor isset($bQuery['max'])) {
+                        return $aHasMax ? 1 : -1;
                     }
 
-                    if (!$a_has_max) {
+                    if (!$aHasMax) {
                         return 0;
                     }
                 }
 
-                return $b_query['max'] - $a_query['max'];
+                return $bQuery['max'] - $aQuery['max'];
             }
         );
     }
@@ -459,20 +459,20 @@ class Stylesheet
      * pixels. It can also handel multiple width endpoints.
      *
      *
-     * @param string $query_hash The hash of the query.
+     * @param string $queryHash The hash of the query.
      *
      * @return string CSS media query.
      */
-    private function getQueryHashStyleFormat($query_hash)
+    private function getQueryHashStyleFormat($queryHash)
     {
-        $query = $this->hashToQuery($query_hash);
+        $query = $this->hashToQuery($queryHash);
 
-        $style_format = [];
+        $styleFormat = [];
 
-        foreach ($query as $end_point => $value) {
-            $style_format[] = '(' . $end_point . '-width:' . $value . 'px)';
+        foreach ($query as $endPoint => $value) {
+            $styleFormat[] = '(' . $endPoint . '-width:' . $value . 'px)';
         }
 
-        return '@media' . implode(' and ', $style_format);
+        return '@media' . implode(' and ', $styleFormat);
     }
 }

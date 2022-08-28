@@ -65,14 +65,14 @@ abstract class AbstractBaseMultiple extends AbstractControlData
      * while extracting CSS from the `selectors` data argument.
      *
      *
-     * @param string $css_property  CSS property.
-     * @param array $control_value Control value.
-     * @param array  $control_data Control Data.
+     * @param string $cssProperty  CSS property.
+     * @param array $controlValue Control value.
+     * @param array  $controlData Control Data.
      *
      * @return array Control style value.
      */
-    public function getStyleValue($css_property, $control_value, array $control_data)
+    public function getStyleValue($cssProperty, $controlValue, array $controlData)
     {
-        return $control_value[ strtolower($css_property) ];
+        return $controlValue[ strtolower($cssProperty) ];
     }
 }

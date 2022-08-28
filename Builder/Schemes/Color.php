@@ -125,11 +125,11 @@ class Color extends AbstractSchema
 				<div class="gmt-panel-heading-title"><?= __('More Palettes'); ?></div>
 			</div>
 			<div class="gmt-panel-box-content">
-				<?php foreach ($this->_getSystemSchemesToPrint() as $scheme_name => $scheme) : ?>
-					<div class="gmt-panel-scheme-color-system-scheme" data-scheme-name="<?= EscaperHelper::escapeHtml($scheme_name); ?>">
+				<?php foreach ($this->_getSystemSchemesToPrint() as $schemeName => $scheme) : ?>
+					<div class="gmt-panel-scheme-color-system-scheme" data-scheme-name="<?= EscaperHelper::escapeHtml($schemeName); ?>">
 						<div class="gmt-panel-scheme-color-system-items">
-							<?php foreach ($scheme['items'] as $color_value) : ?>
-								<div class="gmt-panel-scheme-color-system-item" style="background-color: <?= EscaperHelper::escapeHtml($color_value); ?>;"></div>
+							<?php foreach ($scheme['items'] as $colorValue) : ?>
+								<div class="gmt-panel-scheme-color-system-item" style="background-color: <?= EscaperHelper::escapeHtml($colorValue); ?>;"></div>
 							<?php endforeach; ?>
 						</div>
 						<div class="gmt-title"><?= $scheme['title']; ?></div>

@@ -14,7 +14,7 @@ use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
  */
 $widget = $block->getWidget();
 $settings = $widget->getSettingsForDisplay();
-$has_content = !empty($settings['title_text']) || !empty($settings['description_text']);
+$hasContent = !empty($settings['title_text']) || !empty($settings['description_text']);
 ?>
 <div class="gmt-image-box-wrapper">
     <?php
@@ -32,17 +32,17 @@ $has_content = !empty($settings['title_text']) || !empty($settings['description_
 
     if (!empty($settings['image']['url'])) {
 
-        $image_html = ImageSizeGroup::getAttachmentImageHtml($settings);
+        $imageHtml = ImageSizeGroup::getAttachmentImageHtml($settings);
 
         if (!empty($settings['link']['url'])) {
-            $image_html = '<a ' . $widget->getRenderAttributeString('link') . '>' . $image_html . '</a>';
+            $imageHtml = '<a ' . $widget->getRenderAttributeString('link') . '>' . $imageHtml . '</a>';
         }
         ?>
-        <figure class="gmt-image-box-img"><?= $image_html ?></figure>
+        <figure class="gmt-image-box-img"><?= $imageHtml ?></figure>
         <?php
     }
 
-    if ($has_content) : ?>
+    if ($hasContent) : ?>
         <div class="gmt-image-box-content">
             <?php
             if (!empty($settings['title_text'])) :
@@ -50,15 +50,15 @@ $has_content = !empty($settings['title_text']) || !empty($settings['description_
 
                 $widget->addInlineEditingAttributes('title_text', 'none');
 
-                $title_html = /** @noEscape */ $settings['title_text'];
+                $titleHtml = /** @noEscape */ $settings['title_text'];
 
                 if (!empty($settings['link']['url'])) {
-                    $title_html = '<a ' . $widget->getRenderAttributeString('link') . '>' . $title_html . '</a>';
+                    $titleHtml = '<a ' . $widget->getRenderAttributeString('link') . '>' . $titleHtml . '</a>';
                 }
 
                 ?>
                 <<?= $settings['title_size'] ?> <?= $widget->getRenderAttributeString('title_text') ?>>
-                    <?= $title_html ?>
+                    <?= $titleHtml ?>
                 </<?= $settings['title_size'] ?>>
                 <?php
             endif;

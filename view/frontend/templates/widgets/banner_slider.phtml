@@ -60,14 +60,14 @@ if (count($banners)) :
                                 $widget->addRenderAttribute('image' . $index, 'class', 'gmt-animation-' . $settings['hover_animation']);
                             }
 
-                            $image_html = '<img ' . $widget->getRenderAttributeString('image' . $index) . '/>';
+                            $imageHtml = '<img ' . $widget->getRenderAttributeString('image' . $index) . '/>';
 
                             if (!empty($banner['link']['url'])) {
-                                $image_html = '<a ' . $widget->getRenderAttributeString('link' . $index) . '>' . $image_html . '</a>';
+                                $imageHtml = '<a ' . $widget->getRenderAttributeString('link' . $index) . '>' . $imageHtml . '</a>';
                             }
                             ?>
                             <figure class="gmt-banner-img">
-                                <?= /** @noEscape */ $image_html ?>
+                                <?= /** @noEscape */ $imageHtml ?>
                             </figure>
                             <?php
                         endif;

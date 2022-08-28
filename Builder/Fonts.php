@@ -42,7 +42,7 @@ class Fonts
      *
      * @var null|array
      */
-    private static $font_groups;
+    private static $fontGroups;
 
     /**
      * Get font Groups.
@@ -54,8 +54,8 @@ class Fonts
      */
     public static function getFontGroups()
     {
-        if (null === self::$font_groups) {
-            $font_groups = [
+        if (null === self::$fontGroups) {
+            $fontGroups = [
                 self::SYSTEM => __('System'),
                 self::GOOGLE => __('Google'),
                 self::EARLYACCESS => __('Google Early Access'),
@@ -67,14 +67,14 @@ class Fonts
              * Filters the fonts groups used by SagoTheme.
              *
              *
-             * @param array $font_groups Font groups.
+             * @param array $fontGroups Font groups.
              */
-            $font_groups = HooksHelper::applyFilters('pagebuilder/fonts/groups', $font_groups);
+            $fontGroups = HooksHelper::applyFilters('pagebuilder/fonts/groups', $fontGroups);
 
-            self::$font_groups = $font_groups;
+            self::$fontGroups = $fontGroups;
         }
 
-        return self::$font_groups;
+        return self::$fontGroups;
     }
 
     /**
@@ -88,7 +88,7 @@ class Fonts
     public static function getFonts()
     {
         if (null === self::$fonts) {
-            $additional_fonts = [];
+            $additionalFonts = [];
 
             /**
              * Additional fonts.
@@ -96,11 +96,11 @@ class Fonts
              * Filters the fonts used by SagoTheme to add additional fonts.
              *
              *
-             * @param array $additional_fonts Additional SagoTheme fonts.
+             * @param array $additionalFonts Additional SagoTheme fonts.
              */
-            $additional_fonts = HooksHelper::applyFilters('pagebuilder/fonts/additional_fonts', $additional_fonts);
+            $additionalFonts = HooksHelper::applyFilters('pagebuilder/fonts/additional_fonts', $additionalFonts);
 
-            self::$fonts = array_merge(self::getNativeFonts(), $additional_fonts);
+            self::$fonts = array_merge(self::getNativeFonts(), $additionalFonts);
         }
 
         return self::$fonts;

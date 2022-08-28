@@ -22,7 +22,7 @@ abstract class AbstractControl extends AbstractBase
      *
      * @var array
      */
-    private $_base_settings = [
+    private $baseSettings = [
         'label' => '',
         'description' => '',
         'show_label' => true,
@@ -52,7 +52,7 @@ abstract class AbstractControl extends AbstractBase
      */
     public function __construct()
     {
-        $this->setSettings(array_merge($this->_base_settings, $this->getDefaultSettings()));
+        $this->setSettings(array_merge($this->baseSettings, $this->getDefaultSettings()));
 
         $this->setSettings('features', static::getFeatures());
     }
@@ -76,7 +76,7 @@ abstract class AbstractControl extends AbstractBase
      *
      * Note that the content template is wrapped by Base_Control::printTemplate().
      *
-     * @abstract
+     * @return void
      */
     abstract public function contentTemplate();
 

@@ -294,21 +294,21 @@ class Frontend extends AbstractApp
      */
     public function printFontsLinks()
     {
-        $google_fonts = [
+        $googleFonts = [
             'google' => [],
             'early' => [],
         ];
 
         foreach ($this->fontsToEnqueue as $key => $font) {
-            $font_type = Fonts::getFontType($font);
+            $fontType = Fonts::getFontType($font);
 
-            switch ($font_type) {
+            switch ($fontType) {
                 case Fonts::GOOGLE:
-                    $google_fonts['google'][] = $font;
+                    $googleFonts['google'][] = $font;
                     break;
 
                 case Fonts::EARLYACCESS:
-                    $google_fonts['early'][] = $font;
+                    $googleFonts['early'][] = $font;
                     break;
 
                 case false:
@@ -319,17 +319,17 @@ class Frontend extends AbstractApp
                      *
                      * Fires when SagoTheme frontend fonts are printed on the HEAD tag.
                      *
-                     * The dynamic portion of the hook name, `$font_type`, refers to the font type.
+                     * The dynamic portion of the hook name, `$fontType`, refers to the font type.
                      *
                      *
                      * @param string $font Font name.
                      */
-                    HooksHelper::doAction("pagebuilder/fonts/print_font_links/{$font_type}", $font);
+                    HooksHelper::doAction("pagebuilder/fonts/print_font_links/{$fontType}", $font);
             }
         }
         $this->fontsToEnqueue = [];
 
-        $this->enqueueGoogleFonts($google_fonts);
+        $this->enqueueGoogleFonts($googleFonts);
     }
 
     /**
@@ -338,14 +338,14 @@ class Frontend extends AbstractApp
      * Enqueue all the frontend Google fonts.
      *
      *
-     * @param array $google_fonts Optional. Google fonts to print in the frontend.
+     * @param array $googleFonts Optional. Google fonts to print in the frontend.
      *                            Default is an empty array.
      */
-    private function enqueueGoogleFonts($google_fonts = [])
+    private function enqueueGoogleFonts($googleFonts = [])
     {
-        static $google_fonts_index = 0;
+        static $googleFontsIndex = 0;
 
-        $print_google_fonts = true;
+        $printGoogleFonts = true;
 
         /**
          * Print frontend google fonts.
@@ -353,23 +353,23 @@ class Frontend extends AbstractApp
          * Filters whether to enqueue Google fonts in the frontend.
          *
          *
-         * @param bool $print_google_fonts Whether to enqueue Google fonts. Default is true.
+         * @param bool $printGoogleFonts Whether to enqueue Google fonts. Default is true.
          */
-        $print_google_fonts = HooksHelper::applyFilters('pagebuilder/frontend/print_google_fonts', $print_google_fonts);
+        $printGoogleFonts = HooksHelper::applyFilters('pagebuilder/frontend/print_google_fonts', $printGoogleFonts);
 
-        if (!$print_google_fonts) {
+        if (!$printGoogleFonts) {
             return;
         }
 
         // Print used fonts
-        if (!empty($google_fonts['google'])) {
-            $google_fonts_index++;
+        if (!empty($googleFonts['google'])) {
+            $googleFontsIndex++;
 
-            foreach ($google_fonts['google'] as &$font) {
+            foreach ($googleFonts['google'] as &$font) {
                 $font = str_replace(' ', '+', $font) . ':100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic';
             }
 
-            $fonts_url = sprintf('https://fonts.googleapis.com/css?family=%s', implode(rawurlencode('|'), $google_fonts['google']));
+            $fontsUrl = sprintf('https://fonts.googleapis.com/css?family=%s', implode(rawurlencode('|'), $googleFonts['google']));
 
             $subsets = [
                 'ru_RU' => 'cyrillic',
@@ -385,23 +385,23 @@ class Frontend extends AbstractApp
             $locale = 'EN-en';
 
             if (isset($subsets[ $locale ])) {
-                $fonts_url .= '&subset=' . $subsets[ $locale ];
+                $fontsUrl .= '&subset=' . $subsets[ $locale ];
             }
 
-            $fonts_url .= '&display=swap';
+            $fontsUrl .= '&display=swap';
 
-            ThemeHelper::registerStyle('google-fonts-' . $google_fonts_index, $fonts_url);
-            ThemeHelper::enqueueStyle('google-fonts-' . $google_fonts_index);
+            ThemeHelper::registerStyle('google-fonts-' . $googleFontsIndex, $fontsUrl);
+            ThemeHelper::enqueueStyle('google-fonts-' . $googleFontsIndex);
         }
 
-        if (!empty($google_fonts['early'])) {
-            foreach ($google_fonts['early'] as $current_font) {
-                $google_fonts_index++;
+        if (!empty($googleFonts['early'])) {
+            foreach ($googleFonts['early'] as $currentFont) {
+                $googleFontsIndex++;
 
-                $font_url = sprintf('https://fonts.googleapis.com/earlyaccess/%s.css', strtolower(str_replace(' ', '', $current_font)));
+                $fontUrl = sprintf('https://fonts.googleapis.com/earlyaccess/%s.css', strtolower(str_replace(' ', '', $currentFont)));
 
-                ThemeHelper::registerStyle('google-earlyaccess-' . $google_fonts_index, $font_url);
-                ThemeHelper::enqueueStyle('google-earlyaccess-' . $google_fonts_index);
+                ThemeHelper::registerStyle('google-earlyaccess-' . $googleFontsIndex, $fontUrl);
+                ThemeHelper::enqueueStyle('google-earlyaccess-' . $googleFontsIndex);
             }
         }
     }
@@ -546,13 +546,13 @@ class Frontend extends AbstractApp
 
         $settings['settings'] = ObjectManagerHelper::getSettingsManager()->getSettingsFrontendConfig();
 
-        $empty_object = (object) [];
+        $emptyObject = (object) [];
 
         if ($isPreviewMode) {
             $settings['elements'] = [
-                'data' => $empty_object,
-                'editSettings' => $empty_object,
-                'keys' => $empty_object,
+                'data' => $emptyObject,
+                'editSettings' => $emptyObject,
+                'keys' => $emptyObject,
             ];
         }
 

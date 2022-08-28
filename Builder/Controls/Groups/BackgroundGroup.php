@@ -33,7 +33,7 @@ class BackgroundGroup extends AbstractControlGroup
      *
      * @var array
      */
-    private static $background_types;
+    private static $backgroundTypes;
 
     /**
      * Get background control types.
@@ -45,11 +45,11 @@ class BackgroundGroup extends AbstractControlGroup
      */
     public static function getBackgroundTypes()
     {
-        if (null === self::$background_types) {
-            self::$background_types = self::getDefaultBackgroundTypes();
+        if (null === self::$backgroundTypes) {
+            self::$backgroundTypes = self::getDefaultBackgroundTypes();
         }
 
-        return self::$background_types;
+        return self::$backgroundTypes;
     }
 
     /**
@@ -738,17 +738,17 @@ class BackgroundGroup extends AbstractControlGroup
     {
         $args = $this->getArgs();
 
-        $background_types = self::getBackgroundTypes();
+        $backgroundTypes = self::getBackgroundTypes();
 
-        $choose_types = [];
+        $chooseTypes = [];
 
         foreach ($args['types'] as $type) {
-            if (isset($background_types[ $type ])) {
-                $choose_types[ $type ] = $background_types[ $type ];
+            if (isset($backgroundTypes[ $type ])) {
+                $chooseTypes[ $type ] = $backgroundTypes[ $type ];
             }
         }
 
-        $fields['background']['options'] = $choose_types;
+        $fields['background']['options'] = $chooseTypes;
 
         return parent::prepareFields($fields);
     }

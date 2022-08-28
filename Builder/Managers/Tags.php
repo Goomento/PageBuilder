@@ -83,19 +83,19 @@ class Tags
      *
      * @param string   $text           Dynamic tag text.
      * @param array    $settings       The dynamic tag settings.
-     * @param callable $parse_callback The functions that renders the dynamic tag.
+     * @param callable $parseCallback The functions that renders the dynamic tag.
      *
      * @return string|string[]|mixed A single string or an array of strings with
      *                               the return values from each tag callback
      *                               function.
      */
-    public function parseTagsText($text, array $settings, callable $parse_callback)
+    public function parseTagsText($text, array $settings, callable $parseCallback)
     {
         if (!empty($settings['returnType']) && 'object' === $settings['returnType']) {
-            $value = $this->parseTagText($text, $settings, $parse_callback);
+            $value = $this->parseTagText($text, $settings, $parseCallback);
         } else {
-            $value = preg_replace_callback('/\[' . self::TAG_LABEL . '.+?(?=\])\]/', function ($tag_text_match) use ($settings, $parse_callback) {
-                return $this->parseTagText($tag_text_match[0], $settings, $parse_callback);
+            $value = preg_replace_callback('/\[' . self::TAG_LABEL . '.+?(?=\])\]/', function ($tagTextMatch) use ($settings, $parseCallback) {
+                return $this->parseTagText($tagTextMatch[0], $settings, $parseCallback);
             }, $text);
         }
 
@@ -109,19 +109,19 @@ class Tags
      * function.
      *
      *
-     * @param string   $tag_text       Dynamic tag text.
+     * @param string   $tagText       Dynamic tag text.
      * @param array    $settings       The dynamic tag settings.
-     * @param callable $parse_callback The functions that renders the dynamic tag.
+     * @param callable $parseCallback The functions that renders the dynamic tag.
      *
      * @return string|array|mixed If the tag was not found an empty string or an
      *                            empty array will be returned, otherwise the
      *                            return value from the tag callback function.
      */
-    public function parseTagText($tag_text, array $settings, callable $parse_callback)
+    public function parseTagText($tagText, array $settings, callable $parseCallback)
     {
-        $tag_data = $this->tagTextToTagData($tag_text);
+        $tagData = $this->tagTextToTagData($tagText);
 
-        if (!$tag_data) {
+        if (!$tagData) {
             if (!empty($settings['returnType']) && 'object' === $settings['returnType']) {
                 return [];
             }
@@ -129,20 +129,20 @@ class Tags
             return '';
         }
 
-        return call_user_func_array($parse_callback, $tag_data);
+        return call_user_func_array($parseCallback, $tagData);
     }
 
     /**
      *
-     * @param string $tag_text
+     * @param string $tagText
      *
      * @return array|null
      */
-    public function tagTextToTagData($tag_text)
+    public function tagTextToTagData($tagText)
     {
-        preg_match('/id="(.*?(?="))"/', $tag_text, $tagIdMatch);
-        preg_match('/name="(.*?(?="))"/', $tag_text, $tagNameMatch);
-        preg_match('/settings="(.*?(?="]))/', $tag_text, $tagSettingsMatch);
+        preg_match('/id="(.*?(?="))"/', $tagText, $tagIdMatch);
+        preg_match('/name="(.*?(?="))"/', $tagText, $tagNameMatch);
+        preg_match('/settings="(.*?(?="]))/', $tagText, $tagSettingsMatch);
 
         if (!$tagIdMatch || ! $tagNameMatch || ! $tagSettingsMatch) {
             return null;
@@ -171,15 +171,15 @@ class Tags
     }
 
     /**
-     * @param string $tag_id
-     * @param string $tag_name
+     * @param string $tagId
+     * @param string $tagName
      * @param array  $settings
      *
      * @return string
      */
-    public function tagDataToTagText($tag_id, $tag_name, array $settings = [])
+    public function tagDataToTagText($tagId, $tagName, array $settings = [])
     {
-        $tag = $this->createTag($tag_id, $tag_name, $settings);
+        $tag = $this->createTag($tagId, $tagName, $settings);
 
         if (!$tag) {
             return '';
@@ -286,10 +286,10 @@ class Tags
 
     /**
      *
-     * @param       $group_name
+     * @param       $groupName
      * @param array $groupSettings
      */
-    public function registerGroup($group_name, array $groupSettings)
+    public function registerGroup($groupName, array $groupSettings)
     {
         $defaultGroupSettings = [
             'title' => '',
@@ -297,7 +297,7 @@ class Tags
 
         $groupSettings = array_merge($defaultGroupSettings, $groupSettings);
 
-        $this->tagsGroups[ $group_name ] = $groupSettings;
+        $this->tagsGroups[ $groupName ] = $groupSettings;
     }
 
 
@@ -356,16 +356,16 @@ class Tags
 
         $tagData = [];
 
-        foreach ($data['tags'] as $tag_key) {
-            $tag_key_parts = explode('-', $tag_key);
+        foreach ($data['tags'] as $tagKey) {
+            $tagKeyParts = explode('-', $tagKey);
 
-            $tag_name = base64_decode($tag_key_parts[0]);
+            $tagName = base64_decode($tagKeyParts[0]);
 
-            $tag_settings = \Zend_Json::decode(urldecode(base64_decode($tag_key_parts[1])));
+            $tagSettings = \Zend_Json::decode(urldecode(base64_decode($tagKeyParts[1])));
 
-            $tag = $this->createTag(null, $tag_name, $tag_settings);
+            $tag = $this->createTag(null, $tagName, $tagSettings);
 
-            $tagData[ $tag_key ] = $tag->getContent();
+            $tagData[ $tagKey ] = $tag->getContent();
         }
 
         /**

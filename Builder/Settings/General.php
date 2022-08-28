@@ -162,20 +162,20 @@ class General extends AbstractSettings
      */
     protected function registerControls()
     {
-        $controls_list = self::getControlsList();
+        $controlsList = self::getControlsList();
 
-        foreach ($controls_list as $tab_name => $sections) {
-            foreach ($sections as $section_name => $section_data) {
+        foreach ($controlsList as $tabName => $sections) {
+            foreach ($sections as $sectionName => $sectionData) {
                 $this->startControlsSection(
-                    $section_name,
+                    $sectionName,
                     [
-                        'label' => $section_data['label'],
-                        'tab' => $tab_name,
+                        'label' => $sectionData['label'],
+                        'tab' => $tabName,
                     ]
                 );
 
-                foreach ($section_data['controls'] as $control_name => $control_data) {
-                    $this->addControl($control_name, $control_data);
+                foreach ($sectionData['controls'] as $controlName => $controlData) {
+                    $this->addControl($controlName, $controlData);
                 }
 
                 $this->endControlsSection();

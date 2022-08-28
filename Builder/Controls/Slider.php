@@ -71,9 +71,9 @@ class Slider extends AbstractBaseUnits
      */
     public function contentTemplate()
     {
-        $control_uid = $this->getControlUid(); ?>
+        $controlUid = $this->getControlUid(); ?>
 		<div class="gmt-control-field">
-			<label for="<?= $control_uid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+			<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
 			<?php $this->printUnitsTemplate(); ?>
 			<div class="gmt-control-input-wrapper gmt-clearfix">
 				<div class="gmt-control-tag-area ">
@@ -97,7 +97,7 @@ class Slider extends AbstractBaseUnits
 				<div class="gmt-slider"></div>
 				<# if ( ! isMultiple ) { #>
 					<div class="gmt-slider-input">
-						<input id="<?= $control_uid; ?>" type="number" min="{{ data.min }}" max="{{ data.max }}" step="{{ data.step }}" data-setting="size" />
+						<input id="<?= $controlUid; ?>" type="number" min="{{ data.min }}" max="{{ data.max }}" step="{{ data.step }}" data-setting="size" />
 					</div>
 				<# } #>
 				</div>

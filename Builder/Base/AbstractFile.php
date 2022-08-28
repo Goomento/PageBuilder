@@ -196,8 +196,8 @@ abstract class AbstractFile extends AbstractEntity
      */
     public function getMeta($property = null)
     {
-        $default_meta = $this->getDefaultMeta();
-        $meta = array_merge($default_meta, (array) $this->loadMeta());
+        $defaultMeta = $this->getDefaultMeta();
+        $meta = array_merge($defaultMeta, (array) $this->loadMeta());
 
         if ($property) {
             return $meta[$property] ?? null;
@@ -207,7 +207,7 @@ abstract class AbstractFile extends AbstractEntity
     }
 
     /**
-     * @abstract
+     * @return void
      */
     abstract protected function parseContent();
 
@@ -261,8 +261,8 @@ abstract class AbstractFile extends AbstractEntity
 
     private function setPath()
     {
-        $dir_path = self::getBaseUploadsDir() . $this->filesDir;
+        $dirPath = self::getBaseUploadsDir() . $this->filesDir;
 
-        $this->path = $dir_path;
+        $this->path = $dirPath;
     }
 }

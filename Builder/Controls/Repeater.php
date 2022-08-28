@@ -72,14 +72,14 @@ class Repeater extends AbstractControlData implements ImportInterface
         if (!empty($value)) {
             foreach ($value as &$item) {
                 foreach ($control['fields'] as $field) {
-                    $control_obj = ObjectManagerHelper::get(Controls::class)->getControl($field['type']);
+                    $controlObj = ObjectManagerHelper::get(Controls::class)->getControl($field['type']);
 
                     // Prior to 1.5.0 the fields may contains non-data controls.
-                    if (!$control_obj instanceof \Goomento\PageBuilder\Builder\Controls\AbstractControlData) {
+                    if (!$controlObj instanceof \Goomento\PageBuilder\Builder\Controls\AbstractControlData) {
                         continue;
                     }
 
-                    $item[ $field['name'] ] = $control_obj->getValue($field, $item);
+                    $item[ $field['name'] ] = $controlObj->getValue($field, $item);
                 }
             }
         }
@@ -114,14 +114,14 @@ class Repeater extends AbstractControlData implements ImportInterface
                 }
                 /** @var Controls $controlManager */
                 $controlManager = ObjectManagerHelper::get(Controls::class);
-                $control_obj = $controlManager->getControl($field['type']);
+                $controlObj = $controlManager->getControl($field['type']);
 
-                if (!$control_obj) {
+                if (!$controlObj) {
                     continue;
                 }
 
-                if (method_exists($control_obj, $method)) {
-                    $item[ $field['name'] ] = $control_obj->{$method}($item[ $field['name'] ], $field);
+                if (method_exists($controlObj, $method)) {
+                    $item[ $field['name'] ] = $controlObj->{$method}($item[ $field['name'] ], $field);
                 }
             }
         }

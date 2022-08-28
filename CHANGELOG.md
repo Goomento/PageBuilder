@@ -1,9 +1,10 @@
 # Magento 2 Goomento Page Builder
 
-## 0.3.3: Updated Revision management
+## 0.3.3: Updated Revision mechanism
 - Added revision hash mechanism 
 - Added revision label
 - Added Tag management
+- Updated coding style
 - Fixed minor bugs
 
 ## 0.3.2: Fixed minor bugs

@@ -258,9 +258,9 @@ class ContentCss extends AbstractCss
          */
         HooksHelper::doAction('pagebuilder/element/before_parse_css', $this, $element);
 
-        $element_settings = $element->getSettings();
+        $elementSettings = $element->getSettings();
 
-        $this->addControlsStackStyleRules($element, $element->getStyleControls(null, $element->getParsedDynamicSettings()), $element_settings, [ '{{ID}}', '{{WRAPPER}}' ], [ $element->getId(), $this->getElementUniqueSelector($element) ]);
+        $this->addControlsStackStyleRules($element, $element->getStyleControls(null, $element->getParsedDynamicSettings()), $elementSettings, [ '{{ID}}', '{{WRAPPER}}' ], [ $element->getId(), $this->getElementUniqueSelector($element) ]);
 
         /**
          * After element parse CSS.

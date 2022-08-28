@@ -111,12 +111,12 @@ class MediaHelper
         curl_setopt_array($ch, $options);
         curl_exec($ch);
         if (curl_errno($ch)) {
-            $error_msg = curl_error($ch);
+            $errorMsg = curl_error($ch);
         }
         curl_close($ch);
-        if (isset($error_msg)) {
+        if (isset($errorMsg)) {
             unlink($file);
-            throw new Exception($error_msg);
+            throw new Exception($errorMsg);
         }
 
         return $file;

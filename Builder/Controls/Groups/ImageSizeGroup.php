@@ -158,23 +158,23 @@ class ImageSizeGroup extends AbstractControlGroup
      */
     protected function prepareFields($fields)
     {
-        $image_sizes = $this->getImageSizes();
+        $imageSizes = $this->getImageSizes();
 
         $args = $this->getArgs();
 
-        if (!empty($args['default']) && isset($image_sizes[ $args['default'] ])) {
-            $default_value = $args['default'];
+        if (!empty($args['default']) && isset($imageSizes[ $args['default'] ])) {
+            $defaultValue = $args['default'];
         } else {
             // Get the first item for default value.
-            $default_value = array_keys($image_sizes);
-            $default_value = array_shift($default_value);
+            $defaultValue = array_keys($imageSizes);
+            $defaultValue = array_shift($defaultValue);
         }
 
-        $fields['size']['options'] = $image_sizes;
+        $fields['size']['options'] = $imageSizes;
 
-        $fields['size']['default'] = $default_value;
+        $fields['size']['default'] = $defaultValue;
 
-        if (!isset($image_sizes['custom'])) {
+        if (!isset($imageSizes['custom'])) {
             unset($fields['custom_dimension']);
         }
 
@@ -191,10 +191,10 @@ class ImageSizeGroup extends AbstractControlGroup
      */
     private function getImageSizes()
     {
-        $image_sizes['full'] = __('Full');
-        $image_sizes['custom'] = __('Custom');
+        $imageSizes['full'] = __('Full');
+        $imageSizes['custom'] = __('Custom');
 
-        return $image_sizes;
+        return $imageSizes;
     }
 
     /**

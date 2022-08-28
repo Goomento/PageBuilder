@@ -17,8 +17,8 @@ use Goomento\PageBuilder\Helper\DataHelper;
 $widget = $block->getWidget();
 $settings = $widget->getSettingsForDisplay();
 
-$rating_data = $widget->getRating();
-$textual_rating = $rating_data[0] . '/' . $rating_data[1];
+$ratingData = $widget->getRating();
+$textualRating = $ratingData[0] . '/' . $ratingData[1];
 $icon = '';
 
 if ('star_unicode' === $settings['star_style']) {
@@ -31,7 +31,7 @@ if ('star_unicode' === $settings['star_style']) {
 
 $widget->addRenderAttribute('icon_wrapper', [
     'class' => 'gmt-star-rating',
-    'title' => $textual_rating,
+    'title' => $textualRating,
     'itemtype' => 'http://schema.org/Rating',
     'itemscope' => '',
     'itemprop' => 'reviewRating',
@@ -43,12 +43,12 @@ $widget->addRenderAttribute('title', [
 $widget->addInlineEditingAttributes('title');
 $widget->addRenderAttribute('icon_wrapper', 'class', 'gmt-star-unmarked-' . ($settings['unmarked_star_style'] ?? ''));
 
-$schema_rating = '<span itemprop="ratingValue" class="gmt-screen-only">' . $textual_rating . '</span>';
-$stars_element = '<div ' . $widget->getRenderAttributeString('icon_wrapper') . '>' . $widget->renderStars($icon) . ' ' . $schema_rating . '</div>'; ?>
+$schemaRating = '<span itemprop="ratingValue" class="gmt-screen-only">' . $textualRating . '</span>';
+$starsElement = '<div ' . $widget->getRenderAttributeString('icon_wrapper') . '>' . $widget->renderStars($icon) . ' ' . $schemaRating . '</div>'; ?>
 
 <div class="gmt-star-rating__wrapper">
     <?php if (!empty($settings['title'])) : ?>
         <div <?= $widget->getRenderAttributeString('title') ?>><?= /** @noEscape */ $settings['title']; ?></div>
     <?php endif; ?>
-    <?= $stars_element; ?>
+    <?= $starsElement; ?>
 </div>

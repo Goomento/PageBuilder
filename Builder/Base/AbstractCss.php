@@ -207,14 +207,14 @@ abstract class AbstractCss extends AbstractFile
         }
 
         if (!empty($meta['icons'])) {
-            $icons_types = Icons::getIconManagerTabs();
-            foreach ($meta['icons'] as $icon_font) {
-                if (!isset($icons_types[ $icon_font ])) {
+            $iconsTypes = Icons::getIconManagerTabs();
+            foreach ($meta['icons'] as $iconFont) {
+                if (!isset($iconsTypes[ $iconFont ])) {
                     continue;
                 }
                 /** @var Frontend $frontend */
                 $frontend = ObjectManagerHelper::get(Frontend::class);
-                $frontend->enqueueFont($icon_font);
+                $frontend->enqueueFont($iconFont);
             }
         }
 
@@ -257,49 +257,49 @@ abstract class AbstractCss extends AbstractFile
      *
      *
      * @param array    $control        The controls.
-     * @param array    $controls_stack The controls stack.
-     * @param callable $value_callback Callback function for the value.
+     * @param array    $controlsStack The controls stack.
+     * @param callable $valueCallback Callback function for the value.
      * @param array    $placeholders   Placeholders.
      * @param array    $replacements   Replacements.
      */
-    public function addControlRules(array $control, array $controls_stack, callable $value_callback, array $placeholders, array $replacements)
+    public function addControlRules(array $control, array $controlsStack, callable $valueCallback, array $placeholders, array $replacements)
     {
-        $value = call_user_func($value_callback, $control);
+        $value = call_user_func($valueCallback, $control);
 
         if (null === $value || empty($control['selectors'])) {
             return;
         }
 
-        foreach ($control['selectors'] as $selector => $css_property) {
+        foreach ($control['selectors'] as $selector => $cssProperty) {
             try {
-                $output_css_property = preg_replace_callback('/\{\{(?:([^.}]+)\.)?([^}| ]*)(?: *\|\| *(?:([^.}]+)\.)?([^}| ]*) *)*}}/', function ($matches) use ($control, $value_callback, $controls_stack, $value, $css_property) {
-                    $external_control_missing = $matches[1] && ! isset($controls_stack[ $matches[1] ]);
+                $outputCssProperty = preg_replace_callback('/\{\{(?:([^.}]+)\.)?([^}| ]*)(?: *\|\| *(?:([^.}]+)\.)?([^}| ]*) *)*}}/', function ($matches) use ($control, $valueCallback, $controlsStack, $value, $cssProperty) {
+                    $externalControlMissing = $matches[1] && ! isset($controlsStack[ $matches[1] ]);
 
-                    $parsed_value = '';
+                    $parsedValue = '';
 
-                    if (!$external_control_missing) {
-                        $parsed_value = $this->parsePropertyPlaceholder($control, $value, $controls_stack, $value_callback, $matches[2], $matches[1]);
+                    if (!$externalControlMissing) {
+                        $parsedValue = $this->parsePropertyPlaceholder($control, $value, $controlsStack, $valueCallback, $matches[2], $matches[1]);
                     }
 
-                    if ('' === $parsed_value) {
+                    if ('' === $parsedValue) {
                         if (isset($matches[4])) {
-                            $parsed_value = $matches[4];
+                            $parsedValue = $matches[4];
 
-                            $is_string_value = preg_match('/^([\'"])(.*)\1$/', $parsed_value, $string_matches);
+                            $isStringValue = preg_match('/^([\'"])(.*)\1$/', $parsedValue, $stringMatches);
 
-                            if ($is_string_value) {
-                                $parsed_value = $string_matches[2];
-                            } elseif (! is_numeric($parsed_value)) {
-                                if ($matches[3] && ! isset($controls_stack[ $matches[3] ])) {
+                            if ($isStringValue) {
+                                $parsedValue = $stringMatches[2];
+                            } elseif (! is_numeric($parsedValue)) {
+                                if ($matches[3] && ! isset($controlsStack[ $matches[3] ])) {
                                     return '';
                                 }
 
-                                $parsed_value = $this->parsePropertyPlaceholder($control, $value, $controls_stack, $value_callback, $matches[4], $matches[3]);
+                                $parsedValue = $this->parsePropertyPlaceholder($control, $value, $controlsStack, $valueCallback, $matches[4], $matches[3]);
                             }
                         }
 
-                        if ('' === $parsed_value) {
-                            if ($external_control_missing) {
+                        if ('' === $parsedValue) {
+                            if ($externalControlMissing) {
                                 return '';
                             }
 
@@ -307,43 +307,43 @@ abstract class AbstractCss extends AbstractFile
                         }
                     }
 
-                    return $parsed_value;
-                }, $css_property);
+                    return $parsedValue;
+                }, $cssProperty);
             } catch (\Exception $e) {
                 return;
             }
 
-            if (!$output_css_property) {
+            if (!$outputCssProperty) {
                 continue;
             }
 
-            $device_pattern = '/^(?:\([^\)]+\)){1,2}/';
+            $devicePattern = '/^(?:\([^\)]+\)){1,2}/';
 
-            preg_match($device_pattern, $selector, $device_rules);
+            preg_match($devicePattern, $selector, $deviceRules);
 
             $query = [];
 
-            if ($device_rules) {
-                $selector = preg_replace($device_pattern, '', $selector);
+            if ($deviceRules) {
+                $selector = preg_replace($devicePattern, '', $selector);
 
-                preg_match_all('/\(([^\)]+)\)/', $device_rules[0], $pure_device_rules);
+                preg_match_all('/\(([^\)]+)\)/', $deviceRules[0], $pureDeviceRules);
 
-                $pure_device_rules = $pure_device_rules[1];
+                $pureDeviceRules = $pureDeviceRules[1];
 
-                foreach ($pure_device_rules as $device_rule) {
-                    if (ControlsStack::RESPONSIVE_DESKTOP === $device_rule) {
+                foreach ($pureDeviceRules as $deviceRule) {
+                    if (ControlsStack::RESPONSIVE_DESKTOP === $deviceRule) {
                         continue;
                     }
 
-                    $device = preg_replace('/\+$/', '', $device_rule);
+                    $device = preg_replace('/\+$/', '', $deviceRule);
 
-                    $endpoint = $device === $device_rule ? 'max' : 'min';
+                    $endpoint = $device === $deviceRule ? 'max' : 'min';
 
                     $query[ $endpoint ] = $device;
                 }
             }
 
-            $parsed_selector = str_replace($placeholders, $replacements, $selector);
+            $parsedSelector = str_replace($placeholders, $replacements, $selector);
 
             if (!$query && ! empty($control['responsive'])) {
                 $query = array_intersect_key($control['responsive'], array_flip([ 'min', 'max' ]));
@@ -353,26 +353,26 @@ abstract class AbstractCss extends AbstractFile
                 }
             }
 
-            $this->stylesheetObj->addRules($parsed_selector, $output_css_property, $query);
+            $this->stylesheetObj->addRules($parsedSelector, $outputCssProperty, $query);
         }
     }
 
     /**
      * @param array    $control
      * @param mixed    $value
-     * @param array    $controls_stack
-     * @param callable $value_callback
+     * @param array    $controlsStack
+     * @param callable $valueCallback
      * @param string   $placeholder
-     * @param string   $parser_control_name
+     * @param string   $parserControlName
      *
      * @return string
      */
-    public function parsePropertyPlaceholder(array $control, $value, array $controls_stack, $value_callback, $placeholder, $parser_control_name = null)
+    public function parsePropertyPlaceholder(array $control, $value, array $controlsStack, $valueCallback, $placeholder, $parserControlName = null)
     {
-        if ($parser_control_name) {
-            $control = $controls_stack[ $parser_control_name ];
+        if ($parserControlName) {
+            $control = $controlsStack[ $parserControlName ];
 
-            $value = call_user_func($value_callback, $control);
+            $value = call_user_func($valueCallback, $control);
         }
 
         if (Controls::FONT === $control['type']) {
@@ -380,9 +380,9 @@ abstract class AbstractCss extends AbstractFile
         }
 
         $controlManager = ObjectManagerHelper::getControlsManager();
-        $control_obj = $controlManager->getControl($control['type']);
+        $controlObj = $controlManager->getControl($control['type']);
 
-        return (string) $control_obj->getStyleValue($placeholder, $value, $control);
+        return (string) $controlObj->getStyleValue($placeholder, $value, $control);
     }
 
     /**
@@ -399,13 +399,13 @@ abstract class AbstractCss extends AbstractFile
     }
 
     /**
-     * @param $font_name
+     * @param $fontName
      * @return $this
      */
-    public function setFont($font_name)
+    public function setFont($fontName)
     {
-        if (!in_array($font_name, $this->fonts)) {
-            $this->fonts[] = $font_name;
+        if (!in_array($fontName, $this->fonts)) {
+            $this->fonts[] = $fontName;
         }
 
         return $this;
@@ -445,7 +445,7 @@ abstract class AbstractCss extends AbstractFile
             $allControls = $controlsStack->getControls();
         }
 
-        $parsed_dynamic_settings = $controlsStack->parseDynamicSettings($values, $controls);
+        $parsedDynamicSettings = $controlsStack->parseDynamicSettings($values, $controls);
 
         foreach ($controls as $control) {
             if (!empty($control['style_fields'])) {
@@ -456,11 +456,11 @@ abstract class AbstractCss extends AbstractFile
                 $this->addDynamicControlStyleRules($control, $control[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ]);
             }
 
-            if (!empty($parsed_dynamic_settings[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ])) {
+            if (!empty($parsedDynamicSettings[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ])) {
                 // Dynamic CSS should not be added to the CSS files.
                 // Instead it's handled by \Goomento\PageBuilder\Core\DynamicTags\Dynamic_CSS
                 // and printed in a style tag.
-                unset($parsed_dynamic_settings[ $control['name'] ]);
+                unset($parsedDynamicSettings[ $control['name'] ]);
                 continue;
             }
 
@@ -468,7 +468,7 @@ abstract class AbstractCss extends AbstractFile
                 continue;
             }
 
-            $this->addControlStyleRules($control, $parsed_dynamic_settings, $allControls, $placeholders, $replacements);
+            $this->addControlStyleRules($control, $parsedDynamicSettings, $allControls, $placeholders, $replacements);
         }
     }
 
@@ -476,8 +476,6 @@ abstract class AbstractCss extends AbstractFile
      * Get file handle ID.
      *
      * Retrieve the file handle ID.
-     *
-     * @abstract
      *
      * @return string CSS file handle ID.
      */
@@ -488,7 +486,6 @@ abstract class AbstractCss extends AbstractFile
      *
      * Parse the CSS.
      *
-     * @abstract
      */
     abstract protected function renderCss();
 
@@ -540,8 +537,8 @@ abstract class AbstractCss extends AbstractFile
         if (!$time) {
             return true;
         }
-        $css_updated_time = ConfigHelper::getValue('css_updated_time');
-        if ($css_updated_time && $css_updated_time > $time) {
+        $cssUpdatedTime = ConfigHelper::getValue('css_updated_time');
+        if ($cssUpdatedTime && $cssUpdatedTime > $time) {
             return true;
         }
 
@@ -654,24 +651,24 @@ abstract class AbstractCss extends AbstractFile
      * Register new style rules for the repeater control.
      *
      *
-     * @param ControlsStack $controls_stack The control stack.
-     * @param array $repeater_control The repeater control.
-     * @param array $repeater_values Repeater values array.
+     * @param ControlsStack $controlsStack The control stack.
+     * @param array $repeaterControl The repeater control.
+     * @param array $repeaterValues Repeater values array.
      * @param array $placeholders Placeholders.
      * @param array $replacements Replacements.
      */
-    protected function addRepeaterControlStyleRules(ControlsStack $controls_stack, array $repeater_control, array $repeater_values, array $placeholders, array $replacements)
+    protected function addRepeaterControlStyleRules(ControlsStack $controlsStack, array $repeaterControl, array $repeaterValues, array $placeholders, array $replacements)
     {
         $placeholders = array_merge($placeholders, [ '{{CURRENT_ITEM}}' ]);
 
-        foreach ($repeater_control['style_fields'] as $index => $item) {
+        foreach ($repeaterControl['style_fields'] as $index => $item) {
             $this->addControlsStackStyleRules(
-                $controls_stack,
+                $controlsStack,
                 $item,
-                $repeater_values[ $index ],
+                $repeaterValues[ $index ],
                 $placeholders,
-                array_merge($replacements, [ '.gmt-repeater-item-' . $repeater_values[ $index ]['_id'] ]),
-                $repeater_control['fields']
+                array_merge($replacements, [ '.gmt-repeater-item-' . $repeaterValues[ $index ]['_id'] ]),
+                $repeaterControl['fields']
             );
         }
     }

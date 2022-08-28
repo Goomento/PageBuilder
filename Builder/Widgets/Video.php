@@ -704,10 +704,10 @@ class Video extends AbstractWidget
             $params['autoplay'] = '1';
         }
 
-        $params_dictionary = [];
+        $paramsDictionary = [];
 
         if ('youtube' === $settings['video_type']) {
-            $params_dictionary = [
+            $paramsDictionary = [
                 'loop',
                 'controls',
                 'mute',
@@ -716,9 +716,9 @@ class Video extends AbstractWidget
             ];
 
             if ($settings['loop']) {
-                $video_properties = Embed::getVideoProperties($settings['youtube_url']);
+                $videoProperties = Embed::getVideoProperties($settings['youtube_url']);
 
-                $params['playlist'] = $video_properties['video_id'];
+                $params['playlist'] = $videoProperties['video_id'];
             }
 
             $params['start'] = $settings['start'];
@@ -727,7 +727,7 @@ class Video extends AbstractWidget
 
             $params['wmode'] = 'opaque';
         } elseif ('vimeo' === $settings['video_type']) {
-            $params_dictionary = [
+            $paramsDictionary = [
                 'loop',
                 'mute' => 'muted',
                 'vimeo_title' => 'title',
@@ -739,7 +739,7 @@ class Video extends AbstractWidget
 
             $params['autopause'] = '0';
         } elseif ('dailymotion' === $settings['video_type']) {
-            $params_dictionary = [
+            $paramsDictionary = [
                 'controls',
                 'mute',
                 'showinfo' => 'ui-start-screen-info',
@@ -753,16 +753,16 @@ class Video extends AbstractWidget
             $params['endscreen-enable'] = '0';
         }
 
-        foreach ($params_dictionary as $key => $param_name) {
-            $setting_name = $param_name;
+        foreach ($paramsDictionary as $key => $paramName) {
+            $settingName = $paramName;
 
             if (is_string($key)) {
-                $setting_name = $key;
+                $settingName = $key;
             }
 
-            $setting_value = $settings[ $setting_name ] ? '1' : '0';
+            $settingValue = $settings[ $settingName ] ? '1' : '0';
 
-            $params[ $param_name ] = $setting_value;
+            $params[ $paramName ] = $settingValue;
         }
 
         return $params;
@@ -790,17 +790,17 @@ class Video extends AbstractWidget
     {
         $settings = $this->getSettingsForDisplay();
 
-        $embed_options = [];
+        $embedOptions = [];
 
         if ('youtube' === $settings['video_type']) {
-            $embed_options['privacy'] = $settings['yt_privacy'];
+            $embedOptions['privacy'] = $settings['yt_privacy'];
         } elseif ('vimeo' === $settings['video_type']) {
-            $embed_options['start'] = $settings['start'];
+            $embedOptions['start'] = $settings['start'];
         }
 
-        $embed_options['lazy_load'] = ! empty($settings['lazy_load']);
+        $embedOptions['lazy_load'] = ! empty($settings['lazy_load']);
 
-        return $embed_options;
+        return $embedOptions;
     }
 
     /**
@@ -810,27 +810,27 @@ class Video extends AbstractWidget
     {
         $settings = $this->getSettingsForDisplay();
 
-        $video_params = [];
+        $videoParams = [];
 
-        foreach ([ 'autoplay', 'loop', 'controls' ] as $option_name) {
-            if ($settings[ $option_name ]) {
-                $video_params[ $option_name ] = '';
+        foreach ([ 'autoplay', 'loop', 'controls' ] as $optionName) {
+            if ($settings[ $optionName ]) {
+                $videoParams[ $optionName ] = '';
             }
         }
 
         if ($settings['mute']) {
-            $video_params['muted'] = 'muted';
+            $videoParams['muted'] = 'muted';
         }
 
         if (!$settings['download_button']) {
-            $video_params['controlsList'] = 'nodownload';
+            $videoParams['controlsList'] = 'nodownload';
         }
 
         if ($settings['poster']['url']) {
-            $video_params['poster'] = $settings['poster']['url'];
+            $videoParams['poster'] = $settings['poster']['url'];
         }
 
-        return $video_params;
+        return $videoParams;
     }
 
     /**
@@ -840,25 +840,25 @@ class Video extends AbstractWidget
     {
         $settings = $this->getSettingsForDisplay();
 
-        $video_url = $settings['external_url']['url'];
+        $videoUrl = $settings['external_url']['url'];
 
-        if (empty($video_url)) {
+        if (empty($videoUrl)) {
             return '';
         }
 
         if ($settings['start'] || $settings['end']) {
-            $video_url .= '#t=';
+            $videoUrl .= '#t=';
         }
 
         if ($settings['start']) {
-            $video_url .= $settings['start'];
+            $videoUrl .= $settings['start'];
         }
 
         if ($settings['end']) {
-            $video_url .= ',' . $settings['end'];
+            $videoUrl .= ',' . $settings['end'];
         }
 
-        return $video_url;
+        return $videoUrl;
     }
 
     /**
@@ -866,13 +866,13 @@ class Video extends AbstractWidget
      */
     public function renderExternalVideo()
     {
-        $video_url = $this->getExternalVideoUrl();
-        if (empty($video_url)) {
+        $videoUrl = $this->getExternalVideoUrl();
+        if (empty($videoUrl)) {
             return;
         }
 
-        $video_params = $this->getExternalParams(); ?>
-		<video class="gmt-video" src="<?= $video_url; ?>" <?= DataHelper::renderHtmlAttributes($video_params); ?>></video>
+        $videoParams = $this->getExternalParams(); ?>
+		<video class="gmt-video" src="<?= $videoUrl; ?>" <?= DataHelper::renderHtmlAttributes($videoParams); ?>></video>
 		<?php
     }
 }

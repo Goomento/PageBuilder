@@ -41,17 +41,17 @@ class PopoverToggle extends AbstractControlData
      */
     public function contentTemplate()
     {
-        $control_uid = $this->getControlUid(); ?>
+        $controlUid = $this->getControlUid(); ?>
 		<div class="gmt-control-field">
 			<label class="gmt-control-title">{{{ data.label }}}</label>
 			<div class="gmt-control-input-wrapper">
-				<input id="<?= $control_uid; ?>-custom" class="gmt-control-popover-toggle-toggle" type="radio" name="gmt-choose-{{ data.name }}-{{ data._cid }}" value="{{ data.return_value }}">
-				<label class="gmt-control-popover-toggle-toggle-label" for="<?= $control_uid; ?>-custom">
+				<input id="<?= $controlUid; ?>-custom" class="gmt-control-popover-toggle-toggle" type="radio" name="gmt-choose-{{ data.name }}-{{ data._cid }}" value="{{ data.return_value }}">
+				<label class="gmt-control-popover-toggle-toggle-label" for="<?= $controlUid; ?>-custom">
                     <i class="far fa-edit"></i>
 					<span class="gmt-screen-only"><?= __('Edit'); ?></span>
 				</label>
-				<input id="<?= $control_uid; ?>-default" type="radio" name="gmt-choose-{{ data.name }}-{{ data._cid }}" value="">
-				<label class="gmt-control-popover-toggle-reset-label tooltip-target" for="<?= $control_uid; ?>-default" data-tooltip="<?= __('Back to default'); ?>" data-tooltip-pos="s">
+				<input id="<?= $controlUid; ?>-default" type="radio" name="gmt-choose-{{ data.name }}-{{ data._cid }}" value="">
+				<label class="gmt-control-popover-toggle-reset-label tooltip-target" for="<?= $controlUid; ?>-default" data-tooltip="<?= __('Back to default'); ?>" data-tooltip-pos="s">
                     <i class="fas fa-redo"></i>
 					<span class="gmt-screen-only"><?= __('Back to default'); ?></span>
 				</label>

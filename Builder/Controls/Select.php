@@ -39,13 +39,13 @@ class Select extends AbstractControlData
      */
     public function contentTemplate()
     {
-        $control_uid = $this->getControlUid(); ?>
+        $controlUid = $this->getControlUid(); ?>
 		<div class="gmt-control-field">
 			<# if ( data.label ) {#>
-				<label for="<?= $control_uid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+				<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
 			<# } #>
 			<div class="gmt-control-input-wrapper">
-				<select id="<?= $control_uid; ?>" data-setting="{{ data.name }}">
+				<select id="<?= $controlUid; ?>" data-setting="{{ data.name }}">
 				<#
 					var printOptions = function( options ) {
 						_.each( options, function( option_title, option_value ) { #>

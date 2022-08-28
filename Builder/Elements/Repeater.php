@@ -73,10 +73,10 @@ class Repeater extends AbstractElement
      */
     public function addControl(string $id, array $args, array $options = [])
     {
-        $current_tab = $this->getCurrentTab();
+        $currentTab = $this->getCurrentTab();
 
-        if (null !== $current_tab) {
-            $args = array_merge($args, $current_tab);
+        if (null !== $currentTab) {
+            $args = array_merge($args, $currentTab);
         }
         /** @var Controls $controlsManager */
         $controlsManager = ObjectManagerHelper::get(Controls::class);
@@ -91,11 +91,11 @@ class Repeater extends AbstractElement
      * Note that repeater does not support children, therefore it returns false.
      *
      *
-     * @param array $element_data Element ID.
+     * @param array $elementData Element ID.
      *
      * @return false Repeater default child type or False if type not found.
      */
-    protected function _getDefaultChildType(array $element_data)
+    protected function _getDefaultChildType(array $elementData)
     {
         return false;
     }
