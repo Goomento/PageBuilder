@@ -48,10 +48,12 @@ class Authorization extends AbstractHelper
      */
     protected function getCurrentUserResources()
     {
-        if (is_null($this->currentUserResources)) {
+        if ($this->currentUserResources === null) {
+            $this->currentUserResources = [];
             $user = $this->userHelper->getCurrentAdminUser();
-            $role = $user->getRole();
-            $this->currentUserResources = $this->aclRetriever->getAllowedResourcesByRole($role->getId());
+            if ($user && $role = $user->getRole()) {
+                $this->currentUserResources = $this->aclRetriever->getAllowedResourcesByRole($role->getId());
+            }
         }
 
         return $this->currentUserResources;

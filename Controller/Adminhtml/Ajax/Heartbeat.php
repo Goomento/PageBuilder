@@ -18,7 +18,7 @@ class Heartbeat extends Json
     public function execute()
     {
         return $this->setResponseData(
-            HooksHelper::applyFilters('pagebuilder/heartbeat/response', [])
+            HooksHelper::applyFilters('pagebuilder/heartbeat/response', [])->getResult()
         )->sendResponse();
     }
 }

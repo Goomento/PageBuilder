@@ -12,6 +12,7 @@ use Exception;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Configuration;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
@@ -21,7 +22,6 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\RequestHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
-use Magento\Framework\Exception\LocalizedException;
 
 abstract class AbstractDocument extends ControlsStack
 {
@@ -168,7 +168,7 @@ abstract class AbstractDocument extends ControlsStack
         $attributes = [
             'data-gmt-type' => $this->getName(),
             'data-gmt-id' => $this->getModel()->getOriginContent()->getId(),
-            'class' => 'goomento gmt gmt-' . $this->getModel()->getStatus() . '-' . $this->getModel()->getId(),
+            'class' => 'goomento gmt gmt-' . $this->getModel()->getRevisionHash(),
         ];
 
         if (!StateHelper::isEditorPreviewMode()) {
@@ -195,7 +195,7 @@ abstract class AbstractDocument extends ControlsStack
              * @param string   $url  Preview URL.
              * @param AbstractDocument $this The document instance.
              */
-            $url = HooksHelper::applyFilters('pagebuilder/document/urls/system_preview', $url, $this);
+            $url = HooksHelper::applyFilters('pagebuilder/document/urls/system_preview', $url, $this)->getResult();
         }
 
         return $url;
@@ -269,7 +269,7 @@ abstract class AbstractDocument extends ControlsStack
         /**
          * Register document controls.
          *
-         * Fires after SagoTheme registers the document controls.
+         * Fires after Goomento registers the document controls.
          *
          *
          * @param AbstractDocument $this The document instance.
@@ -282,20 +282,20 @@ abstract class AbstractDocument extends ControlsStack
      *
      * @param array $data
      * @return bool
-     * @throws LocalizedException
+     * @throws Exception
      */
     public function save(array $data)
     {
         if (!AuthorizationHelper::isCurrentUserCan($this->getModel()->getRoleName('save'))) {
-            throw new LocalizedException(
-                __('Sorry, you need permissions to save this content')
+            throw new BuilderException(
+                'Sorry, you need permissions to save this content'
             );
         }
 
         /**
          * Before document save.
          *
-         * Fires when document save starts on SagoTheme.
+         * Fires when document save starts on Goomento.
          *
          *
          * @param AbstractDocument $this The current document.
@@ -309,8 +309,8 @@ abstract class AbstractDocument extends ControlsStack
                 $originModel = $this->getModel()->getOriginContent();
                 if ((isset($data['settings']['status']) && $data['settings']['status'] !== $originModel->getStatus()) ||
                     (isset($data['settings']['is_active']) && $data['settings']['is_active'] !== $originModel->getIsActive())) {
-                    throw new LocalizedException(
-                        __('Sorry, you need permissions to save this content')
+                    throw new BuilderException(
+                        'Sorry, you need permissions to save this content'
                     );
                 }
             }
@@ -356,7 +356,7 @@ abstract class AbstractDocument extends ControlsStack
          * @param string   $url  The edit url.
          * @param AbstractDocument $this The document instance.
          */
-        return HooksHelper::applyFilters('pagebuilder/document/urls/edit', $url, $this);
+        return HooksHelper::applyFilters('pagebuilder/document/urls/edit', $url, $this)->getResult();
     }
 
     /**
@@ -386,7 +386,7 @@ abstract class AbstractDocument extends ControlsStack
              * @param string   $url  The preview URL.
              * @param AbstractDocument $this The document instance.
              */
-            $url = HooksHelper::applyFilters('pagebuilder/document/urls/preview', $url, $this);
+            $url = HooksHelper::applyFilters('pagebuilder/document/urls/preview', $url, $this)->getResult();
         }
 
         return $url;
@@ -439,7 +439,8 @@ abstract class AbstractDocument extends ControlsStack
     {
         if (!$elementsData) {
             $elementsData = $this->getElementsData();
-        } ?>
+        }
+        ?>
 		<div <?= DataHelper::renderHtmlAttributes($this->getContainerAttributes()); ?>>
 			<div class="gmt-inner">
 				<div class="gmt-section-wrap">
@@ -458,7 +459,9 @@ abstract class AbstractDocument extends ControlsStack
         return '';
     }
 
-
+    /**
+     * @return array
+     */
     public function getPanelPageSettings()
     {
         return [
@@ -508,7 +511,7 @@ abstract class AbstractDocument extends ControlsStack
     public function getContent()
     {
         $frontend = ObjectManagerHelper::getFrontend();
-        return $frontend->getBuilderContent($this->getModel()->getId());
+        return $frontend->getBuilderContent($this->getModel());
     }
 
     /**
@@ -538,7 +541,7 @@ abstract class AbstractDocument extends ControlsStack
         /**
          * Before saving data.
          *
-         * Fires before SagoTheme saves data to the database.
+         * Fires before Goomento saves data to the database.
          *
          *
          * @param string   $status          ContentCss status.
@@ -549,7 +552,7 @@ abstract class AbstractDocument extends ControlsStack
         /**
          * After saving data.
          *
-         * Fires after SagoTheme saves data to the database.
+         * Fires after Goomento saves data to the database.
          *
          *
          * @param int   $postId     The ID of the post.
@@ -566,8 +569,8 @@ abstract class AbstractDocument extends ControlsStack
         /**
          * Document version save.
          *
-         * Fires when document version is saved on SagoTheme.
-         * Will not fire during SagoTheme Upgrade.
+         * Fires when document version is saved on Goomento.
+         * Will not fire during Goomento Upgrade.
          *
          *
          * @param AbstractDocument $this The current document.
@@ -681,9 +684,9 @@ abstract class AbstractDocument extends ControlsStack
                 continue;
             }
 
-            $element->setBuildableContent($this->getModel()->getOriginContent());
-
-            $element->printElement();
+            $element
+                ->setBuildableContent($this->getModel()->getOriginContent())
+                ->printElement();
         }
     }
 }

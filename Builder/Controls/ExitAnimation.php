@@ -64,7 +64,7 @@ class ExitAnimation extends Animation
          *
          * @param array $additionalAnimations Additional Animations array.
          */
-        $additionalAnimations = \Goomento\PageBuilder\Helper\HooksHelper::applyFilters('pagebuilder/controls/exit-animations/additional_animations', []);
+        $additionalAnimations = \Goomento\PageBuilder\Helper\HooksHelper::applyFilters('pagebuilder/controls/exit-animations/additional_animations', [])->getResult();
 
         return array_merge($animations, $additionalAnimations);
     }

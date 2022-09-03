@@ -11,8 +11,8 @@ namespace Goomento\PageBuilder\Builder\DynamicTags;
 use Goomento\PageBuilder\Builder\Base\AbstractDataTag;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Tags;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
-use Magento\Framework\Exception\LocalizedException;
 
 class DataConfig extends AbstractDataTag
 {
@@ -79,8 +79,8 @@ class DataConfig extends AbstractDataTag
             $data = DataHelper::getConfig($path);
 
             if ($data && !is_scalar($data)) {
-                throw new LocalizedException(
-                    __('Invalid config path')
+                throw new BuilderException(
+                    'Invalid config path'
                 );
             }
 

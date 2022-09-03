@@ -192,9 +192,8 @@ abstract class AbstractWidget extends AbstractElement
     {
         $stack = parent::getStack();
         if ($withCommonControls && Common::NAME !== $this->getUniqueName()) {
-            /** @var Widgets $widget */
-            $widget = ObjectManagerHelper::get(Widgets::class);
-            $commonWidget = $widget->getWidgetTypes(Common::NAME);
+            $widgetManager = ObjectManagerHelper::getWidgetsManager();
+            $commonWidget = $widgetManager->getWidgetTypes(Common::NAME);
 
             $stack['controls'] = array_merge($stack['controls'], $commonWidget->getControls());
 
@@ -311,7 +310,7 @@ abstract class AbstractWidget extends AbstractElement
      */
     protected function parseTextEditor($content)
     {
-        return HooksHelper::applyFilters('widget_text', $content, $this->getSettings());
+        return HooksHelper::applyFilters('widget_text', $content, $this->getSettings())->getResult();
     }
 
     /**
@@ -362,7 +361,7 @@ abstract class AbstractWidget extends AbstractElement
         /**
          * Before widget render content.
          *
-         * Fires before SagoTheme widget is being rendered.
+         * Fires before Goomento widget is being rendered.
          *
          *
          * @param AbstractWidget $this The current widget.
@@ -413,7 +412,7 @@ abstract class AbstractWidget extends AbstractElement
              * @param string      $widgetContent The content of the widget.
              * @param AbstractWidget $this           The widget.
              */
-            $widgetContent = HooksHelper::applyFilters('pagebuilder/widget/render_content', $widgetContent, $this);
+            $widgetContent = HooksHelper::applyFilters('pagebuilder/widget/render_content', $widgetContent, $this)->getResult();
 
             echo $widgetContent; // XSS ok.
             ?>
@@ -462,7 +461,7 @@ abstract class AbstractWidget extends AbstractElement
      * Retrieve the raw element data, including the id, type, settings, child
      * elements and whether it is an inner element.
      *
-     * The data with the HTML used always to display the data, but the SagoTheme
+     * The data with the HTML used always to display the data, but the Goomento
      * editor uses the raw data without the HTML in order not to render the data
      * again.
      *
@@ -536,8 +535,7 @@ abstract class AbstractWidget extends AbstractElement
      */
     protected function _getDefaultChildType(array $elementData)
     {
-        /** @var Elements $managersElements */
-        $managersElements = ObjectManagerHelper::get(Elements::class);
+        $managersElements = ObjectManagerHelper::getElementsManager();
         return $managersElements->getElementTypes('section');
     }
 

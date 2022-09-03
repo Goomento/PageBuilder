@@ -64,12 +64,12 @@ class Fonts
             /**
              * Font groups.
              *
-             * Filters the fonts groups used by SagoTheme.
+             * Filters the fonts groups used by Goomento.
              *
              *
              * @param array $fontGroups Font groups.
              */
-            $fontGroups = HooksHelper::applyFilters('pagebuilder/fonts/groups', $fontGroups);
+            $fontGroups = HooksHelper::applyFilters('pagebuilder/fonts/groups', $fontGroups)->getResult();
 
             self::$fontGroups = $fontGroups;
         }
@@ -93,12 +93,12 @@ class Fonts
             /**
              * Additional fonts.
              *
-             * Filters the fonts used by SagoTheme to add additional fonts.
+             * Filters the fonts used by Goomento to add additional fonts.
              *
              *
-             * @param array $additionalFonts Additional SagoTheme fonts.
+             * @param array $additionalFonts Additional Goomento fonts.
              */
-            $additionalFonts = HooksHelper::applyFilters('pagebuilder/fonts/additional_fonts', $additionalFonts);
+            $additionalFonts = HooksHelper::applyFilters('pagebuilder/fonts/additional_fonts', $additionalFonts)->getResult();
 
             self::$fonts = array_merge(self::getNativeFonts(), $additionalFonts);
         }
@@ -107,7 +107,7 @@ class Fonts
     }
 
     /**
-     * Get SagoTheme native fonts.
+     * Get Goomento native fonts.
      *
      * Retrieve the list of supported fonts.
      *

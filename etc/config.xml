@@ -28,7 +28,6 @@
                 <is_rtl>0</is_rtl>
                 <resources_globally>0</resources_globally>
                 <debug>0</debug>
-                <js_debug>0</js_debug>
                 <media>
                     <url />
                 </media>

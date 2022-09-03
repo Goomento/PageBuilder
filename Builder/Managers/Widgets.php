@@ -216,7 +216,7 @@ class Widgets
     /**
      * Widgets manager constructor.
      *
-     * Initializing SagoTheme widgets manager.
+     * Initializing Goomento widgets manager.
      *
      */
     public function __construct()

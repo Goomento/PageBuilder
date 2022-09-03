@@ -24,7 +24,7 @@ class Page extends AbstractSettings
     /**
      * Model constructor.
      *
-     * Initializing SagoTheme page settings model.
+     * Initializing Goomento page settings model.
      *
      *
      * @param array $data Optional. Model data. Default is an empty array.

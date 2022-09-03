@@ -45,9 +45,14 @@ trait TraitBuildableModel
     /**
      * @inheridoc
      */
-    public function getElements() : array
+    public function getElements(bool $forDisplay = false) : array
     {
-        return (array) $this->getData(self::ELEMENTS);
+        $elements = (array) $this->getData(self::ELEMENTS);
+        if ($forDisplay === true) {
+//            return $elements;
+        }
+
+        return $elements;
     }
 
     /**
@@ -198,23 +203,6 @@ trait TraitBuildableModel
     public function getUniqueIdentity(): string
     {
         return implode('_', $this->getIdentities());
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setRenderContent(string $content): BuildableContentInterface
-    {
-        $this->contentHtml = $content;
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getRenderContent(): string
-    {
-        return $this->contentHtml;
     }
 
     /**

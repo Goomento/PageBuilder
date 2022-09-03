@@ -35,7 +35,7 @@ class GeneralSettings extends AbstractSettingsManager
     /**
      * General settings manager constructor.
      *
-     * Initializing SagoTheme general settings manager.
+     * Initializing Goomento general settings manager.
      *
      */
     public function __construct()

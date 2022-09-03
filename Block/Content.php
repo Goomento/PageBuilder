@@ -14,7 +14,7 @@ use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Logger\Logger;
 use Goomento\PageBuilder\Helper\ThemeHelper;
-use Goomento\PageBuilder\Model\ContentHtmlProcessor;
+use Goomento\PageBuilder\Model\ContentDataProcessor;
 use Goomento\PageBuilder\Model\ContentRegistry;
 use Goomento\PageBuilder\Helper\Data;
 use Magento\Cms\Model\Template\FilterProvider;
@@ -64,9 +64,9 @@ class Content extends Template implements BlockInterface
     private $dataHelper;
 
     /**
-     * @var ContentHtmlProcessor
+     * @var ContentDataProcessor
      */
-    private $contentHtmlProcessor;
+    private $contentDataProcessor;
 
     /**
      * Content constructor.
@@ -75,24 +75,24 @@ class Content extends Template implements BlockInterface
      * @param FilterProvider $filterProvider
      * @param ContentRegistry $contentRegistry
      * @param Logger $logger
-     * @param ContentHtmlProcessor $contentHtmlProcessor
+     * @param ContentDataProcessor $contentHtmlProcessor
      * @param array $data
      */
     public function __construct(
-        Template\Context $context,
-        Data $dataHelper,
-        FilterProvider $filterProvider,
+        Template\Context         $context,
+        Data                     $dataHelper,
+        FilterProvider           $filterProvider,
         ContentRegistryInterface $contentRegistry,
-        ContentHtmlProcessor $contentHtmlProcessor,
-        Logger $logger,
-        array $data = []
+        ContentDataProcessor     $contentHtmlProcessor,
+        Logger                   $logger,
+        array                    $data = []
     )
     {
         $this->logger = $logger;
         $this->dataHelper = $dataHelper;
         $this->filterProvider = $filterProvider;
         $this->contentRegistry = $contentRegistry;
-        $this->contentHtmlProcessor = $contentHtmlProcessor;
+        $this->contentDataProcessor = $contentHtmlProcessor;
 
         parent::__construct($context, $data);
     }
@@ -225,7 +225,7 @@ class Content extends Template implements BlockInterface
                 ThemeHelper::registerContentToPage($this->getBuildableContent());
 
                 Profiler::start('PAGEBUILDER:RENDER');
-                $html = $this->contentHtmlProcessor->getHtml( $this->getBuildableContent() );
+                $html = $this->contentDataProcessor->getHtml( $this->getBuildableContent() );
                 Profiler::stop('PAGEBUILDER:RENDER');
 
                 $this->logger->debug(sprintf('Render content: %s EMPTY', empty($html) ? 'IS' : 'IS NOT'));

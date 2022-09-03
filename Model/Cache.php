@@ -24,6 +24,8 @@ class Cache
 
     const HOUR_LIFE_TIME = 3600; // 01 hour
 
+    const TEN_MINUTES = 600; // 01 day
+
     const CACHE_TAG = PageBuilder::CACHE_TAG;
 
     /**

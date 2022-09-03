@@ -19,7 +19,7 @@ class Gallery extends AbstractControlData implements ImportInterface
      * Import gallery images.
      *
      * Used to import gallery control files from external sites while importing
-     * SagoTheme template JSON file, and replacing the old data.
+     * Goomento template JSON file, and replacing the old data.
      *
      *
      * @param array|null $data Control settings

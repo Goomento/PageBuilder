@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Base;
 
 use Goomento\PageBuilder\Helper\DataHelper;
+use Goomento\PageBuilder\Helper\HooksHelper;
 
 abstract class AbstractApp extends AbstractModule
 {
@@ -31,6 +32,8 @@ abstract class AbstractApp extends AbstractModule
         if (!$handle) {
             $handle = 'goomento-' . $name;
         }
+
+        $config = HooksHelper::applyFilters('pagebuilder/' . static::NAME . '/js_variables', $config)->getResult();
 
         DataHelper::printJsConfig($handle, $jsVar, $config);
     }

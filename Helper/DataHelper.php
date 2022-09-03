@@ -42,8 +42,6 @@ use Magento\Store\Model\ScopeInterface;
  * @see Data::isJsMinifyFilesEnabled()
  * @method static string getCustomMediaUrl()
  * @see Data::getCustomMediaUrl()
- * @method static bool isJsDebugMode()
- * @see Data::isJsDebugMode()
  */
 class DataHelper
 {
@@ -215,7 +213,7 @@ class DataHelper
      * Retrieve the source of the placeholder image.
      *
      *
-     * @return string The source of the default placeholder image used by SagoTheme.
+     * @return string The source of the default placeholder image used by Goomento.
      */
     public static function getPlaceholderImageSrc()
     {
@@ -224,12 +222,12 @@ class DataHelper
         /**
          * Get placeholder image source.
          *
-         * Filters the source of the default placeholder image used by SagoTheme.
+         * Filters the source of the default placeholder image used by Goomento.
          *
          *
          * @param string $placeholderImage The source of the default placeholder image.
          */
-        return HooksHelper::applyFilters('pagebuilder/utils/get_placeholder_image_src', $placeholderImage);
+        return HooksHelper::applyFilters('pagebuilder/utils/get_placeholder_image_src', $placeholderImage)->getResult();
     }
 
     /**

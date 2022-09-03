@@ -8,11 +8,13 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Managers;
 
+use Exception;
 use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Elements\Column;
 use Goomento\PageBuilder\Builder\Elements\Repeater;
 use Goomento\PageBuilder\Builder\Elements\Section;
 use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\LoggerHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 class Elements
@@ -28,6 +30,36 @@ class Elements
     private $categories;
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        HooksHelper::addFilter('pagebuilder/elements/parse_settings_for_display', [$this, 'parseSettingsForDisplay']);
+    }
+
+    /**
+     * Get settings for display
+     *
+     * @param array $elementData
+     * @return array
+     * @throws Exception
+     */
+    public function parseSettingsForDisplay(array $elementData): array
+    {
+        if (!isset($elementData['elType'])) {
+            throw new Exception('Invalid Element Type for getting settings');
+        }
+
+        $instance = $this->createElementInstance($elementData);
+
+        $settings = $instance->getSettingsForDisplay();
+
+        $elementData['settings'] = $settings;
+
+        return $elementData;
+    }
+
+    /**
      * @param array $elementData
      * @param array $elementArgs
      * @param AbstractElement|null $elementType
@@ -36,8 +68,7 @@ class Elements
     public function createElementInstance(array $elementData, array $elementArgs = [], AbstractElement $elementType = null)
     {
         if (null === $elementType) {
-            /** @var Widgets $widgetManager */
-            $widgetManager = ObjectManagerHelper::get(Widgets::class);
+            $widgetManager = ObjectManagerHelper::getWidgetsManager();
             if ('widget' === $elementData['elType']) {
                 $elementType = $widgetManager->getWidgetTypes($elementData['widgetType']);
             } else {
@@ -55,7 +86,8 @@ class Elements
 
         try {
             $element = new $elementClass($elementData, $args);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            LoggerHelper::error($e);
             return null;
         }
 

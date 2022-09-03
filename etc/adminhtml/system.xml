@@ -68,10 +68,6 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Enabled debug mode will display error in storefront.</comment>
                 </field>
-                <field id="js_debug" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="0">
-                    <label>JS Debug Mode</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
                 <field id="is_rtl" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Is RTL</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

@@ -25,7 +25,7 @@ class Revisions
     /**
      * History revisions manager constructor.
      *
-     * Initializing SagoTheme history revisions manager.
+     * Initializing Goomento history revisions manager.
      *
      */
     public function __construct()

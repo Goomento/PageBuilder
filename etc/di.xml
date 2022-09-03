@@ -251,19 +251,13 @@
         </arguments>
     </type>
     <type name="Goomento\PageBuilder\Controller\Content\View">
-        <plugin name="validateAccess" type="Goomento\PageBuilder\Plugin\PageBuilder\Controller\ValidateAccess" />
+        <plugin name="pagebuilder.validateAccess" type="Goomento\PageBuilder\Plugin\PageBuilder\Controller\ValidateAccess" />
     </type>
     <type name="Goomento\PageBuilder\Controller\Content\EditorPreview">
-        <plugin name="validateAccess" type="Goomento\PageBuilder\Plugin\PageBuilder\Controller\ValidateAccess" />
+        <plugin name="pagebuilder.validateAccess" type="Goomento\PageBuilder\Plugin\PageBuilder\Controller\ValidateAccess" />
     </type>
     <type name="Goomento\PageBuilder\Controller\Actions\Actions">
-        <plugin name="validateAccess" type="Goomento\PageBuilder\Plugin\PageBuilder\Controller\ValidateAccess" />
-    </type>
-    <type name="Goomento\PageBuilder\Model\ResourceModel\Content">
-        <plugin name="invalidateContentCache" type="Goomento\PageBuilder\Plugin\PageBuilder\Model\ResourceModel\Content" />
-    </type>
-    <type name="Magento\Framework\RequireJs\Config">
-        <plugin name="modifyResources" type="Goomento\PageBuilder\Plugin\Framework\RequireJs\Config\ModifyResources" />
+        <plugin name="pagebuilder.validateAccess" type="Goomento\PageBuilder\Plugin\PageBuilder\Controller\ValidateAccess" />
     </type>
 </config>
 

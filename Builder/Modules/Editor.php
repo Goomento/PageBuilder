@@ -360,6 +360,11 @@ class Editor
             }
         }
 
+        $requirejs = HooksHelper::applyFilters('pagebuilder/editor/requirejs_config', $requirejs)->getResult();
+
+        ThemeHelper::removeScripts('underscore');
+        ThemeHelper::registerScript('underscore', 'Goomento_PageBuilder/lib/underscore/underscore.min');
+
         ThemeHelper::registerScript(
             'goomento-editor-engine',
             'Goomento_PageBuilder/build/editor' . $suffix,
@@ -404,7 +409,7 @@ class Editor
         /**
          * Before editor enqueue scripts.
          *
-         * Fires before SagoTheme editor scripts are enqueued.
+         * Fires before Goomento editor scripts are enqueued.
          *
          */
         HooksHelper::doAction('pagebuilder/editor/before_enqueue_scripts');
@@ -415,7 +420,7 @@ class Editor
 
         $config = [
             'version' => Configuration::version(),
-            'debug' => DataHelper::isJsDebugMode(),
+            'debug' => DataHelper::isDebugMode(),
             'data' => $document->getElementsRawData(),
             'document' => $document->getConfig(),
             'current_revision_id' => $currentRevisionId,
@@ -463,7 +468,7 @@ class Editor
         /**
          * Allows to modify this
          */
-        $config = HooksHelper::applyFilters('pagebuilder/editor/js_variables', $config);
+        $config = HooksHelper::applyFilters('pagebuilder/editor/js_variables', $config)->getResult();
 
         DataHelper::printJsConfig('goomento-editor', 'goomentoConfig', $config);
 
@@ -478,7 +483,7 @@ class Editor
         /**
          * After editor enqueue scripts.
          *
-         * Fires after SagoTheme editor scripts are enqueued.
+         * Fires after Goomento editor scripts are enqueued.
          *
          */
         HooksHelper::doAction('pagebuilder/editor/after_enqueue_scripts');
@@ -495,7 +500,7 @@ class Editor
         /**
          * Before editor enqueue styles.
          *
-         * Fires before SagoTheme editor styles are enqueued.
+         * Fires before Goomento editor styles are enqueued.
          *
          */
         HooksHelper::doAction('pagebuilder/editor/before_enqueue_styles');
@@ -521,7 +526,7 @@ class Editor
         /**
          * After editor enqueue styles.
          *
-         * Fires after SagoTheme editor styles are enqueued.
+         * Fires after Goomento editor styles are enqueued.
          *
          */
         HooksHelper::doAction('pagebuilder/editor/after_enqueue_styles');
@@ -571,9 +576,9 @@ EDITOR_WAPPER;
     public function editorHeaderTrigger()
     {
         /**
-         * SagoTheme editor head.
+         * Goomento editor head.
          *
-         * Fires on SagoTheme editor head tag.
+         * Fires on Goomento editor head tag.
          *
          * Used to prints scripts or any other data in the head tag.
          *
@@ -593,9 +598,9 @@ EDITOR_WAPPER;
         ObjectManagerHelper::getTagsManager()->printTemplates();
 
         /**
-         * SagoTheme editor footer.
+         * Goomento editor footer.
          *
-         * Fires on SagoTheme editor before closing the body tag.
+         * Fires on Goomento editor before closing the body tag.
          *
          * Used to prints scripts or any other HTML before closing the body tag.
          *

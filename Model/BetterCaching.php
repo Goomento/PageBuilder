@@ -62,7 +62,7 @@ class BetterCaching
      * @param int $timeout
      * @return bool|float|int|mixed|string
      */
-    public function resolve($key, ?callable $source, array $tags = [Type::CACHE_TAG], int $timeout = Cache::DAY_LIFE_TIME)
+    public function resolve($key, ?callable $source, array $tags = [Type::CACHE_TAG], int $timeout = Cache::TEN_MINUTES)
     {
         if (!is_scalar($key)) {
             $key = Zend_Json::encode($key);

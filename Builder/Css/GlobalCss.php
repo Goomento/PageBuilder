@@ -18,7 +18,7 @@ class GlobalCss extends AbstractCss
 {
 
     /**
-     * SagoTheme global CSS file handler ID.
+     * Goomento global CSS file handler ID.
      */
     const FILE_HANDLER_ID = 'goomento-global';
 
@@ -173,7 +173,7 @@ class GlobalCss extends AbstractCss
         /**
          * Parse CSS file.
          *
-         * Fires when CSS file is parsed on SagoTheme.
+         * Fires when CSS file is parsed on Goomento.
          *
          * The dynamic portion of the hook name, `$name`, refers to the CSS file name.
          *

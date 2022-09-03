@@ -31,10 +31,10 @@ class Section extends AbstractElement
      * Section predefined columns presets.
      *
      * Holds the predefined columns width for each columns count available by
-     * default by SagoTheme. Default is an empty array.
+     * default by Goomento. Default is an empty array.
      *
      * Note that when the user creates a section he can define custom sizes for
-     * the columns. But SagoTheme sets default values for predefined columns.
+     * the columns. But Goomento sets default values for predefined columns.
      *
      * For example two columns 50% width each one, or three columns 33.33% each
      * one. This property hold the data for those preset values.
@@ -108,7 +108,7 @@ class Section extends AbstractElement
      * section can have by default. For example a column can have two columns
      * 50% width each one, or three columns 33.33% each one.
      *
-     * Note that SagoTheme sections have default section presets but the user
+     * Note that Goomento sections have default section presets but the user
      * can set custom number of columns and define custom sizes for each column.
 
      */
@@ -1449,7 +1449,7 @@ class Section extends AbstractElement
         $this->addControl(
             'responsive_description',
             [
-                'raw' => __('Responsive visibility will take effect only on preview or live page, and not while editing in SagoTheme.'),
+                'raw' => __('Responsive visibility will take effect only on preview or live page, and not while editing in Goomento.'),
                 'type' => Controls::RAW_HTML,
                 'content_classes' => 'gmt-descriptor',
             ]
@@ -1641,7 +1641,7 @@ class Section extends AbstractElement
     protected function _getDefaultChildType(array $elementData)
     {
         /** @var Elements $elements */
-        $elements = ObjectManagerHelper::get(Elements::class);
+        $elements = ObjectManagerHelper::getElementsManager();
         return $elements->getElementTypes('column');
     }
 

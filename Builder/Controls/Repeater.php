@@ -90,7 +90,7 @@ class Repeater extends AbstractControlData implements ImportInterface
     /**
      * Import repeater.
      *
-     * Used as a wrapper method for inner controls while importing SagoTheme
+     * Used as a wrapper method for inner controls while importing Goomento
      * template JSON file, and replacing the old data.
      *
      *

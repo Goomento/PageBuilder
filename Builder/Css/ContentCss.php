@@ -72,7 +72,7 @@ class ContentCss extends AbstractCss
      */
     public function getElementUniqueSelector(AbstractElement $element)
     {
-        return '.gmt-' . $this->getModel()->getStatus() . '-' . $this->getModel()->getId() . ' .gmt-element' . $element->getUniqueSelector();
+        return '.gmt-' . $this->getModel()->getRevisionHash() . ' .gmt-element' . $element->getUniqueSelector();
     }
 
     /**
@@ -234,7 +234,7 @@ class ContentCss extends AbstractCss
      */
     protected function getFileHandleId()
     {
-        return 'gmt-' . $this->getModel()->getStatus()   . '-' . $this->getModel()->getId();
+        return 'gmt-' . $this->getModel()->getRevisionHash();
     }
 
     /**

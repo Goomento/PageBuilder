@@ -18,6 +18,7 @@ use Goomento\Core\Traits\TraitStaticInstances;
  * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
  *
  * @method static isAllowed($resource)
+ * @see Authorization::isAllowed()
  */
 class AuthorizationHelper
 {
@@ -38,6 +39,7 @@ class AuthorizationHelper
      */
     public static function isCurrentUserCan(string $part)
     {
-        return self::isAllowed("Goomento_PageBuilder::{$part}");
+        $userCan = (bool) self::isAllowed("Goomento_PageBuilder::{$part}");
+        return HooksHelper::applyFilters('pagebuilder/user_permission/' . $part, $userCan)->getResult();
     }
 }

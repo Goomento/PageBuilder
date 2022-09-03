@@ -20,7 +20,6 @@ use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 class Documents
@@ -48,13 +47,31 @@ class Documents
     /**
      * Documents manager constructor.
      *
-     * Initializing the SagoTheme documents manager.
+     * Initializing the Goomento documents manager.
      *
      */
     public function __construct()
     {
         HooksHelper::addAction('pagebuilder/documents/register', [ $this, 'registerDefaultTypes' ], 0);
+        HooksHelper::addAction('pagebuilder/documents/render_element', [ $this, 'renderElement' ], 0);
         HooksHelper::addAction('pagebuilder/ajax/register_actions', [ $this, 'registerAjaxActions' ]);
+    }
+
+    /**
+     * Render element
+     *
+     * @param BuildableContentInterface|AbstractDocument $document
+     * @param array $data
+     * @return string
+     * @throws Exception
+     */
+    public function renderElement($document, array $data)
+    {
+        if ($document instanceof BuildableContentInterface) {
+            $document = $this->getByContent($document);
+        }
+
+        return $document->renderElement($data);
     }
 
     /**
@@ -63,7 +80,6 @@ class Documents
      * Process ajax action handles when saving data and discarding changes.
      *
      * @param Ajax $ajaxManager An instance of the ajax manager.
-     * @throws LocalizedException
      * @throws Exception
      */
     public function registerAjaxActions(Ajax $ajaxManager)
@@ -231,7 +247,7 @@ class Documents
      *
      *
      *
-     * @throws Exception If current user don't have permissions to edit the post or the post is not using SagoTheme.
+     * @throws Exception If current user don't have permissions to edit the post or the post is not using Goomento.
      *
      * @return array The document data after saving.
      */
@@ -270,7 +286,7 @@ class Documents
          * @param array    $returnData The returned data.
          * @param AbstractDocument $document    The document instance.
          */
-        return HooksHelper::applyFilters('pagebuilder/documents/ajax_save/return_data', $returnData, $document);
+        return HooksHelper::applyFilters('pagebuilder/documents/ajax_save/return_data', $returnData, $document)->getResult();
     }
 
     /**
@@ -295,7 +311,7 @@ class Documents
     {
         if (! HooksHelper::didAction('pagebuilder/documents/register')) {
             /**
-             * Register SagoTheme documents.
+             * Register Goomento documents.
              *
              *
              * @param Documents $this The document manager instance.

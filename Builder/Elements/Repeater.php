@@ -29,7 +29,7 @@ class Repeater extends AbstractElement
     /**
      * Repeater constructor.
      *
-     * Initializing SagoTheme repeater element.
+     * Initializing Goomento repeater element.
      *
      *
      * @param array      $data Optional. Element data. Default is an empty array.

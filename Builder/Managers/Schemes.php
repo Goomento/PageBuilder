@@ -207,7 +207,7 @@ class Schemes
             foreach (self::$schemesTypes as $schemesType) {
                 $enabledSchemes[] = $schemesType;
             }
-            $enabledSchemes = HooksHelper::applyFilters('pagebuilder/schemes/enabled_schemes', $enabledSchemes);
+            $enabledSchemes = HooksHelper::applyFilters('pagebuilder/schemes/enabled_schemes', $enabledSchemes)->getResult();
 
             self::$enabledSchemes = $enabledSchemes;
         }

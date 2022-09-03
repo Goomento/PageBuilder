@@ -88,7 +88,7 @@ abstract class AbstractSchema extends AbstractEntity
     /**
      * Save scheme.
      *
-     * Update SagoTheme scheme in the database, and update the last updated
+     * Update Goomento scheme in the database, and update the last updated
      * scheme time.
      *
      *

@@ -20,4 +20,7 @@
     <type name="Magento\Framework\Data\Form\Element\Editor">
         <plugin name="pagebuilder.builder_assistance" type="Goomento\PageBuilder\Plugin\Framework\Data\Form\Element\Editor"/>
     </type>
+    <type name="Magento\Framework\View\Page\Config\RendererInterface">
+        <plugin name="pagebuilder.add_editor_base" type="Goomento\PageBuilder\Plugin\Framework\View\Page\InitEditorResources" />
+    </type>
 </config>

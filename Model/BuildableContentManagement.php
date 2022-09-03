@@ -175,8 +175,9 @@ class BuildableContentManagement implements BuildableContentManagementInterface
         PageBuilder::initialize();
 
         $buildableContent->setSetting('css/' . Config::CSS_UPDATED_TIME, 0);
-        $this->saveBuildableContent($buildableContent,
-            !$buildableContent->getLabel() ? __('Refreshed Assets')->__toString(): '');
+
+        $this->saveBuildableContent($buildableContent);
+
         $buildableContent->setDataChanges(false);
 
         $css = new ContentCss( $buildableContent );

@@ -189,16 +189,6 @@ class Data extends AbstractHelper
     }
 
     /**
-     * Is JavaScript debug mode
-     *
-     * @return bool
-     */
-    public function isJsDebugMode()
-    {
-        return (bool) $this->getEditorConfig('js_debug');
-    }
-
-    /**
      * Get user-defined custom media URL
      *
      * @return string

@@ -37,7 +37,7 @@ class Media extends AbstractBaseMultiple implements ImportInterface
      * Import media images.
      *
      * Used to import media control files from external sites while importing
-     * SagoTheme template JSON file, and replacing the old data.
+     * Goomento template JSON file, and replacing the old data.
      *
      *
      * @param array|null $data Control settings

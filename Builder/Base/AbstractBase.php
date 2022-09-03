@@ -98,7 +98,7 @@ abstract class AbstractBase extends AbstractEntity
             $this->settings = $this->getInitSettings();
 
             $this->settings = HooksHelper::applyFilters('pagebuilder/settings/' . static::TYPE . '/' . static::NAME,
-                $this->settings);
+                $this->settings)->getResult();
         }
     }
 }

@@ -104,7 +104,7 @@ class Animation extends AbstractControlData
          *
          * @param array $additionalAnimations Additional Animations array.
          */
-        $additionalAnimations = HooksHelper::applyFilters('pagebuilder/controls/animations/additional_animations', []);
+        $additionalAnimations = HooksHelper::applyFilters('pagebuilder/controls/animations/additional_animations', [])->getResult();
 
         return array_merge($animations, $additionalAnimations);
     }

@@ -72,12 +72,12 @@ class Divider extends AbstractWidget
         /**
          * Additional Styles.
          *
-         * Filters the styles used by SagoTheme to add additional divider styles.
+         * Filters the styles used by Goomento to add additional divider styles.
          *
          *
-         * @param array $additionalStyles Additional SagoTheme divider styles.
+         * @param array $additionalStyles Additional Goomento divider styles.
          */
-        return HooksHelper::applyFilters('pagebuilder/divider/styles/additional_styles', $additionalStyles);
+        return HooksHelper::applyFilters('pagebuilder/divider/styles/additional_styles', $additionalStyles)->getResult();
     }
 
     /**

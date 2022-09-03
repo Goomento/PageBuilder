@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Controller\Actions;
 
+use Exception;
 use Goomento\Core\Model\Registry;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Controller\AbstractAction;
@@ -19,6 +20,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\ObjectManagerInterface;
+use Zend_Json;
 
 class Actions extends AbstractAction implements HttpPostActionInterface
 {
@@ -86,14 +88,14 @@ class Actions extends AbstractAction implements HttpPostActionInterface
         try {
             $postData = $this->getRequest()->getParams();
             $postData = EscaperHelper::filter($postData);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->redirect404Page();
         }
 
         try {
             $elementData = $postData['actions'];
-            $elementData = (array) \Zend_Json::decode($elementData);
-        } catch (\Exception $e) {
+            $elementData = (array) Zend_Json::decode($elementData);
+        } catch (Exception $e) {
             $elementData = [];
         }
 
@@ -108,12 +110,19 @@ class Actions extends AbstractAction implements HttpPostActionInterface
                 $actionName = $elementAction['action'];
                 $action = $this->getAction($actionName);
                 $results[$actionId]['data'] = $action->doAction($elementAction['data'], $postData);
-            } catch (\Exception $e) {
-                $this->logger->error($e);
-                $results[$actionId]['success'] = false;
-                $results[$actionId]['code'] = 520;
+            } catch (LocalizedException $e) {
+                $results[$actionId]['message'] = $e->getMessage();
+            } catch (Exception $e) {
                 if (Configuration::debug()) {
                     $results[$actionId]['message'] = $e->getMessage();
+                } else {
+                    $results[$actionId]['message'] = (string) __('Something went wrong when render your action.');
+                }
+            } finally {
+                if (isset($e)) {
+                    $this->logger->error($e);
+                    $results[$actionId]['success'] = false;
+                    $results[$actionId]['code'] = 520;
                 }
             }
         }
