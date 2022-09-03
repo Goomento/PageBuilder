@@ -80,6 +80,15 @@ class RequestHelper
     }
 
     /**
+     * @param string $key
+     * @return void
+     */
+    public static function clearPersistedData(string $key)
+    {
+        self::getDataPersistor()->clear($key);
+    }
+
+    /**
      * @param string $url
      * @param $query string|array
      * @return string

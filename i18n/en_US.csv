@@ -1,4 +1,3 @@
-"Page Builder","Page Builder"
 Save,Save
 "Save & Duplicate","Save & Duplicate"
 "Save & Close","Save & Close"
@@ -6,18 +5,20 @@ Back,Back
 Delete,Delete
 "Are you sure you want to do this?","Are you sure you want to do this?"
 Export,Export
+"Page Builder","Page Builder"
+Preview,Preview
+View,View
 Settings,Settings
 "Hurray! Your %1 is live.","Hurray! Your %1 is live."
 Document,Document
 "General Settings","General Settings"
-Title,Title
-Status,Status
-"Sorry, you need permissions to view this content","Sorry, you need permissions to view this content"
 "%s Settings","%s Settings"
-"Updated %1","Updated %1"
+Automatic,Automatic
+"Updated %1 by %2","Updated %1 by %2"
 Single,Single
 "Body Style","Body Style"
 Padding,Padding
+Close,Close
 Reset,Reset
 Discard,Discard
 Apply,Apply
@@ -151,9 +152,19 @@ Layout,Layout
 "Full width","Full width"
 Empty,Empty
 Page,Page
+"Preview Layout","Preview Layout"
 Section,Section
 Template,Template
+"CMS Block Content","CMS Block Content"
+"Block Identifier","Block Identifier"
+"CMS Page Content","CMS Page Content"
+"Page URL Key","Page URL Key"
+"Config Path","Config Path"
+Logo,Logo
+URLs,URLs
+"Home Page","Home Page"
 Column,Column
+Title,Title
 "Column Width","Column Width"
 "Vertical Align","Vertical Align"
 Middle,Middle
@@ -179,13 +190,16 @@ Border,Border
 "Link Color","Link Color"
 "Link Hover Color","Link Hover Color"
 "Text Align","Text Align"
+Identify,Identify
+"CSS ID","CSS ID"
+"Add your custom id WITHOUT the Pound key. e.g: my-id","Add your custom id WITHOUT the Pound key. e.g: my-id"
+"Please make sure the ID is unique and not used elsewhere on the page this element is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces.","Please make sure the ID is unique and not used elsewhere on the page this element is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces."
+"CSS Classes","CSS Classes"
+"Add your custom class WITHOUT the dot. e.g: my-class","Add your custom class WITHOUT the dot. e.g: my-class"
 Advanced,Advanced
 Margin,Margin
 Z-Index,Z-Index
-"CSS ID","CSS ID"
-"Add your custom id WITHOUT the Pound key. e.g: my-id","Add your custom id WITHOUT the Pound key. e.g: my-id"
-"CSS Classes","CSS Classes"
-"Add your custom class WITHOUT the dot. e.g: my-class","Add your custom class WITHOUT the dot. e.g: my-class"
+Order,Order
 "Motion Effects","Motion Effects"
 "Entrance Animation","Entrance Animation"
 "Animation Duration","Animation Duration"
@@ -215,6 +229,20 @@ Wider,Wider
 Stretch,Stretch
 Overflow,Overflow
 Hidden,Hidden
+Popup,Popup
+Enabled,Enabled
+"Enable this section will hide section on storefront. Use ""Call to Action"" widget to show this popup.","Enable this section will hide section on storefront. Use ""Call to Action"" widget to show this popup."
+"Note: CSS ID must be placed in tab Advanced > Identify > CSS ID. .","Note: CSS ID must be placed in tab Advanced > Identify > CSS ID. ."
+"Popup Title","Popup Title"
+Buttons,Buttons
+"Close Button","Close Button"
+"Confirm Button","Confirm Button"
+Both,Both
+Label,Label
+Text,Text
+Confirm,Confirm
+Link,Link
+https://your-link.com,https://your-link.com
 Structure,Structure
 "Shape Divider","Shape Divider"
 Flip,Flip
@@ -224,7 +252,7 @@ Invert,Invert
 Tablet,Tablet
 Mobile,Mobile
 Visibility,Visibility
-"Responsive visibility will take effect only on preview or live page, and not while editing in SagoTheme.","Responsive visibility will take effect only on preview or live page, and not while editing in SagoTheme."
+"Responsive visibility will take effect only on preview or live page, and not while editing in Goomento.","Responsive visibility will take effect only on preview or live page, and not while editing in Goomento."
 Hide,Hide
 Show,Show
 System,System
@@ -235,19 +263,19 @@ Content,Content
 "Add your own custom CSS here","Add your own custom CSS here"
 Basic,Basic
 General,General
-Extension,Extension
-Theme,Theme
+Products,Products
+Magento,Magento
 Lightbox,Lightbox
 "Font Awesome - Regular","Font Awesome - Regular"
 "Font Awesome - Solid","Font Awesome - Solid"
 "Font Awesome - Brands","Font Awesome - Brands"
 "All Icons","All Icons"
 Anonymous,Anonymous
+Url,Url
+WYSIWYG,WYSIWYG
 "Invalid format.","Invalid format."
 "Action not found.","Action not found."
 "Something went wrong. Please try again later.","Something went wrong. Please try again later."
-Url,Url
-Text,Text
 "Add Media","Add Media"
 Colors,Colors
 "Color Palettes","Color Palettes"
@@ -296,6 +324,8 @@ Split,Split
 Book,Book
 Local,Local
 "(no title)","(no title)"
+"Imported content.","Imported content."
+"Imported content","Imported content"
 Accordion,Accordion
 "Title & Description","Title & Description"
 "Accordion Title","Accordion Title"
@@ -312,6 +342,10 @@ Icon,Icon
 "Active Color","Active Color"
 Alignment,Alignment
 Spacing,Spacing
+"Add To Cart","Add To Cart"
+Product,Product
+"Enter your product SKU.","Enter your product SKU."
+Button,Button
 Alert,Alert
 Info,Info
 Success,Success
@@ -326,7 +360,6 @@ Danger,Danger
 Description,Description
 "Dismiss alert","Dismiss alert"
 SoundCloud,SoundCloud
-Link,Link
 "Visual Player","Visual Player"
 "Additional Options","Additional Options"
 Autoplay,Autoplay
@@ -340,17 +373,21 @@ Comments,Comments
 Username,Username
 "Controls Color","Controls Color"
 Banner,Banner
+"Enter the title here.","Enter the title here."
 Caption,Caption
 "Enter your caption","Enter your caption"
-https://your-link.com,https://your-link.com
 "Hover Animation","Hover Animation"
 "Middle Left","Middle Left"
 "Middle Center","Middle Center"
 "Middle Right","Middle Right"
+"Banner Slider","Banner Slider"
+"Banner List","Banner List"
+"Lorem ipsum dolor sit amet.","Lorem ipsum dolor sit amet."
+Slider,Slider
+Navigation,Navigation
 "Magento Block","Magento Block"
 Block,Block
 "Block class","Block class"
-Button,Button
 "Click here","Click here"
 Justified,Justified
 "Extra Small","Extra Small"
@@ -361,9 +398,30 @@ Large,Large
 "Icon Position","Icon Position"
 Before,Before
 After,After
-"Button ID","Button ID"
-"Please make sure the ID is unique and not used elsewhere on the page this element is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces.","Please make sure the ID is unique and not used elsewhere on the page this form is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces."
+"Button CSS ID","Button CSS ID"
 "Icon Spacing","Icon Spacing"
+"Call to Action","Call to Action"
+"Trigger When","Trigger When"
+"Page Loaded","Page Loaded"
+"After Timeout","After Timeout"
+"Click On Element","Click On Element"
+"Trigger CSS ID","Trigger CSS ID"
+"CSS ID of the Element, which might be found under Advanced > Identify > CSS ID.","CSS ID of the Element, which might be found under Advanced > Identify > CSS ID."
+Action,Action
+"Active this section when matching the trigger.","Active this section when matching the trigger."
+"Run Native HTML/JS/CSS code","Run Native HTML/JS/CSS code"
+"Open Popup","Open Popup"
+"Close Popup","Close Popup"
+"Show Element","Show Element"
+"Hide Element","Hide Element"
+Code,Code
+"JS/CSS must be wrapped into `script` or `style` tag.","JS/CSS must be wrapped into `script` or `style` tag."
+Second(s),Second(s)
+"Trigger after amount of seconds.","Trigger after amount of seconds."
+"Target CSS ID","Target CSS ID"
+"Remember Trigger In (Seconds)","Remember Trigger In (Seconds)"
+"Remember this trigger, then ignore it in amount of seconds. For example: can use for displaying popup once per year to customer.","Remember this trigger, then ignore it in amount of seconds. For example: can use for displaying popup once per year to customer."
+"Define Action","Define Action"
 "Custom Positioning","Custom Positioning"
 Inline,Inline
 "Custom Width","Custom Width"
@@ -406,12 +464,53 @@ Line,Line
 "Add Element","Add Element"
 Amount,Amount
 Gap,Gap
-View,View
 Stacked,Stacked
 Framed,Framed
 "Primary Color","Primary Color"
 "Secondary Color","Secondary Color"
 Rotate,Rotate
+"Facebook Content","Facebook Content"
+Post,Post
+Timeline,Timeline
+Events,Events
+Messages,Messages
+"Small Header","Small Header"
+"Cover Photo","Cover Photo"
+"Profile Photos","Profile Photos"
+"Custom CTA Button","Custom CTA Button"
+"Full Post","Full Post"
+"Applied to photo post, video.","Applied to photo post, video."
+"Allow Full Screen","Allow Full Screen"
+Captions,Captions
+"By default, captions are only available on desktop","By default, captions are only available on desktop"
+"Page URL","Page URL"
+"The URL of the Facebook Page.","The URL of the Facebook Page."
+"Post URL","Post URL"
+"The absolute URL of the post.","The absolute URL of the post."
+"Video URL","Video URL"
+"The absolute URL of the video.","The absolute URL of the video."
+"Facebook Like","Facebook Like"
+Like,Like
+Recommend,Recommend
+Comment,Comment
+Standard,Standard
+"Button Count","Button Count"
+"Box Count","Box Count"
+"Color Scheme","Color Scheme"
+Light,Light
+Dark,Dark
+Faces,Faces
+"Number Of Comments","Number Of Comments"
+"The number of comments to show by default. The minimum value is 1.","The number of comments to show by default. The minimum value is 1."
+"Order By","Order By"
+"The order to use when displaying comments.","The order to use when displaying comments."
+"Reverse Time","Reverse Time"
+Time,Time
+"URL ID","URL ID"
+"The URL of the webpage that will be liked.","The URL of the webpage that will be liked."
+"Google Maps","Google Maps"
+Map,Map
+Zoom,Zoom
 HTML,HTML
 "HTML Code","HTML Code"
 "Enter your code","Enter your code"
@@ -437,6 +536,91 @@ On,On
 "Max Width","Max Width"
 "Image Box","Image Box"
 "Image Position","Image Position"
+Wrapper,Wrapper
+"Slides to Show","Slides to Show"
+"Slides to Scroll","Slides to Scroll"
+"Set how many slides are scrolled per swipe.","Set how many slides are scrolled per swipe."
+"Image Stretch","Image Stretch"
+"Arrows and Dots","Arrows and Dots"
+"Pause on Hover","Pause on Hover"
+"Autoplay Speed","Autoplay Speed"
+Effect,Effect
+Slide,Slide
+Fade,Fade
+"Animation Speed","Animation Speed"
+Inside,Inside
+Outside,Outside
+"Image Spacing","Image Spacing"
+"Image Carousel","Image Carousel"
+"New Products","New Products"
+"Display Type","Display Type"
+"New products","New products"
+"All products","All products"
+"Display Page Control","Display Page Control"
+"Number of Products per Page","Number of Products per Page"
+"Number of Products to display","Number of Products to display"
+"Products Grid Template","Products Grid Template"
+"Products List Template","Products List Template"
+"Products Images and Names Template","Products Images and Names Template"
+"Products Names Only Template","Products Names Only Template"
+"Products Images Only Template","Products Images Only Template"
+"Orders And Returns","Orders And Returns"
+"This widget has no parameters.","This widget has no parameters."
+"Recently Compared Products","Recently Compared Products"
+"Recently Viewed Products","Recently Viewed Products"
+"Product attributes to show","Product attributes to show"
+Name,Name
+Price,Price
+"Learn More Link","Learn More Link"
+"Buttons to show","Buttons to show"
+"Add to Cart","Add to Cart"
+"Add to Compare","Add to Compare"
+"Add to Wishlist","Add to Wishlist"
+"Products Sidebar Template","Products Sidebar Template"
+"SnowDog Menu","SnowDog Menu"
+"This widget requires to install <a target=""_blank"" href=""https://github.com/SnowdogApps/magento2-menu"">Snowdog Menu</a>.","This widget requires to install <a target=""_blank"" href=""https://github.com/SnowdogApps/magento2-menu"">Snowdog Menu</a>."
+"Menu Id","Menu Id"
+Menu,Menu
+Submenu,Submenu
+"Menu Item Level Top","Menu Item Level Top"
+"Menu Item","Menu Item"
+"Pricing Table","Pricing Table"
+"General Package","General Package"
+"On Sale?","On Sale?"
+"Sale Price","Sale Price"
+"Price Currency","Price Currency"
+"Currency Placement","Currency Placement"
+"Price Period (per)","Price Period (per)"
+Month,Month
+"Period Separator","Period Separator"
+Feature,Feature
+"Pricing table list item","Pricing table list item"
+"List Icon","List Icon"
+"Item Active?","Item Active?"
+"Icon Color","Icon Color"
+"Show Icon","Show Icon"
+"Display Button","Display Button"
+Header,Header
+Pricing,Pricing
+"Original Price","Original Price"
+"Original Price Currency","Original Price Currency"
+"Sale Price Currency","Sale Price Currency"
+"Pricing Period","Pricing Period"
+"Body & Features","Body & Features"
+"Disable Item Color","Disable Item Color"
+"Icon Size","Icon Size"
+"Footer & Button","Footer & Button"
+"Product List","Product List"
+Categories,Categories
+"Category IDs, separate by comma.","Category IDs, separate by comma."
+"SKU-1, SKU-2","SKU-1, SKU-2"
+"Product SKUs, separate by comma.","Product SKUs, separate by comma."
+"Products Per Row","Products Per Row"
+"Products Per Page","Products Per Page"
+Mode,Mode
+Grid,Grid
+"Product & Category","Product & Category"
+"Product Slider","Product Slider"
 "Progress Bar","Progress Bar"
 "My Skill","My Skill"
 Percentage,Percentage
@@ -464,6 +648,8 @@ Tabs,Tabs
 "Tab #1","Tab #1"
 "Tab #2","Tab #2"
 "Navigation Width","Navigation Width"
+Testimonial,Testimonial
+Aside,Aside
 "Enter your text","Enter your text"
 "Add Your Text Here","Add Your Text Here"
 XL,XL
@@ -471,12 +657,20 @@ XXL,XXL
 "Text Editor","Text Editor"
 "Drop Cap","Drop Cap"
 Columns,Columns
+Toggle,Toggle
+"Toggle Title","Toggle Title"
+"Toggle Content","Toggle Content"
+"Toggle Items","Toggle Items"
+"Toggle #1","Toggle #1"
+"Toggle #2","Toggle #2"
+"Title HTML AbstractTag","Title HTML AbstractTag"
 Source,Source
 YouTube,YouTube
 Vimeo,Vimeo
 Dailymotion,Dailymotion
 "Self Host","Self Host"
 "Enter your URL","Enter your URL"
+"Enter your URL (Vimeo)","Enter your URL (Vimeo)"
 URL,URL
 "Video Options","Video Options"
 Mute,Mute
@@ -484,7 +678,6 @@ Loop,Loop
 "Player Controls","Player Controls"
 "Video Info","Video Info"
 "Modest Branding","Modest Branding"
-Logo,Logo
 "Privacy Mode","Privacy Mode"
 "When you turn on privacy mode, YouTube won't store information about visitors on your website unless they play the video.","When you turn on privacy mode, YouTube won't store information about visitors on your website unless they play the video."
 "Suggested Videos","Suggested Videos"
@@ -501,10 +694,12 @@ Poster,Poster
 Shadow,Shadow
 "Content Position","Content Position"
 "Invalid action model: %1","Invalid action model: %1"
+"Block %1","Block %1"
 "Something went wrong when processing mass action.","Something went wrong when processing mass action."
 "Content Title","Content Title"
 "Content Type","Content Type"
 "Content View","Content View"
+Status,Status
 "To apply changes you should fill in hidden required ""%1"" field","To apply changes you should fill in hidden required ""%1"" field"
 "You deleted the content.","You deleted the content."
 "Something went wrong when deleting the content","Something went wrong when deleting the content"
@@ -515,9 +710,8 @@ Shadow,Shadow
 "Something went wrong when entering the Page Builder.","Something went wrong when entering the Page Builder."
 "Template content was empty","Template content was empty"
 "Something went wrong when exporting template.","Something went wrong when exporting template."
+"Pages & Landing Pages","Pages & Landing Pages"
 ". 's'",". 's'"
-Pages,Pages
-"Manage %1","Manage %1"
 "Import file must specify.","Import file must specify."
 "Import file should not empty.","Import file should not empty."
 "Something went wrong when importing template.","Something went wrong when importing template."
@@ -529,69 +723,71 @@ Import,Import
 "You cleaned %1 out of %2 content(s) cache","You cleaned %1 out of %2 content(s) cache"
 "Something went wrong when creating content(s)","Something went wrong when creating content(s)"
 "Something went wrong when importing templates/samples.","Something went wrong when importing templates/samples."
-"Import Templates/Samples","Import Templates/Samples"
+"Import Samples","Import Samples"
 "Sorry, you need permissions to save this content.","Sorry, you need permissions to save this content."
 "Invalid content type: %1","Invalid content type: %1"
 "Something went wrong when saving the content.","Something went wrong when saving the content."
 "Data content invalidated. Make sure you copy the right way.","Data content invalidated. Make sure you copy the right way."
+"Admin created content","Admin created content"
+"Admin saved content","Admin saved content"
 "You saved the content.","You saved the content."
 "Something went wrong while saving the content.","Something went wrong while saving the content."
-"( Duplicated from #%1 )","( Duplicated from #%1 )"
+(Duplicated),(Duplicated)
+"Admin duplicated content","Admin duplicated content"
 "You duplicated the content.","You duplicated the content."
 "Global.css saved.","Global.css saved."
 "Something went wrong when saving Global.css","Something went wrong when saving Global.css"
-Global.css,Global.css
-"The entity must be specify","The entity must be specify"
-"Something went wrong when create the Page Builder. Please try again.","Something went wrong when create the Page Builder. Please try again."
+"Replaced URLs successfully.","Replaced URLs successfully."
+"Something went wrong when replacing URLs","Something went wrong when replacing URLs"
+Management,Management
 "Something went wrong when render content view.","Something went wrong when render content view."
+"Page Content not found","Page Content not found"
+"The URL to find and URL to replace must be different","The URL to find and URL to replace must be different"
+"The URL to find and URL to replace must be valid URL's","The URL to find and URL to replace must be valid URL's"
+"Content Id does not specify","Content Id does not specify"
+"Saved revision","Saved revision"
+"Published change","Published change"
 "Invalid method %1::%2","Invalid method %1::%2"
-Internal,Internal
-External,External
-"Use Origin Content","Use Origin Content"
-"Show Nothing","Show Nothing"
-"Do Nothing","Do Nothing"
+"Same window tab","Same window tab"
+"New window tab","New window tab"
+Iframe,Iframe
 Pending,Pending
 Published,Published
-"Invalid content status: %1","Invalid content status: %1"
+"Page Builder renderer lopping detected","Page Builder renderer lopping detected"
 "File does not exited: %1","File does not exited: %1"
-"Content Id does not specify","Content Id does not specify"
 "Could not save the page: %1","Could not save the page: %1"
 "Invalid content identifier: Same identifier with ""%1"".","Invalid content identifier: Same identifier with ""%1""."
-"You can't publish this content","You can't publish this content"
+"Invalid content status: %1","Invalid content status: %1"
 "The content with the ID: ""%1"" doesn't exist.","The content with the ID: ""%1"" doesn't exist."
 "The content with the Identifier: ""%1"" doesn't exist.","The content with the Identifier: ""%1"" doesn't exist."
 "Could not delete the content: %1","Could not delete the content: %1"
-Draft,Draft
 Autosave,Autosave
 Revision,Revision
 "Could not save the revision: %1","Could not save the revision: %1"
 "Invalid revision status: %1","Invalid revision status: %1"
+"Save message must be specified.","Save message must be specified."
 "The revision with the ""%1"" ID doesn't exist.","The revision with the ""%1"" ID doesn't exist."
+"The revision with the ""%1"" hash doesn't exist.","The revision with the ""%1"" hash doesn't exist."
 "Could not delete the revision: %1","Could not delete the revision: %1"
+"Nothing to import","Nothing to import"
 "Invalid content Id","Invalid content Id"
 "Invalid access token.","Invalid access token."
 "Something went wrong.","Something went wrong."
-"Nothing to import","Nothing to import"
-"Invalid sample model","Invalid sample model"
-Luma,Luma
+"Invalid status %1","Invalid status %1"
+"Wrong content saving method.","Wrong content saving method."
 "Page Builder content's not found.","Page Builder content's not found."
+"This action does't allow.","This action does't allow."
 editable_title,editable_title
-Enter,Enter
 Editor,Editor
 "Delete %1","Delete %1"
 "Are you sure you want to delete a `%1`?","Are you sure you want to delete a `%1`?"
 "All Store Views","All Store Views"
-"Sample name","Sample name"
 Templates,Templates
 Actions,Actions
 "Import All","Import All"
 File,File
 "Accepted: JSON files","Accepted: JSON files"
 Loading,Loading
-"Loading ...","Loading ..."
-"Save and Refresh","Save and Refresh"
-"What's new?","What's new?"
-Close,Close
 "Add New Section","Add New Section"
 "Add Template","Add Template"
 "Drag widget here","Drag widget here"
@@ -617,24 +813,27 @@ Quit,Quit
 Skip,Skip
 "Easy Navigation is Here!","Easy Navigation is Here!"
 "Once you fill your page with content, this window will give you an overview display of all the page elements. This way, you can easily move around any section, column, or widget.","Once you fill your page with content, this window will give you an overview display of all the page elements. This way, you can easily move around any section, column, or widget."
-Menu,Menu
 "Widgets Panel","Widgets Panel"
+"Widget List","Widget List"
+"Toggle View","Toggle View"
+"Page Settings","Page Settings"
+"History & Revision","History & Revision"
 Desktop,Desktop
-"Default Preview","Default Preview"
-"Preview for %1","Preview for %1"
 "Preview Changes","Preview Changes"
-Publish,Publish
+Saved,Saved
 "Save Options","Save Options"
 "Save as Template","Save as Template"
+"Global Settings","Global Settings"
+"Back To Magento","Back To Magento"
 "Hide Panel","Hide Panel"
 "Update changes to page","Update changes to page"
 "%s are disabled","%s are disabled"
 "Thanks for using Goomento PageBuilder","Thanks for using Goomento PageBuilder"
+"What's new?","What's new?"
 "Search Widget:","Search Widget:"
 "Search Widget...","Search Widget..."
 "Drag & Drop","Drag & Drop"
 "No Revisions Saved Yet","No Revisions Saved Yet"
-By,By
 Current,Current
 "Import Template","Import Template"
 "Sync Library","Sync Library"
@@ -645,12 +844,10 @@ Popular,Popular
 "My Favorites","My Favorites"
 "Search Templates:","Search Templates:"
 Search,Search
-Name,Name
 "Created By","Created By"
 "Creation Date","Creation Date"
 "Stay tuned! More awesome templates coming real soon.","Stay tuned! More awesome templates coming real soon."
 Favorite,Favorite
-Preview,Preview
 Insert,Insert
 "More actions","More actions"
 "Enter Template Name","Enter Template Name"
@@ -658,7 +855,32 @@ Insert,Insert
 "Drag & drop your .JSON or .zip template file","Drag & drop your .JSON or .zip template file"
 or,or
 "Select File","Select File"
+"Loading ...","Loading ..."
+Find,Find
+Replace,Replace
+"Latest Release:","Latest Release:"
+Version,Version
+"Release Note","Release Note"
+"Download now","Download now"
+Previous,Previous
+Next,Next
+"Invalid URL.","Invalid URL."
+"In stock","In stock"
+"Out of stock","Out of stock"
+"Add to Wish List","Add to Wish List"
 "Play Video","Play Video"
+"Migrate Now","Migrate Now"
+"Create New","Create New"
+"Edit With Goomento","Edit With Goomento"
+By,By
+Shortcode,Shortcode
+"Click To Choose","Click To Choose"
+"WYSIWYG Editor","WYSIWYG Editor"
+"We Found The Content Did Not Compatible With Goomento! Please Select Actions Below.","We Found The Content Did Not Compatible With Goomento! Please Select Actions Below."
+"Please Select Actions Below.","Please Select Actions Below."
+"Content Changed, Save This Before Continue!","Content Changed, Save This Before Continue!"
+"Deactivate Builder Assistance","Deactivate Builder Assistance"
+"Deactivate WYSIWYG","Deactivate WYSIWYG"
 "Edit %1","Edit %1"
 "Paste style","Paste style"
 "Reset style","Reset style"
@@ -688,9 +910,17 @@ got_it,got_it
 "Your browser isn't compatible","Your browser isn't compatible"
 "Your browser isn't compatible with all of Goomento's editing features. We recommend you switch to another browser like Chrome or Firefox.","Your browser isn't compatible with all of Goomento's editing features. We recommend you switch to another browser like Chrome or Firefox."
 "Proceed Anyway","Proceed Anyway"
+"Looks like there was some issue while displaying preview page.","Looks like there was some issue while displaying preview page."
+"Preview Page","Preview Page"
 "Go back or Refresh this page if issue is persistent","Go back or Refresh this page if issue is persistent"
 "My Libraries","My Libraries"
 Upload,Upload
+Help,Help
+"Go to","Go to"
+Shortcuts,Shortcuts
+"View page","View page"
+"Global style","Global style"
+"Default Colors","Default Colors"
 "Saving has been disabled until you’re reconnected.","Saving has been disabled until you’re reconnected."
 "Server error","Server error"
 "Your designs will be available for export and reuse on any page or website","Your designs will be available for export and reuse on any page or website"
@@ -698,6 +928,8 @@ Upload,Upload
 "Delete template","Delete template"
 "An error occurred","An error occurred"
 "The following error(s) occurred while processing the request:","The following error(s) occurred while processing the request:"
+Blocks,Blocks
+Pages,Pages
 "My Templates","My Templates"
 Library,Library
 Category,Category
@@ -715,27 +947,23 @@ Moved,Moved
 "Editing started","Editing started"
 "All content","All content"
 "Add New Column","Add New Column"
-"Have a look","Have a look"
-update,update
+"You Published The Change.","You Published The Change."
+"Revision This Change","Revision This Change"
+Saving,Saving
+Publish,Publish
+"Publish This Change","Publish This Change"
 "Are you sure you want to reset this gallery?","Are you sure you want to reset this gallery?"
 "Delete Gallery","Delete Gallery"
-Help,Help
-"Go to","Go to"
-Shortcuts,Shortcuts
-"View page","View page"
-"Global style","Global style"
-"Default Colors","Default Colors"
 "Global settings","Global settings"
 "Please note: All unsaved changes will be lost","Please note: All unsaved changes will be lost"
 "Saving Disabled","Saving Disabled"
 elements,elements
-preview,preview
-Shortcode,Shortcode
 "Color value","Color value"
 "Select Color","Select Color"
 "Select default color","Select default color"
 Clear,Clear
 "Clear color","Clear color"
+"Pages - Landing Pages","Pages - Landing Pages"
 Sections,Sections
 "Builder Actions","Builder Actions"
 Importer,Importer
@@ -743,21 +971,37 @@ Configuration,Configuration
 Active,Active
 "Download Image","Download Image"
 "Download Folder","Download Folder"
+"Builder Assistance","Builder Assistance"
+"Open In","Open In"
+Integrations,Integrations
+"Google Maps Embed API","Google Maps Embed API"
+"Facebook App Id","Facebook App Id"
+"Debug Mode","Debug Mode"
+"JS Debug Mode","JS Debug Mode"
 "Is RTL","Is RTL"
-"Css Print Method","Css Print Method"
-Render,Render
-Fallback,Fallback
+"Use Goomento As Apart Of Theme","Use Goomento As Apart Of Theme"
+Media,Media
+"URL for User Media Files","URL for User Media Files"
+"Use Inline Css","Use Inline Css"
+"Use Local Font","Use Local Font"
 "Pagebuilder Content","Pagebuilder Content"
 "Goomento Pagebuilder Content Caching","Goomento Pagebuilder Content Caching"
 "Page or Section","Page or Section"
-"Enable PageBuilder","Enable PageBuilder"
-"-- Please Select --","-- Please Select --"
+"Replace URLs","Replace URLs"
+"Replace the old URLs of element such as Image, Link ... to the new one.","Replace the old URLs of element such as Image, Link ... to the new one."
+"Global Css","Global Css"
+"Save and Refresh","Save and Refresh"
 "Edit Page","Edit Page"
+Enable,Enable
 Identifier,Identifier
 "Page Title","Page Title"
 "Store View","Store View"
 Data,Data
 "Content Data","Content Data"
+"Search Engine Optimization","Search Engine Optimization"
+"Meta Title","Meta Title"
+"Meta Keywords","Meta Keywords"
+"Meta Description","Meta Description"
 "Add New Page","Add New Page"
 "Delete Page(s)","Delete Page(s)"
 "Are you sure you wan't to delete selected items?","Are you sure you wan't to delete selected items?"

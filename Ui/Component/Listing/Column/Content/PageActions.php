@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Ui\Component\Listing\Column\Content;
 
 use Goomento\PageBuilder\Api\ContentRegistryInterface;
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
@@ -86,7 +87,8 @@ class PageActions extends Column
                                 'target' => '_blank'
                             ];
 
-                            if ($item['status'] === ContentInterface::STATUS_PUBLISHED) {
+                            if ($item['type'] === ContentInterface::TYPE_PAGE &&
+                                $item['status'] === BuildableContentInterface::STATUS_PUBLISHED) {
                                 $item[$name]['view'] = [
                                     'href' => UrlBuilderHelper::getPublishedContentUrl( $content ),
                                     'label' => __('View'),

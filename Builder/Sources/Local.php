@@ -16,12 +16,12 @@ use Goomento\PageBuilder\Builder\Base\AbstractSource;
 use Goomento\PageBuilder\Builder\Managers\PageSettings;
 use Goomento\PageBuilder\Builder\Settings\Page;
 use Goomento\PageBuilder\Configuration;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
-use Magento\Framework\Exception\LocalizedException;
 use Zend_Json;
 
 class Local extends AbstractSource
@@ -187,7 +187,7 @@ class Local extends AbstractSource
         /**
          * After template library save.
          *
-         * Fires after SagoTheme template library was saved.
+         * Fires after Goomento template library was saved.
          *
          *
          * @param int   $templateId   The ID of the template.
@@ -198,7 +198,7 @@ class Local extends AbstractSource
         /**
          * After template library update.
          *
-         * Fires after SagoTheme template library was updated.
+         * Fires after Goomento template library was updated.
          *
          *
          * @param int   $templateId   The ID of the template.
@@ -218,7 +218,7 @@ class Local extends AbstractSource
      * @param array $newData New template data.
      *
      * @return true
-     * @throws LocalizedException
+     * @throws Exception
      */
     public function updateItem(array $newData)
     {
@@ -227,9 +227,7 @@ class Local extends AbstractSource
         );
 
         if (!$document) {
-            throw new Exception(
-                'Template not exist.'
-            );
+            throw new BuilderException('Template not exist.');
         }
 
         $document->save([
@@ -239,7 +237,7 @@ class Local extends AbstractSource
         /**
          * After template library update.
          *
-         * Fires after SagoTheme template library was updated.
+         * Fires after Goomento template library was updated.
          *
          *
          * @param int   $newDataId The ID of the new template.

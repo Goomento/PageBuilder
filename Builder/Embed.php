@@ -162,6 +162,6 @@ class Embed
 
         $iframeHtml = "<iframe $attributesForPrint></iframe>";
 
-        return HooksHelper::applyFilters('oembed_result', $iframeHtml, $videoUrl, $frameAttributes);
+        return HooksHelper::applyFilters('oembed_result', $iframeHtml, $videoUrl, $frameAttributes)->getResult();
     }
 }

@@ -1014,11 +1014,10 @@ class Column extends AbstractElement
     {
         if ('section' === $elementData['elType']) {
             /** @var Elements $elements */
-            $elements = ObjectManagerHelper::get(Elements::class);
+            $elements = ObjectManagerHelper::getElementsManager();
             return $elements->getElementTypes('section');
         }
-        /** @var Widgets $widgets */
-        $widgets = ObjectManagerHelper::get(Widgets::class);
+        $widgets = ObjectManagerHelper::getWidgetsManager();
         return $widgets->getWidgetTypes($elementData['widgetType']);
     }
 

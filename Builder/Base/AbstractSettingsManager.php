@@ -34,7 +34,7 @@ abstract class AbstractSettingsManager extends AbstractEntity
     /**
      * Settings base manager constructor.
      *
-     * Initializing SagoTheme settings base manager.
+     * Initializing Goomento settings base manager.
      *
      */
     public function __construct()
@@ -129,7 +129,7 @@ abstract class AbstractSettingsManager extends AbstractEntity
          * @param int   $id                    Settings ID.
          * @param array $data                  Settings data.
          */
-        return HooksHelper::applyFilters("pagebuilder/settings/{$settingsName}/success_response_data", $successResponseData, $buildableContent, $data);
+        return HooksHelper::applyFilters("pagebuilder/settings/{$settingsName}/success_response_data", $successResponseData, $buildableContent, $data)->getResult();
     }
 
     /**
@@ -181,7 +181,7 @@ abstract class AbstractSettingsManager extends AbstractEntity
     }
 
     /**
-     * On SagoTheme init.
+     * On Goomento init.
      *
      * Add editor template for the settings
      *

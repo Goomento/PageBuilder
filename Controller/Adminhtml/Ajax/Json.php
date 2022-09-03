@@ -11,6 +11,7 @@ namespace Goomento\PageBuilder\Controller\Adminhtml\Ajax;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Traits\TraitHttpContentAction;
 use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\Exception\LocalizedException;
 
 class Json extends AbstractAjax implements HttpPostActionInterface
 {
@@ -21,15 +22,30 @@ class Json extends AbstractAjax implements HttpPostActionInterface
      */
     public function execute()
     {
-        /**
-         * Start possessing ajax request
-         */
-        HooksHelper::doAction('pagebuilder/ajax/processing', $this->getContent(true), $this->getRequest()->getParams());
+        $response = [
+            'success' => false,
+            'data' => [],
+        ];
 
-        /**
-         * Get the responsed data
-         */
-        $response = (array) HooksHelper::applyFilters('pagebuilder/ajax/return_data', [], $this->getContent(true));
+        try {
+            /**
+             * Start possessing ajax request
+             */
+            HooksHelper::doAction('pagebuilder/ajax/processing', $this->getContent(true), $this->getRequest()->getParams());
+
+            /**
+             * Get the responded data
+             */
+            $response = (array) HooksHelper::applyFilters(
+                'pagebuilder/ajax/return_data',
+                [],
+                $this->getContent(true)
+            )->getResult();
+        } catch (LocalizedException $e) {
+            $response['data'] = $e->getMessage();
+        } catch (\Exception $e) {
+            $response['data'] = (string) __('Something went wrong when render your action.');
+        }
 
         return $this->setResponseData($response)->sendResponse();
     }

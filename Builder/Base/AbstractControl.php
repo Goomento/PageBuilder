@@ -33,7 +33,7 @@ abstract class AbstractControl extends AbstractBase
     /**
      * Get features.
      *
-     * Retrieve the list of all the available features. Currently SagoTheme uses only
+     * Retrieve the list of all the available features. Currently Goomento uses only
      * the `UI` feature.
      *
      *

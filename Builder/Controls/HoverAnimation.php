@@ -72,7 +72,7 @@ class HoverAnimation extends AbstractControlData
              *
              * @param array $additionalAnimations Additional Animations array.
              */
-            $additionalAnimations = HooksHelper::applyFilters('pagebuilder/controls/hover_animations/additional_animations', $additionalAnimations);
+            $additionalAnimations = HooksHelper::applyFilters('pagebuilder/controls/hover_animations/additional_animations', $additionalAnimations)->getResult();
             self::$_animations = array_merge(self::$_animations, $additionalAnimations);
         }
 

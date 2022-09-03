@@ -58,6 +58,7 @@ trait TraitHttpContentAction
      * @param $inLastRevision
      * @return string|null
      * @throws LocalizedException
+     * @TODO should check this
      */
     protected function getContentLayout($inLastRevision = false)
     {

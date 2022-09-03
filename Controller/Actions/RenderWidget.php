@@ -9,10 +9,9 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Controller\Actions;
 
 use Goomento\PageBuilder\Helper\HooksHelper;
-use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Model\BetterCaching;
+use Goomento\PageBuilder\Model\ContentDataProcessor;
 use Goomento\PageBuilder\Model\ContentRegistry;
-use Goomento\PageBuilder\PageBuilder;
 use Magento\Cms\Model\Template\FilterProvider;
 use Magento\Framework\View\Result\PageFactory;
 
@@ -40,24 +39,31 @@ class RenderWidget extends AbstractActions
      * @var ContentRegistry
      */
     private $contentRegistry;
+    /**
+     * @var ContentDataProcessor
+     */
+    private $contentDataProcessor;
 
     /**
      * @param PageFactory $pageFactory
      * @param FilterProvider $filterProvider
      * @param BetterCaching $betterCaching
      * @param ContentRegistry $contentRegistry
+     * @param ContentDataProcessor $contentDataProcessor
      */
     public function __construct(
         PageFactory $pageFactory,
         FilterProvider $filterProvider,
         BetterCaching $betterCaching,
-        ContentRegistry $contentRegistry
+        ContentRegistry $contentRegistry,
+        ContentDataProcessor $contentDataProcessor
     )
     {
         $this->pageFactory = $pageFactory;
         $this->filterProvider = $filterProvider;
         $this->betterCaching = $betterCaching;
         $this->contentRegistry = $contentRegistry;
+        $this->contentDataProcessor = $contentDataProcessor;
     }
 
     /**
@@ -67,7 +73,7 @@ class RenderWidget extends AbstractActions
     {
         if (false === $this->init) {
             $this->init = true;
-            PageBuilder::initialize();
+            HooksHelper::doAction('pagebuilder/editor/render_widget');
             // Fixed issue when render widget that requires loaded element from XML
             $this->pageFactory->create();
         }
@@ -80,20 +86,11 @@ class RenderWidget extends AbstractActions
     public function doAction($actionData, $params = [])
     {
         $collect = function () use ($actionData, $params) {
-
             $this->init();
-
-            HooksHelper::doAction('pagebuilder/editor/render_widget');
-
             $contentId = (int) $params['content_id'];
-
             $result = '';
-
             if ($contentId && $content = $this->contentRegistry->getById($contentId)) {
-                $documentManager = ObjectManagerHelper::getDocumentsManager();
-
-                $document = $documentManager->getByContent( $content );
-                $result = $document->renderElement($actionData['data']);
+                $result = $this->contentDataProcessor->getElementHtml($content, (array) $actionData['data']);
 
                 if (!empty($result)) {
                     $result = $this->filterProvider->getBlockFilter()->filter($result);

@@ -218,12 +218,12 @@ class Shapes
         /**
          * Additional shapes.
          *
-         * Filters the shapes used by SagoTheme to add additional shapes.
+         * Filters the shapes used by Goomento to add additional shapes.
          *
          *
-         * @param array $additionalShapes Additional SagoTheme shapes.
+         * @param array $additionalShapes Additional Goomento shapes.
          */
-        return HooksHelper::applyFilters('pagebuilder/shapes/additional_shapes', $additionalShapes);
+        return HooksHelper::applyFilters('pagebuilder/shapes/additional_shapes', $additionalShapes)->getResult();
     }
 
     /**

@@ -65,6 +65,9 @@ class Banner extends AbstractWidget
             $args + [
                 'label' => __('Choose Image'),
                 'type' => Controls::MEDIA,
+                'dynamic' => [
+                    'active' => true,
+                ],
                 'default' => [
                     'url' => DataHelper::getPlaceholderImageSrc(),
                 ],

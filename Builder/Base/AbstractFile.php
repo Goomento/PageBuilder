@@ -69,7 +69,7 @@ abstract class AbstractFile extends AbstractEntity
     public function __construct($fileName)
     {
         /**
-         * SagoTheme File Name
+         * Goomento File Name
          *
          * Filters the File name
          *
@@ -77,7 +77,7 @@ abstract class AbstractFile extends AbstractEntity
          * @param string   $fileName
          * @param object $this The file instance, which inherits Goomento\PageBuilder\Core\Files
          */
-        $fileName = HooksHelper::applyFilters('pagebuilder/files/file_name', $fileName, $this);
+        $fileName = HooksHelper::applyFilters('pagebuilder/files/file_name', $fileName, $this)->getResult();
 
         $this->setFileName($fileName);
 

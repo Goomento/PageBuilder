@@ -12,6 +12,8 @@ use Exception;
 use Goomento\PageBuilder\Builder\DynamicTags\DataConfig;
 use Goomento\PageBuilder\Builder\DynamicTags\Urls;
 use Goomento\PageBuilder\Builder\DynamicTags\Images;
+use Goomento\PageBuilder\Builder\DynamicTags\CmsBlocks;
+use Goomento\PageBuilder\Builder\DynamicTags\CmsPages;
 use Goomento\PageBuilder\Builder\Modules\Ajax;
 use Goomento\PageBuilder\Builder\Base\AbstractBaseTag;
 use Goomento\PageBuilder\Builder\Base\AbstractTag;
@@ -35,6 +37,10 @@ class Tags
      * Dynamic tags text category.
      */
     public const TEXT_CATEGORY = 'text';
+    /**
+     * Dynamic tags WYSIWYG category.
+     */
+    public const WYSIWYG_CATEGORY = 'wysiwyg';
     /**
      * Dynamic tags URL category.
      */
@@ -66,7 +72,7 @@ class Tags
     /**
      * Dynamic tags manager constructor.
      *
-     * Initializing SagoTheme dynamic tags manager.
+     * Initializing Goomento dynamic tags manager.
      *
      */
     public function __construct()
@@ -255,7 +261,7 @@ class Tags
             /**
              * Register dynamic tags.
              *
-             * Fires when SagoTheme registers dynamic tags.
+             * Fires when Goomento registers dynamic tags.
              *
              *
              * @param Tags $this Dynamic tags manager.
@@ -349,7 +355,7 @@ class Tags
         /**
          * Before dynamic tags rendered.
          *
-         * Fires before SagoTheme renders the dynamic tags.
+         * Fires before Goomento renders the dynamic tags.
          *
          */
         HooksHelper::doAction('pagebuilder/dynamic_tags/before_render');
@@ -371,7 +377,7 @@ class Tags
         /**
          * After dynamic tags rendered.
          *
-         * Fires after SagoTheme renders the dynamic tags.
+         * Fires after Goomento renders the dynamic tags.
          *
          */
         HooksHelper::doAction('pagebuilder/dynamic_tags/after_render');
@@ -417,6 +423,8 @@ class Tags
             DataConfig::NAME => DataConfig::class,
             Urls::NAME => Urls::class,
             Images::NAME => Images::class,
+            CmsBlocks::NAME => CmsBlocks::class,
+            CmsPages::NAME => CmsPages::class,
         ];
     }
 
@@ -439,6 +447,9 @@ class Tags
             ],
             self::TEXT_CATEGORY => [
                 'title' => __('Text'),
+            ],
+            self::WYSIWYG_CATEGORY => [
+                'title' => __('WYSIWYG'),
             ],
             self::IMAGE_CATEGORY => [
                 'title' => __('Image'),

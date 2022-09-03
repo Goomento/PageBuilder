@@ -95,7 +95,7 @@ class ImageSizeGroup extends AbstractControlGroup
          *                               is null. If not defined uses image size key
          *                               as the image key.
          */
-        return HooksHelper::applyFilters('pagebuilder/image_size/get_attachment_image_html', $html, $settings, $imageKey, $imageKey);
+        return HooksHelper::applyFilters('pagebuilder/image_size/get_attachment_image_html', $html, $settings, $imageKey, $imageKey)->getResult();
     }
 
     /**

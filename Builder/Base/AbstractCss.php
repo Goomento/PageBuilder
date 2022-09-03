@@ -25,21 +25,21 @@ abstract class AbstractCss extends AbstractFile
 {
 
     /**
-     * SagoTheme CSS file generated status.
+     * Goomento CSS file generated status.
      *
      * The parsing result after generating CSS file.
      */
     const CSS_STATUS_FILE = 'file';
 
     /**
-     * SagoTheme inline CSS status.
+     * Goomento inline CSS status.
      *
      * The parsing result after generating inline CSS.
      */
     const CSS_STATUS_INLINE = 'inline';
 
     /**
-     * SagoTheme CSS empty status.
+     * Goomento CSS empty status.
      *
      * The parsing result when an empty CSS returned.
      */
@@ -78,7 +78,7 @@ abstract class AbstractCss extends AbstractFile
     /**
      * CSS file constructor.
      *
-     * Initializing SagoTheme CSS file.
+     * Initializing Goomento CSS file.
      *
      */
     public function __construct($fileName)
@@ -149,7 +149,7 @@ abstract class AbstractCss extends AbstractFile
     /**
      * Enqueue CSS.
      *
-     * Either enqueue the CSS file in SagoTheme or add inline style.
+     * Either enqueue the CSS file in Goomento or add inline style.
      *
      * This method is also responsible for loading the fonts.
      *
@@ -223,7 +223,7 @@ abstract class AbstractCss extends AbstractFile
         /**
          * Enqueue CSS file.
          *
-         * Fires when CSS file is enqueued on SagoTheme.
+         * Fires when CSS file is enqueued on Goomento.
          *
          * The dynamic portion of the hook name, `$name`, refers to the CSS file name.
          *
@@ -560,7 +560,7 @@ abstract class AbstractCss extends AbstractFile
         /**
          * Parse CSS file.
          *
-         * Fires when CSS file is parsed on SagoTheme.
+         * Fires when CSS file is parsed on Goomento.
          *
          * The dynamic portion of the hook name, `$name`, refers to the CSS file name.
          *

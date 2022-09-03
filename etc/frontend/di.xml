@@ -17,4 +17,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Framework\View\Page\Config\RendererInterface">
+        <plugin name="fixMultipleMagentoVersion" type="Goomento\PageBuilder\Plugin\Framework\View\Page\MagentoVersionCompatible" />
+    </type>
 </config>

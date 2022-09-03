@@ -83,7 +83,7 @@ abstract class ControlsStack extends AbstractBase
     /**
      * The configuration.
      *
-     * Holds the configuration used to generate the SagoTheme editor. It includes
+     * Holds the configuration used to generate the Goomento editor. It includes
      * the element name, icon, categories, etc.
      *
      *
@@ -1199,7 +1199,7 @@ abstract class ControlsStack extends AbstractBase
         /**
          * Before section start.
          *
-         * Fires before SagoTheme section starts in the editor panel.
+         * Fires before Goomento section starts in the editor panel.
          *
          *
          * @param ControlsStack $this       The control.
@@ -1211,7 +1211,7 @@ abstract class ControlsStack extends AbstractBase
         /**
          * Before section start.
          *
-         * Fires before SagoTheme section starts in the editor panel.
+         * Fires before Goomento section starts in the editor panel.
          *
          * The dynamic portions of the hook name, `$sectionName` and `$sectionId`, refers to the section name and section ID, respectively.
          *
@@ -1238,7 +1238,7 @@ abstract class ControlsStack extends AbstractBase
         /**
          * After section start.
          *
-         * Fires after SagoTheme section starts in the editor panel.
+         * Fires after Goomento section starts in the editor panel.
          *
          *
          * @param ControlsStack $this       The control.
@@ -1250,7 +1250,7 @@ abstract class ControlsStack extends AbstractBase
         /**
          * After section start.
          *
-         * Fires after SagoTheme section starts in the editor panel.
+         * Fires after Goomento section starts in the editor panel.
          *
          * The dynamic portions of the hook name, `$sectionName` and `$sectionId`, refers to the section name and section ID, respectively.
          *
@@ -1284,7 +1284,7 @@ abstract class ControlsStack extends AbstractBase
         /**
          * Before section end.
          *
-         * Fires before SagoTheme section ends in the editor panel.
+         * Fires before Goomento section ends in the editor panel.
          *
          *
          * @param ControlsStack $this       The control.
@@ -1296,7 +1296,7 @@ abstract class ControlsStack extends AbstractBase
         /**
          * Before section end.
          *
-         * Fires before SagoTheme section ends in the editor panel.
+         * Fires before Goomento section ends in the editor panel.
          *
          * The dynamic portions of the hook name, `$stackName` and `$sectionId`, refers to the stack name and section ID, respectively.
          *
@@ -1311,7 +1311,7 @@ abstract class ControlsStack extends AbstractBase
         /**
          * After section end.
          *
-         * Fires after SagoTheme section ends in the editor panel.
+         * Fires after Goomento section ends in the editor panel.
          *
          *
          * @param ControlsStack $this       The control.
@@ -1323,7 +1323,7 @@ abstract class ControlsStack extends AbstractBase
         /**
          * After section end.
          *
-         * Fires after SagoTheme section ends in the editor panel.
+         * Fires after Goomento section ends in the editor panel.
          *
          * The dynamic portions of the hook name, `$stackName` and `$sectionId`, refers to the section name and section ID, respectively.
          *
@@ -1515,7 +1515,7 @@ abstract class ControlsStack extends AbstractBase
          * @param string         $contentTemplate The controls stack template in the editor.
          * @param ControlsStack $this             The controls stack.
          */
-        $templateContent = HooksHelper::applyFilters("pagebuilder/{$elementType}/print_template", $templateContent, $this);
+        $templateContent = HooksHelper::applyFilters("pagebuilder/{$elementType}/print_template", $templateContent, $this)->getResult();
 
         if (empty($templateContent)) {
             return;

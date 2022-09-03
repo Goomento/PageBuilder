@@ -37,14 +37,14 @@ class EncryptorHelper
      * Token will be expired in 3 hours
      * @param BuildableContentInterface $content
      * @param int|null $userId
-     * @param int|null $timeExpired
+     * @param int|null $timeExpired Time expire in second
      * @return string
      */
     public static function createAccessToken(BuildableContentInterface $content, ?int $userId = 0, ?int $timeExpired = self::DEFAULT_EXPIRED_SECONDS)
     {
         $contentId = $content->getOriginContent()->getId();
-
-        $data = sprintf('c_%s_u_%s_t_%s', $contentId, $userId, ($timeExpired ? time() + $timeExpired : 0));
+        $timeExpired = HooksHelper::applyFilters('pagebuilder/encryptor/time_expire', $timeExpired, $content)->getResult();
+        $data = sprintf('%s_%s_%s', $contentId, $userId, time() + $timeExpired);
         return self::encrypt($data);
     }
 
@@ -69,30 +69,22 @@ class EncryptorHelper
             $token = (string) RequestHelper::getParam(self::ACCESS_TOKEN);
         }
         $token = self::decrypt($token);
+
         if (!empty($token)) {
             $token = explode('_', $token);
-            $data = [];
-            for ($i = 0; ; $i++) {
-                if (!isset($token[$i+1])) {
-                    break;
-                }
-                $data[$token[$i]] = $token[$i+1];
-                ++$i;
-            }
+            list($tokenContentId, $tokenUserId, $tokenTime) = $token;
 
-            $createdTime = (int) $data['t'];
-            if (!$createdTime || $createdTime < time()) {
+            if (!$tokenTime || $tokenTime < time()) {
                 return false;
             }
 
-            if ($data['c'] == $content->getOriginContent()->getId()) {
-                if ($userId && $userId != $data['u']) {
+            if ($tokenContentId == $content->getOriginContent()->getId()) {
+                if ($userId && $tokenUserId != $userId) {
                     return false;
                 }
 
                 return true;
             }
-
         }
 
         return false;

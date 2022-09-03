@@ -106,7 +106,7 @@ class Icons
                 'fetchJson' => self::getFaAssetUrl('brands', 'json', false),
                 'native' => true,
             ],
-        ]);
+        ])->getResult();
     }
 
     /**
@@ -118,7 +118,7 @@ class Icons
         if (! self::$tabs) {
             self::initTabs();
         }
-        $additionalTabs = HooksHelper::applyFilters('pagebuilder/icons_manager/additional_tabs', []);
+        $additionalTabs = HooksHelper::applyFilters('pagebuilder/icons_manager/additional_tabs', [])->getResult();
         return array_merge(self::$tabs, $additionalTabs);
     }
 

@@ -11,7 +11,6 @@ namespace Goomento\PageBuilder;
 use Goomento\PageBuilder\Builder\Managers\Widgets;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
-use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 
 class EntryPoint extends BuilderRegister
@@ -53,16 +52,6 @@ class EntryPoint extends BuilderRegister
         );
 
         ThemeHelper::enqueueScript('pagebuilderRegister');
-
-        $magentoVersion = Configuration::magentoVersion();
-        if (!$magentoVersion || version_compare($magentoVersion, '2.4.4', '<')) {
-            // Use `underscore` by Goomento for the good fit
-            ThemeHelper::removeScripts('underscore');
-            ThemeHelper::registerScript(
-                'underscore',
-                'Goomento_PageBuilder/lib/underscore/underscore.min'
-            );
-        }
 
         ThemeHelper::registerScript(
             'backbone',

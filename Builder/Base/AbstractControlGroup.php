@@ -406,7 +406,7 @@ abstract class AbstractControlGroup extends AbstractEntity
      * Used to add the group prefix to controls with conditions, to
      * distinguish them from other controls with the same name.
      *
-     * This way SagoTheme can apply condition logic to a specific control in a
+     * This way Goomento can apply condition logic to a specific control in a
      * group control.
      *
      *
@@ -454,7 +454,7 @@ abstract class AbstractControlGroup extends AbstractEntity
      * Handle selectors.
      *
      * Used to process the CSS selector of group control fields. When using
-     * group control, SagoTheme needs to apply the selector to different fields.
+     * group control, Goomento needs to apply the selector to different fields.
      * This method handles the process.
      *
      * In addition, it handles selector values from other fields and process the

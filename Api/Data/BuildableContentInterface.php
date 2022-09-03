@@ -15,6 +15,8 @@ namespace Goomento\PageBuilder\Api\Data;
  * @method bool|null getIgnoreLabelFlag()
  * @method BuildableContentInterface setIsRefreshingAssetsFlag(bool $flag)
  * @method bool|null getIsRefreshingAssetsFlag()
+ * @method BuildableContentInterface setIsRenderingContentFlag(bool $flag)
+ * @method bool|null getIsRenderingContentFlag()
  */
 interface BuildableContentInterface
 {
@@ -33,9 +35,10 @@ interface BuildableContentInterface
     /**
      * Get elements
      *
+     * @param bool $forDisplay Add default config to elements
      * @return array
      */
-    public function getElements() : array;
+    public function getElements(bool $forDisplay = false) : array;
 
     /**
      * Set elements
@@ -160,21 +163,6 @@ interface BuildableContentInterface
      * @return string|null
      */
     public function getCreationTime();
-
-    /**
-     * Set renderer content
-     *
-     * @param string $content
-     * @return BuildableContentInterface
-     */
-    public function setRenderContent(string $content) : BuildableContentInterface;
-
-    /**
-     * Get renderer content
-     *
-     * @return string
-     */
-    public function getRenderContent() : string;
 
     /**
      * Get update time

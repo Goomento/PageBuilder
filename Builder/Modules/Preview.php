@@ -48,10 +48,12 @@ class Preview
      *
      * @param BuildableContentInterface $buildableContent The content of the builder.
      *
-     * @return BuildableContentInterface with HTML wrapper for the builder.
+     * @return string with HTML wrapper for the builder.
      */
     public function builderWrapper(BuildableContentInterface $buildableContent)
     {
+        $content = '';
+
         if ($buildableContent->getId()) {
 
             $documentManager = ObjectManagerHelper::getDocumentsManager();
@@ -64,10 +66,10 @@ class Preview
 
             $attributes['class'] .= ' gmt-edit-mode';
 
-            $buildableContent->setRenderContent('<div ' . DataHelper::renderHtmlAttributes($attributes) . '></div>');
+            $content = '<div ' . DataHelper::renderHtmlAttributes($attributes) . '></div>';
         }
 
-        return $buildableContent;
+        return $content;
     }
 
     /**
@@ -102,7 +104,7 @@ class Preview
         /**
          * Preview enqueue styles.
          *
-         * Fires after SagoTheme preview styles are enqueued.
+         * Fires after Goomento preview styles are enqueued.
          *
          */
         HooksHelper::doAction('pagebuilder/preview/enqueue_styles');
@@ -122,7 +124,7 @@ class Preview
         /**
          * Preview enqueue scripts.
          *
-         * Fires after SagoTheme preview scripts are enqueued.
+         * Fires after Goomento preview scripts are enqueued.
          *
          */
         HooksHelper::doAction('pagebuilder/preview/enqueue_scripts');

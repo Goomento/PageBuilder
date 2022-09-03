@@ -307,8 +307,8 @@ abstract class AbstractElement extends ControlsStack
         if (!$childType) {
             return false;
         }
-        /** @var Elements $elementsManager */
-        $elementsManager = ObjectManagerHelper::get(Elements::class);
+
+        $elementsManager = ObjectManagerHelper::getElementsManager();
         $child = $elementsManager->createElementInstance($childData, $childArgs, $childType);
 
         if ($child) {
@@ -513,7 +513,7 @@ abstract class AbstractElement extends ControlsStack
         /**
          * Before frontend element render.
          *
-         * Fires before SagoTheme element is rendered in the frontend.
+         * Fires before Goomento element is rendered in the frontend.
          *
          *
          * @param AbstractElement $this The element.
@@ -523,7 +523,7 @@ abstract class AbstractElement extends ControlsStack
         /**
          * Before frontend element render.
          *
-         * Fires before SagoTheme element is rendered in the frontend.
+         * Fires before Goomento element is rendered in the frontend.
          *
          * The dynamic portion of the hook name, `$elementType`, refers to the element type.
          *
@@ -547,7 +547,7 @@ abstract class AbstractElement extends ControlsStack
          * @param bool true The element.
          * @param AbstractElement $this The element.
          */
-        $shouldRender = HooksHelper::applyFilters("pagebuilder/frontend/{$elementType}/should_render", $shouldRender, $this);
+        $shouldRender = HooksHelper::applyFilters("pagebuilder/frontend/{$elementType}/should_render", $shouldRender, $this)->getResult();
 
         if ($shouldRender) {
             $this->_addRenderAttributes();
@@ -563,7 +563,7 @@ abstract class AbstractElement extends ControlsStack
         /**
          * After frontend element render.
          *
-         * Fires after SagoTheme element is rendered in the frontend.
+         * Fires after Goomento element is rendered in the frontend.
          *
          * The dynamic portion of the hook name, `$elementType`, refers to the element type.
          *
@@ -575,7 +575,7 @@ abstract class AbstractElement extends ControlsStack
         /**
          * After frontend element render.
          *
-         * Fires after SagoTheme element is rendered in the frontend.
+         * Fires after Goomento element is rendered in the frontend.
          *
          *
          * @param AbstractElement $this The element.
@@ -601,7 +601,7 @@ abstract class AbstractElement extends ControlsStack
      * Retrieve the raw element data, including the id, type, settings, child
      * elements and whether it is an inner element.
      *
-     * The data with the HTML used always to display the data, but the SagoTheme
+     * The data with the HTML used always to display the data, but the Goomento
      * editor uses the raw data without the HTML in order not to render the data
      * again.
      *
@@ -635,7 +635,7 @@ abstract class AbstractElement extends ControlsStack
      * Get unique selector.
      *
      * Retrieve the unique selector of the element. Used to set a unique HTML
-     * class for each HTML element. This way SagoTheme can set custom styles for
+     * class for each HTML element. This way Goomento can set custom styles for
      * each element.
      *
      *
@@ -808,7 +808,7 @@ abstract class AbstractElement extends ControlsStack
          * @param array        $elementData The original element ID.
          * @param AbstractElement $this         The original element.
          */
-        return HooksHelper::applyFilters('pagebuilder/element/get_child_type', $childType, $elementData, $this);
+        return HooksHelper::applyFilters('pagebuilder/element/get_child_type', $childType, $elementData, $this)->getResult();
     }
 
     /**
@@ -848,11 +848,12 @@ abstract class AbstractElement extends ControlsStack
      * Set buildable content, which available in template only
      *
      * @param BuildableContentInterface|null $buildableContent
-     * @return BuildableContentInterface|null
+     * @return AbstractElement
      */
     public function setBuildableContent(?BuildableContentInterface $buildableContent = null)
     {
-        return $this->buildableContent = $buildableContent;
+        $this->buildableContent = $buildableContent;
+        return $this;
     }
 
     /**
@@ -861,7 +862,7 @@ abstract class AbstractElement extends ControlsStack
      * Initializing the element base class using `$data` and `$args`.
      *
      * The `$data` parameter is required for a normal instance because of the
-     * way SagoTheme renders data when initializing elements.
+     * way Goomento renders data when initializing elements.
      *
      *
      * @param array      $data Optional. Element data. Default is an empty array.

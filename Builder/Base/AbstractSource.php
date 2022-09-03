@@ -118,11 +118,11 @@ abstract class AbstractSource extends AbstractEntity
     /**
      * Replace elements IDs.
      *
-     * For any given SagoTheme content/data, replace the IDs with new randomly
+     * For any given Goomento content/data, replace the IDs with new randomly
      * generated IDs.
      *
      *
-     * @param array $contentData Any type of SagoTheme data.
+     * @param array $contentData Any type of Goomento data.
      *
      * @return mixed Iterated data.
      */
