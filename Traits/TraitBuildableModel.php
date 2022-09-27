@@ -8,15 +8,30 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Traits;
 
+use Exception;
+use Goomento\PageBuilder\Api\ContentRegistryInterface;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\User\Model\UserFactory;
 
 trait TraitBuildableModel
 {
+    /**
+     * Flag storage
+     *
+     * @var array
+     */
+    protected $flags = [];
+
+    /**
+     * @var DateTime|null
+     */
+    protected $dateTime;
+
     /**
      * @inheridoc
      */
@@ -49,10 +64,46 @@ trait TraitBuildableModel
     {
         $elements = (array) $this->getData(self::ELEMENTS);
         if ($forDisplay === true) {
-//            return $elements;
+//            return $elements; // TODO implement late
         }
 
         return $elements;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setFlag(string $key, $value)
+    {
+        $this->flags[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFlag(string $key)
+    {
+        return $this->flags[$key] ?? null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasFlag(string $key)
+    {
+        return array_key_exists($key, $this->flags);
+    }
+
+    /**
+     * @return $this
+     */
+    public function removeFlag(string $key)
+    {
+        if ($this->hasFlag($key)) {
+            unset($this->flags[$key]);
+        }
+        return $this;
     }
 
     /**
@@ -92,7 +143,7 @@ trait TraitBuildableModel
                 $this->author = $userFactory->create()->load(
                     $this->getAuthorId()
                 );
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
             }
         }
 
@@ -114,7 +165,6 @@ trait TraitBuildableModel
     {
         return $this->setData(self::SETTINGS, $settings);
     }
-
 
     /**
      * @inheridoc
@@ -202,7 +252,8 @@ trait TraitBuildableModel
      */
     public function getUniqueIdentity(): string
     {
-        return implode('_', $this->getIdentities());
+        $key = md5(implode('_', $this->getIdentities()));
+        return substr($key, 0, 6);
     }
 
     /**
@@ -235,7 +286,6 @@ trait TraitBuildableModel
                 }
             }
         }
-
         return $result;
     }
 
@@ -249,12 +299,16 @@ trait TraitBuildableModel
                 __('Wrong content saving method.')
             );
         }
-        /** @var \Magento\Framework\Stdlib\DateTime\DateTime $datetime */
-        $datetime = ObjectManager::getInstance()->get(\Magento\Framework\Stdlib\DateTime\DateTime::class);
-        if (!$this->getCreationTime()) {
-            $this->setCreationTime($datetime->gmtDate());
+
+        if ($this->dateTime === null) {
+            $this->dateTime = ObjectManager::getInstance()->get(DateTime::class);
         }
-        $this->setUpdateTime($datetime->gmtDate());
+
+        if (!$this->getCreationTime()) {
+            $this->setCreationTime($this->dateTime->gmtDate());
+        }
+
+        $this->setUpdateTime($this->dateTime->gmtDate());
         return parent::beforeSave();
     }
 }

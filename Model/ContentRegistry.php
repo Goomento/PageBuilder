@@ -169,7 +169,7 @@ class ContentRegistry implements ContentRegistryInterface
                 /** @var Content $content */
                 $content = $this->contentFactory->create();
                 $content->setData($data);
-                $content->setIsCaching(true);
+                $content->setFlag('is_caching', true);
                 $content->setOrigData();
                 $content->setHasDataChanges(false);
                 $content->afterLoad();

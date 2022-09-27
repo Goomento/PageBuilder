@@ -46,7 +46,7 @@ class ContentDataProcessor
         foreach ($this->isProcessing as $model) {
             if ($model->getUniqueIdentity() === $key) {
                 throw new LocalizedException(
-                    __('Page Builder renderer lopping detected')
+                    __('Page Builder renderer looping detected')
                 );
             }
         }
@@ -91,7 +91,7 @@ class ContentDataProcessor
 
             PageBuilder::initialize();
 
-            $this->elements[$key] = HooksHelper::applyFilters('pagebuilder/documents/render_element',
+            $this->elements[$key] = HooksHelper::applyFilters('pagebuilder/document/render_element',
                 $content, $data)->getResult();
         }
 

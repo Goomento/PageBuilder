@@ -50,7 +50,7 @@ class ProcessRefreshBuildableContentObserver implements ObserverInterface
             /** @var $content BuildableContentInterface */
             $content = $observer->getEvent()->getObject();
 
-            if ($content instanceof BuildableContentInterface && $content->getIsRefreshingAssetsFlag() !== true) {
+            if ($content instanceof BuildableContentInterface && $content->getFlag('is_refreshing_assets') !== true) {
                 $this->buildableContentManagement->refreshBuildableContentAssets($content);
             }
         } catch (\Exception $e) {

@@ -753,7 +753,7 @@ Management,Management
 Iframe,Iframe
 Pending,Pending
 Published,Published
-"Page Builder renderer lopping detected","Page Builder renderer lopping detected"
+"Page Builder renderer looping detected","Page Builder renderer lopping detected"
 "File does not exited: %1","File does not exited: %1"
 "Could not save the page: %1","Could not save the page: %1"
 "Invalid content identifier: Same identifier with ""%1"".","Invalid content identifier: Same identifier with ""%1""."

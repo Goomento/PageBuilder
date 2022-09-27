@@ -10,15 +10,19 @@ namespace Goomento\PageBuilder\Builder\Managers;
 
 use Exception;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
+use Goomento\PageBuilder\Builder\Css\ContentCss;
+use Goomento\PageBuilder\Builder\Css\GlobalCss;
 use Goomento\PageBuilder\Builder\Sources\Local;
 use Goomento\PageBuilder\Builder\Base\AbstractDocument;
 use Goomento\PageBuilder\Builder\Modules\Ajax;
 use Goomento\PageBuilder\Builder\DocumentTypes\Page;
 use Goomento\PageBuilder\Builder\DocumentTypes\Section;
 use Goomento\PageBuilder\Builder\DocumentTypes\Template;
+use Goomento\PageBuilder\Helper\ConfigHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Model\Config;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 
@@ -53,8 +57,50 @@ class Documents
     public function __construct()
     {
         HooksHelper::addAction('pagebuilder/documents/register', [ $this, 'registerDefaultTypes' ], 0);
-        HooksHelper::addAction('pagebuilder/documents/render_element', [ $this, 'renderElement' ], 0);
+        HooksHelper::addFilter('pagebuilder/document/render_element', [ $this, 'renderElement' ], 0);
+        HooksHelper::addAction('pagebuilder/document/update_css', [ $this, 'updateCss' ], 0);
+        HooksHelper::addAction('pagebuilder/documents/update_css', [ $this, 'updateGlobalCss' ], 0);
         HooksHelper::addAction('pagebuilder/ajax/register_actions', [ $this, 'registerAjaxActions' ]);
+    }
+
+    /**
+     * Update global Css
+     * @return void
+     */
+    public function updateGlobalCss()
+    {
+        ConfigHelper::setValue(Config::CSS_UPDATED_TIME, time());
+        $globalCss = new GlobalCss();
+        $globalCss->update();
+    }
+
+    /**
+     * Update content Css
+     *
+     * @return void
+     */
+    public function updateCss(BuildableContentInterface $buildableContent)
+    {
+        if ($buildableContent->getFlag('is_refreshing_assets') === true) {
+            return;
+        }
+
+        $buildableContent
+            ->setFlag('direct_save', true)
+            ->setFlag('is_refreshing_assets', true);
+
+        $buildableContent->setSetting('css/' . Config::CSS_UPDATED_TIME, 0);
+
+        BuildableContentHelper::saveBuildableContent($buildableContent);
+
+        $buildableContent->setDataChanges(false);
+
+        $css = new ContentCss( $buildableContent );
+        $css->update();
+
+        $buildableContent
+            ->removeFlag('direct_save')
+            ->removeFlag('is_refreshing_assets');
     }
 
     /**

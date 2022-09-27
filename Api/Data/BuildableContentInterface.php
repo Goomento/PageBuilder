@@ -11,12 +11,10 @@ namespace Goomento\PageBuilder\Api\Data;
 /**
  * @method BuildableContentInterface getData($key, $value = null)
  * @method mixed setData()
- * @method BuildableContentInterface setIgnoreLabelFlag(bool $flag)
- * @method bool|null getIgnoreLabelFlag()
- * @method BuildableContentInterface setIsRefreshingAssetsFlag(bool $flag)
- * @method bool|null getIsRefreshingAssetsFlag()
- * @method BuildableContentInterface setIsRenderingContentFlag(bool $flag)
- * @method bool|null getIsRenderingContentFlag()
+ * @method BuildableContentInterface setFlag($key, $value)
+ * @method mixed getFlag()
+ * @method bool hasFlag()
+ * @method BuildableContentInterface removeFlag()
  */
 interface BuildableContentInterface
 {

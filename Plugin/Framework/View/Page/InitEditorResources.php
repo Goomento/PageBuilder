@@ -50,7 +50,7 @@ class InitEditorResources
      * @param $result
      * @return string
      */
-    public function afterRenderHeadContent(?RendererInterface $subject, $result)
+    public function afterRenderHeadContent(RendererInterface $subject, $result)
     {
         if (is_string($result)) {
             try {
@@ -76,7 +76,7 @@ class InitEditorResources
         $requirejsUrl = $this->assetRepository->getUrlWithParams('Goomento_PageBuilder/lib/requirejs/require.min.js', $params);
         $html = sprintf('<script src="%s"></script>', $requirejsUrl);
         $cssPrefix = DataHelper::isCssMinifyFilesEnabled() ? '.min' : '';
-        foreach (['css/styles', 'Goomento_Core::css/style-m'] as $file) {
+        foreach (['css/styles', 'jquery/jstree/themes/default/style', 'Goomento_Core::css/style-m'] as $file) {
             $cssUrl = $this->assetRepository->getUrlWithParams($file . $cssPrefix . '.css', $params);
             $html .= sprintf('<link rel="stylesheet" href="%s" />', $cssUrl);
         }

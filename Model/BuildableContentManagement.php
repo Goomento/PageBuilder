@@ -16,10 +16,9 @@ use Goomento\PageBuilder\Api\ContentRepositoryInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Api\RevisionRepositoryInterface;
 use Goomento\PageBuilder\Api\ConfigInterface;
-use Goomento\PageBuilder\Builder\Css\ContentCss;
-use Goomento\PageBuilder\Builder\Css\GlobalCss;
 use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
+use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\AdminUser;
 use Goomento\PageBuilder\PageBuilder;
@@ -164,32 +163,11 @@ class BuildableContentManagement implements BuildableContentManagementInterface
      */
     public function refreshBuildableContentAssets(BuildableContentInterface $buildableContent)
     {
-        if ($buildableContent->getIsRefreshingAssetsFlag() === true) {
-            return;
-        }
-
-        $buildableContent
-            ->setIgnoreLabelFlag(true)
-            ->setIsRefreshingAssetsFlag(true);
-
         PageBuilder::initialize();
-
-        $buildableContent->setSetting('css/' . Config::CSS_UPDATED_TIME, 0);
-
-        $this->saveBuildableContent($buildableContent);
-
-        $buildableContent->setDataChanges(false);
-
-        $css = new ContentCss( $buildableContent );
-        $css->update();
-
-        $buildableContent
-            ->setIgnoreLabelFlag(false)
-            ->setIsRefreshingAssetsFlag(false);
-
+        HooksHelper::doAction('pagebuilder/document/update_css', $buildableContent);
         // Update last revision
         if ($revision = $buildableContent->getLastRevision(true)) {
-            $this->refreshBuildableContentAssets($revision);
+            HooksHelper::doAction('pagebuilder/document/update_css', $revision);
         }
     }
 
@@ -199,10 +177,7 @@ class BuildableContentManagement implements BuildableContentManagementInterface
     public function refreshGlobalAssets()
     {
         PageBuilder::initialize();
-
-        $this->config->setValue(Config::CSS_UPDATED_TIME, time());
-        $globalCss = new GlobalCss();
-        $globalCss->update();
+        HooksHelper::doAction('pagebuilder/documents/update_css');
     }
 
     /**
@@ -343,9 +318,9 @@ class BuildableContentManagement implements BuildableContentManagementInterface
         }
 
         if ($isLast) {
-            $revision = $buildableContent->getLastRevision();
+            $revision = $buildableContent->getLastRevision($buildableContent->getFlag('direct_save') === true);
         } else {
-            $revision = $buildableContent->getCurrentRevision();
+            $revision = $buildableContent->getCurrentRevision($buildableContent->getFlag('direct_save') === true);
         }
 
         if (!$revision) {
@@ -372,7 +347,7 @@ class BuildableContentManagement implements BuildableContentManagementInterface
         }
 
         /** @var Revision $revision */
-        if (!$saveMassage && !$revision->getLabel() && $revision->getIgnoreLabelFlag() !== true) {
+        if (!$saveMassage && !$revision->getLabel() && $revision->getFlag('ignore_label') !== true) {
             $revision->setLabel($isLast ? __('Saved revision')->__toString() : __('Published change')->__toString());
         } elseif ($saveMassage) {
             $revision->setLabel($saveMassage);
@@ -403,9 +378,6 @@ class BuildableContentManagement implements BuildableContentManagementInterface
             BuildableContentInterface::UPDATE_TIME,
             BuildableContentInterface::CREATION_TIME,
             BuildableContentInterface::REVISION_HASH,
-            'is_caching',
-            'ignore_label_flag',
-            'is_refreshing_assets_flag',
         ];
 
         foreach ($privateFields as $field) {

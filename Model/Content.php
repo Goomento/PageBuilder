@@ -53,30 +53,12 @@ class Content extends AbstractModel implements ContentInterface, IdentityInterfa
     protected $lastEditor;
 
     /**
-     * @var StoreManagerInterface|null
-     */
-    protected $storeManager;
-
-    /**
-     * @var StoreInterface[]|[]|null
-     */
-    protected $stores;
-
-    private $revisionFlag;
-
-    /**
      * @var RevisionInterface|null
      */
     private $lastVersion;
 
-    /**
-     * @var string
-     */
-    private $contentHtml = '';
-
-    const VERSION = Developer::VERSION;
-
     const CSS = 'css';
+
     /**
      * @var BuildableContentInterface|null
      */
@@ -88,18 +70,6 @@ class Content extends AbstractModel implements ContentInterface, IdentityInterfa
     protected function _construct()
     {
         $this->_init(ResourceModel\Content::class);
-    }
-
-    /**
-     * @return StoreManagerInterface
-     */
-    protected function getStoreManager()
-    {
-        if (is_null($this->storeManager)) {
-            $this->storeManager = ObjectManagerHelper::get(StoreManagerInterface::class);
-        }
-
-        return $this->storeManager;
     }
 
     /**

@@ -50,11 +50,6 @@ class Revision extends AbstractModel implements RevisionInterface, IdentityInter
     private $content;
 
     /**
-     * @var string
-     */
-    private $contentHtml = '';
-
-    /**
      * @inheridoc
      */
     protected function _construct()
