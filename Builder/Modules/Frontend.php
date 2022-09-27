@@ -47,13 +47,6 @@ class Frontend extends AbstractApp
     private $registeredFonts = [];
 
     /**
-     * Filters removed from the content.
-     *
-     * @var array Filters removed from the content. Default is an empty array.
-     */
-    private $contentRemovedFilters = [];
-
-    /**
      * Frontend constructor.
      */
     public function __construct()
@@ -442,11 +435,11 @@ class Frontend extends AbstractApp
      */
     public function getBuilderContent(BuildableContentInterface $buildableContent)
     {
-        if ($buildableContent->getIsRenderingContentFlag() === true) {
-            throw new BuilderException('Page Builder renderer lopping detected');
+        if ($buildableContent->getFlag('is_rendering_content') === true) {
+            throw new BuilderException('Page Builder renderer looping detected');
         }
 
-        $buildableContent->setIsRenderingContentFlag(true);
+        $buildableContent->setFlag('is_rendering_content', true);
 
         $document = ObjectManagerHelper::getDocumentsManager()->getByContent(
             $buildableContent
@@ -493,7 +486,7 @@ class Frontend extends AbstractApp
          */
         $html = HooksHelper::applyFilters('pagebuilder/the_content', $html)->getResult();
 
-        $buildableContent->setIsRenderingContentFlag(false);
+        $buildableContent->setFlag('is_rendering_content', false);
 
         return $html;
     }

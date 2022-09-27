@@ -1,9 +1,14 @@
 # Magento 2 Goomento Page Builder
 
+## 0.3.6: Added CMS Page, Block
+- Fixed minor bugs
+- Added CMS Block Widget
+- Added CMS Page Widget
+
 ## 0.3.4: Added CMS object to Tag
 - Added CMS object to Tag
 - Fixed minor bugs
-q
+
 ## 0.3.3: Updated Revision mechanism
 - Added revision hash mechanism 
 - Added revision label

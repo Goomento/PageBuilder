@@ -1,4 +1,4 @@
-![Goomento - Free Magento Page Builder Extension](https://i.imgur.com/bHHzngI.png)
+![Goomento - Free Magento Page Builder Extension](https://i.imgur.com/jVUNmot.gif)
 
 # Goomento - The Free Magento Page Builder Extension, allows you to create unique Magento websites, landing pages using advanced animations, custom CSS, responsive designs, and more, without a line of code.
 
@@ -14,7 +14,7 @@ Goomento is built for **designers**, **developers** and **marketers**, who want 
 
 [Version Compatible](#version-compatible)
 
-[Demo](#demo-site)
+[Demo](https://goomento.com/goomento-the-free-magento-page-builder-extension)
 
 [Setup](#setup)
 
@@ -103,19 +103,12 @@ app/design/frontend/<Vendor>/
 
 ## Version Compatible
 
-Magento Community Edition (CE): 2.3.x, 2.4.0 - 2.4.4
+Magento Community Edition (CE): 2.3.x, 2.4.0 - 2.4.5
 
-Magento Enterprise Edition (EE): 2.3.x, 2.4.0 - 2.4.4
+Magento Enterprise Edition (EE): 2.3.x, 2.4.0 - 2.4.5
 
 ## Open An Issue And Contribution
 
 Feel free to Open an Issue, Fork and Create Pull Request (PR) on GitHub
 
 For opening an issue, click [here](https://github.com/Goomento/PageBuilder/issues/new).
-
-Each issue needs more detail for easily to produce, then please provide
-
-- Goomento version, which is installed on your website. 
-- Your Magento Version, can be revealed by running this command `bin/magento --version`.
-- Description of issue in detail.
-- Browser console log (if capable).

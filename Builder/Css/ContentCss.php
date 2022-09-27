@@ -49,7 +49,9 @@ class ContentCss extends AbstractCss
     {
         $this->model = $content;
 
-        parent::__construct($content->getUniqueIdentity() . '.css');
+        $fileName = sprintf('pagebuilder-%s.css', $content->getUniqueIdentity());
+
+        parent::__construct($fileName);
     }
 
     /**
@@ -72,7 +74,7 @@ class ContentCss extends AbstractCss
      */
     public function getElementUniqueSelector(AbstractElement $element)
     {
-        return '.gmt-' . $this->getModel()->getRevisionHash() . ' .gmt-element' . $element->getUniqueSelector();
+        return '.gmt-' . $this->getModel()->getUniqueIdentity() . ' .gmt-element' . $element->getUniqueSelector();
     }
 
     /**
@@ -100,10 +102,16 @@ class ContentCss extends AbstractCss
      */
     protected function updateMeta($meta)
     {
-        $this->getModel()->setSetting(static::META_KEY, $meta);
-        $this->getModel()->setIgnoreLabelFlag(true);
+        $this->getModel()
+            ->setSetting(static::META_KEY, $meta)
+            ->setFlag('is_refreshing_assets', true)
+            ->setFlag('direct_save', true);
+
         BuildableContentHelper::saveBuildableContent( $this->getModel() );
-        $this->getModel()->setIgnoreLabelFlag(false);
+
+        $this->getModel()
+            ->removeFlag('is_refreshing_assets')
+            ->removeFlag('direct_save');
     }
 
     /**
@@ -114,10 +122,16 @@ class ContentCss extends AbstractCss
      */
     protected function deleteMeta()
     {
-        $this->getModel()->deleteSetting(static::META_KEY);
-        $this->getModel()->setIgnoreLabelFlag(true);
+        $this->getModel()
+            ->deleteSetting(static::META_KEY)
+            ->setFlag('is_refreshing_assets', true)
+            ->setFlag('direct_save', true);
+
         BuildableContentHelper::saveBuildableContent( $this->getModel() );
-        $this->getModel()->setIgnoreLabelFlag(false);
+
+        $this->getModel()
+            ->removeFlag('is_refreshing_assets')
+            ->removeFlag('direct_save');
     }
 
     /**
@@ -234,7 +248,7 @@ class ContentCss extends AbstractCss
      */
     protected function getFileHandleId()
     {
-        return 'gmt-' . $this->getModel()->getRevisionHash();
+        return 'goomento-' . $this->getModel()->getUniqueIdentity();
     }
 
     /**

@@ -309,6 +309,8 @@ class EntryPoint extends BuilderRegister
             Builder\Widgets\Magento\RecentlyViewedProducts::class,
             Builder\Widgets\Magento\RecentlyComparedProducts::class,
             Builder\Widgets\Magento\NewProducts::class,
+            Builder\Widgets\Magento\CmsBlock::class,
+            Builder\Widgets\Magento\CmsPage::class,
             Builder\Widgets\Magento\OrdersAndReturns::class,
             Builder\Widgets\PricingTable::class,
             Builder\Widgets\Navigation::class,

@@ -16,7 +16,6 @@ use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Managers\Tags;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ConfigHelper;
-use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
@@ -99,7 +98,7 @@ abstract class AbstractCss extends AbstractFile
      */
     protected function useExternalFile()
     {
-        return !DataHelper::useInlineCss();
+        return true;
     }
 
     /**
@@ -129,6 +128,7 @@ abstract class AbstractCss extends AbstractFile
 
             if ($useExternalFile) {
                 $meta['status'] = self::CSS_STATUS_FILE;
+                $meta['css'] = '';
             } else {
                 $meta['status'] = self::CSS_STATUS_INLINE;
                 $meta['css'] = $content;

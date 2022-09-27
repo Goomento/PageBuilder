@@ -106,7 +106,9 @@ class ContentRepository implements ContentRepositoryInterface
             $this->setIdentifier($content);
             $this->validateIdentifier($content);
             $this->setAuthor($content);
-            $content->setRevisionHash(BuildableContentManagement::generateRevisionHash());
+            if ($content->getFlag('direct_save') !== true) {
+                $content->setRevisionHash(BuildableContentManagement::generateRevisionHash());
+            }
             $this->resource->save($content);
             $this->checkObjectInstance($content, true);
         } catch (\Exception $exception) {

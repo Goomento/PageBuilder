@@ -168,7 +168,7 @@ abstract class AbstractDocument extends ControlsStack
         $attributes = [
             'data-gmt-type' => $this->getName(),
             'data-gmt-id' => $this->getModel()->getOriginContent()->getId(),
-            'class' => 'goomento gmt gmt-' . $this->getModel()->getRevisionHash(),
+            'class' => 'goomento gmt gmt-' . $this->getModel()->getUniqueIdentity(),
         ];
 
         if (!StateHelper::isEditorPreviewMode()) {

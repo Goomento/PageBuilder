@@ -16,6 +16,10 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 class GlobalCss extends AbstractCss
 {
+    /**
+     * Meta key
+     */
+    const META_KEY = 'global_css';
 
     /**
      * Goomento global CSS file handler ID.
