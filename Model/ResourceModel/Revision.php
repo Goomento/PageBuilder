@@ -10,13 +10,14 @@ namespace Goomento\PageBuilder\Model\ResourceModel;
 
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
-use Goomento\PageBuilder\Helper\DataHelper;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 class Revision extends AbstractDb
 {
     use TraitResourceModel;
+
+    const MAX_REVISION_ITEMS = 500;
 
     /**
      * @inheriDoc
@@ -51,7 +52,6 @@ class Revision extends AbstractDb
     {
         $contentId = (int) $object->getData(RevisionInterface::CONTENT_ID);
         if ($contentId) {
-            $maxRevision = DataHelper::getBuilderConfig('editor/number_of_revision') ?: 200;
             $connection = $this->getConnection();
             $selectCount = $connection->select()->from(
                 $this->getMainTable(),
@@ -59,8 +59,8 @@ class Revision extends AbstractDb
             )->where('content_id = ?', $contentId);
             $count = (int) $connection->fetchOne($selectCount);
 
-            if ($count && $count > $maxRevision) {
-                $removeNumber = $count - $maxRevision;
+            if ($count && $count > self::MAX_REVISION_ITEMS) {
+                $removeNumber = $count - self::MAX_REVISION_ITEMS;
                 $connection->deleteFromSelect(
                     $connection->select()->from(
                         $this->getMainTable(),

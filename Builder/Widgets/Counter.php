@@ -291,23 +291,4 @@ class Counter extends AbstractWidget
 
         $this->endControlsSection();
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function contentTemplate()
-    {
-        ?>
-		<div class="gmt-counter">
-			<div class="gmt-counter-number-wrapper">
-				<span class="gmt-counter-number-prefix">{{{ settings.counter_prefix }}}</span>
-				<span class="gmt-counter-number" data-duration="{{ settings.counter_duration }}" data-to-value="{{ settings.counter_ending_number }}" data-delimiter="{{ settings.counter_thousand_separator ? settings.counter_thousand_separator_char || ',' : '' }}">{{{ settings.counter_starting_number }}}</span>
-				<span class="gmt-counter-number-suffix">{{{ settings.counter_suffix }}}</span>
-			</div>
-			<# if ( settings.counter_title ) {
-				#><div class="gmt-counter-title">{{{ settings.counter_title }}}</div><#
-			} #>
-		</div>
-		<?php
-    }
 }

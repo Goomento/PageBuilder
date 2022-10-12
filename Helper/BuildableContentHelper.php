@@ -25,7 +25,7 @@ use Goomento\PageBuilder\Model\Content as ContentModel;
  * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
  *
  * @see \Goomento\PageBuilder\Helper\BuildableContent
- * @method static RevisionInterface[] getRevisionsByContent(ContentInterface $content, ?array $statuses = null, ?int $limit = 200, ?int $currentPage = 1)
+ * @method static RevisionInterface[] getRevisionsByContent(ContentInterface $content, ?array $statuses = null, ?int $limit = 12, ?int $currentPage = 1)
  * @see \Goomento\PageBuilder\Helper\BuildableContent::getRevisionsByContent()
  * @method static RevisionInterface getRevision($revisionId)
  * @see \Goomento\PageBuilder\Helper\BuildableContent::getRevision()

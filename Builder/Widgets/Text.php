@@ -294,28 +294,4 @@ class Text extends AbstractWidget
 
         $this->endControlsSection();
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function contentTemplate()
-    {
-        ?>
-		<#
-            var title = settings.text_title;
-
-            if ( '' !== settings.text_link.url ) {
-                title = '<a href="' + settings.text_link.url + '">' + title + '</a>';
-            }
-
-            view.addRenderAttribute( 'title', 'class', [ 'gmt-text-title', 'gmt-size-' + settings.text_size ] );
-
-            view.addInlineEditingAttributes( 'title' );
-
-            var title_html = '<' + settings.text_tag  + ' ' + view.getRenderAttributeString( 'title' ) + '>' + title + '</' + settings.text_tag + '>';
-
-            print( title_html );
-		#>
-		<?php
-    }
 }

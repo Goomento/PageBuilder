@@ -378,26 +378,4 @@ class Icon extends AbstractWidget
 
         $this->endControlsSection();
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function contentTemplate()
-    {
-        ?>
-		<# var link = settings.icon_link.url ? 'href="' + settings.icon_link.url + '"' : '',
-				iconHTML = goomento.helpers.renderIcon( view, settings.icon_selected_icon, { 'aria-hidden': true }, 'i' , 'object' ),
-				iconTag = link ? 'a' : 'div';
-		#>
-		<div class="gmt-icon-wrapper">
-			<{{{ iconTag }}} class="gmt-icon gmt-animation-{{ settings.icon_hover_animation }}" {{{ link }}}>
-				<# if ( iconHTML && iconHTML.rendered && ! settings.icon_icon ) { #>
-					{{{ iconHTML.value }}}
-				<# } else { #>
-					<i class="{{ settings.icon }}" aria-hidden="true"></i>
-				<# } #>
-			</{{{ iconTag }}}>
-		</div>
-		<?php
-    }
 }

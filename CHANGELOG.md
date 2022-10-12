@@ -1,5 +1,10 @@
 # Magento 2 Goomento Page Builder
 
+## 0.3.7: Fixed minor bugs
+- Fixed minor bugs
+- Fixed #18
+- Updated style
+
 ## 0.3.6: Added CMS Page, Block
 - Fixed minor bugs
 - Added CMS Block Widget

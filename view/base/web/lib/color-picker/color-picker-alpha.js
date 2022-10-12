@@ -64,7 +64,11 @@ require(['jquery', 'mage/translate'], function ($, $t) {
          * @returns {void}
          */
         close: function() {
-            this.element.iris( 'toggle' );
+            try {
+                this.element.iris( 'toggle' );
+            } catch (e) {
+                console.warn(e);
+            }
             this.inputWrapper.addClass( 'hidden' );
             this.wrap.removeClass( 'wp-picker-active' );
             this.toggler
