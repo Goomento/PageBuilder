@@ -9,5 +9,5 @@ use Magento\Framework\Component\ComponentRegistrar;
 ComponentRegistrar::register(
     ComponentRegistrar::MODULE,
     'Goomento_PageBuilder',
-    isset($file) ? dirname($file) : __DIR__
+    __DIR__
 );

@@ -567,44 +567,4 @@ class IconBox extends AbstractWidget
 
         $this->endControlsSection();
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function contentTemplate()
-    {
-        ?>
-		<#
-		var link = settings.link.url ? 'href="' + settings.link.url + '"' : '',
-			iconTag = link ? 'a' : 'span',
-			iconHTML = goomento.helpers.renderIcon( view, settings.selected_icon, { 'aria-hidden': true }, 'i' , 'object' );
-
-		view.addRenderAttribute( 'description_text', 'class', 'gmt-icon-box-description' );
-
-		view.addInlineEditingAttributes( 'title_text', 'none' );
-		view.addInlineEditingAttributes( 'description_text' );
-		#>
-		<div class="gmt-icon-box-wrapper">
-			<# if ( settings.icon || settings.selected_icon ) { #>
-			<div class="gmt-icon-box-icon">
-				<{{{ iconTag + ' ' + link }}} class="gmt-icon gmt-animation-{{ settings.hover_animation }}">
-					<# if ( iconHTML && iconHTML.rendered && ! settings.icon ) { #>
-						{{{ iconHTML.value }}}
-						<# } else { #>
-							<i class="{{ settings.icon }}" aria-hidden="true"></i>
-						<# } #>
-				</{{{ iconTag }}}>
-			</div>
-			<# } #>
-			<div class="gmt-icon-box-content">
-				<{{{ settings.title_size }}} class="gmt-icon-box-title">
-					<{{{ iconTag + ' ' + link }}} {{{ view.getRenderAttributeString( 'title_text' ) }}}>{{{ settings.title_text }}}</{{{ iconTag }}}>
-				</{{{ settings.title_size }}}>
-				<# if ( settings.description_text ) { #>
-				<p {{{ view.getRenderAttributeString( 'description_text' ) }}}>{{{ settings.description_text }}}</p>
-				<# } #>
-			</div>
-		</div>
-		<?php
-    }
 }

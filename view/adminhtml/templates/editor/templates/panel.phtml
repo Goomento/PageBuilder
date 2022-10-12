@@ -54,11 +54,12 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-controls-content">
+    <# var ctrlLabel = goomento.env.mac ? '⌘' : 'Ctrl'; #>
     <div class="gmt-panel-control-tools gmt-panel-control-tools-start">
-        <div id="gmt-panel-control-panel" class="gmt-panel-control-tool gmt-leave-open tooltip-target active" data-tooltip="<?= __('Widget List'); ?>">
+        <div id="gmt-panel-control-panel" class="gmt-panel-control-tool gmt-leave-open tooltip-target active" data-tooltip="<?= __('Widget List'); ?> ({{{ctrlLabel}}} + Shift + P)">
             <i class="fas fa-th-large" aria-hidden="true"></i>
         </div>
-        <div id="gmt-panel-control-editing" class="gmt-panel-control-tool gmt-leave-open tooltip-target active" data-tooltip="<?= __('Toggle View'); ?>">
+        <div id="gmt-panel-control-editing" class="gmt-panel-control-tool gmt-leave-open tooltip-target active" data-tooltip="<?= __('Toggle View'); ?> ({{{ctrlLabel}}} + P)">
             <i class="far fa-edit"></i>
         </div>
     </div>
@@ -69,21 +70,21 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
         <div id="gmt-panel-control-settings" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('Page Settings'); ?>">
             <i class="fas fa-cog" aria-hidden="true"></i>
         </div>
-        <div id="gmt-panel-control-navigator" class="gmt-panel-control-tool tooltip-target" data-tooltip="<?= __('Navigator') ?>">
+        <div id="gmt-panel-control-navigator" class="gmt-panel-control-tool tooltip-target" data-tooltip="<?= __('Navigator') ?> ({{{ctrlLabel}}} + I)">
             <i class="fas fa-location-arrow" aria-hidden="true"></i>
         </div>
-        <div id="gmt-panel-control-history" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('History & Revision'); ?>">
+        <div id="gmt-panel-control-history" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('History & Revision'); ?> ({{{ctrlLabel}}} + Shift + H)">
             <i class="fas fa-history" aria-hidden="true"></i>
         </div>
         <div id="gmt-panel-control-responsive" class="gmt-panel-control-tool">
             <div class="gmt-panel-control-responsive-devices">
-                <div class="gmt-panel-control-responsive-device tooltip-target" data-device-mode="desktop" data-tooltip="<?= __('Desktop'); ?>">
+                <div class="gmt-panel-control-responsive-device tooltip-target" data-device-mode="desktop" data-tooltip="<?= __('Desktop'); ?> ({{{ctrlLabel}}} + Shift + M)">
                     <i class="gmt-icon fa fa-desktop" aria-hidden="true"></i>
                 </div>
-                <div class="gmt-panel-control-responsive-device tooltip-target" data-device-mode="tablet" data-tooltip="<?= __('Tablet'); ?>">
+                <div class="gmt-panel-control-responsive-device tooltip-target" data-device-mode="tablet" data-tooltip="<?= __('Tablet'); ?> ({{{ctrlLabel}}} + Shift + M)">
                     <i class="gmt-icon fa fa-tablet" aria-hidden="true"></i>
                 </div>
-                <div class="gmt-panel-control-responsive-device tooltip-target" data-device-mode="mobile" data-tooltip="<?= __('Mobile'); ?>">
+                <div class="gmt-panel-control-responsive-device tooltip-target" data-device-mode="mobile" data-tooltip="<?= __('Mobile'); ?> ({{{ctrlLabel}}} + Shift + M)">
                     <i class="gmt-icon fa fa-mobile" aria-hidden="true"></i>
                 </div>
             </div>
@@ -95,7 +96,7 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 		</span>
         </div>
         <div id="gmt-panel-control-saver-publish" class="gmt-panel-control-tool">
-            <button id="gmt-panel-saver-button-publish" class="gmt-button gmt-button-success gmt-disabled tooltip-target" data-tooltip="<?= __('Saved'); ?>">
+            <button id="gmt-panel-saver-button-publish" class="gmt-button gmt-button-success gmt-disabled tooltip-target" data-tooltip="<?= __('Saved'); ?> ({{{ctrlLabel}}} + S)">
 			<span class="gmt-state-icon">
 				<i class="fa-circle-notch fas spinning" aria-hidden="true"></i>
 			</span>
@@ -131,8 +132,11 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
         <div id="gmt-panel-control-general-settings" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('Global Settings'); ?>">
             <i class="fas fa-cogs" aria-hidden="true"></i>
         </div>
+        <div id="gmt-panel-control-help" onclick="$e.run('shortcuts/open')" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('Help'); ?> ({{{ctrlLabel}}} + ?)">
+            <i class="fas fa-question" aria-hidden="true"></i>
+        </div>
         <div id="gmt-panel-control-back-to-dashboard" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('Back To Magento'); ?>">
-            <i class="fab fa-magento" aria-hidden="true"></i>
+            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
         </div>
     </div>
 </script>

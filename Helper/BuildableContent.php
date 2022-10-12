@@ -72,7 +72,7 @@ class BuildableContent extends AbstractHelper
      * @return RevisionInterface[]
      * @throws LocalizedException
      */
-    public function getRevisionsByContent(ContentInterface $content, ?array $statuses = null, ?int $limit = 200, ?int $currentPage = 1)
+    public function getRevisionsByContent(ContentInterface $content, ?array $statuses = null, ?int $limit = 12, ?int $currentPage = 1)
     {
         return $this->revisionRepository->getListByContentId(
             (int) $content->getId(),

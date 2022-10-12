@@ -28,6 +28,7 @@ define([
                     return moment(datetime).calendar();
                 }
             },
+            i18n: $.mage.__,
         });
         $( () => goomento.start() );
     }, 200);

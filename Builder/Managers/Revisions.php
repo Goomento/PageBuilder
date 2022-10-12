@@ -46,7 +46,7 @@ class Revisions
     {
         /** @var ContentInterface $content */
         $content = $buildableContent->getOriginContent();
-        $revisions =  BuildableContentHelper::getRevisionsByContent( $content );
+        $revisions =  BuildableContentHelper::getRevisionsByContent( $content, null, null, null);
         $revisionData = [];
 
         foreach ($revisions as $revision) {
@@ -158,7 +158,11 @@ class Revisions
         return self::getRevisions( $buildableContent );
     }
 
-
+    /**
+     * @param Ajax $ajax
+     * @return void
+     * @throws Exception
+     */
     public static function registerAjaxActions(Ajax $ajax)
     {
         $ajax->registerAjaxAction('get_revisions', [ __CLASS__, 'ajaxGetRevisions' ]);

@@ -34,8 +34,8 @@ declare(strict_types=1);
 <script type="text/template" id="tmpl-gmt-panel-revisions-no-revisions">
 	<i class="gmt-nerd-box-icon fas fa-glasses" aria-hidden="true"></i>
 	<div class="gmt-nerd-box-title"><?= __( 'No Revisions Saved Yet' ); ?></div>
-	<div class="gmt-nerd-box-message">{{{ jQuery.mage.__( goomento.config.revisions_enabled ? 'no_revisions_1' : 'revisions_disabled_1' ) }}}</div>
-	<div class="gmt-nerd-box-message">{{{ jQuery.mage.__( goomento.config.revisions_enabled ? 'no_revisions_2' : 'revisions_disabled_2' ) }}}</div>
+	<div class="gmt-nerd-box-message">{{{ goomento.helpers.i18n( goomento.config.revisions_enabled ? 'no_revisions_1' : 'revisions_disabled_1' ) }}}</div>
+	<div class="gmt-nerd-box-message">{{{ goomento.helpers.i18n( goomento.config.revisions_enabled ? 'no_revisions_2' : 'revisions_disabled_2' ) }}}</div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-revisions-loading">
@@ -48,8 +48,8 @@ declare(strict_types=1);
 			<div class="gmt-revision-date">{{{ goomento.helpers.formatDatetime(date) }}}</div>
 			<div class="gmt-revision-meta">
                 <span class="gmt-revision-label">{{{ label }}}</span> |
-                <span class="gmt-revision-type">{{{ jQuery.mage.__( type ) }}}</span>
-                <span class="gmt-revision-author">{{{ jQuery.mage.__( 'By' ) }}} {{{ author }}}</span>
+                <span class="gmt-revision-type">{{{ goomento.helpers.i18n( type ) }}}</span>
+                <span class="gmt-revision-author">{{{ goomento.helpers.i18n( 'By' ) }}} {{{ author }}}</span>
             </div>
 		</div>
 		<div class="gmt-revision-item__tools">

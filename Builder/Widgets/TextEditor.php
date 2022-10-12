@@ -415,19 +415,4 @@ class TextEditor extends AbstractWidget
         // In plain mode, render without shortcode
         echo $this->getSettings('editor');
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function contentTemplate()
-    {
-        ?>
-		<#
-		view.addRenderAttribute( 'text-editor_editor', 'class', [ 'gmt-text-editor', 'gmt-clearfix' ] );
-
-		view.addInlineEditingAttributes( 'text-editor_editor', 'advanced' );
-		#>
-		<div {{{ view.getRenderAttributeString( 'text-editor_editor' ) }}}>{{{ settings['text-editor_editor'] }}}</div>
-		<?php
-    }
 }

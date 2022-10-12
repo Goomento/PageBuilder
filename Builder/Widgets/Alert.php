@@ -216,35 +216,4 @@ class Alert extends AbstractWidget
 
         $this->endControlsSection();
     }
-
-
-    /**
-     * @inheritDoc
-     */
-    protected function contentTemplate()
-    {
-        ?>
-        <# if ( settings.alert_title ) {
-        view.addRenderAttribute( {
-            alert_title: { class: 'gmt-alert-title' },
-            alert_description: { class: 'gmt-alert-description' }
-        } );
-
-        view.addInlineEditingAttributes( 'alert_title', 'none' );
-        view.addInlineEditingAttributes( 'alert_description' );
-        #>
-
-        <div class="gmt-alert gmt-alert-{{ settings.alert_type }}" role="alert">
-            <span {{{ view.getRenderAttributeString( 'alert_title' ) }}}>{{{ settings.alert_title }}}</span>
-            <span {{{ view.getRenderAttributeString( 'alert_description' ) }}}>{{{ settings.alert_description }}}</span>
-            <# if ( 'show' === settings.alert_show_dismiss ) { #>
-            <button type="button" class="gmt-alert-dismiss">
-                <span aria-hidden="true">&times;</span>
-                <span class="gmt-screen-only"><?= __('Dismiss alert'); ?></span>
-            </button>
-            <# } #>
-        </div>
-        <# } #>
-        <?php
-    }
 }
