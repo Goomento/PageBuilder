@@ -29,7 +29,9 @@ define([
     /**
      * @constructor
      */
-    const AssistanceActions = function () {};
+    const AssistanceActions = function () {
+        this.refreshContentList = _.throttle(this.refreshContentList.bind(this), 1000);
+    };
 
     AssistanceActions.prototype = {
         config: {

@@ -8,17 +8,18 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Block\Content;
 
+use Goomento\PageBuilder\Block\Content;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 
-class Published extends Preview
+class Published extends Content
 {
     /**
      * @inheritDoc
      */
     protected function _prepareLayout()
     {
-        $this->isValidContent();
-        $content = $this->getBuildableContent();
+        $this->isValidCurrentContent();
+        $content = $this->loadCurrentBuildableContent();
         $this->pageConfig->addBodyClass('gmt-' .
             EscaperHelper::slugify($content->getOriginContent()->getIdentifier()));
         $metaTitle = $content->getMetaTitle();

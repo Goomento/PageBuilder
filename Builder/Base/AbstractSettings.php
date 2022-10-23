@@ -11,6 +11,9 @@ namespace Goomento\PageBuilder\Builder\Base;
 
 abstract class AbstractSettings extends ControlsStack
 {
+    const NAME = 'settings';
+
+    const TYPE = 'settings';
 
     /**
      * Get CSS wrapper selector.

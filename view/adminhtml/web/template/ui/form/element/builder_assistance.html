@@ -4,7 +4,7 @@
  * @link https://github.com/Goomento/PageBuilder
  */
 -->
-<div class="builder-assistance" data-bind="css: wrapperClasses().join(' ')">
+<div class="builder-assistance" data-bind="css: wrapperClasses().join(' '), afterRender: afterRender">
     <div class="builder-assistance-action">
         <div class="builder-assistance-buttons">
             <button data-bind="text: toggleBtnLabel, click: onClickAssistanceBtn,

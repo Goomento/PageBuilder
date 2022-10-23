@@ -14,6 +14,8 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 class Page extends AbstractSettings
 {
+    const NAME = 'page-settings';
+
     /**
      * Content Model
      *
@@ -34,19 +36,6 @@ class Page extends AbstractSettings
         $this->model = $data['model'] ?? null;
 
         parent::__construct($data);
-    }
-
-    /**
-     * Get model name.
-     *
-     * Retrieve page settings model name.
-     *
-     *
-     * @return string Model name.
-     */
-    public function getName()
-    {
-        return 'page-settings';
     }
 
     /**

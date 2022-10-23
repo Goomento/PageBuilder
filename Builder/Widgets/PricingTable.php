@@ -413,7 +413,11 @@ class PricingTable extends AbstractWidget
             ]
         );
 
-        Text::registerSimpleTextStyle($this, self::NAME . '_onpc_', '.gmt-pricing-body .gmt-sale-price .gmt-price-currency');
+        Text::registerSimpleTextStyle($this, self::NAME . '_onpc_', '.gmt-pricing-body .gmt-sale-price .gmt-price-currency', [
+            'condition' => [
+                'pricing_table_onsale' => 'yes'
+            ]
+        ]);
 
         $this->addControl(
             'pricing_table_pricing_period_style',

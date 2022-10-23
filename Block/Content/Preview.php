@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Block\Content;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Block\Content;
 
 /**
@@ -16,17 +17,10 @@ use Goomento\PageBuilder\Block\Content;
 class Preview extends Content
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    protected function isValidContent()
+    protected function checkValidContent(BuildableContentInterface $content) : bool
     {
-        $contentId = $this->getContentId();
-        $contentId = $contentId ?: $this->getRequest()->getParam(self::CONTENT_ID);
-        if ($contentId) {
-            $this->setContentId((int) $contentId);
-            return true;
-        }
-
-        return false;
+        return (bool)$content->getId();
     }
 }

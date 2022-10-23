@@ -85,7 +85,10 @@ class Elements
         $elementClass = get_class($elementType);
 
         try {
-            $element = new $elementClass($elementData, $args);
+            $element = ObjectManagerHelper::create($elementClass, [
+                'data' => $elementData,
+                'args' => $args
+            ]);
         } catch (Exception $e) {
             LoggerHelper::error($e);
             return null;

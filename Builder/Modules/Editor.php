@@ -163,6 +163,7 @@ class Editor
     }
 
     /**
+     * Register the editor scripts
      */
     public function registerScripts()
     {
@@ -476,6 +477,11 @@ class Editor
 
     }
 
+    /**
+     * Print the script to HTML
+     *
+     * @return void
+     */
     public function enqueueScripts()
     {
         ThemeHelper::enqueueScript('goomento-editor');
@@ -508,6 +514,11 @@ class Editor
         $suffix = Configuration::debug() ? '' : '.min';
 
         $directionSuffix = DataHelper::isRtl() ? '-rtl' : '';
+
+        ThemeHelper::registerStyle(
+            'google-font-inter',
+            'https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap'
+        );
 
         ThemeHelper::registerStyle(
             'goomento-editor',

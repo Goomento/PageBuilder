@@ -11,17 +11,17 @@ namespace Goomento\PageBuilder\Model\Cache\Type;
 use Magento\Framework\App\Cache\Type\FrontendPool;
 use Magento\Framework\Cache\Frontend\Decorator\TagScope;
 
-class PageBuilder extends TagScope
+class PageBuilderFrontend extends TagScope
 {
     /**
      * Cache type code unique among all cache types
      */
-    const TYPE_IDENTIFIER = 'goomento_pagebuilder';
+    const TYPE_IDENTIFIER = 'goomento_pagebuilder_frontend';
 
     /**
      * The tag name that limits the cache cleaning scope within a particular tag
      */
-    const CACHE_TAG = 'GOOMENTO_PAGEBUILDER';
+    const CACHE_TAG = 'GOOMENTO_PAGEBUILDER_FRONTEND';
 
     /**
      * @param FrontendPool $cacheFrontendPool

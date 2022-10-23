@@ -21,12 +21,15 @@ use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\AdminUser;
+use Goomento\PageBuilder\Model\Cache\Type\PageBuilderFrontend;
 use Goomento\PageBuilder\PageBuilder;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\App\Cache\Type\Block;
 use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\PageCache\Model\Cache\Type;
 
 class BuildableContentManagement implements BuildableContentManagementInterface
 {
@@ -63,7 +66,7 @@ class BuildableContentManagement implements BuildableContentManagementInterface
      */
     private $config;
     /**
-     * @var Cache
+     * @var BetterCaching
      */
     private $cache;
     /**
@@ -82,7 +85,7 @@ class BuildableContentManagement implements BuildableContentManagementInterface
      * @param FilterBuilder $filterBuilder
      * @param SortOrderBuilder $sortOrderBuilder
      * @param ConfigInterface $config
-     * @param Cache $cache
+     * @param BetterCaching $cache
      */
     public function __construct(
         ContentFactory $contentFactory,
@@ -94,7 +97,7 @@ class BuildableContentManagement implements BuildableContentManagementInterface
         FilterBuilder $filterBuilder,
         SortOrderBuilder $sortOrderBuilder,
         ConfigInterface $config,
-        Cache $cache
+        BetterCaching $cache
     ) {
         $this->contentFactory = $contentFactory;
         $this->revisionFactory = $revisionFactory;
@@ -242,7 +245,11 @@ class BuildableContentManagement implements BuildableContentManagementInterface
         );
 
         if ($contentCount || $revisionCount) {
-            $this->cache->invalid();
+            $this->cache->invalid([
+                PageBuilderFrontend::TYPE_IDENTIFIER,
+                Type::TYPE_IDENTIFIER,
+                Block::TYPE_IDENTIFIER
+            ]);
         }
     }
 
