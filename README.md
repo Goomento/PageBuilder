@@ -45,6 +45,12 @@ php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy
 ```
 
+Enable these caches in `Production mode` for best performance at `System > Tools > Cache Management`
+
+**Pagebuilder Frontend**: Uses for frontend display, preview HTML ...
+
+**Pagebuilder Backend**: Uses for registered controls data of widgets, system variables ...
+
 ## Setup
 
 1. Create Landing Pages, Blocks, Templates in the admin area `Goomento > Pages & Landing Pages`.

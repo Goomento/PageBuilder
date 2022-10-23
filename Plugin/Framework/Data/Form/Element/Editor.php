@@ -10,8 +10,10 @@ namespace Goomento\PageBuilder\Plugin\Framework\Data\Form\Element;
 
 use Goomento\PageBuilder\Helper\Data;
 use Goomento\PageBuilder\Helper\EscaperHelper;
+use Goomento\PageBuilder\Plugin\Ui\Component\Form\Element\Wysiwyg\BuilderAssistance;
 use Magento\Framework\Data\Form\Element\Editor as FormEditor;
 use Magento\Framework\UrlInterface;
+use Zend_Json;
 
 class Editor
 {
@@ -48,8 +50,14 @@ class Editor
         callable $proceed
     )
     {
-        if (!$this->dataHelper->isBuilderAssistanceActive() ||
-            $subject->getData('use_origin_editor') === true) {
+        $isAssistanceActive = $this->dataHelper->isBuilderAssistanceActive();
+        if ($isAssistanceActive) {
+            $isAssistanceActive = $this->dataHelper->isBuilderAssistanceOnAllPage()
+                || BuilderAssistance::urlContains($this->urlBuilder->getCurrentUrl(), $this->dataHelper->getBuilderAssistanceCustomPages());
+        }
+
+
+        if (!$isAssistanceActive || $subject->getData('use_origin_editor') === true) {
             return $proceed();
         }
 
@@ -69,7 +77,7 @@ class Editor
                 ]
             ]
         ];
-        $js = '<script type="text/x-magento-init">' . \Zend_Json::encode($jsParams) . '</script>';
+        $js = '<script type="text/x-magento-init">' . Zend_Json::encode($jsParams) . '</script>';
         return '<div data-bind="scope: \'' . $componentName . '\'"><!-- ko template: getTemplate() --><!-- /ko --></div>' . $js;
     }
 }

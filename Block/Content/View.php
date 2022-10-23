@@ -8,31 +8,20 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Block\Content;
 
-use Goomento\PageBuilder\Block\Content;
-
-class View extends Content
+/**
+ * This is using for viewing last reversion of content
+ */
+class View extends Preview
 {
     /**
      * @inheritdoc
      */
-    protected function isValidContent()
+    public function loadCurrentBuildableContent()
     {
-        $contentId = $this->getContentId();
-        $contentId = $contentId ?: $this->getRequest()->getParam(self::CONTENT_ID);
-        if ($contentId) {
-            $this->setContentId((int) $contentId);
-            return true;
+        $content = parent::loadCurrentBuildableContent();
+        if ($content && $content->getId()) {
+            $content = $content->getLastRevision(true) ?: $content;
         }
-
-        return false;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBuildableContent()
-    {
-        $content = parent::getBuildableContent();
-        return $content->getLastRevision(true) ?: $content;
+        return $content;
     }
 }

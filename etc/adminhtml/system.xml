@@ -48,6 +48,24 @@
                     <label>Open In</label>
                     <source_model>Goomento\PageBuilder\Model\Config\Source\OpenAssistance</source_model>
                     <comment>Open editor behavior.</comment>
+                    <depends>
+                        <field id="pagebuilder/builder_assistance/active">1</field>
+                    </depends>
+                </field>
+                <field id="all_page" type="select" translate="label" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Show In All Pages</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="pagebuilder/builder_assistance/active">1</field>
+                    </depends>
+                </field>
+                <field id="custom_pages" type="multiselect" translate="label" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Page's URL Contains</label>
+                    <frontend_model>Goomento\PageBuilder\Block\Adminhtml\Config\Form\Field\AssistancePages</frontend_model>
+                    <backend_model>Goomento\PageBuilder\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <depends>
+                        <field id="pagebuilder/builder_assistance/all_page">0</field>
+                    </depends>
                 </field>
             </group>
             <group id="integrations" translate="label" type="text" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1">

@@ -43,7 +43,7 @@ class Config implements ConfigInterface
     private $config = null;
 
     /**
-     * @var Cache
+     * @var BetterCaching
      */
     private $cache;
     /**
@@ -53,11 +53,11 @@ class Config implements ConfigInterface
 
     /**
      * @param ResourceModel\Config $configResource
-     * @param Cache $cache
+     * @param BetterCaching $cache
      */
     public function __construct(
         ResourceModel\Config $configResource,
-        Cache $cache
+        BetterCaching $cache
     )
     {
         $this->configResource = $configResource;
@@ -67,12 +67,12 @@ class Config implements ConfigInterface
     /**
      * Load all configs
      */
-    private function loadAll()
+    private function load()
     {
         if ($this->config === null) {
             $this->config = [];
             $configs = $this->cache->load(self::CACHE_KEY);
-            if ($configs !== null) {
+            if ($configs !== false) {
                 $this->config = $configs;
             } else {
                 $configs = $this->configResource->fetchAll();
@@ -119,7 +119,7 @@ class Config implements ConfigInterface
      */
     public function getValue($path, int $storeId = self::DEFAULT_STORE_ID)
     {
-        $this->loadAll();
+        $this->load();
         $storeData = $this->config[$storeId] ?? [];
         $value = null;
         if (isset($storeData[$path])) {
@@ -135,7 +135,7 @@ class Config implements ConfigInterface
      */
     public function setValue($path, $value = null, int $storeId = self::DEFAULT_STORE_ID)
     {
-        $this->loadAll();
+        $this->load();
         if (is_array($path)) {
             foreach ($path as $key => $valueData) {
                 $this->setConfigData($key, $valueData, $storeId);
@@ -153,7 +153,7 @@ class Config implements ConfigInterface
      */
     public function deleteValue($path, int $storeId = self::DEFAULT_STORE_ID)
     {
-        $this->loadAll();
+        $this->load();
         $this->setValue($path, null);
         return $this;
     }
@@ -164,7 +164,7 @@ class Config implements ConfigInterface
      */
     public function save()
     {
-        $this->loadAll();
+        $this->load();
         if (!empty($this->dataChanged)) {
             $changedData = $this->dataChanged;
             $this->dataChanged = [];
@@ -190,7 +190,7 @@ class Config implements ConfigInterface
      */
     private function saveToCache()
     {
-        $this->cache->save((array) $this->config, self::CACHE_KEY);
+        $this->cache->save((array) $this->config, self::CACHE_KEY, BetterCaching::BACKEND_CACHE_TAG);
     }
 
     /**

@@ -66,18 +66,21 @@ define([
                     this.selectedContentId(selectedContentId);
                     this.activatingAssistance();
                 }.bind(this));
-
+            return this;
+        },
+        /**
+         * After render the html component callback
+         */
+        afterRender: function () {
             let content = this.value().trim();
             if (!content || (content && !this._shouldMigrateStr(content))) {
                 this._onEndWysiwyg()
                     ._onActiveAssistance();
             } else {
                 this._onEndWysiwyg()
-                    ._onDeactivateAssistance();
+                    ._onDeactivateAssistance()
+                    .onClickWysiwygBtn();
             }
-
-
-            return this;
         },
         /**
          *
@@ -105,7 +108,7 @@ define([
             this.showSelectBox(true);
             this.showMigrateBtn(true);
             this.showEditBtn(false);
-            this.message($.mage.__('We Found The Content Did Not Compatible With Goomento! Please Select Actions Below.'));
+            this.message($.mage.__('We found the content did not compatible with Goomento! Please select actions below.'));
             return this;
         },
         /**
@@ -119,7 +122,7 @@ define([
             this.showSelectBox(true);
             this.showMigrateBtn(false);
             this.showEditBtn(false);
-            this.message($.mage.__('Please Select Actions Below.'));
+            this.message($.mage.__('Please select actions below.'));
             return this;
         },
         /**
@@ -213,7 +216,7 @@ define([
             this.showMigrateBtn(false);
             this.showEditBtn(false);
             this.showSelectionList(true);
-            this.message($.mage.__('Content Changed, Save This Before Continue!'));
+            this.message($.mage.__('Content changed, click save before continue!'));
         },
         /**
          * Create New Empty Page Builder
@@ -265,6 +268,7 @@ define([
                         if ( !this.$iframe.length ) {
                             this.$iframe = $('<iframe>', {
                                 src: '',
+                                width: window.innerWidth - $('.admin__menu').width(),
                                 id:  'builder-assistance-iframe',
                                 frameborder: 0,
                                 scrolling: 'no'
@@ -273,12 +277,15 @@ define([
                         }
 
                         window.closeBuilderAssistanceIFrame = () => {
+                            this.$iframe.hide();
                             this.$iframe.remove();
                             this.$iframe = null;
                         };
                     }
 
-                    this.$iframe.attr('src', this.editorUrl.href);
+                    let editorUrl = new URL(this.editorUrl.href);
+                    editorUrl.searchParams.set('exitCallback', 'closeBuilderAssistanceIFrame');
+                    this.$iframe.attr('src', editorUrl.toString());
                     this.$iframe.css('left', $('.admin__menu').width());
                 }
             }.bind(this);
@@ -376,7 +383,7 @@ define([
          * @private
          */
         _onActiveAssistance:function () {
-            this.toggleBtnLabel($.mage.__('Deactivate Builder Assistance'));
+            this.toggleBtnLabel($.mage.__('Deactivate Pagebuilder'));
             this.isActiveBuilderAssistance(true);
             this.activatingAssistance();
             return this;
@@ -387,7 +394,7 @@ define([
          * @private
          */
         _onDeactivateAssistance:function () {
-            this.toggleBtnLabel('Activate Builder Assistance');
+            this.toggleBtnLabel('Activate Pagebuilder');
             this.isActiveBuilderAssistance(false);
             return this;
         },

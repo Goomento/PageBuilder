@@ -12,6 +12,7 @@ use Exception;
 use Goomento\PageBuilder\Builder\Base\AbstractControlGroup;
 use Goomento\PageBuilder\Builder\Base\AbstractCss;
 use Goomento\PageBuilder\Builder\Base\ControlsStack;
+use Goomento\PageBuilder\Builder\Base\DataCache;
 use Goomento\PageBuilder\Builder\Controls\Animation;
 use Goomento\PageBuilder\Builder\Base\AbstractControl;
 use Goomento\PageBuilder\Builder\Controls\AbstractControlData;
@@ -131,7 +132,7 @@ class Controls
     private $controlGroups = [];
 
     /**
-     * @var array
+     * @var DataCache[]
      */
     private $stacks = [];
 
@@ -343,7 +344,7 @@ class Controls
      * @param string|null $id
      * @return array|mixed|null
      */
-    public function getControlGroups($id)
+    public function getControlGroups(?string $id)
     {
         $this->getControls();
         return $this->controlGroups[$id] ?? $this->controlGroups;
@@ -378,10 +379,12 @@ class Controls
     {
         $stackId = $controlsStack->getUniqueName();
 
-        $this->stacks[ $stackId ] = [
+        $this->stacks[ $stackId ] = new \Goomento\PageBuilder\Builder\Base\DataCache([
             'tabs' => [],
             'controls' => [],
-        ];
+        ]);
+
+        $this->stacks[ $stackId ]->setId($controlsStack->getUniqueName());
     }
 
     /**
@@ -430,6 +433,10 @@ class Controls
 
         $stackId = $element->getUniqueName();
 
+        if (!isset($this->stacks[ $stackId ])) {
+            $this->openStack($element);
+        }
+
         if (!$options['overwrite'] && isset($this->stacks[ $stackId ]['controls'][ $controlId ])) {
             return false;
         }
@@ -440,9 +447,8 @@ class Controls
             $controlData['tab'] = $defaultArgs['tab'];
         }
 
-        $this->stacks[ $stackId ]['tabs'][ $controlData['tab'] ] = $tabs[ $controlData['tab'] ];
-
-        $this->stacks[ $stackId ]['controls'][ $controlId ] = $controlData;
+        $this->stacks[ $stackId ]->setDataByPath('tabs/'. $controlData['tab'], $tabs[ $controlData['tab'] ]);
+        $this->stacks[ $stackId ]->setDataByPath('controls/' . $controlId, $controlData);
 
         if (null !== $options['index']) {
             $controls = $this->stacks[ $stackId ]['controls'];
@@ -451,7 +457,7 @@ class Controls
 
             array_splice($controlsKeys, $options['index'], 0, $controlId);
 
-            $this->stacks[ $stackId ]['controls'] = array_merge(array_flip($controlsKeys), $controls);
+            $this->stacks[ $stackId ]->setData('controls', array_merge(array_flip($controlsKeys), $controls));
         }
 
         return true;
@@ -476,7 +482,7 @@ class Controls
             );
         }
 
-        unset($this->stacks[ $stackId ]['controls'][ $controlId ]);
+        $this->stacks[ $stackId ]->unsetDataByPath('controls/' . $controlId);
 
         return true;
     }
@@ -529,7 +535,7 @@ class Controls
     {
         if ($stackId) {
             if (isset($this->stacks[ $stackId ])) {
-                return $this->stacks[ $stackId ];
+                return $this->stacks[ $stackId ]->toArray();
             }
 
             return null;
@@ -547,10 +553,16 @@ class Controls
         $stackId = $controlsStack->getUniqueName();
 
         if (!isset($this->stacks[ $stackId ])) {
-            return null;
+            $stack = new DataCache();
+            $stack->load($stackId);
+            if (!$stack->isEmpty()) {
+                $this->stacks[ $stackId ] = $stack;
+            } else {
+                return null;
+            }
         }
 
-        return $this->stacks[ $stackId ];
+        return $this->stacks[ $stackId ]->toArray();
     }
 
     /**

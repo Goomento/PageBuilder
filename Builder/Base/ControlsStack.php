@@ -140,21 +140,11 @@ abstract class ControlsStack extends AbstractBase
     private $settingsSanitized = false;
 
     /**
-     * @var Controls
-     */
-    private $controlManager;
-
-    /**
-     * @var Tags
-     */
-    private $tagsManager;
-
-    /**
      * @return string
      */
     public function getUniqueName()
     {
-        return $this->getName();
+        return implode('_', [$this->getType(), $this->getName()]);
     }
 
     /**
@@ -299,8 +289,7 @@ abstract class ControlsStack extends AbstractBase
                     $targetTab = $this->injectionPoint['tab'];
                 }
             }
-            /** @var Controls  $controlsManager */
-            $controlsManager = ObjectManagerHelper::get(Controls::class);
+
             if (null !== $targetSectionArgs) {
                 if (!empty($args['section']) || ! empty($args['tab'])) {
                     throw new Exception(
@@ -313,7 +302,8 @@ abstract class ControlsStack extends AbstractBase
                 if (null !== $targetTab) {
                     $args = array_replace_recursive($targetTab, $args);
                 }
-            } elseif (empty($args['section']) && (! $options['overwrite'] || !$controlsManager->getControlFromStack($this->getUniqueName(), $id))) {
+            } elseif (empty($args['section']) && (! $options['overwrite'] || !ObjectManagerHelper::getControlsManager()
+                        ->getControlFromStack($this->getUniqueName(), $id))) {
                 throw new Exception(
                     'Cannot add a control outside of a section'
                 );
@@ -334,7 +324,7 @@ abstract class ControlsStack extends AbstractBase
             $this->currentPopover['initialized'] = true;
         }
 
-        return $this->controlManager->addControlToStack($this, $id, $args, $options);
+        return ObjectManagerHelper::getControlsManager()->addControlToStack($this, $id, $args, $options);
     }
 
     /**
@@ -349,7 +339,7 @@ abstract class ControlsStack extends AbstractBase
      */
     public function removeControl($controlId)
     {
-        return $this->controlManager->removeControlFromStack($this->getUniqueName(), $controlId);
+        return ObjectManagerHelper::getControlsManager()->removeControlFromStack($this->getUniqueName(), $controlId);
     }
 
     /**
@@ -370,7 +360,7 @@ abstract class ControlsStack extends AbstractBase
      */
     public function updateControl($controlId, array $args, array $options = [])
     {
-        $isUpdated = $this->controlManager->updateControlInStack($this, $controlId, $args, $options);
+        $isUpdated = ObjectManagerHelper::getControlsManager()->updateControlInStack($this, $controlId, $args, $options);
 
         if (!$isUpdated) {
             return false;
@@ -401,11 +391,11 @@ abstract class ControlsStack extends AbstractBase
      */
     public function getStack()
     {
-        $stack = $this->controlManager->getElementStack($this);
+        $stack = ObjectManagerHelper::getControlsManager()->getElementStack($this);
 
         if (null === $stack) {
             $this->initControls();
-            return $this->controlManager->getElementStack($this);
+            $stack = ObjectManagerHelper::getControlsManager()->getElementStack($this);
         }
 
         return $stack;
@@ -605,7 +595,7 @@ abstract class ControlsStack extends AbstractBase
      */
     final public function addGroupControl(?string $groupName, array $args = [], array $options = [])
     {
-        $group = $this->controlManager->getControlGroups($groupName);
+        $group = ObjectManagerHelper::getControlsManager()->getControlGroups($groupName);
         if (!$group) {
             throw new Exception(
                 sprintf('Group "%s" not found.',  $groupName)
@@ -654,7 +644,7 @@ abstract class ControlsStack extends AbstractBase
         $styleControls = [];
 
         foreach ($controls as $controlName => $control) {
-            $controlObj = $this->controlManager->getControl($control['type']);
+            $controlObj = ObjectManagerHelper::getControlsManager()->getControl($control['type']);
 
             if (!$controlObj instanceof AbstractControlData) {
                 continue;
@@ -1013,7 +1003,7 @@ abstract class ControlsStack extends AbstractBase
 
         foreach ($controls as $control) {
             $controlName = $control['name'];
-            $controlObj = $this->controlManager->getControl($control['type']);
+            $controlObj = ObjectManagerHelper::getControlsManager()->getControl($control['type']);
 
             if (!$controlObj instanceof AbstractControlData) {
                 continue;
@@ -1617,7 +1607,7 @@ abstract class ControlsStack extends AbstractBase
         $settings = $this->getData('settings');
 
         foreach ($this->getControls() as $control) {
-            $controlObj = $this->controlManager->getControl($control['type']);
+            $controlObj = ObjectManagerHelper::getControlsManager()->getControl($control['type']);
 
             if (!$controlObj instanceof AbstractControlData) {
                 continue;
@@ -1712,7 +1702,7 @@ abstract class ControlsStack extends AbstractBase
      */
     protected function initControls()
     {
-        $this->controlManager->openStack($this);
+        ObjectManagerHelper::getControlsManager()->openStack($this);
         $this->registerControls();
     }
 
@@ -1772,9 +1762,9 @@ abstract class ControlsStack extends AbstractBase
 
             $valueToCheck = $settings[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ];
 
-            $tagTextData = $this->tagsManager->tagTextToTagData($valueToCheck);
+            $tagTextData = ObjectManagerHelper::getTagsManager()->tagTextToTagData($valueToCheck);
 
-            if (!$this->tagsManager->getTag($tagTextData['name'])) {
+            if (!ObjectManagerHelper::getTagsManager()->getTag($tagTextData['name'])) {
                 unset($settings[ Tags::DYNAMIC_SETTING_KEY ][ $control['name'] ]);
             }
         }
@@ -1796,8 +1786,5 @@ abstract class ControlsStack extends AbstractBase
         if (!empty($data)) {
             $this->_init($data);
         }
-
-        $this->controlManager = ObjectManagerHelper::getControlsManager();
-        $this->tagsManager = ObjectManagerHelper::getTagsManager();
     }
 }

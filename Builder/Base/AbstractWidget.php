@@ -10,15 +10,12 @@ namespace Goomento\PageBuilder\Builder\Base;
 
 use Exception;
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Builder\Managers\Elements;
-use Goomento\PageBuilder\Builder\Managers\Widgets;
 use Goomento\PageBuilder\Builder\Widgets\Common;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\TemplateHelper;
-use function GuzzleHttp\Promise\is_settled;
 
 abstract class AbstractWidget extends AbstractElement
 {
@@ -188,10 +185,10 @@ abstract class AbstractWidget extends AbstractElement
      *
      * @return array Widget stack of controls.
      */
-    public function getStack($withCommonControls = true)
+    public function getStack(bool $withCommonControls = true)
     {
         $stack = parent::getStack();
-        if ($withCommonControls && Common::NAME !== $this->getUniqueName()) {
+        if ($withCommonControls && Common::NAME !== $this->getName()) {
             $widgetManager = ObjectManagerHelper::getWidgetsManager();
             $commonWidget = $widgetManager->getWidgetTypes(Common::NAME);
 

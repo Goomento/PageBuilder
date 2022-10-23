@@ -10,7 +10,9 @@ namespace Goomento\PageBuilder\Helper;
 
 use Goomento\Core\Traits\TraitStaticCaller;
 use Goomento\Core\Traits\TraitStaticInstances;
-use Goomento\PageBuilder\Model\Cache;
+use Goomento\PageBuilder\Model\BetterCaching;
+use Goomento\PageBuilder\Model\Cache\Type\PageBuilderBackend;
+use Goomento\PageBuilder\Model\Cache\Type\PageBuilderFrontend;
 
 /**
  *
@@ -18,10 +20,14 @@ use Goomento\PageBuilder\Model\Cache;
  * HooksHelper::doAction( 'footer' ) ... . Otherwise might cause some issues with classes loader.
  * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
  *
- * @method static save($data, $identifier, $tags = [], $lifeTime = null);
- * @method static remove($identifier);
- * @method static clean($tags = []);
+ * @method static save($data, $identifier, $tags = self::FRONTEND_CACHE_TAG, $lifeTime = null);
+ * @see BetterCaching::save()
+ * @method static remove(string $identifier);
+ * @see BetterCaching::remove()
+ * @method static clean($tags);
+ * @see BetterCaching::clean()
  * @method static load($identifier);
+ * @see BetterCaching::load()
  * @method static createKey();
  */
 class CacheHelper
@@ -29,11 +35,19 @@ class CacheHelper
     use TraitStaticCaller;
     use TraitStaticInstances;
 
+    const FRONTEND_CACHE_TAG = PageBuilderFrontend::CACHE_TAG;
+
+    const BACKEND_CACHE_TAG = PageBuilderBackend::CACHE_TAG;
+
+    const DAY_LIFE_TIME = 86400; // 01 day
+
+    const HOUR_LIFE_TIME = 3600; // 01 hour
+
     /**
-     * @return Cache
+     * @return BetterCaching
      */
     protected static function getStaticInstance()
     {
-        return self::getInstance(Cache::class);
+        return self::getInstance(BetterCaching::class);
     }
 }

@@ -26,22 +26,18 @@ use Magento\Widget\Block\BlockInterface;
 
 class Content extends Template implements BlockInterface
 {
-    const CONTENT_ID = ContentInterface::CONTENT_ID;
-    const IDENTIFIER = ContentInterface::IDENTIFIER;
-
     /**
-     * @var null|ContentInterface
+     * @var ContentInterface[]
      */
-    private $content = null;
-
+    protected $buildableContents = [];
     /**
-     * @var null|bool
+     * @var bool[]
      */
-    private $validated = null;
+    protected $validate = [];
     /**
-     * @inheritdoc
+     * @var string[]
      */
-    protected $_template = 'Goomento_PageBuilder::content.phtml';
+    protected $html = [];
     /**
      * @var FilterProvider
      */
@@ -51,10 +47,6 @@ class Content extends Template implements BlockInterface
      */
     private $logger;
     /**
-     * @var string
-     */
-    private $html;
-    /**
      * @var ContentRegistry
      */
     protected $contentRegistry;
@@ -62,11 +54,29 @@ class Content extends Template implements BlockInterface
      * @var Data
      */
     private $dataHelper;
-
     /**
      * @var ContentDataProcessor
      */
     private $contentDataProcessor;
+    /**
+     * Current content Id
+     *
+     * @var int|null
+     */
+    private $currentContentId;
+    /**
+     * Current identifier Id
+     *
+     * @var string|null
+     */
+    private $currentIdentifier;
+
+    /**
+     * identifier-id mapping
+     *
+     * @var string[]
+     */
+    private $identifierIdMapping = [];
 
     /**
      * Content constructor.
@@ -93,101 +103,137 @@ class Content extends Template implements BlockInterface
         $this->filterProvider = $filterProvider;
         $this->contentRegistry = $contentRegistry;
         $this->contentDataProcessor = $contentHtmlProcessor;
-
         parent::__construct($context, $data);
     }
 
     /**
-     * @param int $id
+     * @inheritDoc
+     */
+    protected function _construct()
+    {
+        if ($this->hasData('identifier')) {
+            $this->currentIdentifier = (string) $this->getData('identifier');
+            $this->unsetData('identifier');
+        }
+        if ($this->hasData('content_id')) {
+            $this->currentIdentifier = (int) $this->getData('content_id');
+            $this->unsetData('content_id');
+        }
+
+        if (!$this->currentIdentifier || !$this->currentContentId) {
+            $contentId = (int) $this->getRequest()->getParam(ContentInterface::CONTENT_ID);
+            if ($contentId) {
+                $this->setContentId($contentId);
+            }
+        }
+        parent::_construct();
+    }
+
+    /**
+     * @param $contentId
      * @return Content
      */
-    public function setContentId($id)
+    public function setContentId($contentId)
     {
-        $this->setData(self::CONTENT_ID, $id);
+        $this->currentIdentifier = null;
+        $this->currentContentId = $contentId;
+        $content = $this->loadCurrentBuildableContent();
+        if ($content && $content->getId()) {
+            $this->currentIdentifier = (string) $content->getIdentifier();
+        }
         return $this;
     }
 
     /**
-     * @return int|null
-     */
-    public function getContentId()
-    {
-        return (int) $this->getData(self::CONTENT_ID);
-    }
-
-    /**
+     * Published method for setting content identifier
+     *
      * @param string $identifier
      * @return Content
      */
     public function setIdentifier(string $identifier)
     {
-        $this->setData(self::IDENTIFIER, $identifier);
+        $this->currentContentId = null;
+        $this->currentIdentifier = $identifier;
+        $content = $this->loadCurrentBuildableContent();
+        if ($content && $content->getId()) {
+            $this->currentContentId = $content->getId();
+        }
         return $this;
     }
 
     /**
-     * @param BuildableContentInterface $content
+     * @param BuildableContentInterface $buildableContent
      * @return Content
      */
-    public function setContent(BuildableContentInterface $content)
+    public function setBuildableContent(BuildableContentInterface $buildableContent)
     {
-        $this->content = $content;
+        $this->buildableContents[$buildableContent->getId()] = $buildableContent;
+        $this->identifierIdMapping[(string) $buildableContent->getData('identifier')] = $buildableContent->getId();
         return $this;
     }
 
     /**
      * @return BuildableContentInterface|null
      */
-    public function getBuildableContent()
+    protected function loadCurrentBuildableContent()
     {
-        if ($this->content === null) {
-            $content = null;
-            if ($this->getContentId()) {
+        $content = null;
+        if ($this->currentContentId) {
+            $content = $this->buildableContents[$this->currentContentId] ?? null;
+            if (!$content) {
                 $content = $this->contentRegistry->getById(
-                    (int) $this->getContentId()
+                    (int) $this->currentContentId
                 );
-            }
-
-            if (!$content && $this->getIdentifier()) {
-                $content = $this->contentRegistry->getByIdentifier(
-                    (string) $this->getIdentifier()
-                );
-            }
-
-            $this->content = false;
-            if ($content instanceof BuildableContentInterface && $content->getId()) {
-                $this->content = $content;
+                if ($content && $content->getId()) {
+                    $this->setBuildableContent($content);
+                }
             }
         }
 
-        return $this->content;
-    }
+        if ($this->currentIdentifier) {
+            $contentId = $this->identifierIdMapping[$this->currentIdentifier] ?? null;
+            $content = $contentId && isset($this->buildableContents[$contentId])
+                ? $this->buildableContents[$contentId] : null;
+            if(!$content) {
+                $content = $this->contentRegistry->getByIdentifier(
+                    (string) $this->currentIdentifier
+                );
+                if ($content && $content->getId()) {
+                    $this->setBuildableContent($content);
+                }
+            }
+        }
 
-    /**
-     * @return string|null
-     */
-    public function getIdentifier()
-    {
-        return $this->getData(self::IDENTIFIER);
+        return $content;
     }
 
     /**
      * @return bool
      * @throws NoSuchEntityException|LocalizedException
      */
-    protected function isValidContent()
+    protected function isValidCurrentContent() : bool
     {
-        if ($this->validated === null) {
-            $this->validated = false;
-            if ($content = $this->getBuildableContent()) {
-                $this->setContentId($content->getId());
-                if ($content->getIsActive() && $this->isContentInStore($content)) {
-                    $this->validated = true;
+        if (!isset($this->validate[$this->currentContentId])) {
+            $this->validate[$this->currentContentId] = false;
+            // This content can set
+            if ($content = $this->loadCurrentBuildableContent()) {
+                if ($this->checkValidContent($content)) {
+                    $this->validate[$this->currentContentId] = true;
                 }
             }
         }
 
-        return (bool) $this->validated;
+        return (bool) $this->validate[$this->currentContentId];
+    }
+
+    /**
+     * @param BuildableContentInterface $content
+     * @return bool
+     * @throws NoSuchEntityException
+     */
+    protected function checkValidContent(BuildableContentInterface $content) : bool
+    {
+        return $content->getIsActive() && $this->isContentInStore($content);
     }
 
     /**
@@ -210,25 +256,22 @@ class Content extends Template implements BlockInterface
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    public function getContentHtml()
+    protected function _toHtml()
     {
         $html = '';
 
         Profiler::start('PAGEBUILDER:BLOCK');
 
-        $this->isValidContent();
+        $this->logger->debug(sprintf('Render content: %s', $this->currentContentId));
 
-        $this->logger->debug(sprintf('Render content: %s', $this->getContentId()));
-
-        if ($this->isValidContent()) {
+        if ($this->isValidCurrentContent()) {
+            $this->logger->debug(sprintf('Render content: %s', $this->currentContentId));
             try {
-                ThemeHelper::registerContentToPage($this->getBuildableContent());
+                ThemeHelper::registerContentToPage($this->loadCurrentBuildableContent());
 
                 Profiler::start('PAGEBUILDER:RENDER');
-                $html = $this->contentDataProcessor->getHtml( $this->getBuildableContent() );
+                $html = $this->contentDataProcessor->getHtml( $this->loadCurrentBuildableContent() );
                 Profiler::stop('PAGEBUILDER:RENDER');
-
-                $this->logger->debug(sprintf('Render content: %s EMPTY', empty($html) ? 'IS' : 'IS NOT'));
 
                 Profiler::start('PAGEBUILDER:CMS_FILTER');
                 $html = $this->filterProvider->getPageFilter()->filter($html);
@@ -248,28 +291,36 @@ class Content extends Template implements BlockInterface
     }
 
     /**
-     * @inheridoc
-     */
-    public function getCacheKey()
-    {
-        $key = parent::getCacheKey();
-        $content = $this->getBuildableContent();
-        if ($content instanceof BuildableContentInterface) {
-            return $key . '_' . $content->getUniqueIdentity();
-        }
-
-        return $key;
-    }
-
-    /**
      * @inheritDoc
      */
     public function toHtml()
     {
-        if ($this->html === null) {
-            $this->html = parent::toHtml();
+        $html = $this->html[$this->currentContentId] ?? null;
+        if ($html === null) {
+            $this->html[$this->currentContentId] = parent::toHtml();
         }
-        return $this->html;
+        return $this->html[$this->currentContentId];
+    }
+
+    /**
+     * @inheridoc
+     */
+    public function getCacheKey()
+    {
+        $keys = [parent::getCacheKey()];
+        $content = $this->loadCurrentBuildableContent();
+        if ($content && $content->getId()) {
+            $keys[] = $content->getUniqueIdentity();
+        } else {
+            if ($this->currentContentId) {
+                $keys[] = 'id_' . $this->currentContentId;
+            }
+            if ($this->currentIdentifier) {
+                $keys[] = 'key_' . $this->currentIdentifier;
+            }
+        }
+
+        return implode('_', $keys);
     }
 
     /**
@@ -279,6 +330,6 @@ class Content extends Template implements BlockInterface
      */
     public function __toString()
     {
-        return (string) $this->toHtml();
+        return $this->toHtml();
     }
 }

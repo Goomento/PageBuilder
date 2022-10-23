@@ -250,11 +250,6 @@ class EntryPoint extends BuilderRegister
         );
 
         ThemeHelper::registerStyle(
-            'google-font-inter',
-            'https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap'
-        );
-
-        ThemeHelper::registerStyle(
             'jquery-select2',
             'Goomento_PageBuilder/lib/e-select2/css/e-select2.min.css'
         );

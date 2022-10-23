@@ -78,8 +78,8 @@ class Repeater extends AbstractElement
         if (null !== $currentTab) {
             $args = array_merge($args, $currentTab);
         }
-        /** @var Controls $controlsManager */
-        $controlsManager = ObjectManagerHelper::get(Controls::class);
+
+        $controlsManager = ObjectManagerHelper::getControlsManager();
         return $controlsManager->addControlToStack($this, $id, $args, $options);
     }
 

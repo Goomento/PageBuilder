@@ -14,19 +14,7 @@ use Goomento\PageBuilder\Builder\Managers\GeneralSettings;
 
 class General extends AbstractSettings
 {
-
-    /**
-     * Get model name.
-     *
-     * Retrieve global settings model name.
-     *
-     *
-     * @return string Model name.
-     */
-    public function getName()
-    {
-        return 'global-settings';
-    }
+    const NAME = 'global-settings';
 
     /**
      * Get CSS wrapper selector.

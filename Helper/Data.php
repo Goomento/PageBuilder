@@ -75,11 +75,41 @@ class Data extends AbstractHelper
     /**
      * @return bool
      */
-    public function isBuilderAssistanceActive()
+    public function isBuilderAssistanceActive() : bool
     {
         return (bool) $this->getBuilderConfig(
             'builder_assistance/active'
         );
+    }
+
+    /**
+     * Show builder assistance to all page
+     *
+     * @return bool
+     */
+    public function isBuilderAssistanceOnAllPage() : bool
+    {
+        return (bool) $this->getBuilderConfig(
+            'builder_assistance/all_page'
+        );
+    }
+
+    /**
+     * Show builder assistance to all page
+     *
+     * @return array
+     */
+    public function getBuilderAssistanceCustomPages() : array
+    {
+        $pages = (string) $this->getBuilderConfig(
+            'builder_assistance/custom_pages'
+        );
+        try {
+            $pages = \Zend_Json::decode($pages);
+        } catch (\Exception $e) {
+            $pages = [];
+        }
+        return array_column($pages, 'page');
     }
 
     /**

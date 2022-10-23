@@ -1,5 +1,10 @@
 # Magento 2 Goomento Page Builder
 
+## 0.3.8: Optimized speed loading
+- Optimized speed loading
+- Added Builder Assistance to specify page
+- Fixed minor bugs
+
 ## 0.3.7: Fixed minor bugs
 - Fixed minor bugs
 - Fixed #18

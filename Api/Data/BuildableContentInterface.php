@@ -9,8 +9,8 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Api\Data;
 
 /**
- * @method BuildableContentInterface getData($key, $value = null)
- * @method mixed setData()
+ * @method mixed getData($key)
+ * @method BuildableContentInterface setData($key, $value = null)
  * @method BuildableContentInterface setFlag($key, $value)
  * @method mixed getFlag()
  * @method bool hasFlag()

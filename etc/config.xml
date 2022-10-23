@@ -22,6 +22,18 @@
             <builder_assistance>
                 <active>1</active>
                 <open_in>iframe</open_in>
+                <all_page>1</all_page>
+                <custom_pages>
+                    <![CDATA[{
+                    "item0":{"page":"cms/page/new"},
+                    "item1":{"page":"cms/page/edit"},
+                    "item2":{"page":"cms/block/new"},
+                    "item3":{"page":"cms/block/edit"},
+                    "item4":{"page":"catalog/product/new"},
+                    "item5":{"page":"catalog/product/edit"},
+                    "item6":{"page":"catalog/category/new"},
+                    "item7":{"page":"catalog/category/edit"}}]]>
+                </custom_pages>
             </builder_assistance>
             <editor>
                 <number_of_revision>200</number_of_revision>

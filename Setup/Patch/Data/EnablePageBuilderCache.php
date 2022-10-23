@@ -11,7 +11,8 @@ namespace Goomento\PageBuilder\Setup\Patch\Data;
 use Magento\Framework\App\Cache\StateInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\App\Cache\Manager as CacheManager;
-use Goomento\PageBuilder\Model\Cache\Type\PageBuilder;
+use Goomento\PageBuilder\Model\Cache\Type\PageBuilderFrontend;
+use Goomento\PageBuilder\Model\Cache\Type\PageBuilderBackend;
 
 class EnablePageBuilderCache implements DataPatchInterface
 {
@@ -42,8 +43,11 @@ class EnablePageBuilderCache implements DataPatchInterface
      */
     public function apply()
     {
-        if (!$this->cacheState->isEnabled(PageBuilder::TYPE_IDENTIFIER)) {
-            $this->cacheManager->setEnabled([PageBuilder::TYPE_IDENTIFIER], true);
+        if (!$this->cacheState->isEnabled(PageBuilderFrontend::TYPE_IDENTIFIER)) {
+            $this->cacheManager->setEnabled([PageBuilderFrontend::TYPE_IDENTIFIER], true);
+        }
+        if (!$this->cacheState->isEnabled(PageBuilderBackend::TYPE_IDENTIFIER)) {
+            $this->cacheManager->setEnabled([PageBuilderBackend::TYPE_IDENTIFIER], true);
         }
     }
 

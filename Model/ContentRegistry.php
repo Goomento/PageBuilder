@@ -28,7 +28,7 @@ class ContentRegistry implements ContentRegistryInterface
      */
     private $logger;
     /**
-     * @var Cache
+     * @var BetterCaching
      */
     private $cache;
     /**
@@ -53,13 +53,13 @@ class ContentRegistry implements ContentRegistryInterface
      * ContentRegistry constructor.
      * @param ContentInterfaceFactory $contentFactory
      * @param ContentRepositoryInterface $contentRepository
-     * @param Cache $cache
+     * @param BetterCaching $cache
      * @param Logger $logger
      */
     public function __construct(
         ContentInterfaceFactory $contentFactory,
         ContentRepositoryInterface $contentRepository,
-        Cache $cache,
+        BetterCaching $cache,
         Logger $logger
     ) {
         $this->contentFactory = $contentFactory;

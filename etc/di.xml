@@ -164,7 +164,7 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="PageBuilderRenderer" type="Goomento\PageBuilder\Block\Content" shared="false" />
+    <virtualType name="PageBuilderRenderer" type="Goomento\PageBuilder\Block\Content"/>
     <type name="Goomento\PageBuilder\Block\Content" shared="false" />
     <type name="Goomento\PageBuilder\Model\ContentRepository">
         <arguments>
