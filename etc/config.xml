@@ -40,6 +40,9 @@
                 <is_rtl>0</is_rtl>
                 <resources_globally>0</resources_globally>
                 <debug>0</debug>
+                <revisions>
+                    <number_to_keep>500</number_to_keep>
+                </revisions>
                 <media>
                     <url />
                 </media>

@@ -39,14 +39,15 @@ class Revisions
 
     /**
      * @param BuildableContentInterface $buildableContent
+     * @param int|null $page Page number
+     * @param int|null $limit Items per page
      * @return array
-     * @throws Exception
      */
-    public static function getRevisions( BuildableContentInterface $buildableContent )
+    public static function getRevisions(BuildableContentInterface $buildableContent, ?int $limit = 200, ?int $page = 1) : array
     {
         /** @var ContentInterface $content */
         $content = $buildableContent->getOriginContent();
-        $revisions =  BuildableContentHelper::getRevisionsByContent( $content, null, null, null);
+        $revisions =  BuildableContentHelper::getRevisionsByContent( $content, null, $limit, $page);
         $revisionData = [];
 
         foreach ($revisions as $revision) {
@@ -57,7 +58,7 @@ class Revisions
                 'id' => $revision->getId(),
                 'author' => $author,
                 'label' => $revision->getLabel(),
-                'timestamp' => strtotime($buildableContent->getUpdateTime()),
+                'timestamp' => strtotime($revision->getCreationTime()),
                 'type' => $revision->getStatus(),
                 'hash' => $revision->getRevisionHash(),
                 'date' => date(DATE_ATOM, strtotime($revision->getCreationTime())),
@@ -111,7 +112,7 @@ class Revisions
     public static function onAjaxSaveBuilderData($returnData, AbstractDocument $document)
     {
         $buildableContent = $document->getModel();
-        $latestRevisions = self::getRevisions( $buildableContent );
+        $latestRevisions = self::getRevisions( $buildableContent, 5);
 
         $lastRevisionId = $currentRevisionId = null;
         foreach ($latestRevisions as $revision) {
@@ -155,7 +156,7 @@ class Revisions
      */
     public static function ajaxGetRevisions(array $data, BuildableContentInterface $buildableContent)
     {
-        return self::getRevisions( $buildableContent );
+        return self::getRevisions( $buildableContent, 200, isset($data['page']) ? (int) $data['page'] : 1);
     }
 
     /**

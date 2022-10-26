@@ -68,7 +68,7 @@ class Editor
                 'Magento_Ui/js/core/app' => [
                     'components' => [
                         $componentName => [
-                            'component' => 'Goomento_PageBuilder/js/ui/form/element/builderAssistance',
+                            'component' => 'goomento-builder-assistance',
                             'endpoint' => $this->urlBuilder->getUrl('pagebuilder/ajax/BuilderAssistance'),
                             'value' => $subject->getValue(),
                             'html_name' => $name,

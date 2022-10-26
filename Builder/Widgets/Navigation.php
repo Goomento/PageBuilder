@@ -190,7 +190,7 @@ class Navigation extends AbstractWidget
             /** @var \Snowdog\Menu\Model\MenuRepository $menuRepo */
             $menuRepo = ObjectManagerHelper::get('Snowdog\Menu\Model\MenuRepository');
             /** @var \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder */
-            $searchCriteriaBuilder = ObjectManagerHelper::get('Magento\Framework\Api\SearchCriteriaBuilder');
+            $searchCriteriaBuilder = ObjectManagerHelper::get(\Magento\Framework\Api\SearchCriteriaBuilder::class);
 
             $menus = $menuRepo->getList(
                 $searchCriteriaBuilder

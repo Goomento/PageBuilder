@@ -1,0 +1,78 @@
+.builder-assistance {
+    width: 100%;
+    min-height: 100px;
+}
+.builder-assistance .goomento-logo-grey:before,
+.builder-assistance .goomento-logo-white:before {
+    min-width: 15px;
+    min-height: 15px;
+}
+.builder-assistance-btn {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+.builder-assistance-btn-highlight,
+.builder-assistance-btn-highlight:hover,
+.builder-assistance-btn-highlight:focus {
+    background: linear-gradient(-90deg, #60c576 12%, #5ec6a4 100%);
+    color: #fff;
+}
+.builder-assistance-ignore-btn {
+    opacity: 0.5;
+    cursor: pointer;
+}
+.builder-assistance-ignore-btn:before {
+    content: '\e610';
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Admin Icons';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    speak: none;
+}
+.builder-assistance-select-box .select2 * {
+    line-height: inherit;
+    font-size: inherit;
+}
+.builder-assistance-select-box .select2 .select2-selection {
+    padding: 12px 20px;
+    height: auto;
+}
+.builder-assistance-select-box .select2 .select2-selection__arrow {
+    height: 100% !important;
+}
+.builder-assistance-action-wrapper {
+    text-align: center;
+    background: #f8f8f8;
+    padding: 0 0 40px;
+    border-radius: 3px;
+    margin: 20px auto 40px;
+    border: 1px solid #e5e5e5;
+}
+.builder-assistance-messages {
+    margin: 20px auto;
+}
+.builder-assistance-message:empty {
+    display: none;
+}
+.builder-assistance-field {
+    display: inline-block;
+    position: relative;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.builder-assistance-editor {
+    margin: 20px auto;
+}
+#builder-assistance-iframe {
+    position: fixed;
+    z-index: 600;
+    top: 0;
+    left: 8.8rem;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+}

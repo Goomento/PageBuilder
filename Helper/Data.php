@@ -227,4 +227,14 @@ class Data extends AbstractHelper
     {
         return (string) $this->getEditorConfig('media/url');
     }
+
+    /**
+     * Get number of revision to keep
+     *
+     * @return int
+     */
+    public function getNumberOfRevisionToKeep() : int
+    {
+        return (int) $this->getEditorConfig('revisions/number_to_keep');
+    }
 }

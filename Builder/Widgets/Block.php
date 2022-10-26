@@ -8,16 +8,8 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Widgets;
 
-use Exception;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Helper\EscaperHelper;
-use Goomento\PageBuilder\Helper\LayoutHelper;
-use Goomento\PageBuilder\Helper\LoggerHelper;
-use Goomento\PageBuilder\Helper\ObjectManagerHelper;
-use Goomento\PageBuilder\Helper\TemplateHelper;
-use Magento\Framework\View\Element\Template;
-use Magento\Framework\View\LayoutInterface;
 
 class Block extends AbstractWidget
 {

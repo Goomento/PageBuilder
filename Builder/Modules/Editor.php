@@ -163,6 +163,120 @@ class Editor
     }
 
     /**
+     * Register editor scripts
+     *
+     * @return void
+     */
+    public function beforeRegisterScripts()
+    {
+
+        $suffix = Configuration::debug() ? '' : '.min';
+
+        ThemeHelper::registerScript(
+            'backbone',
+            'Goomento_PageBuilder/lib/backbone/backbone' . $suffix
+        );
+
+        ThemeHelper::registerScript(
+            'backbone.radio',
+            'Goomento_PageBuilder/lib/backbone/backbone.radio' . $suffix,
+            ['backbone']
+        );
+
+        ThemeHelper::registerScript(
+            'backbone.marionette',
+            'Goomento_PageBuilder/lib/backbone/backbone.marionette' . $suffix,
+            [
+                'backbone',
+                'backbone.radio'
+            ]
+        );
+
+        ThemeHelper::registerScript(
+            'flatpickr',
+            'Goomento_PageBuilder/lib/flatpickr/flatpickr.min'
+        );
+
+
+        ThemeHelper::registerScript(
+            'nouislider',
+            'Goomento_PageBuilder/lib/nouislider/nouislider.min',
+            ['jquery']
+        );
+
+        ThemeHelper::inlineScript('nouislider',
+            "require(['nouislider'], nouislider => {window.noUiSlider = window.noUiSlider || nouislider});", 'before');
+
+        ThemeHelper::registerScript(
+            'perfect-scrollbar',
+            'Goomento_PageBuilder/lib/perfect-scrollbar/js/perfect-scrollbar.min',
+            ['jquery']
+        );
+
+        ThemeHelper::inlineScript('perfect-scrollbar',
+            "require(['perfect-scrollbar'], PerfectScrollbar => {window.PerfectScrollbar = window.PerfectScrollbar || PerfectScrollbar});",
+            'before');
+
+        ThemeHelper::registerScript(
+            'jquery-easing',
+            'Goomento_PageBuilder/lib/jquery-easing/jquery-easing.min',
+            ['jquery']
+        );
+
+        ThemeHelper::registerScript(
+            'nprogress',
+            'Goomento_PageBuilder/lib/nprogress/nprogress.min'
+        );
+
+        ThemeHelper::inlineScript('nprogress',
+            "require(['nprogress'], NProgress => {window.NProgress = window.NProgress || NProgress});",
+            'before');
+
+
+        ThemeHelper::registerScript(
+            'jquery-select2',
+            'Goomento_PageBuilder/lib/e-select2/js/e-select2.full.min',
+            ['jquery']
+        );
+
+        ThemeHelper::registerScript(
+            'ace',
+            'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace'
+        );
+
+        ThemeHelper::registerScript(
+            'ace-language-tools',
+            'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ext-language_tools',
+            ['ace']
+        );
+
+        ThemeHelper::registerScript(
+            'jquery-hover-intent',
+            'Goomento_PageBuilder/lib/jquery-hover-intent/jquery-hover-intent.min',
+            ['jquery']
+        );
+
+        ThemeHelper::registerScript(
+            'iris',
+            'Goomento_PageBuilder/lib/color-picker/iris.min',
+            [
+                'jquery',
+                'jquery/ui',
+            ]
+        );
+
+        ThemeHelper::registerScript(
+            'image-carousel',
+            'Goomento_PageBuilder/js/widgets/image-carousel'
+        );
+
+        ThemeHelper::registerScript(
+            'product-slider',
+            'Goomento_PageBuilder/js/widgets/product-slider'
+        );
+    }
+
+    /**
      * Register the editor scripts
      */
     public function registerScripts()
@@ -234,29 +348,12 @@ class Editor
                     'rjsResolver' => 'mage/requirejs/resolver',
                     'tinymce4' => 'tiny_mce_4/tinymce.min',
                     'wysiwygAdapter' => 'mage/adminhtml/wysiwyg/tiny_mce/tinymce4Adapter',
-                    'translateInline' => 'mage/translate-inline',
-                    'form' => 'mage/backend/form',
-                    'button' => 'mage/backend/button',
-                    'accordion' => 'mage/accordion',
-                    'actionLink' => 'mage/backend/action-link',
-                    'validation' => 'mage/backend/validation',
-                    'notification' => 'mage/backend/notification',
                     'loader' => 'mage/loader_old',
                     'loaderAjax' => 'mage/loader_old',
-                    'floatingHeader' => 'mage/backend/floating-header',
-                    'suggest' => 'mage/backend/suggest',
                     'mediabrowser' => 'jquery/jstree/jquery.jstree',
-                    'tabs' => 'mage/backend/tabs',
-                    'treeSuggest' => 'mage/backend/tree-suggest',
-                    'calendar' => 'mage/calendar',
-                    'dropdown' => 'mage/dropdown_old',
-                    'collapsible' => 'mage/collapsible',
-                    'menu' => 'mage/backend/menu',
                     'jstree' => 'jquery/jstree/jquery.jstree',
-                    'details' => 'jquery/jquery.details',
                     'mediaUploader' => 'Magento_Backend/js/media-uploader',
                     'mage/translate' => 'Magento_Backend/js/translate',
-                    'eavInputTypes' => 'Magento_Eav/js/input-types',
                     'folderTree' => 'Magento_Cms/js/folder-tree',
                     'uiElement' => 'Magento_Ui/js/lib/core/element/element',
                     'uiCollection' => 'Magento_Ui/js/lib/core/collection',
@@ -266,7 +363,6 @@ class Editor
                     'uiRegistry' => 'Magento_Ui/js/lib/registry/registry',
                     'consoleLogger' => 'Magento_Ui/js/lib/logger/console-logger',
                     'uiLayout' => 'Magento_Ui/js/core/renderer/layout',
-                    'buttonAdapter' => 'Magento_Ui/js/form/button-adapter',
                     'tinymceDeprecated' => 'Magento_Tinymce3/tiny_mce/tiny_mce_src',
                     'escaper' =>  'Magento_Security/js/escaper',
                 ]
@@ -382,7 +478,7 @@ class Editor
                 'goomento-editor-modules',
                 'perfect-scrollbar',
                 'nprogress',
-                'tipsy',
+                'jquery-tipsy',
                 'color-picker-alpha',
                 'jquery-select2',
                 'flatpickr',
@@ -624,6 +720,7 @@ EDITOR_WAPPER;
      */
     public function __construct()
     {
+        HooksHelper::addAction('pagebuilder/adminhtml/register_scripts', [$this, 'beforeRegisterScripts'], 7);
         HooksHelper::addAction('pagebuilder/editor/index', [ $this, 'initByContent']); // catch trigger in controller
     }
 }

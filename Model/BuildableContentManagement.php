@@ -112,11 +112,12 @@ class BuildableContentManagement implements BuildableContentManagementInterface
     }
 
     /**
-     * @param array $filters
+     * @param int|null $limit
+     * @param int|null $currentPage
      * @return ContentSearchResultsInterface
      * @throws LocalizedException
      */
-    public function getBuildableContents(array $filters = [])
+    public function getBuildableTemplates(?int $limit, ?int $currentPage)
     {
         $pageTypes = $this->filterBuilder
             ->setField(BuildableContentInterface::TYPE)
@@ -132,8 +133,18 @@ class BuildableContentManagement implements BuildableContentManagementInterface
         $this->searchCriteriaBuilder->addFilters([$pageTypes]);
         $this->searchCriteriaBuilder->addSortOrder($sortOrder);
 
+        $searchCriteria = $this->searchCriteriaBuilder->create();
+
+        if ($limit) {
+            $searchCriteria->setPageSize($limit);
+        }
+
+        if ($currentPage) {
+            $searchCriteria->setCurrentPage($currentPage);
+        }
+
         return $this->contentRepository->getList(
-            $this->searchCriteriaBuilder->create()
+            $searchCriteria
         );
     }
 

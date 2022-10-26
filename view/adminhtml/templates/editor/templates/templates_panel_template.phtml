@@ -144,6 +144,11 @@ $document = ObjectManagerHelper::getEditor()->getDocument();
 			<div class="gmt-excerpt"><?= __( 'Stay tuned! More awesome templates coming real soon.' ); ?></div>
 		</div>
 	<# } #>
+    <# if ( goomento.templates.getTemplatesCollection().length ) { #>
+        <div class="gmt-template-actions">
+            <a href="#" title="<?= __('Load more') ?>" class="gmt-template-load-more"><?= __('Load more') ?></a>
+        </div>
+    <# } #>
 </script>
 
 <script type="text/template" id="tmpl-gmt-template-library-template-remote">

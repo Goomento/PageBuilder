@@ -93,32 +93,16 @@ class ThemeHelper extends \Goomento\Core\Helper\ThemeHelper
      */
     public static function onStyleLoaderSource($src = '')
     {
-        if (strpos($src, 'http') === false) {
+        if(!preg_match('#((https?|ftp)://(\S*?\.\S*?))([\s)\[\]{},;"\':<]|\.\s|$)#i', $src)) {
             $src = UrlBuilderHelper::urlStaticBuilder($src);
         }
+
+        // Trip off all params in static folder for best fix with Css minification config
+        if (strpos($src, 'static/') !== false && StateHelper::isProductionMode()
+            && DataHelper::isCssMinifyFilesEnabled()) {
+            $src = preg_replace("/^([^?]+).*/", "$1", $src);
+        }
+
         return $src;
-    }
-
-    /**
-     * Get resource in PRODUCTION mode
-     * Will add `.min`
-     *
-     * @param string $resource
-     * @param string $extension
-     * @return string
-     */
-    public static function getProductionResourceUrl(string $resource, string $extension = 'css') : string
-    {
-        if ($extension[0] === '.') {
-            $extension = substr($extension, 1, strlen($extension));
-        }
-
-        if ($extension === 'css') {
-            $mustMinify = DataHelper::isCssMinifyFilesEnabled() && StateHelper::isProductionMode();
-        } else {
-            $mustMinify = DataHelper::isJsMinifyFilesEnabled() && StateHelper::isProductionMode();
-        }
-
-        return $mustMinify ?  $resource . '.min.' . $extension : $resource . '.' . $extension;
     }
 }
