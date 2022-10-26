@@ -52,27 +52,6 @@ class EntryPoint extends BuilderRegister
         );
 
         ThemeHelper::enqueueScript('pagebuilderRegister');
-
-        ThemeHelper::registerScript(
-            'backbone',
-            'Goomento_PageBuilder/lib/backbone/backbone.min'
-        );
-
-        $suffix = Configuration::debug() ? '' : '.min';
-        ThemeHelper::registerScript(
-            'backbone.radio',
-            'Goomento_PageBuilder/lib/backbone/backbone.radio' . $suffix,
-            ['backbone']
-        );
-
-        ThemeHelper::registerScript(
-            'backbone.marionette',
-            'Goomento_PageBuilder/lib/backbone/backbone.marionette' . $suffix,
-            [
-                'backbone',
-                'backbone.radio'
-            ]
-        );
     }
 
     /**
@@ -122,89 +101,8 @@ class EntryPoint extends BuilderRegister
         );
 
         ThemeHelper::registerScript(
-            'flatpickr',
-            'Goomento_PageBuilder/lib/flatpickr/flatpickr' . $minSuffix
-        );
-
-        ThemeHelper::registerScript(
-            'nouislider',
-            'Goomento_PageBuilder/lib/nouislider/nouislider.min',
-            ['jquery']
-        );
-
-        ThemeHelper::inlineScript('nouislider',
-            "require(['nouislider'], nouislider => {window.noUiSlider = window.noUiSlider || nouislider});", 'before');
-
-        ThemeHelper::registerScript(
-            'perfect-scrollbar',
-            'Goomento_PageBuilder/lib/perfect-scrollbar/js/perfect-scrollbar.min',
-            ['jquery']
-        );
-
-        ThemeHelper::inlineScript('perfect-scrollbar',
-            "require(['perfect-scrollbar'], PerfectScrollbar => {window.PerfectScrollbar = window.PerfectScrollbar || PerfectScrollbar});",
-            'before');
-
-        ThemeHelper::registerScript(
-            'jquery-easing',
-            'Goomento_PageBuilder/lib/jquery-easing/jquery-easing.min',
-            ['jquery']
-        );
-
-        ThemeHelper::registerScript(
-            'nprogress',
-            'Goomento_PageBuilder/lib/nprogress/nprogress.min'
-
-        );
-        ThemeHelper::inlineScript('nprogress',
-            "require(['nprogress'], NProgress => {window.NProgress = window.NProgress || NProgress});",
-            'before');
-
-        ThemeHelper::registerScript(
-            'tipsy',
+            'jquery-tipsy',
             'Goomento_PageBuilder/lib/tipsy/tipsy.min'
-        );
-
-        ThemeHelper::registerScript(
-            'jquery-select2',
-            'Goomento_PageBuilder/lib/e-select2/js/e-select2.full.min',
-            ['jquery']
-        );
-
-        ThemeHelper::registerScript(
-            'ace',
-            'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace'
-        );
-
-        ThemeHelper::registerScript(
-            'ace-language-tools',
-            'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ext-language_tools',
-            ['ace']
-        );
-
-        ThemeHelper::registerScript(
-            'jquery-hover-intent',
-            'Goomento_PageBuilder/lib/jquery-hover-intent/jquery-hover-intent.min',
-            ['jquery']
-        );
-
-        ThemeHelper::registerScript(
-            'iris',
-            'Goomento_PageBuilder/lib/color-picker/iris.min',
-            [
-                'jquery',
-                'jquery/ui',
-            ]
-        );
-
-        ThemeHelper::registerScript(
-            'image-carousel',
-            'Goomento_PageBuilder/js/widgets/image-carousel'
-        );
-
-        ThemeHelper::registerScript(
-            'product-slider',
-            'Goomento_PageBuilder/js/widgets/product-slider'
         );
 
         ThemeHelper::registerScript(
@@ -256,9 +154,8 @@ class EntryPoint extends BuilderRegister
 
         ThemeHelper::registerStyle(
             'goomento-widgets',
-            ThemeHelper::getProductionResourceUrl('Goomento_PageBuilder/css/widgets', '.css'),
-            ['goomento-frontend'],
-            Configuration::version()
+            'Goomento_PageBuilder/css/widgets.css',
+            ['goomento-frontend']
         );
     }
 

@@ -132,15 +132,11 @@ class Local extends AbstractSource
      */
     public function getItems(array $args = [])
     {
-        /** @var BuildableContentManagementInterface $contentManager */
-        $contentManager = ObjectManagerHelper::get(BuildableContentManagementInterface::class);
-        $contents = $contentManager->getBuildableContents();
+        $contents = (array) BuildableContentHelper::getBuildableTemplates(5, $args['page'] ?? null);
         $templates = [];
 
-        if ($contents) {
-            foreach ($contents->getItems() as $content) {
-                $templates[] = $this->getItem( (int) $content->getId() );
-            }
+        foreach ($contents as $content) {
+            $templates[] = $this->getItem((int) $content->getId());
         }
 
         return $templates;
@@ -255,7 +251,7 @@ class Local extends AbstractSource
      */
     public function getItem(int $templateId)
     {
-        $buildableContent = BuildableContentHelper::getContent( $templateId );
+        $buildableContent = BuildableContentHelper::getContent($templateId);
 
         $pageSettings = $buildableContent->getSettings();
 
@@ -294,7 +290,7 @@ class Local extends AbstractSource
 
         $buildableContent = BuildableContentHelper::getContent($templateId);
 
-        $document = $documentManager->getByContent( $buildableContent );
+        $document = $documentManager->getByContent($buildableContent);
 
         if (!empty($args['display'])) {
             $content = $document ? $document->getElementsRawData(null, true) : [];
@@ -314,7 +310,7 @@ class Local extends AbstractSource
             $pageSettingsManager = ObjectManagerHelper::getSettingsManager()
                 ->getSettingsManagers(PageSettings::NAME);
 
-            $page = $pageSettingsManager->getSettingModel( $buildableContent );
+            $page = $pageSettingsManager->getSettingModel($buildableContent);
 
             $data['page_settings'] = $page->getData('settings');
         }
@@ -448,7 +444,7 @@ class Local extends AbstractSource
             );
         }
 
-        $content = BuildableContentHelper::getContent( $contentId );
+        $content = BuildableContentHelper::getContent($contentId);
         $currentRevision = $content->getCurrentRevision(true);
         if ($currentRevision instanceof RevisionInterface) {
             $currentRevision->setLabel((string) __('Imported content'));
@@ -510,8 +506,8 @@ class Local extends AbstractSource
     private function getExportSettings(int $templateId)
     {
         $pageSettingsManager = ObjectManagerHelper::getSettingsManager()->getSettingsManagers(PageSettings::NAME);
-        $template = BuildableContentHelper::getContent( $templateId );
-        $page = $pageSettingsManager->getSettingModel( $template );
+        $template = BuildableContentHelper::getContent($templateId);
+        $page = $pageSettingsManager->getSettingModel($template);
         $pageData = $page->getData();
         $newPageData = $this->processExportElement($page);
 

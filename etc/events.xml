@@ -10,6 +10,7 @@
         <observer name="pagebuilder.process_url_rewrite_saving" instance="Goomento\PageBuilder\Observer\ProcessUrlRewriteSavingObserver" />
         <observer name="pagebuilder.process_content_assets_saving" instance="Goomento\PageBuilder\Observer\ProcessRefreshBuildableContentObserver" />
         <observer name="pagebuilder.process_content_cache" instance="Goomento\PageBuilder\Observer\ProcessRefreshContentCacheObserver" />
+        <observer name="pagebuilder.process_clean_revision" instance="Goomento\PageBuilder\Observer\CleanRevisionsObserver" />
     </event>
     <event name="pagebuilder_content_revision_save_after">
         <observer name="pagebuilder.process_revision_assets_saving" instance="Goomento\PageBuilder\Observer\ProcessRefreshBuildableContentObserver" />

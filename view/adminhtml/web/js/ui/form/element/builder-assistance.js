@@ -6,10 +6,14 @@ define([
     'jquery',
     'underscore',
     'Magento_Ui/js/form/element/abstract',
-    './assistanceActions',
-    'mage/translate'
+    'goomento-builder-actions',
+    'mage/translate',
+    'goomento-backend'
 ], function ($, _, Abstract, assistanceActions) {
     'use strict';
+
+    goomentoBackend.helpers.addCss('Goomento_PageBuilder/css/ui/form/element/builder-assistance.min.css');
+    goomentoBackend.helpers.addCss('Goomento_PageBuilder/lib/e-select2/css/e-select2.min.css');
 
     return Abstract.extend({
         defaults: {
@@ -59,7 +63,6 @@ define([
 
             assistanceActions
                 .setEndpoint(this.endpoint)
-                .refreshContentList()
                 .availableContentIds.subscribe(function (items) {
                     let selectedContentId = this.selectedContentId();
                     this.availableContentIds(items);

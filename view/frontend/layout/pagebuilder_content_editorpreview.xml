@@ -13,7 +13,6 @@
         <referenceContainer name="content">
             <block class="Goomento\PageBuilder\Block\Content\Preview"
                    name="pagebuilder.content.preview"
-                   cacheable="false"
             />
         </referenceContainer>
     </body>

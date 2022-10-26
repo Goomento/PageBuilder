@@ -7,25 +7,25 @@
 declare(strict_types=1);
 ?>
 <script type="text/template" id="tmpl-gmt-templates-modal__header">
-	<div class="gmt-templates-modal__header__logo-area"></div>
-	<div class="gmt-templates-modal__header__menu-area"></div>
-	<div class="gmt-templates-modal__header__items-area">
-		<# if ( closeType ) { #>
-			<div class="gmt-templates-modal__header__close gmt-templates-modal__header__close--{{{ closeType }}} gmt-templates-modal__header__item">
-				<# if ( 'skip' === closeType ) { #>
-				<span><?= __( 'Skip' ); ?></span>
-				<# } #>
-				<i class="fas fa-times" aria-hidden="true" title="<?= __( 'Close' ); ?>"></i>
-				<span class="gmt-screen-only"><?= __( 'Close' ); ?></span>
-			</div>
-		<# } #>
-		<div id="gmt-template-library-header-tools"></div>
-	</div>
+    <div class="gmt-templates-modal__header__logo-area"></div>
+    <div class="gmt-templates-modal__header__menu-area"></div>
+    <div class="gmt-templates-modal__header__items-area">
+        <# if ( closeType ) { #>
+            <div class="gmt-templates-modal__header__close gmt-templates-modal__header__close--{{{ closeType }}} gmt-templates-modal__header__item">
+                <# if ( 'skip' === closeType ) { #>
+                <span><?= __('Skip'); ?></span>
+                <# } #>
+                <i class="fas fa-times" aria-hidden="true" title="<?= __('Close'); ?>"></i>
+                <span class="gmt-screen-only"><?= __('Close'); ?></span>
+            </div>
+        <# } #>
+        <div id="gmt-template-library-header-tools"></div>
+    </div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-templates-modal__header__logo">
-	<span class="gmt-templates-modal__header__logo__icon-wrapper">
-		<i class="goomento-logo"></i>
-	</span>
-	<span class="gmt-templates-modal__header__logo__title">{{{ title }}}</span>
+    <span class="gmt-templates-modal__header__logo__icon-wrapper">
+        <i class="goomento-logo"></i>
+    </span>
+    <span class="gmt-templates-modal__header__logo__title">{{{ title }}}</span>
 </script>

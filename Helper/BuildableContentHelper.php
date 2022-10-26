@@ -13,9 +13,6 @@ use Goomento\Core\Traits\TraitStaticInstances;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
-use Goomento\PageBuilder\Builder\Elements\Column;
-use Goomento\PageBuilder\Builder\Elements\Section;
-use Goomento\PageBuilder\Builder\Widgets\TextEditor;
 use Goomento\PageBuilder\Model\Content as ContentModel;
 
 /**
@@ -29,6 +26,8 @@ use Goomento\PageBuilder\Model\Content as ContentModel;
  * @see \Goomento\PageBuilder\Helper\BuildableContent::getRevisionsByContent()
  * @method static RevisionInterface getRevision($revisionId)
  * @see \Goomento\PageBuilder\Helper\BuildableContent::getRevision()
+ * @method static BuildableContentInterface[] getBuildableTemplates(?int $limit = 12, ?int $currentPage = 1)
+ * @see \Goomento\PageBuilder\Helper\BuildableContent::getBuildableTemplates()
  * @method static ContentInterface|null getContent($contentId)
  * @see \Goomento\PageBuilder\Helper\BuildableContent::getContent()
  * @method static ContentInterface createContent(array $data)

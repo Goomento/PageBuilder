@@ -9,6 +9,9 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Traits;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Helper\StateHelper;
+use Magento\Framework\Escaper;
 
 /**
  * Use this under Block template
@@ -21,6 +24,28 @@ trait TraitWidgetBlock
     public function getWidget() : ?AbstractWidget
     {
         return $this->getData('builder_widget');
+    }
+
+    /**
+     * @return Escaper
+     */
+    public function getEscaper() : Escaper
+    {
+        if (isset($this->_escaper) && $this->_escaper instanceof Escaper) {
+            return $this->_escaper;
+        }
+
+        return ObjectManagerHelper::get(Escaper::class);
+    }
+
+    /**
+     * Check whether builder mode or not
+     *
+     * @return bool
+     */
+    public function isEnteredBuilderMode() : bool
+    {
+        return (bool) StateHelper::isBuildable();
     }
 
     /**

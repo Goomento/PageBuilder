@@ -23,8 +23,6 @@ use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Model\Config;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\NoSuchEntityException;
 
 class Documents
 {
@@ -251,8 +249,6 @@ class Documents
      * @param string $type AbstractDocument type.
      * @param array $data An array containing the post data.
      * @return AbstractDocument The type of the document.
-     * @throws CouldNotSaveException
-     * @throws NoSuchEntityException
      * @throws Exception
      */
     public function create(string $type, array $data = [])
@@ -307,6 +303,7 @@ class Documents
         $data = [
             'elements' => $requestData['elements'],
             'settings' => $requestData['settings'],
+            'label' => $requestData['label'] ?? null,
         ];
 
         $document->save( $data );
