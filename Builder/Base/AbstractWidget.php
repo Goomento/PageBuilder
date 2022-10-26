@@ -176,6 +176,16 @@ abstract class AbstractWidget extends AbstractElement
     }
 
     /**
+     * Render preview in widget sidebar
+     *
+     * @return array
+     */
+    public function getPreviewHelper() : array
+    {
+        return [];
+    }
+
+    /**
      * Get stack.
      *
      * Retrieve the widget stack of controls.
@@ -256,6 +266,7 @@ abstract class AbstractWidget extends AbstractElement
             'html_wrapper_class' => $this->getHtmlWrapperClass(),
             'show_in_panel' => $this->showInPanel(),
             'render_preview' => $this->renderPreview(),
+            'preview_helper' => $this->getPreviewHelper(),
         ];
 
         /** @var Controls $managersControls */

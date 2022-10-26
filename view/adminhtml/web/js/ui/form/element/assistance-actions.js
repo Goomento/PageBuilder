@@ -6,25 +6,10 @@ define([
     'jquery',
     'ko',
     'mage/translate',
+    'goomento-backend',
     'Goomento_PageBuilder/lib/e-select2/js/e-select2.full.min'
 ], function ($, ko) {
     'use strict';
-
-    /**
-     * Add stylesheet to <head
-     * @param href
-     */
-    const addCss = function (href) {
-        href = require.toUrl(href);
-        var link = document.createElement('link');
-        link.type = 'text/css';
-        link.rel = 'stylesheet';
-        document.head.appendChild(link);
-
-        link.href = href;
-    }
-
-    addCss('Goomento_PageBuilder/lib/e-select2/css/e-select2.min.css');
 
     /**
      * @constructor
@@ -45,16 +30,36 @@ define([
         availableContentIds: ko.observable([]),
         setEndpoint: function (url = '') {
             this.config.endpoint = url;
+            this.refreshContentList();
             return this;
+        },
+        /**
+         * Go ajax
+         * @returns {*}
+         */
+        doAjax: function (data, method = 'get', loader = true) {
+            let result = $.Deferred();
+            loader && $('body').trigger('processStart');
+            $.ajax({
+                url: this.config.endpoint,
+                type: (method || 'get').toUpperCase(),
+                data: data,
+                success: data => { result.resolve(data) },
+                error: () => { result.reject() },
+                complete: () => {
+                    loader && $('body').trigger('processStop');
+                },
+            });
+            return result;
         },
         /**
          * Refresh the list
          * @return {AssistanceActions}
          */
         refreshContentList: function () {
-            $.get(this.config.endpoint, {
+            this.doAjax({
                 action: 'list'
-            }).done(function (items) {
+            }, 'get', false).done(function (items) {
                 items.unshift(this.config.defaultContentId);
                 this.availableContentIds(items);
             }.bind(this));
@@ -72,7 +77,7 @@ define([
             } else {
                 Object.assign(post, data);
             }
-            $.post(this.config.endpoint, post).done(function (item) {
+            this.doAjax(post, 'post').done(function (item) {
                 let items = this.availableContentIds();
                 items.push(item);
                 this.availableContentIds(items);
@@ -87,11 +92,11 @@ define([
          * @param cb
          */
         initWysiwyg: function (elementId = '', storeId = 0, cb) {
-            $.post(this.config.endpoint, {
+            this.doAjax({
                 element_id: elementId,
                 store_id: storeId,
                 action: 'wysiwyg'
-            }).done(function (data) {
+            }, 'post').done(function (data) {
                 if (cb && data) {
                     cb(data);
                 }
@@ -103,7 +108,7 @@ define([
          * @return {AssistanceActions}
          */
         getEditUrl: function (identifier = '', cb) {
-            $.get(this.config.endpoint, {
+            this.doAjax({
                 action: 'edit',
                 identifier: identifier
             }).done(function (data) {

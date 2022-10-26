@@ -15,8 +15,6 @@ use Goomento\PageBuilder\Model\PageBuilderUrlRewriteGenerator;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
-use Magento\Store\Model\ResourceModel\Store as ResourceStore;
-use Magento\UrlRewrite\Model\Exception\UrlAlreadyExistsException;
 use Magento\UrlRewrite\Model\UrlPersistInterface;
 
 class Store
@@ -66,12 +64,14 @@ class Store
     /**
      * Replace page url rewrites on store view save
      *
-     * @param ResourceStore $object
-     * @param ResourceStore $result
-     * @param AbstractModel $store
+     * @param \Magento\Store\Model\ResourceModel\Store $object
+     * @param \Magento\Store\Model\ResourceModel\Store|null $store
      * @return void
      */
-    public function afterSave(ResourceStore $object, ResourceStore $result, $store): void
+    public function afterSave(
+        \Magento\Store\Model\ResourceModel\Store $object,
+        ?\Magento\Store\Model\ResourceModel\Store $store
+    ): void
     {
         try {
             if ($store instanceof AbstractModel && $store->isObjectNew()) {

@@ -83,6 +83,17 @@ class BuildableContent extends AbstractHelper
     }
 
     /**
+     * @param int|null $limit
+     * @param int|null $currentPage
+     * @return BuildableContentInterface[]
+     * @throws LocalizedException
+     */
+    public function getBuildableTemplates(?int $limit = 12, ?int $currentPage = 1)
+    {
+        return $this->contentManagement->getBuildableTemplates($limit, $currentPage)->getItems();
+    }
+
+    /**
      * @param $revisionId
      * @return RevisionInterface
      * @throws LocalizedException

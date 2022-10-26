@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Plugin\Ui\Component\Form\Element\Wysiwyg;
 
-use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Goomento\PageBuilder\Helper\Data;
 use Magento\Framework\UrlInterface;
 use Magento\Ui\Component\Form\Element\AbstractElement;
@@ -51,14 +50,23 @@ class BuilderAssistance
 
         if ($isAssistanceActive) {
             $config = $subject->getData('config');
-            $config['component']   = 'Goomento_PageBuilder/js/ui/form/element/builderAssistance';
-            $config['elementTmpl'] = 'Goomento_PageBuilder/ui/form/element/builder_assistance';
-            $config['template'] = 'ui/form/field';
-            $config['endpoint']    = UrlBuilderHelper::getUrl('pagebuilder/ajax/BuilderAssistance');
-            $subject->setData('config', (array)$config);
+            $subject->setData('config', $this->addComponent((array) $config));
         } else {
             $proceed();
         }
+    }
+
+    /**
+     * @param array $config
+     * @return array
+     */
+    private function addComponent(array $config)
+    {
+        $config['component']   = 'goomento-builder-assistance';
+        $config['elementTmpl'] = 'Goomento_PageBuilder/ui/form/element/builder_assistance';
+        $config['template']    = 'ui/form/field';
+        $config['endpoint']    = $this->urlBuilder->getUrl('pagebuilder/ajax/BuilderAssistance');
+        return $config;
     }
 
     /**
@@ -68,8 +76,12 @@ class BuilderAssistance
      */
     public static function urlContains(string $currentUrl, array $paths)
     {
+        $currentUrl = explode('/', $currentUrl);
+        $currentUrl = array_filter($currentUrl);
         foreach ($paths as $path) {
-            if (strpos($currentUrl, $path) !== false) {
+            $path = explode('/', $path);
+            $path = array_filter($path);
+            if (array_intersect($path, $currentUrl) === $path) {
                 return true;
             }
         }

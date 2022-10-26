@@ -110,6 +110,16 @@ class Elements
     }
 
     /**
+     * @param array $categories
+     * @return $this
+     */
+    public function setCategories(array $categories)
+    {
+        $this->categories = $categories;
+        return $this;
+    }
+
+    /**
      * @param $categoryName
      * @param $categoryProperties
      */
@@ -156,7 +166,7 @@ class Elements
      */
     public function getElementTypes($elementName = null)
     {
-        if (is_null($this->elementTypes)) {
+        if (null === $this->elementTypes) {
             $this->initElements();
         }
 
@@ -181,6 +191,11 @@ class Elements
         return $config;
     }
 
+    /**
+     * Print out the child content HTML
+     *
+     * @return void
+     */
     public function renderElementsContent()
     {
         foreach ($this->getElementTypes() as $elementType) {

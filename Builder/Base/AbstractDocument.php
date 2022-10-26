@@ -322,6 +322,10 @@ abstract class AbstractDocument extends ControlsStack
             $this->setModelElements($data['elements']);
         }
 
+        if (isset($data['label']) && $data['label']) {
+            $this->getModel()->setFlag('save_message', (string) $data['label']);
+        }
+
         $this->setModelVersion();
 
         $this->saveModel();
@@ -490,7 +494,12 @@ abstract class AbstractDocument extends ControlsStack
      */
     public function saveModel()
     {
-        return BuildableContentHelper::saveBuildableContent( $this->getModel() );
+        $model = $this->getModel();
+
+        return BuildableContentHelper::saveBuildableContent(
+            $model,
+            $model->hasFlag('save_message') ? $model->getFlag('save_message') : ''
+        );
     }
 
     /**
