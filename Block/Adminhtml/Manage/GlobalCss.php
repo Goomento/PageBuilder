@@ -35,8 +35,7 @@ class GlobalCss extends Tab
         DataPersistorInterface $dataPersistor,
         ConfigInterface $config,
         array $data = []
-    )
-    {
+    ) {
         $this->dataPersistor = $dataPersistor;
         $this->config = $config;
         parent::__construct($context, $data);

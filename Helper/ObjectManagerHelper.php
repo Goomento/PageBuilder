@@ -28,6 +28,7 @@ use Magento\Store\Model\StoreManager;
  * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
  *
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class ObjectManagerHelper extends \Goomento\Core\Helper\ObjectManagerHelper
 {
     /**

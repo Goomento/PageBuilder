@@ -49,8 +49,7 @@ class ValidateAccess
         ResponseInterface $response,
         ManagerInterface $messageManager,
         BuildableContent $contentHelper
-    )
-    {
+    ) {
         $this->request = $request;
         $this->response = $response;
         $this->contentHelper = $contentHelper;
@@ -65,8 +64,7 @@ class ValidateAccess
     public function beforeDispatch(
         ActionInterface $subject,
         RequestInterface $request
-    )
-    {
+    ) {
         try {
             $contentId = (int) $this->request->getParam(ContentInterface::CONTENT_ID);
             if (empty($contentId)) {

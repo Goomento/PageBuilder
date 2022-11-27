@@ -32,8 +32,7 @@ class ProcessRefreshBuildableContentObserver implements ObserverInterface
     public function __construct(
         BuildableContentManagementInterface $buildableContentManagement,
         Logger $logger
-    )
-    {
+    ) {
         $this->buildableContentManagement = $buildableContentManagement;
         $this->logger = $logger;
     }

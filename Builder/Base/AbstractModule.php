@@ -33,7 +33,7 @@ abstract class AbstractModule extends AbstractBase
      */
     public function __clone()
     {
-        throw new \Exception('Something went wrong');
+        throw new \Goomento\PageBuilder\Exception\BuilderException('Something went wrong');
     }
 
     /**
@@ -44,7 +44,7 @@ abstract class AbstractModule extends AbstractBase
      */
     public function __wakeup()
     {
-        throw new \Exception(
+        throw new \Goomento\PageBuilder\Exception\BuilderException(
             'Something went wrong'
         );
     }
@@ -102,7 +102,7 @@ abstract class AbstractModule extends AbstractBase
      *
      * @return string
      */
-    final protected function getAssetsUrl($fileName, $fileExtension, $relativeUrl = null, $addMinSuffix = 'default')
+    protected function getAssetsUrl($fileName, $fileExtension, $relativeUrl = null, $addMinSuffix = 'default')
     {
         if (!$relativeUrl) {
             $relativeUrl = $this->getAssetsRelativeUrl() . $fileExtension . '/';
@@ -134,7 +134,7 @@ abstract class AbstractModule extends AbstractBase
      * @return string
      * @deprecated
      */
-    final protected function getJsAssetsUrl($fileName, $relativeUrl = null, $addMinSuffix = 'default'): string
+    protected function getJsAssetsUrl($fileName, $relativeUrl = null, $addMinSuffix = 'default'): string
     {
         return $this->getAssetsUrl($fileName, 'js', $relativeUrl, $addMinSuffix);
     }

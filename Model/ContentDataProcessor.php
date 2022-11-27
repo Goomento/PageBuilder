@@ -10,6 +10,7 @@ namespace Goomento\PageBuilder\Model;
 
 use Exception;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
+use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\PageBuilder;
 use Magento\Framework\Exception\LocalizedException;
@@ -85,14 +86,17 @@ class ContentDataProcessor
      */
     public function getElementHtml(BuildableContentInterface $content, array $data) : string
     {
-        $key = md5( Zend_Json::encode($data) );
+        $key = EncryptorHelper::uniqueStringId(Zend_Json::encode($data));
 
         if (!isset($this->elements[$key])) {
 
             PageBuilder::initialize();
 
-            $this->elements[$key] = HooksHelper::applyFilters('pagebuilder/document/render_element',
-                $content, $data)->getResult();
+            $this->elements[$key] = HooksHelper::applyFilters(
+                'pagebuilder/document/render_element',
+                $content,
+                $data
+            )->getResult();
         }
 
         return (string) $this->elements[$key];
@@ -113,7 +117,7 @@ class ContentDataProcessor
             );
         }
 
-        $key = md5( Zend_Json::encode($data) );
+        $key = EncryptorHelper::uniqueStringId(Zend_Json::encode($data));
 
         if (!isset($this->settings[$key])) {
 

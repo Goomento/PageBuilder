@@ -67,7 +67,7 @@ interface ContentRepositoryInterface
      * @param ContentInterface $page
      * @return bool true on success
      * @throws LocalizedException
-     *@see ContentRegistryInterface::invalidateContent()
+     * @see ContentRegistryInterface::invalidateContent()
      */
     public function delete(ContentInterface $page);
 
@@ -78,7 +78,7 @@ interface ContentRepositoryInterface
      * @return bool true on success
      * @throws NoSuchEntityException
      * @throws LocalizedException
-     *@see ContentRegistryInterface::invalidateContent()
+     * @see ContentRegistryInterface::invalidateContent()
      */
     public function deleteById($pageId);
 }

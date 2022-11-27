@@ -19,6 +19,8 @@ use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\RequestHelper;
 
+// phpcs:disable Magento2.Functions.DiscouragedFunction.Discouraged
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class Revisions
 {
 
@@ -47,7 +49,7 @@ class Revisions
     {
         /** @var ContentInterface $content */
         $content = $buildableContent->getOriginContent();
-        $revisions =  BuildableContentHelper::getRevisionsByContent( $content, null, $limit, $page);
+        $revisions =  BuildableContentHelper::getRevisionsByContent($content, null, $limit, $page);
         $revisionData = [];
 
         foreach ($revisions as $revision) {
@@ -82,7 +84,7 @@ class Revisions
     public static function ajaxGetRevisionData(array $data)
     {
         if (!isset($data['id'])) {
-            throw new Exception(
+            throw new \Goomento\PageBuilder\Exception\BuilderException(
                 'You must set the revision ID.'
             );
         }
@@ -90,7 +92,7 @@ class Revisions
         $revision = BuildableContentHelper::getRevision($data['id']);
 
         if (!$revision) {
-            throw new Exception(
+            throw new \Goomento\PageBuilder\Exception\BuilderException(
                 'Invalid revision.'
             );
         }
@@ -112,7 +114,7 @@ class Revisions
     public static function onAjaxSaveBuilderData($returnData, AbstractDocument $document)
     {
         $buildableContent = $document->getModel();
-        $latestRevisions = self::getRevisions( $buildableContent, 5);
+        $latestRevisions = self::getRevisions($buildableContent, 5);
 
         $lastRevisionId = $currentRevisionId = null;
         foreach ($latestRevisions as $revision) {
@@ -156,7 +158,7 @@ class Revisions
      */
     public static function ajaxGetRevisions(array $data, BuildableContentInterface $buildableContent)
     {
-        return self::getRevisions( $buildableContent, 200, isset($data['page']) ? (int) $data['page'] : 1);
+        return self::getRevisions($buildableContent, 200, isset($data['page']) ? (int) $data['page'] : 1);
     }
 
     /**

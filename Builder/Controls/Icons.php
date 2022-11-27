@@ -42,30 +42,30 @@ class Icons extends AbstractBaseMultiple
     public function contentTemplate()
     {
         ?>
-		<div class="gmt-control-field gmt-control-media">
-			<label class="gmt-control-title">{{{ data.label }}}</label>
-			<div class="gmt-control-input-wrapper gmt-aspect-ratio-219">
-				<div class="gmt-control-media__content gmt-control-tag-area gmt-control-preview-area gmt-fit-aspect-ratio">
-					<div class="gmt-control-media-upload-button gmt-fit-aspect-ratio">
-						<i class="fas fa-plus-circle" aria-hidden="true"></i>
-					</div>
-					<div class="gmt-control-media-area gmt-fit-aspect-ratio">
-						<div class="gmt-control-media__remove" title="<?= __('Remove'); ?>">
-							<i class="fas fa-trash"></i>
-						</div>
-						<div class="gmt-control-media__preview gmt-fit-aspect-ratio"></div>
-					</div>
-					<div class="gmt-control-media__tools">
-						<div class="gmt-control-icon-picker gmt-control-media__tool"><?= __('Icon Library'); ?></div>
-					</div>
-				</div>
-			</div>
-			<# if ( data.description ) { #>
-			<div class="gmt-control-field-description">{{{ data.description }}}</div>
-			<# } #>
-			<input type="hidden" data-setting="{{ data.name }}"/>
-		</div>
-		<?php
+        <div class="gmt-control-field gmt-control-media">
+            <label class="gmt-control-title">{{{ data.label }}}</label>
+            <div class="gmt-control-input-wrapper gmt-aspect-ratio-219">
+                <div class="gmt-control-media__content gmt-control-tag-area gmt-control-preview-area gmt-fit-aspect-ratio">
+                    <div class="gmt-control-media-upload-button gmt-fit-aspect-ratio">
+                        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+                    </div>
+                    <div class="gmt-control-media-area gmt-fit-aspect-ratio">
+                        <div class="gmt-control-media__remove" title="<?= __('Remove'); ?>">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                        <div class="gmt-control-media__preview gmt-fit-aspect-ratio"></div>
+                    </div>
+                    <div class="gmt-control-media__tools">
+                        <div class="gmt-control-icon-picker gmt-control-media__tool"><?= __('Icon Library'); ?></div>
+                    </div>
+                </div>
+            </div>
+            <# if ( data.description ) { #>
+            <div class="gmt-control-field-description">{{{ data.description }}}</div>
+            <# } #>
+            <input type="hidden" data-setting="{{ data.name }}"/>
+        </div>
+        <?php
     }
 
     /**

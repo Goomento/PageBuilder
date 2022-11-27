@@ -216,8 +216,7 @@ class Button extends AbstractWidget
         string         $prefix = self::NAME . '_',
         string         $cssTarget = '.gmt-button',
         array          $args = []
-    )
-    {
+    ) {
         $widget->addGroupControl(
             BorderGroup::NAME,
             $args + [
@@ -275,8 +274,7 @@ class Button extends AbstractWidget
         string         $prefix = self::NAME . '_',
         string         $cssTarget = '.gmt-button',
         array          $args = []
-    )
-    {
+    ) {
         $widget->addControl(
             $prefix . 'icon_indent',
             $args + [
@@ -309,8 +307,7 @@ class Button extends AbstractWidget
         string         $prefix = self::NAME . '_',
         string         $cssTarget = '.gmt-button',
         array          $args = []
-    )
-    {
+    ) {
         $widget->addGroupControl(
             TypographyGroup::NAME,
             $args + [
@@ -436,8 +433,7 @@ class Button extends AbstractWidget
         string         $prefix = self::NAME . '_',
         string         $cssTarget = '.gmt-button',
         array          $args = []
-    )
-    {
+    ) {
         self::registerButtonLabelStyle($widget, $prefix, $cssTarget, $args);
         self::registerButtonBodyStyle($widget, $prefix, $cssTarget, $args);
         self::registerButtonIconStyle($widget, $prefix, $cssTarget, $args);

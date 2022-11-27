@@ -39,8 +39,8 @@ class General extends AbstractSettings
      * @return array {
      *    Panel settings.
      *
-     *    @type string $title The panel title.
-     *    @type array  $menu  The panel menu.
+     * @type string $title The panel title.
+     * @type array  $menu  The panel menu.
      * }
      */
     public function getPanelPageSettings()

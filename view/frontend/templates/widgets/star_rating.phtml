@@ -47,8 +47,8 @@ $schemaRating = '<span itemprop="ratingValue" class="gmt-screen-only">' . $textu
 $starsElement = '<div ' . $widget->getRenderAttributeString('icon_wrapper') . '>' . $widget->renderStars($icon) . ' ' . $schemaRating . '</div>'; ?>
 
 <div class="gmt-star-rating__wrapper">
-    <?php if (!empty($settings['title'])) : ?>
-        <div <?= $widget->getRenderAttributeString('title') ?>><?= /** @noEscape */ $settings['title']; ?></div>
+    <?php if (!empty($settings['title'])): ?>
+        <div <?= /** @noEscape */ $widget->getRenderAttributeString('title') ?>><?= /** @noEscape */ $settings['title']; ?></div>
     <?php endif; ?>
-    <?= $starsElement; ?>
+    <?=  /** @noEscape */ $starsElement; ?>
 </div>

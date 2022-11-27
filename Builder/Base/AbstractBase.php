@@ -31,7 +31,7 @@ abstract class AbstractBase extends AbstractEntity
      * @param null $setting
      * @return array|mixed|null
      */
-    final public function getSettings($setting = null)
+    public function getSettings($setting = null)
     {
         $this->ensureSettings();
 
@@ -42,7 +42,7 @@ abstract class AbstractBase extends AbstractEntity
      * @param $key
      * @param null $value
      */
-    final public function setSettings($key, $value = null)
+    public function setSettings($key, $value = null)
     {
         $this->ensureSettings();
 
@@ -70,7 +70,7 @@ abstract class AbstractBase extends AbstractEntity
      * @param null $needle
      * @return array|mixed|null
      */
-    final protected static function getItems(array $haystack, $needle = null)
+    protected static function getItems(array $haystack, $needle = null)
     {
         if ($needle) {
             return $haystack[$needle] ?? null;
@@ -97,8 +97,10 @@ abstract class AbstractBase extends AbstractEntity
         if (null === $this->settings) {
             $this->settings = $this->getInitSettings();
 
-            $this->settings = HooksHelper::applyFilters('pagebuilder/settings/' . static::TYPE . '/' . static::NAME,
-                $this->settings)->getResult();
+            $this->settings = HooksHelper::applyFilters(
+                'pagebuilder/settings/' . static::TYPE . '/' . static::NAME,
+                $this->settings
+            )->getResult();
         }
     }
 }

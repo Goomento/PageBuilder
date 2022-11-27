@@ -12,6 +12,7 @@ use Magento\Framework\App\ObjectManager;
 
 const DEBUGGING = false;
 
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class Developer
 {
     const DEBUG = 'debug';
@@ -62,6 +63,7 @@ class Developer
     {
         if (self::$variables === null) {
             self::$variables = [];
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
             $composer = file_get_contents(__dir__ . '/composer.json');
             $composer = json_decode($composer);
             self::$variables[self::VERSION] = $composer->version;

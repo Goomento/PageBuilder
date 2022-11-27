@@ -52,7 +52,7 @@ class DataConfig extends AbstractDataTag
         $this->addControl(
             self::CONFIG_PATH,
             [
-                'label' => __( 'Config Path'),
+                'label' => __('Config Path'),
                 'type' => Controls::TEXT,
                 'default' => '',
             ]
@@ -74,7 +74,7 @@ class DataConfig extends AbstractDataTag
     protected function getValue(array $options = [])
     {
         $path = $this->getSettings(self::CONFIG_PATH);
-        if (trim($path) && count( explode('/', $path) ) >= 3) {
+        if (trim($path) && count(explode('/', $path)) >= 3) {
 
             $data = DataHelper::getConfig($path);
 

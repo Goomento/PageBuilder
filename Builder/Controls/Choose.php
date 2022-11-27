@@ -23,25 +23,25 @@ class Choose extends AbstractControlData
     public function contentTemplate()
     {
         $controlUid = $this->getControlUid('{{value}}'); ?>
-		<div class="gmt-control-field">
-			<label class="gmt-control-title">{{{ data.label }}}</label>
-			<div class="gmt-control-input-wrapper">
-				<div class="gmt-choices">
-					<# _.each( data.options, function( options, value ) { #>
-					<input id="<?= $controlUid; ?>" type="radio" name="gmt-choose-{{ data.name }}-{{ data._cid }}" value="{{ value }}">
-					<label class="gmt-choices-label tooltip-target" for="<?= $controlUid; ?>" data-tooltip="{{ options.title }}" title="{{ options.title }}">
-						<i class="{{ options.icon }}" aria-hidden="true"></i>
-						<span class="gmt-screen-only">{{{ options.title }}}</span>
-					</label>
-					<# } ); #>
-				</div>
-			</div>
-		</div>
+        <div class="gmt-control-field">
+            <label class="gmt-control-title">{{{ data.label }}}</label>
+            <div class="gmt-control-input-wrapper">
+                <div class="gmt-choices">
+                    <# _.each( data.options, function( options, value ) { #>
+                    <input id="<?= $controlUid; ?>" type="radio" name="gmt-choose-{{ data.name }}-{{ data._cid }}" value="{{ value }}">
+                    <label class="gmt-choices-label tooltip-target" for="<?= $controlUid; ?>" data-tooltip="{{ options.title }}" title="{{ options.title }}">
+                        <i class="{{ options.icon }}" aria-hidden="true"></i>
+                        <span class="gmt-screen-only">{{{ options.title }}}</span>
+                    </label>
+                    <# } ); #>
+                </div>
+            </div>
+        </div>
 
-		<# if ( data.description ) { #>
-		<div class="gmt-control-field-description">{{{ data.description }}}</div>
-		<# } #>
-		<?php
+        <# if ( data.description ) { #>
+        <div class="gmt-control-field-description">{{{ data.description }}}</div>
+        <# } #>
+        <?php
     }
 
     /**

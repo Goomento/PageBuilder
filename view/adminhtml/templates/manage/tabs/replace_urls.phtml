@@ -17,7 +17,7 @@ use Goomento\PageBuilder\Block\Adminhtml\Manage\Tab;
             <div class="admin__field-label">
                 <label for="from">
                     <span>
-                        <?= __('Find') ?>
+                        <?= $block->escapeHtml(__('Find')) ?>
                     </span>
                 </label>
             </div>
@@ -33,7 +33,7 @@ use Goomento\PageBuilder\Block\Adminhtml\Manage\Tab;
             <div class="admin__field-label">
                 <label for="to">
                     <span>
-                        <?= __('Replace') ?>
+                        <?= $block->escapeHtml(__('Replace')) ?>
                     </span>
                 </label>
             </div>

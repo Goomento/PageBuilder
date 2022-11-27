@@ -25,8 +25,7 @@ class ProcessRefreshContentCacheObserver implements ObserverInterface
      */
     public function __construct(
         ContentRegistryInterface $contentRegistry
-    )
-    {
+    ) {
         $this->contentRegistry = $contentRegistry;
     }
 

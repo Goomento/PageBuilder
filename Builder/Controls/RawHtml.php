@@ -23,11 +23,11 @@ class RawHtml extends AbstractControlUi
     public function contentTemplate()
     {
         ?>
-		<# if ( data.label ) { #>
-		<span class="gmt-control-title">{{{ data.label }}}</span>
-		<# } #>
-		<div class="gmt-control-raw-html {{ data.content_classes }}">{{{ data.raw }}}</div>
-		<?php
+        <# if ( data.label ) { #>
+        <span class="gmt-control-title">{{{ data.label }}}</span>
+        <# } #>
+        <div class="gmt-control-raw-html {{ data.content_classes }}">{{{ data.raw }}}</div>
+        <?php
     }
 
     /**

@@ -3,70 +3,79 @@
  * @package Goomento_PageBuilder
  * @link https://github.com/Goomento/PageBuilder
  */
-
 declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/**
+ * @var Template $block
+ */
 ?>
 
 <script type="text/template" id="tmpl-gmt-panel-revisions">
-	<div class="gmt-panel-box">
-	<div class="gmt-panel-scheme-buttons">
-            <div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-close tooltip-target" data-tooltip="<?= __( 'Close' ); ?>">
+    <div class="gmt-panel-box">
+    <div class="gmt-panel-scheme-buttons">
+            <div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-close tooltip-target"
+                 data-tooltip="<?= $block->escapeHtml(__('Close')); ?>">
                 <button class="gmt-button">
                     <i class="fas fa-chevron-left"></i>
-                    <?= __( 'Close' ); ?>
+                    <?= $block->escapeHtml(__('Close')); ?>
                 </button>
             </div>
-			<div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-discard tooltip-target" data-tooltip="<?= __( 'Discard' ); ?>">
-				<button class="gmt-button" disabled>
-					<i class="fas fa-times" aria-hidden="true"></i>
-					<?= __( 'Discard' ); ?>
-				</button>
-			</div>
-			<div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-save tooltip-target" data-tooltip="<?= __( 'Apply' ); ?>">
-				<button class="gmt-button gmt-button-success" disabled>
-					<?= __( 'Apply' ); ?>
-				</button>
-			</div>
-		</div>
-	</div>
+            <div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-discard tooltip-target"
+                 data-tooltip="<?= $block->escapeHtml(__('Discard')); ?>">
+                <button class="gmt-button" disabled>
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                    <?= $block->escapeHtml(__('Discard')); ?>
+                </button>
+            </div>
+            <div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-save tooltip-target"
+                 data-tooltip="<?= $block->escapeHtml(__('Apply')); ?>">
+                <button class="gmt-button gmt-button-success" disabled>
+                    <?= $block->escapeHtml(__('Apply')); ?>
+                </button>
+            </div>
+        </div>
+    </div>
 
-	<div class="gmt-panel-box">
-		<div class="gmt-panel-heading">
-			<div><?= __( 'Saved draft & revisions' ); ?></div>
-		</div>
-		<div id="gmt-revisions-list" class="gmt-panel-box-content"></div>
+    <div class="gmt-panel-box">
+        <div class="gmt-panel-heading">
+            <div><?= $block->escapeHtml(__('Saved draft & revisions')); ?></div>
+        </div>
+        <div id="gmt-revisions-list" class="gmt-panel-box-content"></div>
         <# if ( goomento.revisions.getRevisions().length ) { #>
             <div class="gmt-revisions-actions">
-                <a href="#" title="<?= __('Load more') ?>" class="gmt-revisions-load-more"><?= __('Load more') ?></a>
+                <a href="#" title="<?= $block->escapeHtml(__('Load more')) ?>"
+                   class="gmt-revisions-load-more"><?= $block->escapeHtml(__('Load more')) ?></a>
             </div>
         <# } #>
-	</div>
+    </div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-revisions-no-revisions">
-	<i class="gmt-nerd-box-icon fas fa-glasses" aria-hidden="true"></i>
-	<div class="gmt-nerd-box-title"><?= __( 'No Revisions Saved Yet' ); ?></div>
+    <i class="gmt-nerd-box-icon fas fa-glasses" aria-hidden="true"></i>
+    <div class="gmt-nerd-box-title"><?= $block->escapeHtml(__('No Revisions Saved Yet')); ?></div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-revisions-revision-item">
-	<div class="gmt-revision-item__wrapper {{ type }}" data-revision-id="{{ id }}">
-		<div class="gmt-revision-item__details">
-			<div class="gmt-revision-date">{{{ goomento.helpers.formatDatetime(date) }}} &
+    <div class="gmt-revision-item__wrapper {{ type }}" data-revision-id="{{ id }}">
+        <div class="gmt-revision-item__details">
+            <div class="gmt-revision-date">{{{ goomento.helpers.formatDatetime(date) }}} &
                 <span class="gmt-revision-author-detail">
                     <span class="gmt-revision-type">{{{ goomento.helpers.i18n( type ) }}}</span>
                     <span class="gmt-revision-author">{{{ goomento.helpers.i18n( 'by' ) }}} {{{ author }}}</span>
                 </span>
             </div>
-			<div class="gmt-revision-meta">
+            <div class="gmt-revision-meta">
                 <span class="gmt-revision-label">{{{ label }}}</span>
             </div>
-		</div>
-		<div class="gmt-revision-item__tools">
-			<# if ( current === true ) { #>
-				<i class="gmt-revision-item__tools-current fa fa-star" aria-hidden="true"></i>
-				<span class="gmt-screen-only"><?= __( 'Current' ); ?></span>
-			<# } #>
-			<i class="gmt-revision-item__tools-spinner fa-circle-notch fas spinning" aria-hidden="true"></i>
-		</div>
-	</div>
+        </div>
+        <div class="gmt-revision-item__tools">
+            <# if ( current === true ) { #>
+                <i class="gmt-revision-item__tools-current fa fa-star" aria-hidden="true"></i>
+                <span class="gmt-screen-only"><?= $block->escapeHtml(__('Current')); ?></span>
+            <# } #>
+            <i class="gmt-revision-item__tools-spinner fa-circle-notch fas spinning" aria-hidden="true"></i>
+        </div>
+    </div>
 </script>

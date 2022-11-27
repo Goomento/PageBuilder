@@ -1508,32 +1508,32 @@ class Section extends AbstractElement
     protected function contentTemplate()
     {
         ?>
-		<#
-		if ( settings.background_video_link ) {
-			let videoAttributes = 'autoplay muted playsinline';
+        <#
+        if ( settings.background_video_link ) {
+            let videoAttributes = 'autoplay muted playsinline';
 
-			if ( ! settings.background_play_once ) {
-				videoAttributes += ' loop';
-			}
+            if ( ! settings.background_play_once ) {
+                videoAttributes += ' loop';
+            }
 
-			view.addRenderAttribute( 'background-video-container', 'class', 'gmt-background-video-container' );
+            view.addRenderAttribute( 'background-video-container', 'class', 'gmt-background-video-container' );
 
-			if ( ! settings.background_play_on_mobile ) {
-				view.addRenderAttribute( 'background-video-container', 'class', 'gmt-hidden-phone' );
-			}
-		#>
-			<div {{{ view.getRenderAttributeString( 'background-video-container' ) }}}>
-				<div class="gmt-background-video-embed"></div>
-				<video class="gmt-background-video-hosted gmt-html5-video" {{ videoAttributes }}></video>
-			</div>
-		<# } #>
-		<div class="gmt-background-overlay"></div>
-		<div class="gmt-shape gmt-shape-top"></div>
-		<div class="gmt-shape gmt-shape-bottom"></div>
-		<div class="gmt-container gmt-column-gap-{{ settings.gap }}">
-			<div class="gmt-row"></div>
-		</div>
-		<?php
+            if ( ! settings.background_play_on_mobile ) {
+                view.addRenderAttribute( 'background-video-container', 'class', 'gmt-hidden-phone' );
+            }
+        #>
+            <div {{{ view.getRenderAttributeString( 'background-video-container' ) }}}>
+                <div class="gmt-background-video-embed"></div>
+                <video class="gmt-background-video-hosted gmt-html5-video" {{ videoAttributes }}></video>
+            </div>
+        <# } #>
+        <div class="gmt-background-overlay"></div>
+        <div class="gmt-shape gmt-shape-top"></div>
+        <div class="gmt-shape gmt-shape-bottom"></div>
+        <div class="gmt-container gmt-column-gap-{{ settings.gap }}">
+            <div class="gmt-row"></div>
+        </div>
+        <?php
     }
 
     /**
@@ -1545,52 +1545,52 @@ class Section extends AbstractElement
     public function beforeRender()
     {
         $settings = $this->getSettingsForDisplay(); ?>
-		<<?= EscaperHelper::escapeHtml($this->getHtmlTag()); ?> <?php $this->printRenderAttributeString('_wrapper'); ?>>
-			<?php
-            if ('video' === $settings['background_background']) :
-                if ($settings['background_video_link']) :
+        <<?= EscaperHelper::escapeHtml($this->getHtmlTag()); ?> <?php $this->printRenderAttributeString('_wrapper'); ?>>
+            <?php
+            if ('video' === $settings['background_background']):
+                if ($settings['background_video_link']):
                     $videoProperties = Embed::getVideoProperties($settings['background_video_link']);
 
-        $this->addRenderAttribute('background-video-container', 'class', 'gmt-background-video-container');
+                    $this->addRenderAttribute('background-video-container', 'class', 'gmt-background-video-container');
 
-        if (!$settings['background_play_on_mobile']) {
-            $this->addRenderAttribute('background-video-container', 'class', 'gmt-hidden-phone');
-        } ?>
-					<div <?= $this->getRenderAttributeString('background-video-container'); ?>>
-						<?php if ($videoProperties) : ?>
-							<div class="gmt-background-video-embed"></div>
-							<?php
-                        else :
-                            $videoTagAttributes = 'autoplay muted playsinline';
-        if ('yes' !== $settings['background_play_once']) :
+                    if (!$settings['background_play_on_mobile']) {
+                        $this->addRenderAttribute('background-video-container', 'class', 'gmt-hidden-phone');
+                    } ?>
+                    <div <?= $this->getRenderAttributeString('background-video-container'); ?>>
+                        <?php if ($videoProperties): ?>
+                            <div class="gmt-background-video-embed"></div>
+                            <?php
+                        else:
+                                $videoTagAttributes = 'autoplay muted playsinline';
+                            if ('yes' !== $settings['background_play_once']):
                                 $videoTagAttributes .= ' loop';
-        endif; ?>
-							<video class="gmt-background-video-hosted gmt-html5-video" <?= $videoTagAttributes; ?>></video>
-						<?php endif; ?>
-					</div>
-					<?php
+                            endif; ?>
+                            <video class="gmt-background-video-hosted gmt-html5-video" <?= $videoTagAttributes; ?>></video>
+                        <?php endif; ?>
+                    </div>
+                    <?php
                 endif;
-        endif;
-
-        $hasBackgroundOverlay = in_array($settings['background_overlay_background'], [ 'classic', 'gradient' ], true) ||
-                                    in_array($settings['background_overlay_hover_background'], [ 'classic', 'gradient' ], true);
-
-        if ($hasBackgroundOverlay) :
-                ?>
-				<div class="gmt-background-overlay"></div>
-				<?php
             endif;
 
-        if ($settings['shape_divider_top']) {
-            $this->printShapeDivider('top');
-        }
+            $hasBackgroundOverlay = in_array($settings['background_overlay_background'], [ 'classic', 'gradient' ], true) ||
+                                    in_array($settings['background_overlay_hover_background'], [ 'classic', 'gradient' ], true);
 
-        if ($settings['shape_divider_bottom']) {
-            $this->printShapeDivider('bottom');
-        } ?>
-			<div class="gmt-container gmt-column-gap-<?= EscaperHelper::escapeHtml($settings['gap']); ?>">
-				<div class="gmt-row">
-		<?php
+            if ($hasBackgroundOverlay):
+                ?>
+                <div class="gmt-background-overlay"></div>
+                <?php
+            endif;
+
+            if ($settings['shape_divider_top']) {
+                $this->printShapeDivider('top');
+            }
+
+            if ($settings['shape_divider_bottom']) {
+                $this->printShapeDivider('bottom');
+            } ?>
+            <div class="gmt-container gmt-column-gap-<?= EscaperHelper::escapeHtml($settings['gap']); ?>">
+                <div class="gmt-row">
+        <?php
     }
 
     /**
@@ -1602,10 +1602,10 @@ class Section extends AbstractElement
     public function afterRender()
     {
         ?>
-				</div>
-			</div>
-		</<?= EscaperHelper::escapeHtml($this->getHtmlTag()); ?>>
-		<?php
+                </div>
+            </div>
+        </<?= EscaperHelper::escapeHtml($this->getHtmlTag()); ?>>
+        <?php
     }
 
     /**
@@ -1681,9 +1681,9 @@ class Section extends AbstractElement
         if (! is_file($shapePath) || ! is_readable($shapePath)) {
             return;
         } ?>
-		<div class="gmt-shape gmt-shape-<?= EscaperHelper::escapeHtml($side); ?>" data-negative="<?= var_export($negative); ?>">
-			<?= file_get_contents($shapePath); ?>
-		</div>
-		<?php
+        <div class="gmt-shape gmt-shape-<?= EscaperHelper::escapeHtml($side); ?>" data-negative="<?= var_export($negative); ?>">
+            <?= file_get_contents($shapePath); ?>
+        </div>
+        <?php
     }
 }

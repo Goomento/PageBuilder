@@ -34,7 +34,7 @@ if (DataHelper::getCustomMediaUrl()) {
     <input type="hidden" id="image-bucket">
 </div>
 <script>
-    window.mediaUrl = "<?= $mediaUrl ?>";
+    window.mediaUrl = "<?=  /** @noEscape */ $mediaUrl ?>";
 </script>
 <script type="text/x-magento-init">
 {
@@ -44,9 +44,9 @@ if (DataHelper::getCustomMediaUrl()) {
                         "image-bucket": {
                             "component": "Goomento_PageBuilder/js/media-bucket/uploader",
                             "mediaGallery":{
-                            "openDialogUrl":"<?= $block->getUrl('cms/wysiwyg_images/index', ['_secure' => true]) ?>",
+                            "openDialogUrl":"<?= $block->escapeUrl($block->getUrl('cms/wysiwyg_images/index', ['_secure' => true])) ?>",
                             "initialOpenSubpath":"wysiwyg",
-                            "storeId":"<?= $storeId ?>"
+                            "storeId":"<?=  /** @noEscape */ $storeId ?>"
                     }
                 }
             }

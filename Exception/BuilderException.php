@@ -17,7 +17,7 @@ class BuilderException extends LocalizedException
      * @param Exception|null $cause
      * @param $code
      */
-    public function __construct($phrase, Exception $cause = null, $code = 0)
+    public function __construct($phrase = '', Exception $cause = null, $code = 0)
     {
         parent::__construct($phrase instanceof Phrase ? $phrase : __($phrase), $cause, $code);
     }

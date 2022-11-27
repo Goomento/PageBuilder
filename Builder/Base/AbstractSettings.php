@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Base;
 
-
 abstract class AbstractSettings extends ControlsStack
 {
     const NAME = 'settings';

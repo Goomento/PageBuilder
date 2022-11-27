@@ -50,54 +50,54 @@ if (! empty($settings['link']['url'])) {
         $widget->addRenderAttribute('link', 'rel', 'nofollow');
     }
 } ?>
-<div <?= $widget->getRenderAttributeString('wrapper'); ?>>
+<div <?= /** @noEscape */ $widget->getRenderAttributeString('wrapper'); ?>>
     <?php
-    if ($hasContent) :
+    if ($hasContent):
         $widget->addRenderAttribute('testimonial_content', 'class', 'gmt-testimonial-content');
 
         $widget->addInlineEditingAttributes('testimonial_content'); ?>
-        <div <?= $widget->getRenderAttributeString('testimonial_content'); ?>><?= $settings['testimonial_content']; ?></div>
+        <div <?= /** @noEscape */ $widget->getRenderAttributeString('testimonial_content'); ?>><?=  /** @noEscape */ $settings['testimonial_content']; ?></div>
     <?php endif; ?>
 
-    <?php if ($hasImage || $hasName || $hasJob) : ?>
-        <div <?= $widget->getRenderAttributeString('meta'); ?>>
+    <?php if ($hasImage || $hasName || $hasJob): ?>
+        <div <?= /** @noEscape */ $widget->getRenderAttributeString('meta'); ?>>
             <div class="gmt-testimonial-meta-inner">
-                <?php if ($hasImage) : ?>
+                <?php if ($hasImage): ?>
                     <div class="gmt-testimonial-image">
                         <?php
                         $imageHtml = ImageSizeGroup::getAttachmentImageHtml($settings, 'testimonial_image');
-                        if (! empty($settings['link']['url'])) :
+                        if (! empty($settings['link']['url'])):
                             $imageHtml = '<a ' . $widget->getRenderAttributeString('link') . '>' . $imageHtml . '</a>';
                         endif;
-                        echo $imageHtml; ?>
+                        echo /** @noEscape */ $imageHtml; ?>
                     </div>
                 <?php endif; ?>
 
-                <?php if ($hasName || $hasJob) : ?>
+                <?php if ($hasName || $hasJob): ?>
                     <div class="gmt-testimonial-details">
                         <?php
-                        if ($hasName) :
+                        if ($hasName):
                             $widget->addRenderAttribute('testimonial_name', 'class', 'gmt-testimonial-name');
 
                             $widget->addInlineEditingAttributes('testimonial_name', 'none');
 
                             $testimonialNameHtml = $settings['testimonial_name'];
-                            if (! empty($settings['link']['url'])) :
+                            if (! empty($settings['link']['url'])):
                                 $testimonialNameHtml = '<a ' . $widget->getRenderAttributeString('link') . '>' . $testimonialNameHtml . '</a>';
                             endif; ?>
-                            <div <?= $widget->getRenderAttributeString('testimonial_name'); ?>><?= $testimonialNameHtml; ?></div>
+                            <div <?= /** @noEscape */ $widget->getRenderAttributeString('testimonial_name'); ?>><?=  /** @noEscape */ $testimonialNameHtml; ?></div>
                         <?php endif; ?>
                         <?php
-                        if ($hasJob) :
+                        if ($hasJob):
                             $widget->addRenderAttribute('testimonial_job', 'class', 'gmt-testimonial-job');
 
                             $widget->addInlineEditingAttributes('testimonial_job');
 
                             $testimonialJobHtml = $settings['testimonial_job'];
-                            if (! empty($settings['link']['url'])) :
+                            if (! empty($settings['link']['url'])):
                                 $testimonialJobHtml = '<a ' . $widget->getRenderAttributeString('link') . '>' . $testimonialJobHtml . '</a>';
                             endif; ?>
-                            <div <?= $widget->getRenderAttributeString('testimonial_job'); ?>><?= $testimonialJobHtml; ?></div>
+                            <div <?= /** @noEscape */ $widget->getRenderAttributeString('testimonial_job'); ?>><?=  /** @noEscape */ $testimonialJobHtml; ?></div>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>

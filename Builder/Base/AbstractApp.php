@@ -21,7 +21,7 @@ abstract class AbstractApp extends AbstractModule
      * @param null $handle Optional
      *
      */
-    final protected function printConfig($handle = null)
+    protected function printConfig($handle = null)
     {
         $name = $this->getName();
 

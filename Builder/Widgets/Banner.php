@@ -112,9 +112,12 @@ class Banner extends AbstractWidget
      * @param array $args
      * @return void
      */
-    public static function registerImageStyle(AbstractElement $widget, string $prefix = self::NAME . '_',
-                                              string          $cssTarget = '.gmt-banner-img', array $args = [])
-    {
+    public static function registerImageStyle(
+        AbstractElement $widget,
+        string $prefix = self::NAME . '_',
+        string          $cssTarget = '.gmt-banner-img',
+        array $args = []
+    ) {
         $widget->addControl(
             $prefix . 'hover_animation',
             [
@@ -230,8 +233,7 @@ class Banner extends AbstractWidget
         string $prefix = self::NAME . '_title_',
         string $cssTarget = '.gmt-banner-title',
         array $args = []
-    )
-    {
+    ) {
         Text::registerTextStyle($widget, $prefix, $cssTarget, $args);
     }
 
@@ -247,8 +249,7 @@ class Banner extends AbstractWidget
         string $prefix = self::NAME . '_caption_',
         string $cssTarget = '.gmt-banner-content',
         array $args = []
-    )
-    {
+    ) {
         Text::registerTextStyle($widget, $prefix, $cssTarget);
 
         $widget->addResponsiveControl(

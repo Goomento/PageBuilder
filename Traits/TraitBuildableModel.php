@@ -12,12 +12,14 @@ use Exception;
 use Goomento\PageBuilder\Api\ContentRegistryInterface;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Helper\DataHelper;
+use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\User\Model\UserFactory;
 
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 trait TraitBuildableModel
 {
     /**
@@ -139,12 +141,9 @@ trait TraitBuildableModel
             $this->author = false;
             /** @var UserFactory $userFactory */
             $userFactory = ObjectManagerHelper::get(UserFactory::class);
-            try {
-                $this->author = $userFactory->create()->load(
-                    $this->getAuthorId()
-                );
-            } catch (Exception $e) {
-            }
+            $this->author = $userFactory->create()->load(
+                $this->getAuthorId()
+            );
         }
 
         return $this->author && $this->author->getId() ? $this->author : null;
@@ -252,8 +251,7 @@ trait TraitBuildableModel
      */
     public function getUniqueIdentity(): string
     {
-        $key = md5(implode('_', $this->getIdentities()));
-        return substr($key, 0, 6);
+        return EncryptorHelper::uniqueStringId(implode('_', $this->getIdentities()));
     }
 
     /**

@@ -105,9 +105,12 @@ class TextEditor extends AbstractWidget
      * @param array $args
      * @return void
      */
-    public static function registerTextEditorStyle(AbstractWidget $widget, string $prefix = self::NAME . '_',
-                                                   string         $cssTarget = '.gmt-text-editor', array $args = [])
-    {
+    public static function registerTextEditorStyle(
+        AbstractWidget $widget,
+        string $prefix = self::NAME . '_',
+        string         $cssTarget = '.gmt-text-editor',
+        array $args = []
+    ) {
         $widget->addResponsiveControl(
             $prefix . 'align',
             $args + [
@@ -215,9 +218,12 @@ class TextEditor extends AbstractWidget
      * @param array $args
      * @return void
      */
-    public static function registerDropCapStyles(AbstractWidget $widget, string $prefix = self::NAME . '_',
-                                                 string         $cssTarget = '.gmt-drop-cap', array $args = [])
-    {
+    public static function registerDropCapStyles(
+        AbstractWidget $widget,
+        string $prefix = self::NAME . '_',
+        string         $cssTarget = '.gmt-drop-cap',
+        array $args = []
+    ) {
 
         $widget->addControl(
             $prefix . 'drop_cap_view',
@@ -413,6 +419,7 @@ class TextEditor extends AbstractWidget
     public function renderPlainContent()
     {
         // In plain mode, render without shortcode
+        // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
         echo $this->getSettings('editor');
     }
 }

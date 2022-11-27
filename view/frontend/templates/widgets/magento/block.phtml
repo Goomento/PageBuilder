@@ -14,8 +14,8 @@ use Magento\Framework\View\Element\Template;
  * @var Widget $block
  */
 $widget = $block->getWidget();
-$class = $block->getSettingsForDisplay( 'class' );
-$template = $block->getSettingsForDisplay( 'template' );
+$class = $block->getSettingsForDisplay('class');
+$template = $block->getSettingsForDisplay('template');
 $html = '';
 if (($class && class_exists($class)) || $template) {
     if (empty($class) || !class_exists($class)) {

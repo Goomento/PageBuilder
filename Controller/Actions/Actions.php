@@ -49,8 +49,7 @@ class Actions extends AbstractAction implements HttpPostActionInterface
         Data $dataHelper,
         ObjectManagerInterface $objectManager,
         array $actions = []
-    )
-    {
+    ) {
         $this->objectManager = $objectManager;
         $this->actions = $actions;
         parent::__construct($context, $logger, $registry, $dataHelper);

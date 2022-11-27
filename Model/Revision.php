@@ -19,6 +19,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\User\Model\User;
 
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class Revision extends AbstractModel implements RevisionInterface, IdentityInterface
 {
 

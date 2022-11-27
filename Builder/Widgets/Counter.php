@@ -185,8 +185,7 @@ class Counter extends AbstractWidget
         string         $prefix = self::NAME . '_',
         string         $cssTarget = '.gmt-counter-number-wrapper',
         array          $args = []
-    )
-    {
+    ) {
         $widget->addControl(
             $prefix . 'number_color',
             $args + [
@@ -224,8 +223,7 @@ class Counter extends AbstractWidget
         string         $prefix = self::NAME . '_',
         string         $cssTarget = '.gmt-counter-title',
         array          $args = []
-    )
-    {
+    ) {
         $widget->addControl(
             $prefix . 'title_color',
             $args + [

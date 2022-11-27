@@ -25,18 +25,18 @@ class Text extends AbstractControlData
     public function contentTemplate()
     {
         $controlUid = $this->getControlUid(); ?>
-		<div class="gmt-control-field">
-			<# if ( data.label ) {#>
-				<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
-			<# } #>
-			<div class="gmt-control-input-wrapper">
-				<input id="<?= $controlUid; ?>" type="{{ data.input_type }}" class="tooltip-target gmt-control-tag-area" data-tooltip="{{ data.title }}" title="{{ data.title }}" data-setting="{{ data.name }}" placeholder="{{ data.placeholder }}" />
-			</div>
-		</div>
-		<# if ( data.description ) { #>
-			<div class="gmt-control-field-description">{{{ data.description }}}</div>
-		<# } #>
-		<?php
+        <div class="gmt-control-field">
+            <# if ( data.label ) {#>
+                <label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+            <# } #>
+            <div class="gmt-control-input-wrapper">
+                <input id="<?= $controlUid; ?>" type="{{ data.input_type }}" class="tooltip-target gmt-control-tag-area" data-tooltip="{{ data.title }}" title="{{ data.title }}" data-setting="{{ data.name }}" placeholder="{{ data.placeholder }}" />
+            </div>
+        </div>
+        <# if ( data.description ) { #>
+            <div class="gmt-control-field-description">{{{ data.description }}}</div>
+        <# } #>
+        <?php
     }
 
     /**

@@ -38,8 +38,7 @@ class InitEditorResources
         Repository $assetRepository,
         RequestInterface $request,
         Config $pageConfig
-    )
-    {
+    ) {
         $this->assetRepository = $assetRepository;
         $this->pageConfig = $pageConfig;
         $this->request = $request;
@@ -61,7 +60,9 @@ class InitEditorResources
                     $result .= $this->pageConfig->getIncludes();
                     $result .= $this->getHtmlHead();
                 }
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+
+            }
         }
 
         return $result;

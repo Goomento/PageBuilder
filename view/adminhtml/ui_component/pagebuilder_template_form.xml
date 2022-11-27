@@ -72,6 +72,9 @@
                 <dataType>text</dataType>
                 <label translate="true">Enable</label>
                 <dataScope>is_active</dataScope>
+                <tooltip>
+                    <description>Share this content to inner website settings, config ...</description>
+                </tooltip>
             </settings>
             <formElements>
                 <checkbox>

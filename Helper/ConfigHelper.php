@@ -24,6 +24,7 @@ use Goomento\PageBuilder\Model\Config;
  * @method static setValue($path, $value, $storeId = 0)
  * @method static deleteValue($path, $storeId = 0)
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class ConfigHelper
 {
     use TraitStaticInstances;
@@ -32,7 +33,7 @@ class ConfigHelper
     /**
      * @inheritDoc
      */
-    static protected function getStaticInstance()
+    protected static function getStaticInstance()
     {
         return Config::class;
     }

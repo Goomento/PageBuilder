@@ -17,6 +17,7 @@ use Exception;
  * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
  *
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class MediaHelper
 {
     /**

@@ -46,8 +46,8 @@ if (!empty($settings['button_size'])) {
 if ($settings['button_hover_animation']) {
     $widget->addRenderAttribute('button', 'class', 'gmt-animation-' . $settings['button_hover_animation']);
 } ?>
-    <div <?= $widget->getRenderAttributeString('wrapper'); ?>>
-        <a <?= $widget->getRenderAttributeString('button'); ?>>
+    <div <?= /** @noEscape */ $widget->getRenderAttributeString('wrapper'); ?>>
+        <a <?= /** @noEscape */ $widget->getRenderAttributeString('button'); ?>>
             <?php
 
             $widget->addRenderAttribute([
@@ -66,14 +66,14 @@ if ($settings['button_hover_animation']) {
             ]);
 
             $widget->addInlineEditingAttributes(['text' => 'button_text' ], 'none'); ?>
-            <span <?= $widget->getRenderAttributeString('content-wrapper'); ?>>
-			<?php if (!empty($settings['button_icon']) || ! empty($settings['button_selected_icon']['value'])) : ?>
-                <span <?= $widget->getRenderAttributeString('icon-align'); ?>>
-				    <?php Icons::renderIcon($settings['button_selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
-			    </span>
+            <span <?= /** @noEscape */ $widget->getRenderAttributeString('content-wrapper'); ?>>
+            <?php if (!empty($settings['button_icon']) || ! empty($settings['button_selected_icon']['value'])): ?>
+                <span <?= /** @noEscape */ $widget->getRenderAttributeString('icon-align'); ?>>
+                    <?php Icons::renderIcon($settings['button_selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
+                </span>
             <?php endif; ?>
-			    <span <?= $widget->getRenderAttributeString('text'); ?>><?= /** @noEscape */ $settings['button_text']; ?></span>
-		    </span>
+                <span <?= /** @noEscape */ $widget->getRenderAttributeString('text'); ?>><?= /** @noEscape */ $settings['button_text']; ?></span>
+            </span>
         </a>
     </div>
 <?php

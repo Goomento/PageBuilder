@@ -118,7 +118,7 @@ class Icon extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'link',
-           $args + [
+            $args + [
                 'label' => __('Link'),
                 'type' => Controls::URL,
                 'dynamic' => [
@@ -140,8 +140,7 @@ class Icon extends AbstractWidget
         string          $prefix = self::NAME . '_',
         array           $args = [],
         string          $cssTarget = '.gmt-icon'
-    )
-    {
+    ) {
         $widget->startControlsTabs($prefix . 'colors');
 
         $widget->startControlsTab(

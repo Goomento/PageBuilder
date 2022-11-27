@@ -37,6 +37,7 @@ use Goomento\PageBuilder\Model\Content as ContentModel;
  * @method static void deleteBuildableContent(BuildableContentInterface $content)
  * @see \Goomento\PageBuilder\Helper\BuildableContent::deleteBuildableContent()
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class BuildableContentHelper
 {
     use TraitStaticInstances;
@@ -45,7 +46,7 @@ class BuildableContentHelper
     /**
      * @inheritDoc
      */
-    static protected function getStaticInstance()
+    protected static function getStaticInstance()
     {
         return BuildableContent::class;
     }
@@ -88,6 +89,7 @@ class BuildableContentHelper
                 $dataContainer['elements'] = self::iterateData($dataContainer['elements'], $callback, $args);
             }
 
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
             return call_user_func($callback, $dataContainer, $args);
         }
 

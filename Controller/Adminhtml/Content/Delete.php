@@ -30,7 +30,8 @@ class Delete extends AbstractContent implements HttpPostActionInterface
             $this->buildableContentManagement->deleteBuildableContent($content);
             $this->messageManager->addSuccessMessage(__('You deleted the content.'));
             return $resultRedirect->setPath(
-                'pagebuilder/*/grid', [
+                'pagebuilder/*/grid',
+                [
                     'type' => $type
                 ]
             );

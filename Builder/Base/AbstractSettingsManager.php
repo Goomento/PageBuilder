@@ -81,7 +81,7 @@ abstract class AbstractSettingsManager extends AbstractEntity
      * @param BuildableContentInterface|null $buildableContent
      * @return AbstractSettings
      */
-    final public function getSettingModel(?BuildableContentInterface $buildableContent = null)
+    public function getSettingModel(?BuildableContentInterface $buildableContent = null)
     {
         if ($buildableContent) {
             $key = $buildableContent->getUniqueIdentity();
@@ -105,7 +105,7 @@ abstract class AbstractSettingsManager extends AbstractEntity
      *
      * @return array Ajax response data.
      */
-    final public function ajaxSaveSettings(array $request, BuildableContentInterface $buildableContent)
+    public function ajaxSaveSettings(array $request, BuildableContentInterface $buildableContent)
     {
         $data = $request['data'];
 
@@ -142,18 +142,8 @@ abstract class AbstractSettingsManager extends AbstractEntity
      * @param BuildableContentInterface|null $buildableContent
      * @return AbstractSettingsManager
      */
-    final public function saveSettings(array $settings, ?BuildableContentInterface $buildableContent)
+    public function saveSettings(array $settings, ?BuildableContentInterface $buildableContent)
     {
-//        $specialSettings = $buildableContent ? $buildableContent->getSpecialSettingKeys() : [];
-//
-//        $settingsToSave = $settings;
-//
-//        foreach ($specialSettings as $specialSetting) {
-//            if (isset($settingsToSave[ $specialSetting ])) {
-//                unset($settingsToSave[ $specialSetting ]);
-//            }
-//        }
-
         $this->saveSettingsToDb($settings, $buildableContent);
 
         return $this;
@@ -271,20 +261,20 @@ abstract class AbstractSettingsManager extends AbstractEntity
     protected function printEditorTemplateContent(string $name)
     {
         ?>
-		<div class="gmt-panel-navigation">
+        <div class="gmt-panel-navigation">
             <div class="gmt-component-tab gmt-panel-navigation-tab gmt-tab-control-close" data-tab="close">
                 <a href="#"><?= __('Close') ?></a>
             </div>
-			<# _.each( goomento.config.settings.<?= EscaperHelper::escapeHtml($name); ?>.tabs, function( tabTitle, tabSlug ) {
-				$e.bc.ensureTab( 'panel/<?= EscaperHelper::escapeHtml($name); ?>-settings', tabSlug );
-			#>
-				<div class="gmt-component-tab gmt-panel-navigation-tab gmt-tab-control-{{ tabSlug }}" data-tab="{{ tabSlug }}">
-					<a href="#">{{{ tabTitle }}}</a>
-				</div>
-				<# } ); #>
-		</div>
-		<div id="gmt-panel-<?= EscaperHelper::escapeHtml($name); ?>-settings-controls"></div>
-		<?php
+            <# _.each( goomento.config.settings.<?= EscaperHelper::escapeHtml($name); ?>.tabs, function( tabTitle, tabSlug ) {
+                $e.bc.ensureTab( 'panel/<?= EscaperHelper::escapeHtml($name); ?>-settings', tabSlug );
+            #>
+                <div class="gmt-component-tab gmt-panel-navigation-tab gmt-tab-control-{{ tabSlug }}" data-tab="{{ tabSlug }}">
+                    <a href="#">{{{ tabTitle }}}</a>
+                </div>
+                <# } ); #>
+        </div>
+        <div id="gmt-panel-<?= EscaperHelper::escapeHtml($name); ?>-settings-controls"></div>
+        <?php
     }
 
     /**
@@ -293,5 +283,5 @@ abstract class AbstractSettingsManager extends AbstractEntity
      * Create a new model object for any given model ID and store the object in
      * models cache property for later use.
      */
-    public abstract function createModel(?BuildableContentInterface $buildableContent = null) : AbstractSettings;
+    abstract public function createModel(?BuildableContentInterface $buildableContent = null) : AbstractSettings;
 }

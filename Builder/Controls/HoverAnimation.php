@@ -90,21 +90,21 @@ class HoverAnimation extends AbstractControlData
     public function contentTemplate()
     {
         $controlUid = $this->getControlUid(); ?>
-		<div class="gmt-control-field">
-			<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
-			<div class="gmt-control-input-wrapper">
-				<select id="<?= $controlUid; ?>" data-setting="{{ data.name }}">
-					<option value=""><?= __('None'); ?></option>
-					<?php foreach (self::getAnimations() as $animationName => $animationTitle) : ?>
-						<option value="<?= $animationName; ?>"><?= $animationTitle; ?></option>
-					<?php endforeach; ?>
-				</select>
-			</div>
-		</div>
-		<# if ( data.description ) { #>
-		<div class="gmt-control-field-description">{{{ data.description }}}</div>
-		<# } #>
-		<?php
+        <div class="gmt-control-field">
+            <label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+            <div class="gmt-control-input-wrapper">
+                <select id="<?= $controlUid; ?>" data-setting="{{ data.name }}">
+                    <option value=""><?= __('None'); ?></option>
+                    <?php foreach (self::getAnimations() as $animationName => $animationTitle): ?>
+                        <option value="<?= $animationName; ?>"><?= $animationTitle; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <# if ( data.description ) { #>
+        <div class="gmt-control-field-description">{{{ data.description }}}</div>
+        <# } #>
+        <?php
     }
 
     /**

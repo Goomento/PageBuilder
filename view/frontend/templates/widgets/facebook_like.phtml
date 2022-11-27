@@ -20,11 +20,11 @@ $settings = $block->getSettingsForDisplay();
 
 $type = $settings['facebook_like_type'] ?? '';
 $urlId = $settings['facebook_like_url_id'] ?? '';
-if ($urlId && ! filter_var( $urlId, FILTER_VALIDATE_URL ) ) :
+if ($urlId && ! filter_var($urlId, FILTER_VALIDATE_URL)):
     ?>
-        <p><?= __('Invalid URL.') ?></p>
+        <p><?= $block->escapeHtml(__('Invalid URL.')) ?></p>
     <?php
-elseif ($type) :
+elseif ($type):
     if (empty($urlId)) {
         $urlId = $block->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]);
     }
@@ -46,6 +46,6 @@ elseif ($type) :
         $attributes['class'] = 'fb-comments';
     }
     $widget->addRenderAttribute('facebook_like', $attributes); ?>
-    <div data-mage-init='{"facebook-sdk": {"app_id":"<?= /* @noEscape */ DataHelper::getFbAppId(); ?>"}}' <?=  $widget->getRenderAttributeString( 'facebook_like' ) ?>> </div>
+    <div data-mage-init='{"facebook-sdk": {"app_id":"<?= /* @noEscape */ DataHelper::getFbAppId(); ?>"}}' <?= /* @noEscape */ $widget->getRenderAttributeString('facebook_like') ?>> </div>
     <?php
 endif;

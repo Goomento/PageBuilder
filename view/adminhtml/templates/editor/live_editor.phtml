@@ -24,7 +24,7 @@ use Magento\Backend\Block\Template;
                 <div class="gmt-loader-wrapper">
                     <i class="goomento-logo gmt-loader"></i>
                     <div class="lds-ripple"><div></div><div></div></div>
-                    <div class="gmt-loading-title"><?= __('Loading'); ?></div>
+                    <div class="gmt-loading-title"><?= $block->escapeHtml(__('Loading')); ?></div>
                 </div>
             </div>
             <div id="gmt-preview-responsive-wrapper" class="gmt-device-desktop gmt-device-rotate-portrait">

@@ -107,37 +107,37 @@ class Color extends AbstractSchema
     public function printTemplateContent()
     {
         ?>
-		<div class="gmt-panel-scheme-content gmt-panel-box">
-			<div class="gmt-panel-heading">
-				<div class="gmt-panel-heading-title"><?= $this->_getCurrentSchemeTitle(); ?></div>
-			</div>
-			<?php
+        <div class="gmt-panel-scheme-content gmt-panel-box">
+            <div class="gmt-panel-heading">
+                <div class="gmt-panel-heading-title"><?= $this->_getCurrentSchemeTitle(); ?></div>
+            </div>
+            <?php
             $description = static::getDescription();
 
-        if ($description) :
+            if ($description):
                 ?>
-				<div class="gmt-panel-scheme-description gmt-descriptor"><?= $description; ?></div>
-			<?php endif; ?>
-			<div class="gmt-panel-scheme-items gmt-panel-box-content"></div>
-		</div>
-		<div class="gmt-panel-scheme-colors-more-palettes gmt-panel-box">
-			<div class="gmt-panel-heading">
-				<div class="gmt-panel-heading-title"><?= __('More Palettes'); ?></div>
-			</div>
-			<div class="gmt-panel-box-content">
-				<?php foreach ($this->_getSystemSchemesToPrint() as $schemeName => $scheme) : ?>
-					<div class="gmt-panel-scheme-color-system-scheme" data-scheme-name="<?= EscaperHelper::escapeHtml($schemeName); ?>">
-						<div class="gmt-panel-scheme-color-system-items">
-							<?php foreach ($scheme['items'] as $colorValue) : ?>
-								<div class="gmt-panel-scheme-color-system-item" style="background-color: <?= EscaperHelper::escapeHtml($colorValue); ?>;"></div>
-							<?php endforeach; ?>
-						</div>
-						<div class="gmt-title"><?= $scheme['title']; ?></div>
-					</div>
-				<?php endforeach; ?>
-			</div>
-		</div>
-		<?php
+                <div class="gmt-panel-scheme-description gmt-descriptor"><?= $description; ?></div>
+            <?php endif; ?>
+            <div class="gmt-panel-scheme-items gmt-panel-box-content"></div>
+        </div>
+        <div class="gmt-panel-scheme-colors-more-palettes gmt-panel-box">
+            <div class="gmt-panel-heading">
+                <div class="gmt-panel-heading-title"><?= __('More Palettes'); ?></div>
+            </div>
+            <div class="gmt-panel-box-content">
+                <?php foreach ($this->_getSystemSchemesToPrint() as $schemeName => $scheme): ?>
+                    <div class="gmt-panel-scheme-color-system-scheme" data-scheme-name="<?= EscaperHelper::escapeHtml($schemeName); ?>">
+                        <div class="gmt-panel-scheme-color-system-items">
+                            <?php foreach ($scheme['items'] as $colorValue): ?>
+                                <div class="gmt-panel-scheme-color-system-item" style="background-color: <?= EscaperHelper::escapeHtml($colorValue); ?>;"></div>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="gmt-title"><?= $scheme['title']; ?></div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php
     }
 
     /**

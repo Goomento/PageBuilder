@@ -7,12 +7,10 @@
 declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
-use Goomento\PageBuilder\Builder\Widgets\Audio;
 use Goomento\PageBuilder\Helper\RequestHelper;
 
 /**
  * @var Widget $block
- * @var Audio
  */
 $widget = $block->getWidget();
 $settings = $block->getSettingsForDisplay();
@@ -50,7 +48,7 @@ $url = RequestHelper::appendQueryStringToUrl($url, $params);
 
 ?>
 <div class="gmt-soundcloud-wrapper">
-    <?= sprintf(
+    <?= /** @noEscape */ sprintf(
         '<iframe width="100%%" scrolling="no" frameborder="no" allow="autoplay" src="%s"></iframe>',
         $url
     ); ?>

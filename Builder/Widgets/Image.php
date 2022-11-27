@@ -217,8 +217,7 @@ class Image extends AbstractWidget
         string         $prefix = self::NAME . '_',
         string         $cssTarget = '.gmt-image',
         array          $args = []
-    )
-    {
+    ) {
         $widget->addResponsiveControl(
             $prefix . 'width',
             $args + [
@@ -434,8 +433,7 @@ class Image extends AbstractWidget
         string         $prefix = self::NAME . '_',
         string         $cssTarget = '.gmt-image',
         array          $args = []
-    )
-    {
+    ) {
         $widget->addControl(
             $prefix . 'caption_align',
             $args + [

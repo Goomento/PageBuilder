@@ -62,7 +62,7 @@ abstract class AbstractWidget extends AbstractElement
         $isTypeInstance = $this->isTypeInstance();
 
         if (!$isTypeInstance && null === $args) {
-            throw new Exception(
+            throw new \Goomento\PageBuilder\Exception\BuilderException(
                 '`$args` argument is required when initializing a full widget instance.'
             );
         }
@@ -299,10 +299,10 @@ abstract class AbstractWidget extends AbstractElement
     protected function printTemplateContent($templateContent)
     {
         ?>
-		<div class="gmt-widget-container">
-			<?php parent::printTemplateContent($templateContent) ?>
-		</div>
-		<?php
+        <div class="gmt-widget-container">
+            <?php parent::printTemplateContent($templateContent) ?>
+        </div>
+        <?php
     }
 
     /**
@@ -377,6 +377,7 @@ abstract class AbstractWidget extends AbstractElement
         HooksHelper::doAction('pagebuilder/widget/before_render_content', $this);
 
         try {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
             ob_start();
 
             $widgetReturn = $this->render();
@@ -384,6 +385,7 @@ abstract class AbstractWidget extends AbstractElement
         } catch (\Exception $e) {
             if (DataHelper::isDebugMode() && StateHelper::isBuildable()) {
                 $this->addRenderAttribute('_container', 'class', 'gmt-widget-debug');
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
                 printf('<pre class="gmt-debugging">%s</pre>', $e->__toString());
             }
         } finally {
@@ -408,8 +410,8 @@ abstract class AbstractWidget extends AbstractElement
 
         $container = $this->getRenderAttributeString('_container');
         ?>
-		<div <?= $container ?>>
-			<?php
+        <div <?= $container ?>>
+            <?php
 
             /**
              * Render widget content.
@@ -422,10 +424,11 @@ abstract class AbstractWidget extends AbstractElement
              */
             $widgetContent = HooksHelper::applyFilters('pagebuilder/widget/render_content', $widgetContent, $this)->getResult();
 
+            // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
             echo $widgetContent; // XSS ok.
             ?>
-		</div>
-		<?php
+        </div>
+        <?php
     }
 
     /**
@@ -446,8 +449,8 @@ abstract class AbstractWidget extends AbstractElement
     public function beforeRender()
     {
         ?>
-		<div <?php $this->printRenderAttributeString('_wrapper'); ?>>
-		<?php
+        <div <?php $this->printRenderAttributeString('_wrapper'); ?>>
+        <?php
     }
 
     /**
@@ -459,8 +462,8 @@ abstract class AbstractWidget extends AbstractElement
     public function afterRender()
     {
         ?>
-		</div>
-		<?php
+        </div>
+        <?php
     }
 
     /**

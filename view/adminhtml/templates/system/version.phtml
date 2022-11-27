@@ -17,25 +17,25 @@ use Goomento\PageBuilder\Model\Config\Frontend\Version;
 <div class="gmt-system_config" id="goomento_pagebuilder">
     <div class="gmt-system_config-wrapper">
         <p>Thanks for using <strong>Goomento</strong> - The Magento Page Builder Extension</p>
-        <p>Module Version: <span class="gmt-version"><?= Configuration::version() ?></span></p>
+        <p>Module Version: <span class="gmt-version"><?= $block->escapeHtml(Configuration::version()) ?></span></p>
         <a target="_blank"
            href="https://github.com/Goomento/PageBuilder">
-            <?= __('What\'s new?') ?>
+            <?= $block->escapeHtml(__('What\'s new?')) ?>
         </a>
         <div class="gmt-system_config-release-notes">
             <div class="gmt-system_config-release-note" style="display: none">
-                <strong><?= __('Latest Release:') ?></strong>
+                <strong><?= $block->escapeHtml(__('Latest Release:')) ?></strong>
                 <div>
-                    <span><?= __('Version') ?></span>
+                    <span><?= $block->escapeHtml(__('Version')) ?></span>
                     <span class="gmt-version"></span>
                 </div>
                 <div>
-                    <span><?= __('Release Note') ?></span>
+                    <span><?= $block->escapeHtml(__('Release Note')) ?></span>
                     <br>
                     <span class="gmt-version-note"></span>
                 </div>
                 <div>
-                    <a href="#"><?= __('Download now') ?></a>
+                    <a href="#"><?= $block->escapeHtml(__('Download now')) ?></a>
                 </div>
             </div>
         </div>

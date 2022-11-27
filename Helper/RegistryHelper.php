@@ -23,6 +23,7 @@ use Goomento\Core\Model\Registry;
  * @method static register($key, $value, $graceful = false);
  * @see \Goomento\Core\Model\Registry::register()
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class RegistryHelper
 {
     use TraitStaticCaller;

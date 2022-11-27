@@ -50,19 +50,19 @@ $widget->addInlineEditingAttributes('title_text', 'none');
 $widget->addInlineEditingAttributes('description_text');
 ?>
 <div class="gmt-icon-box-wrapper">
-    <?php if ($hasIcon) : ?>
+    <?php if ($hasIcon): ?>
     <div class="gmt-icon-box-icon">
-        <<?= implode(' ', [ $iconTag, $iconAttributes, $linkAttributes ]); ?>>
+        <<?= /** @noEscape */ implode(' ', [ $iconTag, $iconAttributes, $linkAttributes ]); ?>>
             <?php Icons::renderIcon($settings['selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
-        </<?= $iconTag; ?>>
+        </<?= /** @noEscape */ $iconTag; ?>>
     </div>
     <?php endif; ?>
     <div class="gmt-icon-box-content">
-        <<?= $settings['title_size']; ?> class="gmt-icon-box-title">
-            <<?= implode(' ', [ $iconTag, $linkAttributes ]); ?><?= $widget->getRenderAttributeString('title_text'); ?>><?= $settings['title_text']; ?></<?= $iconTag; ?>>
-        </<?= $settings['title_size']; ?>>
-        <?php if (!empty($settings['description_text'])) : ?>
-            <p <?= $widget->getRenderAttributeString('description_text'); ?>><?= /** @noEscape */ $settings['description_text']; ?></p>
+        <<?=  /** @noEscape */ $settings['title_size']; ?> class="gmt-icon-box-title">
+            <<?= /** @noEscape */ implode(' ', [ $iconTag, $linkAttributes ]); ?><?= /** @noEscape */ $widget->getRenderAttributeString('title_text'); ?>><?=  /** @noEscape */ $settings['title_text']; ?></<?=  /** @noEscape */ $iconTag; ?>>
+        </<?=  /** @noEscape */ $settings['title_size']; ?>>
+        <?php if (!empty($settings['description_text'])): ?>
+            <p <?= /** @noEscape */ $widget->getRenderAttributeString('description_text'); ?>><?= /** @noEscape */ $settings['description_text']; ?></p>
         <?php endif; ?>
     </div>
 </div>

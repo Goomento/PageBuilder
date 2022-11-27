@@ -39,8 +39,8 @@ if (!empty($settings['icon_link']['url'])) {
 }
 
 ?>
-<div <?= $widget->getRenderAttributeString('wrapper'); ?>>
-    <<?= $iconTag . ' ' . $widget->getRenderAttributeString('icon-wrapper'); ?>>
+<div <?= /** @noEscape */ $widget->getRenderAttributeString('wrapper'); ?>>
+    <<?= /** @noEscape */ $iconTag . ' ' . /** @noEscape */ $widget->getRenderAttributeString('icon-wrapper'); ?>>
     <?php Icons::renderIcon($settings['icon_selected_icon'], [ 'aria-hidden' => 'true' ]) ?>
-    </<?= $iconTag; ?>>
+    </<?=  /** @noEscape */ $iconTag; ?>>
 </div>

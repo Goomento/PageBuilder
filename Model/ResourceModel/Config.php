@@ -37,7 +37,9 @@ class Config extends AbstractDb
         if (is_array($value)) {
             try {
                 $value = \Zend_Json::encode($value);
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+
+            }
         }
         $connection = $this->getConnection();
         $select = $connection->select()
@@ -88,7 +90,9 @@ class Config extends AbstractDb
                 if (is_string($row['value'])) {
                     try {
                         $row['value'] = \Zend_Json::decode($row['value']);
-                    } catch (\Exception $e) {}
+                    } catch (\Exception $e) {
+
+                    }
                 }
             }
         }

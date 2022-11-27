@@ -61,7 +61,7 @@ class CmsBlock extends AbstractMagentoWidget
         $this->startControlsSection(
             'cms_block_section',
             [
-                'label' => __( 'Cms Block' ),
+                'label' => __('Cms Block'),
             ]
         );
 

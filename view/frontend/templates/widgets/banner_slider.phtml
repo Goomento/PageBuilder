@@ -15,13 +15,13 @@ $widget = $block->getWidget();
 $settings = $block->getSettingsForDisplay();
 $banners = $settings['banner_list'] ?? [];
 
-if (count($banners)) :
+if (count($banners)):
     $widget->addRenderAttribute('_wrapper', 'class', 'gmt-invisible');
     ?>
     <div class="gmt-banner-slider-wrapper swiper-container">
         <div class="gmt-banner-carousel swiper-wrapper">
             <?php
-            foreach ($banners as $index => $banner) :
+            foreach ($banners as $index => $banner):
                 $bannerTitleSettingKey = 'banner_list.' . $index . '.banner_title';
                 $bannerCaptionSettingKey = 'banner_list.' . $index . '.banner_caption';
                 $caption = trim((string) $banner['banner_caption']);
@@ -43,17 +43,23 @@ if (count($banners)) :
                             }
                         }
 
-                        if (!empty($banner['banner_image']['url'])) :
+                        if (!empty($banner['banner_image']['url'])):
                             $widget->addRenderAttribute('image' . $index, 'src', $banner['banner_image']['url']);
                             $widget->addRenderAttribute('image' . $index, 'alt', '');
                             $widget->addRenderAttribute('image' . $index, 'title', '');
                             $widget->addRenderAttribute('image' . $index, 'class', 'swiper-slide-image');
 
                             if ($settings['banner-slider_thumbnail_size'] === 'custom') {
-                                $widget->addRenderAttribute('image' . $index, 'width',
-                                    $settings['banner-slider_thumbnail_custom_dimension']['width']);
-                                $widget->addRenderAttribute('image' . $index, 'height',
-                                    $settings['banner-slider_thumbnail_custom_dimension']['height']);
+                                $widget->addRenderAttribute(
+                                    'image' . $index,
+                                    'width',
+                                    $settings['banner-slider_thumbnail_custom_dimension']['width']
+                                );
+                                $widget->addRenderAttribute(
+                                    'image' . $index,
+                                    'height',
+                                    $settings['banner-slider_thumbnail_custom_dimension']['height']
+                                );
                             }
 
                             if (!empty($settings['hover_animation'])) {
@@ -72,20 +78,20 @@ if (count($banners)) :
                             <?php
                         endif;
 
-                        if ($hasContent) :
+                        if ($hasContent):
                             $widget->addRenderAttribute('box-content' . $index, 'class', 'gmt-banner-content');
                             $widget->addRenderAttribute('box-content' . $index, 'class', 'gmt-banner-content-position-' . ($settings['banner-slider_caption_position'] ?? ''));
                             ?>
-                            <div <?= /** @noEscape  */ $widget->getRenderAttributeString('box-content' . $index) ?>>
+                            <div <?= /** @noEscape */ $widget->getRenderAttributeString('box-content' . $index) ?>>
                                 <?php
                                 $widget->addRenderAttribute($bannerCaptionSettingKey, 'class', 'gmt-banner-description');
                                 $widget->addInlineEditingAttributes($bannerTitleSettingKey, 'none');
                                 $widget->addInlineEditingAttributes($bannerCaptionSettingKey);
-                                if ($title) :
+                                if ($title):
                                     $widget->addRenderAttribute($bannerTitleSettingKey, 'class', 'gmt-banner-title'); ?>
-                                    <div <?= $widget->getRenderAttributeString($bannerTitleSettingKey) ?>><?= /** @noEscape */ $title ?></div>
+                                    <div <?= /** @noEscape */ $widget->getRenderAttributeString($bannerTitleSettingKey) ?>><?= /** @noEscape */ $title ?></div>
                                 <?php endif; ?>
-                                <div <?= $widget->getRenderAttributeString($bannerCaptionSettingKey) ?>><?= /** @noEscape */ $caption ?></div>
+                                <div <?= /** @noEscape */ $widget->getRenderAttributeString($bannerCaptionSettingKey) ?>><?= /** @noEscape */ $caption ?></div>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -93,22 +99,22 @@ if (count($banners)) :
             <?php endforeach; ?>
         </div>
         <?php
-        if (count($banners) > 1) :
-            if (in_array($settings['navigation'], [ 'dots', 'both' ])) : ?>
+        if (count($banners) > 1):
+            if (in_array($settings['navigation'], [ 'dots', 'both' ])): ?>
                 <div class="swiper-pagination"></div>
-            <?php
+                <?php
             endif;
-            if (in_array($settings['navigation'], [ 'arrows', 'both' ])) :
+            if (in_array($settings['navigation'], [ 'arrows', 'both' ])):
                 ?>
                 <div class="gmt-swiper-button gmt-swiper-button-prev">
                     <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                    <span class="gmt-screen-only"><?= __('Previous') ?></span>
+                    <span class="gmt-screen-only"><?= $block->escapeHtml(__('Previous')) ?></span>
                 </div>
                 <div class="gmt-swiper-button gmt-swiper-button-next">
                     <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    <span class="gmt-screen-only"><?= __('Next') ?></span>
+                    <span class="gmt-screen-only"><?= $block->escapeHtml(__('Next')) ?></span>
                 </div>
-            <?php
+                <?php
             endif;
         endif;
         ?>

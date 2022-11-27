@@ -56,7 +56,7 @@ class CmsBlocks extends AbstractDataTag
         $this->addControl(
             self::IDENTIFIER,
             [
-                'label' => __( 'Block Identifier'),
+                'label' => __('Block Identifier'),
                 'type' => Controls::TEXT,
                 'default' => '',
             ]

@@ -19,6 +19,7 @@ use Goomento\PageBuilder\Builder\Base\AbstractWidget as WidgetBase;
  * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
  *
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class TemplateHelper
 {
     use TraitStaticInstances;

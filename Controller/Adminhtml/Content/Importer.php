@@ -71,11 +71,15 @@ class Importer extends AbstractAction implements HttpGetActionInterface, HttpPos
     protected function executePost()
     {
         try {
-            if (empty($_FILES[self::FILE_NAME])) {
+            /** @var \Laminas\Stdlib\Parameters $files */
+            $files = $this->getRequest()->getFiles();
+
+            if (empty($files[self::FILE_NAME])) {
                 throw new LocalizedException(__('Import file must specify.'));
             }
 
-            $data = file_get_contents($_FILES[self::FILE_NAME]['tmp_name']);
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
+            $data = file_get_contents($files[self::FILE_NAME]['tmp_name']);
 
             if (!trim($data)) {
                 throw new LocalizedException(__('Import file should not empty.'));
@@ -112,8 +116,11 @@ class Importer extends AbstractAction implements HttpGetActionInterface, HttpPos
      */
     protected function executeGet()
     {
-        $this->messageManager->addNotice(sprintf('For import Sample templates click %shere%s.',
-            '<a href="' . $this->getUrl('*/*/sampleImporter') . '">', '</a>'));
+        $this->messageManager->addNotice(sprintf(
+            'For import Sample templates click %shere%s.',
+            '<a href="' . $this->getUrl('*/*/sampleImporter') . '">',
+            '</a>'
+        ));
         return $this->renderPage();
     }
 

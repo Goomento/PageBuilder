@@ -164,13 +164,14 @@ class Icons
      * @param $icon
      * @param array $attributes
      * @param string $tag
-     * @return false|mixed|string'
+     * @return false|mixed|string
      */
     private static function renderIconHtml($icon, $attributes = [], $tag = 'i')
     {
         $iconTypes = self::getIconManagerTabs();
         if (isset($iconTypes[ $icon['library'] ]['render_callback']) && is_callable($iconTypes[ $icon['library'] ]['render_callback'])) {
-            return call_user_func_array($iconTypes[ $icon['library'] ]['render_callback'], [ $icon, $attributes, $tag ]);
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
+            return call_user_func($iconTypes[ $icon['library'] ]['render_callback'], $icon, $attributes, $tag);
         }
 
         if (empty($attributes['class'])) {
@@ -192,7 +193,7 @@ class Icons
      * @param array $attributes       Icon HTML Attributes
      * @param string $tag             Icon HTML tag, defaults to <i>
      *
-     * @return mixed|string
+     * @return bool
      */
     public static function renderIcon($icon, $attributes = [], $tag = 'i')
     {
@@ -201,6 +202,8 @@ class Icons
         }
 
         $output = self::renderIconHtml($icon, $attributes, $tag);
+
+        // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
         echo $output;
         return true;
     }

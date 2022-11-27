@@ -24,10 +24,10 @@ class Tab extends AbstractControlUi
     public function contentTemplate()
     {
         ?>
-			<div class="gmt-panel-tab-heading">
-				{{{ data.label }}}
-			</div>
-		<?php
+            <div class="gmt-panel-tab-heading">
+                {{{ data.label }}}
+            </div>
+        <?php
     }
 
     /**

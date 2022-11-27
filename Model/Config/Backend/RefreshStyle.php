@@ -43,8 +43,7 @@ class RefreshStyle extends Value
         AbstractResource                    $resource = null,
         AbstractDb                          $resourceCollection = null,
         array                               $data = []
-    )
-    {
+    ) {
         $this->contentManagement = $contentManagement;
         parent::__construct($context, $registry, $config, $cacheTypeList, $resource, $resourceCollection, $data);
     }

@@ -23,20 +23,20 @@ class Switcher extends AbstractControlData
     public function contentTemplate()
     {
         $controlUid = $this->getControlUid(); ?>
-		<div class="gmt-control-field">
-			<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
-			<div class="gmt-control-input-wrapper">
-				<label class="gmt-switch">
-					<input id="<?= $controlUid; ?>" type="checkbox" data-setting="{{ data.name }}" class="gmt-switch-input" value="{{ data.return_value }}">
-					<span class="gmt-switch-label" data-on="{{ data.label_on }}" data-off="{{ data.label_off }}"></span>
-					<span class="gmt-switch-handle"></span>
-				</label>
-			</div>
-		</div>
-		<# if ( data.description ) { #>
-		<div class="gmt-control-field-description">{{{ data.description }}}</div>
-		<# } #>
-		<?php
+        <div class="gmt-control-field">
+            <label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+            <div class="gmt-control-input-wrapper">
+                <label class="gmt-switch">
+                    <input id="<?= $controlUid; ?>" type="checkbox" data-setting="{{ data.name }}" class="gmt-switch-input" value="{{ data.return_value }}">
+                    <span class="gmt-switch-label" data-on="{{ data.label_on }}" data-off="{{ data.label_off }}"></span>
+                    <span class="gmt-switch-handle"></span>
+                </label>
+            </div>
+        </div>
+        <# if ( data.description ) { #>
+        <div class="gmt-control-field-description">{{{ data.description }}}</div>
+        <# } #>
+        <?php
     }
 
     /**

@@ -175,9 +175,12 @@ class Accordion extends AbstractWidget
      * @param array $args
      * @return void
      */
-    public static function registerAccordionItemStyle(AbstractElement $widget, string $prefix = self::NAME . '_',
-                                                      string          $cssTarget = '.gmt-accordion .gmt-accordion-item', array $args = [])
-    {
+    public static function registerAccordionItemStyle(
+        AbstractElement $widget,
+        string $prefix = self::NAME . '_',
+        string          $cssTarget = '.gmt-accordion .gmt-accordion-item',
+        array $args = []
+    ) {
         $widget->addControl(
             $prefix . 'border_width',
             $args + [
@@ -218,9 +221,12 @@ class Accordion extends AbstractWidget
      * @param array $args
      * @return void
      */
-    public static function registerAccordionTitleStyle(AbstractElement $widget, string $prefix = self::NAME . '_',
-                                                       string          $cssTarget = '.gmt-accordion .gmt-tab-title', array $args = [])
-    {
+    public static function registerAccordionTitleStyle(
+        AbstractElement $widget,
+        string $prefix = self::NAME . '_',
+        string          $cssTarget = '.gmt-accordion .gmt-tab-title',
+        array $args = []
+    ) {
         $widget->addControl(
             $prefix . 'title_background',
             $args + [
@@ -296,8 +302,7 @@ class Accordion extends AbstractWidget
         string          $cssTarget = '.gmt-accordion .gmt-accordion-icon',
         string          $cssActiveTarget = '.gmt-accordion .gmt-tab-title.gmt-active .gmt-accordion-icon',
         array           $args = []
-    )
-    {
+    ) {
         $widget->addControl(
             $prefix . 'icon_align',
             $args + [
@@ -369,9 +374,12 @@ class Accordion extends AbstractWidget
      * @param array $args
      * @return void
      */
-    public static function registerAccordionContentStyle(AbstractElement $widget, string $prefix = self::NAME . '_',
-                                                         string          $cssTarget = '.gmt-accordion .gmt-tab-content', array $args = [])
-    {
+    public static function registerAccordionContentStyle(
+        AbstractElement $widget,
+        string $prefix = self::NAME . '_',
+        string          $cssTarget = '.gmt-accordion .gmt-tab-content',
+        array $args = []
+    ) {
         $widget->addControl(
             $prefix . 'content_background_color',
             $args + [

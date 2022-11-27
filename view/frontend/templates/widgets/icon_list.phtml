@@ -29,11 +29,11 @@ if ('inline' === $settings['view']) {
     $widget->addRenderAttribute('icon_list', 'class', 'gmt-inline-items');
     $widget->addRenderAttribute('list_item', 'class', 'gmt-inline-item');
 } ?>
-<ul <?= $widget->getRenderAttributeString('icon_list'); ?>>
+<ul <?= /** @noEscape */ $widget->getRenderAttributeString('icon_list'); ?>>
     <?php
-    foreach ($settings['icon_list'] as $index => $item) :
+    foreach ($settings['icon_list'] as $index => $item):
         $key = 'icon_list.' . $index . '.text';
-        $widget->addRenderAttribute($key , 'class', 'gmt-icon-list-text');
+        $widget->addRenderAttribute($key, 'class', 'gmt-icon-list-text');
         $widget->addInlineEditingAttributes($key);
         ?>
         <li class="gmt-icon-list-item" >
@@ -51,7 +51,7 @@ if ('inline' === $settings['view']) {
                     $widget->addRenderAttribute($linkKey, 'rel', 'nofollow');
                 }
 
-                echo '<a ' . $widget->getRenderAttributeString($linkKey) . '>';
+                echo '<a ' . /** @noEscape */ $widget->getRenderAttributeString($linkKey) . '>';
             }
 
             // add old default
@@ -59,17 +59,17 @@ if ('inline' === $settings['view']) {
                 $item['icon'] = $fallbackDefaults[$index] ?? 'fas fa-check';
             }
 
-            if (!empty($item['icon']) || (! empty($item['selected_icon']['value']))) :
+            if (!empty($item['icon']) || (! empty($item['selected_icon']['value']))):
                 ?>
                 <span class="gmt-icon-list-icon">
                     <?php Icons::renderIcon($item['selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
                 </span>
             <?php endif; ?>
-            <span <?= $widget->getRenderAttributeString($key); ?>><?= /** @noEscape */ $item['text']; ?></span>
-            <?php if (!empty($item['link']['url'])) : ?>
+            <span <?= /** @noEscape */ $widget->getRenderAttributeString($key); ?>><?= /** @noEscape */ $item['text']; ?></span>
+            <?php if (!empty($item['link']['url'])): ?>
                 </a>
             <?php endif; ?>
         </li>
-    <?php
+        <?php
     endforeach; ?>
 </ul>

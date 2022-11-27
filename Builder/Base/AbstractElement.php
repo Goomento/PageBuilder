@@ -138,7 +138,7 @@ abstract class AbstractElement extends ControlsStack
      * Registers all the scripts defined as element dependencies and enqueues them.
      *
      */
-    final public function enqueueScripts()
+    public function enqueueScripts()
     {
         foreach ($this->getScriptDepends() as $script) {
             ThemeHelper::enqueueScript($script);
@@ -165,7 +165,7 @@ abstract class AbstractElement extends ControlsStack
      * them. Use `get_style_depends()` method to add custom style dependencies.
      *
      */
-    final public function enqueueStyles()
+    public function enqueueStyles()
     {
         foreach ($this->getStyleDepends() as $style) {
             ThemeHelper::enqueueStyle($style);
@@ -496,6 +496,7 @@ abstract class AbstractElement extends ControlsStack
      */
     public function printRenderAttributeString($element)
     {
+        // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
         echo $this->getRenderAttributeString($element); // XSS ok.
     }
 
@@ -552,6 +553,7 @@ abstract class AbstractElement extends ControlsStack
             $this->_addRenderAttributes();
 
             $this->beforeRender();
+            // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
             echo $content;
             $this->afterRender();
 

@@ -42,20 +42,20 @@ class Icon extends AbstractControlData
     public function contentTemplate()
     {
         $controlUid = $this->getControlUid(); ?>
-		<div class="gmt-control-field">
-			<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
-			<div class="gmt-control-input-wrapper">
-				<select id="<?= $controlUid; ?>" class="gmt-control-icon" data-setting="{{ data.name }}" data-placeholder="<?= __('Select Icon'); ?>">
-					<option value=""><?= __('Select Icon'); ?></option>
-					<# _.each( data.options, function( option_title, option_value ) { #>
-					<option value="{{ option_value }}">{{{ option_title }}}</option>
-					<# } ); #>
-				</select>
-			</div>
-		</div>
-		<# if ( data.description ) { #>
-		<div class="gmt-control-field-description">{{ data.description }}</div>
-		<# } #>
-		<?php
+        <div class="gmt-control-field">
+            <label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+            <div class="gmt-control-input-wrapper">
+                <select id="<?= $controlUid; ?>" class="gmt-control-icon" data-setting="{{ data.name }}" data-placeholder="<?= __('Select Icon'); ?>">
+                    <option value=""><?= __('Select Icon'); ?></option>
+                    <# _.each( data.options, function( option_title, option_value ) { #>
+                    <option value="{{ option_value }}">{{{ option_title }}}</option>
+                    <# } ); #>
+                </select>
+            </div>
+        </div>
+        <# if ( data.description ) { #>
+        <div class="gmt-control-field-description">{{ data.description }}</div>
+        <# } #>
+        <?php
     }
 }

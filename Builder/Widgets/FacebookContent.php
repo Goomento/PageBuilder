@@ -59,8 +59,7 @@ class FacebookContent extends AbstractWidget
         AbstractWidget $widget,
         string $prefix = self::NAME . '_',
         array $args = []
-    )
-    {
+    ) {
         $widget->addControl(
             $prefix . 'type',
             $args + [
@@ -68,9 +67,9 @@ class FacebookContent extends AbstractWidget
                 'type' => Controls::SELECT,
                 'default' => 'page',
                 'options' => [
-                    'page' => __( 'Page' ),
-                    'post' => __( 'Post' ),
-                    'video' => __( 'Video' ),
+                    'page' => __('Page'),
+                    'post' => __('Post'),
+                    'video' => __('Video'),
                 ],
             ]
         );
@@ -78,7 +77,7 @@ class FacebookContent extends AbstractWidget
         $widget->addControl(
             $prefix . 'tabs',
             $args + [
-                'label' => __( 'Layout'),
+                'label' => __('Layout'),
                 'type' => Controls::SELECT2,
                 'multiple' => true,
                 'label_block' => true,
@@ -86,9 +85,9 @@ class FacebookContent extends AbstractWidget
                     'timeline',
                 ],
                 'options' => [
-                    'timeline' => __( 'Timeline'),
-                    'events' => __( 'Events'),
-                    'messages' => __( 'Messages' ),
+                    'timeline' => __('Timeline'),
+                    'events' => __('Events'),
+                    'messages' => __('Messages'),
                 ],
                 'condition' => [
                     $prefix . 'type' => 'page',
@@ -99,7 +98,7 @@ class FacebookContent extends AbstractWidget
         $widget->addControl(
             $prefix . 'small_header',
             $args + [
-                'label' => __( 'Small Header'),
+                'label' => __('Small Header'),
                 'type' => Controls::SWITCHER,
                 'default' => '',
                 'condition' => [
@@ -111,7 +110,7 @@ class FacebookContent extends AbstractWidget
         $widget->addControl(
             $prefix . 'show_cover',
             $args + [
-                'label' => __( 'Cover Photo'),
+                'label' => __('Cover Photo'),
                 'type' => Controls::SWITCHER,
                 'default' => 'yes',
                 'condition' => [
@@ -123,7 +122,7 @@ class FacebookContent extends AbstractWidget
         $widget->addControl(
             $prefix . 'show_facepile',
             $args + [
-                'label' => __( 'Profile Photos'),
+                'label' => __('Profile Photos'),
                 'type' => Controls::SWITCHER,
                 'default' => 'yes',
                 'condition' => [
@@ -135,7 +134,7 @@ class FacebookContent extends AbstractWidget
         $widget->addControl(
             $prefix . 'show_cta',
             $args + [
-                'label' => __( 'Custom CTA Button' ),
+                'label' => __('Custom CTA Button'),
                 'type' => Controls::SWITCHER,
                 'default' => 'yes',
                 'condition' => [
@@ -147,7 +146,7 @@ class FacebookContent extends AbstractWidget
         $widget->addControl(
             $prefix . 'height',
             $args + [
-                'label' => __( 'Height'),
+                'label' => __('Height'),
                 'type' => Controls::SLIDER,
                 'default' => [
                     'unit' => 'px',
@@ -169,7 +168,7 @@ class FacebookContent extends AbstractWidget
         $widget->addControl(
             $prefix . 'width',
             $args + [
-                'label' => __( 'Width'),
+                'label' => __('Width'),
                 'type' => Controls::SLIDER,
                 'default' => [
                     'unit' => 'px',
@@ -188,10 +187,10 @@ class FacebookContent extends AbstractWidget
         $widget->addControl(
             $prefix . 'show_text',
             $args + [
-                'label' => __( 'Full Post' ),
+                'label' => __('Full Post'),
                 'type' => Controls::SWITCHER,
                 'default' => '',
-                'description' => __( 'Applied to photo post, video.' ),
+                'description' => __('Applied to photo post, video.'),
                 'condition' => [
                     $prefix . 'type' => [ 'post', 'video' ],
                 ],
@@ -201,7 +200,7 @@ class FacebookContent extends AbstractWidget
         $widget->addControl(
             $prefix . 'video_allowfullscreen',
             $args + [
-                'label' => __( 'Allow Full Screen' ),
+                'label' => __('Allow Full Screen'),
                 'type' => Controls::SWITCHER,
                 'default' => '',
                 'condition' => [
@@ -213,7 +212,7 @@ class FacebookContent extends AbstractWidget
         $widget->addControl(
             $prefix . 'video_autoplay',
             $args + [
-                'label' => __( 'Autoplay' ),
+                'label' => __('Autoplay'),
                 'type' => Controls::SWITCHER,
                 'default' => '',
                 'condition' => [
@@ -225,10 +224,10 @@ class FacebookContent extends AbstractWidget
         $widget->addControl(
             $prefix . 'video_show_captions',
             $args + [
-                'label' => __( 'Captions' ),
+                'label' => __('Captions'),
                 'type' => Controls::SWITCHER,
                 'default' => '',
-                'description' => __( 'By default, captions are only available on desktop' ),
+                'description' => __('By default, captions are only available on desktop'),
                 'condition' => [
                     $prefix . 'type' => 'video',
                 ],
@@ -238,8 +237,8 @@ class FacebookContent extends AbstractWidget
         $widget->addControl(
             $prefix . 'page_url',
             $args + [
-                'label' => __( 'Page URL' ),
-                'placeholder' => __( 'https://your-link.com' ),
+                'label' => __('Page URL'),
+                'placeholder' => __('https://your-link.com'),
                 'default' => 'https://www.facebook.com/facebook/',
                 'description' => __('The URL of the Facebook Page.'),
                 'separator' => 'before',
@@ -252,8 +251,8 @@ class FacebookContent extends AbstractWidget
         $widget->addControl(
             $prefix . 'post_url',
             $args + [
-                'label' => __( 'Post URL' ),
-                'placeholder' => __( 'https://your-link.com' ),
+                'label' => __('Post URL'),
+                'placeholder' => __('https://your-link.com'),
                 'default' => 'https://www.facebook.com/20531316728/posts/10154009990506729/',
                 'description' => __('The absolute URL of the post.'),
                 'separator' => 'before',
@@ -266,8 +265,8 @@ class FacebookContent extends AbstractWidget
         $widget->addControl(
             $prefix . 'video_url',
             $args + [
-                'label' => __( 'Video URL' ),
-                'placeholder' => __( 'https://your-link.com' ),
+                'label' => __('Video URL'),
+                'placeholder' => __('https://your-link.com'),
                 'default' => 'https://www.facebook.com/facebook/videos/10153231379946729/',
                 'description' => __('The absolute URL of the video.'),
                 'separator' => 'before',
@@ -285,7 +284,7 @@ class FacebookContent extends AbstractWidget
         $this->startControlsSection(
             'facebook_content_section',
             [
-                'label' => __( 'Content' ),
+                'label' => __('Content'),
             ]
         );
 

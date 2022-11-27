@@ -44,13 +44,13 @@ abstract class AbstractControlGroup extends AbstractEntity
      * Retrieve group control options. If options are not set, it will initialize default options.
      *
      *
-     * @param array $option Optional. Single option.
+     * @param string|null $option Optional. Single option.
      *
      * @return mixed Group control options. If option parameter was not specified, it will
      *               return an array of all the options. If single option specified, it will
      *               return the option value or `null` if option does not exists.
      */
-    final public function getOptions($option = null)
+    public function getOptions(?string $option = null)
     {
         if (null === $this->options) {
             $this->initOptions();
@@ -78,7 +78,7 @@ abstract class AbstractControlGroup extends AbstractEntity
      * @param array          $options   Optional. The element options. Default is
      *                                  an empty array.
      */
-    final public function addControls(ControlsStack $element, array $userArgs, array $options = [])
+    public function addControls(ControlsStack $element, array $userArgs, array $options = [])
     {
         $this->initArgs($userArgs);
 
@@ -140,7 +140,7 @@ abstract class AbstractControlGroup extends AbstractEntity
      *
      * @return array Group control arguments.
      */
-    final public function getArgs()
+    public function getArgs()
     {
         return $this->args;
     }
@@ -153,7 +153,7 @@ abstract class AbstractControlGroup extends AbstractEntity
      *
      * @return array Control fields.
      */
-    final public function getFields()
+    public function getFields()
     {
         if (null === static::$fields) {
             static::$fields = $this->initFields();

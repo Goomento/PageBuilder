@@ -36,7 +36,7 @@ class RecentlyComparedProducts extends AbstractMagentoWidget
         $this->startControlsSection(
             'magento_recently_compared_products_section',
             [
-                'label' => __( 'Recently Compared Products' ),
+                'label' => __('Recently Compared Products'),
             ]
         );
 

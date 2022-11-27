@@ -208,17 +208,17 @@ class PricingTable extends AbstractWidget
         $repeater->addControl(
             'pricing_table_item',
             [
-                'label'       => __( 'List Item' ),
+                'label'       => __('List Item'),
                 'type'        => Controls::TEXT,
                 'label_block' => true,
-                'default'     => __( 'Pricing table list item' ),
+                'default'     => __('Pricing table list item'),
             ]
         );
 
         $repeater->addControl(
             'pricing_table_item_selected_icon',
             [
-                'label'            => __( 'List Icon' ),
+                'label'            => __('List Icon'),
                 'type'             => Controls::ICONS,
                 'default'          => [
                     'value'   => 'fas fa-check',
@@ -230,7 +230,7 @@ class PricingTable extends AbstractWidget
         $repeater->addControl(
             'pricing_table_item_active',
             [
-                'label'        => __( 'Item Active?' ),
+                'label'        => __('Item Active?'),
                 'type'         => Controls::SWITCHER,
                 'return_value' => 'yes',
                 'default'      => 'yes',
@@ -240,7 +240,7 @@ class PricingTable extends AbstractWidget
         $repeater->addControl(
             'pricing_table_item_icon_color',
             [
-                'label'   => __( 'Icon Color' ),
+                'label'   => __('Icon Color'),
                 'type'    => Controls::COLOR,
                 'default' => '#23a455',
             ]

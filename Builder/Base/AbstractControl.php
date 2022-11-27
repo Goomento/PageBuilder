@@ -88,15 +88,15 @@ abstract class AbstractControl extends AbstractBase
      * object.
      *
      */
-    final public function printTemplate()
+    public function printTemplate()
     {
         ?>
-		<script type="text/html" id="tmpl-gmt-control-<?= $this->getName() ?>-content">
-			<div class="gmt-control-content">
-				<?php $this->contentTemplate(); ?>
-			</div>
-		</script>
-		<?php
+        <script type="text/html" id="tmpl-gmt-control-<?= $this->getName() ?>-content">
+            <div class="gmt-control-content">
+                <?php $this->contentTemplate(); ?>
+            </div>
+        </script>
+        <?php
     }
 
     /**

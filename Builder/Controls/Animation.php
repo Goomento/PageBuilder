@@ -120,25 +120,25 @@ class Animation extends AbstractControlData
     public function contentTemplate()
     {
         $controlUid = $this->getControlUid(); ?>
-		<div class="gmt-control-field">
-			<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
-			<div class="gmt-control-input-wrapper">
-				<select id="<?= $controlUid; ?>" data-setting="{{ data.name }}">
-					<option value=""><?= __('Default'); ?></option>
-					<option value="none"><?= __('None'); ?></option>
-					<?php foreach (static::getAnimations() as $animationsGroupName => $animationsGroup) : ?>
-						<optgroup label="<?= $animationsGroupName; ?>">
-							<?php foreach ($animationsGroup as $animationName => $animationTitle) : ?>
-								<option value="<?= $animationName; ?>"><?= $animationTitle; ?></option>
-							<?php endforeach; ?>
-						</optgroup>
-					<?php endforeach; ?>
-				</select>
-			</div>
-		</div>
-		<# if ( data.description ) { #>
-		<div class="gmt-control-field-description">{{{ data.description }}}</div>
-		<# } #>
-		<?php
+        <div class="gmt-control-field">
+            <label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+            <div class="gmt-control-input-wrapper">
+                <select id="<?= $controlUid; ?>" data-setting="{{ data.name }}">
+                    <option value=""><?= __('Default'); ?></option>
+                    <option value="none"><?= __('None'); ?></option>
+                    <?php foreach (static::getAnimations() as $animationsGroupName => $animationsGroup): ?>
+                        <optgroup label="<?= $animationsGroupName; ?>">
+                            <?php foreach ($animationsGroup as $animationName => $animationTitle): ?>
+                                <option value="<?= $animationName; ?>"><?= $animationTitle; ?></option>
+                            <?php endforeach; ?>
+                        </optgroup>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <# if ( data.description ) { #>
+        <div class="gmt-control-field-description">{{{ data.description }}}</div>
+        <# } #>
+        <?php
     }
 }

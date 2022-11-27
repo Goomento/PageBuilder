@@ -23,7 +23,7 @@ class Hidden extends AbstractControlData
     public function contentTemplate()
     {
         ?>
-		<input type="hidden" data-setting="{{{ data.name }}}" />
-		<?php
+        <input type="hidden" data-setting="{{{ data.name }}}" />
+        <?php
     }
 }

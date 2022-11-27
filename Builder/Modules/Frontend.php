@@ -23,6 +23,7 @@ use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 
+// phpcs:ignore Magento2.Functions.StaticFunction.StaticFunction
 class Frontend extends AbstractApp
 {
     const NAME = 'frontend';
@@ -419,7 +420,7 @@ class Frontend extends AbstractApp
             return '';
         }
 
-        return $this->getBuilderContent( $content );
+        return $this->getBuilderContent($content);
     }
 
     /**
@@ -462,8 +463,9 @@ class Frontend extends AbstractApp
             return '';
         }
 
-        $cssFile = new ContentCss( $buildableContent );
+        $cssFile = new ContentCss($buildableContent);
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
         ob_start();
 
         HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$cssFile, 'enqueue']);

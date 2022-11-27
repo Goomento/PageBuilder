@@ -324,7 +324,9 @@ class Content extends AbstractModel implements ContentInterface, IdentityInterfa
             $revisionRepo = ObjectManagerHelper::get(RevisionRepositoryInterface::class);
             try {
                 $this->lastVersion = $revisionRepo->getLastRevisionByContentId((int) $this->getId());
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+
+            }
         }
 
         return $this->lastVersion ?: null;
@@ -349,7 +351,9 @@ class Content extends AbstractModel implements ContentInterface, IdentityInterfa
             $revisionRepo = ObjectManagerHelper::get(RevisionRepositoryInterface::class);
             try {
                 $this->currentRevision = $revisionRepo->getByRevisionHash($this->getRevisionHash());
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+
+            }
         }
 
         return $this->currentRevision;

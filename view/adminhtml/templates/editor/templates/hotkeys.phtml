@@ -3,8 +3,14 @@
  * @package Goomento_PageBuilder
  * @link https://github.com/Goomento/PageBuilder
  */
-
 declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/**
+ * @var Template $block
+ */
+
 ?>
 <script type="text/template" id="tmpl-gmt-hotkeys">
     <# var ctrlLabel = environment.mac ? '⌘' : 'Ctrl'; #>
@@ -12,11 +18,11 @@ declare(strict_types=1);
         <div id="gmt-hotkeys__actions" class="gmt-hotkeys__col">
 
             <div class="gmt-hotkeys__header">
-                <h3><?= __('Actions'); ?></h3>
+                <h3><?= $block->escapeHtml(__('Actions')); ?></h3>
             </div>
             <div class="gmt-hotkeys__list">
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('Undo'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('Undo')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>{{{ ctrlLabel }}}</span>
                         <span>Z</span>
@@ -24,7 +30,7 @@ declare(strict_types=1);
                 </div>
 
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('Redo'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('Redo')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>{{{ ctrlLabel }}}</span>
                         <span>Shift</span>
@@ -33,7 +39,7 @@ declare(strict_types=1);
                 </div>
 
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('Copy'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('Copy')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>{{{ ctrlLabel }}}</span>
                         <span>C</span>
@@ -41,7 +47,7 @@ declare(strict_types=1);
                 </div>
 
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('Paste'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('Paste')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>{{{ ctrlLabel }}}</span>
                         <span>V</span>
@@ -49,7 +55,7 @@ declare(strict_types=1);
                 </div>
 
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('Paste Style'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('Paste Style')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>{{{ ctrlLabel }}}</span>
                         <span>Shift</span>
@@ -58,14 +64,14 @@ declare(strict_types=1);
                 </div>
 
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('Delete'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('Delete')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>Delete</span>
                     </div>
                 </div>
 
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('Duplicate'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('Duplicate')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>{{{ ctrlLabel }}}</span>
                         <span>D</span>
@@ -73,7 +79,7 @@ declare(strict_types=1);
                 </div>
 
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('Save'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('Save')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>{{{ ctrlLabel }}}</span>
                         <span>S</span>
@@ -86,12 +92,12 @@ declare(strict_types=1);
         <div id="gmt-hotkeys__navigation" class="gmt-hotkeys__col">
 
             <div class="gmt-hotkeys__header">
-                <h3><?= __('Go To'); ?></h3>
+                <h3><?= $block->escapeHtml(__('Go To')); ?></h3>
             </div>
             <div class="gmt-hotkeys__list">
 
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('Show / Hide Panel'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('Show / Hide Panel')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>{{{ ctrlLabel }}}</span>
                         <span>P</span>
@@ -99,7 +105,7 @@ declare(strict_types=1);
                 </div>
 
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('Responsive Mode'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('Responsive Mode')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>{{{ ctrlLabel }}}</span>
                         <span>Shift</span>
@@ -108,7 +114,7 @@ declare(strict_types=1);
                 </div>
 
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('History'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('History')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>{{{ ctrlLabel }}}</span>
                         <span>Shift</span>
@@ -117,7 +123,7 @@ declare(strict_types=1);
                 </div>
 
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('Navigator'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('Navigator')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>{{{ ctrlLabel }}}</span>
                         <span>I</span>
@@ -125,7 +131,7 @@ declare(strict_types=1);
                 </div>
 
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('Template Library'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('Template Library')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>{{{ ctrlLabel }}}</span>
                         <span>Shift</span>
@@ -134,7 +140,7 @@ declare(strict_types=1);
                 </div>
 
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('Keyboard Shortcuts'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('Keyboard Shortcuts')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>{{{ ctrlLabel }}}</span>
                         <span>?</span>
@@ -142,7 +148,7 @@ declare(strict_types=1);
                 </div>
 
                 <div class="gmt-hotkeys__item">
-                    <div class="gmt-hotkeys__item--label"><?= __('Quit'); ?></div>
+                    <div class="gmt-hotkeys__item--label"><?= $block->escapeHtml(__('Quit')); ?></div>
                     <div class="gmt-hotkeys__item--shortcut">
                         <span>Esc</span>
                     </div>

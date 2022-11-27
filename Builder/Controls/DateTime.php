@@ -33,15 +33,15 @@ class DateTime extends AbstractControlData
     public function contentTemplate()
     {
         $controlUid = $this->getControlUid(); ?>
-		<div class="gmt-control-field">
-			<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
-			<div class="gmt-control-input-wrapper">
-				<input id="<?= $controlUid; ?>" placeholder="{{ data.placeholder }}" class="gmt-date-time-picker flatpickr" type="text" data-setting="{{ data.name }}">
-			</div>
-		</div>
-		<# if ( data.description ) { #>
-			<div class="gmt-control-field-description">{{{ data.description }}}</div>
-		<# } #>
-		<?php
+        <div class="gmt-control-field">
+            <label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+            <div class="gmt-control-input-wrapper">
+                <input id="<?= $controlUid; ?>" placeholder="{{ data.placeholder }}" class="gmt-date-time-picker flatpickr" type="text" data-setting="{{ data.name }}">
+            </div>
+        </div>
+        <# if ( data.description ) { #>
+            <div class="gmt-control-field-description">{{{ data.description }}}</div>
+        <# } #>
+        <?php
     }
 }

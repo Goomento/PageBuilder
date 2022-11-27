@@ -17,5 +17,5 @@ abstract class AbstractActions
      * @param array $params
      * @return array
      */
-    public abstract function doAction($actionData, $params = []);
+    abstract public function doAction($actionData, $params = []);
 }

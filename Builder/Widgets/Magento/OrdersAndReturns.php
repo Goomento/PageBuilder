@@ -41,7 +41,7 @@ class OrdersAndReturns extends AbstractMagentoWidget
         $this->startControlsSection(
             'magento_orders_and_returns_section',
             [
-                'label' => __( 'Orders And Returns' ),
+                'label' => __('Orders And Returns'),
             ]
         );
 

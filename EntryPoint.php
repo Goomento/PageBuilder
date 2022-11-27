@@ -86,8 +86,11 @@ class EntryPoint extends BuilderRegister
             'Goomento_PageBuilder/lib/swiper/swiper.min'
         );
 
-        ThemeHelper::inlineScript('swiper',
-            "require(['swiper'], Swiper => {window.Swiper = window.Swiper || Swiper});", 'before');
+        ThemeHelper::inlineScript(
+            'swiper',
+            "require(['swiper'], Swiper => {window.Swiper = window.Swiper || Swiper});",
+            'before'
+        );
 
         ThemeHelper::registerScript(
             'sofish-pen',

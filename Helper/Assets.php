@@ -279,6 +279,7 @@ class Assets extends AbstractHelper
             $folder = $this->filesystem->getDirectoryWrite($fileName['directory_code']);
             return $folder->delete($fileName['related_path']);
         } elseif ($fileName['absolute_path'] && file_exists($fileName['absolute_path'])) {
+            // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
             @unlink($fileName['absolute_path']);
             return true;
         }

@@ -18,7 +18,6 @@ use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
 use Goomento\PageBuilder\Traits\TraitComponentsLoader;
 
-
 class Schemes
 {
 
@@ -151,7 +150,7 @@ class Schemes
     public function ajaxApplyScheme($data)
     {
         if (!AuthorizationHelper::isCurrentUserCan('manage_global_config')) {
-            throw new \Exception(
+            throw new \Goomento\PageBuilder\Exception\BuilderException(
                 'Sorry, you need permissions to view this content'
             );
         }

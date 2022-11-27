@@ -13,6 +13,7 @@ use Goomento\PageBuilder\Builder\Managers\Elements;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 
+// phpcs:disable Magento2.CodeAnalysis.EmptyBlock.DetectedFunction
 class BuilderRegister implements BuildableInterface
 {
     /**

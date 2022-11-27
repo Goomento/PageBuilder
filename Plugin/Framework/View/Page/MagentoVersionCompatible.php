@@ -21,8 +21,7 @@ class MagentoVersionCompatible
      */
     public function __construct(
         ProductMetadataInterface $productMetadata
-    )
-    {
+    ) {
         $this->productMetadata = $productMetadata;
     }
 
@@ -40,7 +39,9 @@ class MagentoVersionCompatible
                 if ($shouldModify) {
                     $result = $this->getUnderscoreJs() . $result;
                 }
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+
+            }
         }
         return $result;
     }

@@ -5,11 +5,15 @@
  */
 
 declare(strict_types=1);
+/**
+ * @var Template $block
+ */
 
 use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Fonts;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Magento\Backend\Block\Template;
 
 ?>
 
@@ -28,31 +32,31 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
     <div class="gmt-add-section-inner">
         <div class="gmt-add-section-close">
             <i class="fas fa-times" aria-hidden="true"></i>
-            <span class="gmt-screen-only"><?= __('Close'); ?></span>
+            <span class="gmt-screen-only"><?= $block->escapeHtml(__('Close')); ?></span>
         </div>
         <div class="gmt-add-new-section">
-            <div class="gmt-add-section-drag-title"><?= __('Drop widget here'); ?></div>
+            <div class="gmt-add-section-drag-title"><?= $block->escapeHtml(__('Drop widget here')); ?></div>
             <div class="gmt-add-section-area-helper">
-                <span class="gmt-add-section-area-button gmt-add-section-button" title="<?= __('Add New Section'); ?>">
+                <span class="gmt-add-section-area-button gmt-add-section-button" title="<?= $block->escapeHtml(__('Add New Section')); ?>">
                     <i class="fas fa-plus"></i>
                 </span>
-                <span><?= __('Add new section'); ?></span>
+                <span><?= $block->escapeHtml(__('Add new section')); ?></span>
             </div>
             <div class="gmt-add-section-area-helper">
-                <span class="gmt-add-section-area-button gmt-add-template-button" title="<?= __('Add Template'); ?>">
+                <span class="gmt-add-section-area-button gmt-add-template-button" title="<?= $block->escapeHtml(__('Add Template')); ?>">
                     <i class="fas fa-folder"></i>
                 </span>
-                <span><?= __('Add saved templates'); ?> ({{{ ctrlLabel }}} + Shift + L)</span>
+                <span><?= $block->escapeHtml(__('Add saved templates')); ?> ({{{ ctrlLabel }}} + Shift + L)</span>
             </div>
             <div class="gmt-add-section-area-helper">
-                <span class="gmt-add-section-area-button gmt-shortcut-button" title="<?= __('All keyboard shortcuts'); ?>">
+                <span class="gmt-add-section-area-button gmt-shortcut-button" title="<?= $block->escapeHtml(__('All keyboard shortcuts')); ?>">
                     <i class="fas fa-question"></i>
                 </span>
-                <span><?= __('All keyboard shortcuts'); ?> ({{{ ctrlLabel }}} + ?)</span>
+                <span><?= $block->escapeHtml(__('All keyboard shortcuts')); ?> ({{{ ctrlLabel }}} + ?)</span>
             </div>
         </div>
         <div class="gmt-select-preset">
-            <div class="gmt-select-preset-title"><?= __('Select your Structure'); ?></div>
+            <div class="gmt-select-preset-title"><?= $block->escapeHtml(__('Select your Structure')); ?></div>
             <ul class="gmt-select-preset-list">
                 <#
                 var structures = [ 10, 20, 30, 40, 21, 22, 31, 32, 33, 50, 60, 34 ];
@@ -70,12 +74,12 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 </script>
 
 <script type="text/template" id="tmpl-gmt-tag-controls-stack-empty">
-    <?= __('This tag has no settings.'); ?>
+    <?= $block->escapeHtml(__('This tag has no settings.')); ?>
 </script>
 
 
 <script type="text/template" id="tmpl-gmt-panel">
-    <div id="gmt-panel-header-wrapper" class="tooltip-target" data-tooltip-gravity="n" data-tooltip="<?= __('Drag panel') ?>">
+    <div id="gmt-panel-header-wrapper" class="tooltip-target" data-tooltip-gravity="n" data-tooltip="<?= $block->escapeHtml(__('Drag panel')) ?>">
         <i class="fas fa-ellipsis-h"></i>
     </div>
     <div id="gmt-panel-content-wrapper"></div>
@@ -105,23 +109,26 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 <script type="text/template" id="tmpl-gmt-panel-header">
     <div id="gmt-panel-header-menu-button" class="gmt-header-button">
-        <i class="gmt-icon fa fa-bars tooltip-target" aria-hidden="true" data-tooltip="<?= __('Menu'); ?>"></i>
-        <span class="gmt-screen-only"><?= __('Menu'); ?></span>
+        <i class="gmt-icon fa fa-bars tooltip-target" aria-hidden="true" data-tooltip="<?= $block->escapeHtml(__('Menu')); ?>"></i>
+        <span class="gmt-screen-only"><?= $block->escapeHtml(__('Menu')); ?></span>
     </div>
     <div id="gmt-panel-header-title"></div>
     <div id="gmt-panel-header-add-button" class="gmt-header-button">
-        <i class="gmt-icon goomento-logo-white tooltip-target" aria-hidden="true" data-tooltip="<?= __('Widgets Panel'); ?>"></i>
-        <span class="gmt-screen-only"><?= __('Widgets Panel'); ?></span>
+        <i class="gmt-icon goomento-logo-white tooltip-target" aria-hidden="true"
+           data-tooltip="<?= $block->escapeHtml(__('Widgets Panel')); ?>"></i>
+        <span class="gmt-screen-only"><?= $block->escapeHtml(__('Widgets Panel')); ?></span>
     </div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-controls-content">
     <# var ctrlLabel = goomento.env.mac ? '⌘' : 'Ctrl'; #>
     <div class="gmt-panel-control-tools gmt-panel-control-tools-start">
-        <div id="gmt-panel-control-panel" class="gmt-panel-control-tool gmt-leave-open tooltip-target active" data-tooltip="<?= __('Widget List'); ?> ({{{ctrlLabel}}} + Shift + P)">
+        <div id="gmt-panel-control-panel" class="gmt-panel-control-tool gmt-leave-open tooltip-target active"
+             data-tooltip="<?= $block->escapeHtml(__('Widget List')); ?> ({{{ctrlLabel}}} + Shift + P)">
             <i class="fas fa-th-large" aria-hidden="true"></i>
         </div>
-        <div id="gmt-panel-control-editing" class="gmt-panel-control-tool gmt-leave-open tooltip-target active" data-tooltip="<?= __('Toggle View'); ?> ({{{ctrlLabel}}} + P)">
+        <div id="gmt-panel-control-editing" class="gmt-panel-control-tool gmt-leave-open tooltip-target active"
+             data-tooltip="<?= $block->escapeHtml(__('Toggle View')); ?> ({{{ctrlLabel}}} + P)">
             <i class="far fa-edit"></i>
         </div>
     </div>
@@ -129,50 +136,60 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
         <div class="gmt-panel-control-tool gmt-logo-brand">
             <i class="goomento-logo-white"></i>
         </div>
-        <div id="gmt-panel-control-settings" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('Page Settings'); ?>">
+        <div id="gmt-panel-control-settings" class="gmt-panel-control-tool gmt-leave-open tooltip-target"
+             data-tooltip="<?= $block->escapeHtml(__('Page Settings')); ?>">
             <i class="fas fa-cog" aria-hidden="true"></i>
         </div>
-        <div id="gmt-panel-control-navigator" class="gmt-panel-control-tool tooltip-target" data-tooltip="<?= __('Navigator') ?> ({{{ctrlLabel}}} + I)">
+        <div id="gmt-panel-control-navigator" class="gmt-panel-control-tool tooltip-target"
+             data-tooltip="<?= $block->escapeHtml(__('Navigator')) ?> ({{{ctrlLabel}}} + I)">
             <i class="fas fa-location-arrow" aria-hidden="true"></i>
         </div>
-        <div id="gmt-panel-control-history" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('History'); ?> ({{{ctrlLabel}}} + Shift + H)">
+        <div id="gmt-panel-control-history" class="gmt-panel-control-tool gmt-leave-open tooltip-target"
+             data-tooltip="<?= $block->escapeHtml(__('History')); ?> ({{{ctrlLabel}}} + Shift + H)">
             <i class="fas fa-history" aria-hidden="true"></i>
         </div>
-        <div id="gmt-panel-control-revision" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('Saved draft'); ?> ({{{ctrlLabel}}} + H)">
+        <div id="gmt-panel-control-revision" class="gmt-panel-control-tool gmt-leave-open tooltip-target"
+             data-tooltip="<?= $block->escapeHtml(__('Saved draft')); ?> ({{{ctrlLabel}}} + H)">
             <i class="fas fa-code-branch" aria-hidden="true"></i>
         </div>
         <div id="gmt-panel-control-responsive" class="gmt-panel-control-wrapper gmt-panel-control-tool">
             <div class="gmt-panel-control-responsive-devices gmt-panel-control-group">
-                <div class="gmt-panel-control-responsive-device tooltip-target gmt-panel-control-tool" data-device-mode="desktop" data-tooltip="<?= __('Desktop'); ?> ({{{ctrlLabel}}} + Shift + M)">
+                <div class="gmt-panel-control-responsive-device tooltip-target gmt-panel-control-tool"
+                     data-device-mode="desktop" data-tooltip="<?= $block->escapeHtml(__('Desktop')); ?> ({{{ctrlLabel}}} + Shift + M)">
                     <i class="gmt-icon fa fa-desktop" aria-hidden="true"></i>
                 </div>
-                <div class="gmt-panel-control-responsive-device tooltip-target gmt-panel-control-tool" data-device-mode="tablet" data-tooltip="<?= __('Tablet'); ?> ({{{ctrlLabel}}} + Shift + M)">
+                <div class="gmt-panel-control-responsive-device tooltip-target gmt-panel-control-tool"
+                     data-device-mode="tablet" data-tooltip="<?= $block->escapeHtml(__('Tablet')); ?> ({{{ctrlLabel}}} + Shift + M)">
                     <i class="gmt-icon fa fa-tablet" aria-hidden="true"></i>
                 </div>
-                <div class="gmt-panel-control-responsive-device tooltip-target gmt-panel-control-tool" data-device-mode="mobile" data-tooltip="<?= __('Mobile'); ?> ({{{ctrlLabel}}} + Shift + M)">
+                <div class="gmt-panel-control-responsive-device tooltip-target gmt-panel-control-tool"
+                     data-device-mode="mobile" data-tooltip="<?= $block->escapeHtml(__('Mobile')); ?> ({{{ctrlLabel}}} + Shift + M)">
                     <i class="gmt-icon fa fa-mobile" aria-hidden="true"></i>
                 </div>
             </div>
         </div>
-        <div id="gmt-panel-control-saver-preview" class="gmt-panel-control-tool tooltip-target" data-tooltip="<?= __('Preview Changes'); ?>">
+        <div id="gmt-panel-control-saver-preview" class="gmt-panel-control-tool tooltip-target"
+             data-tooltip="<?= $block->escapeHtml(__('Preview Changes')); ?>">
         <span id="gmt-panel-control-saver-preview-label">
             <i class="fas fa-eye" aria-hidden="true"></i>
-            <span class="gmt-screen-only"><?= __('Preview Changes'); ?></span>
+            <span class="gmt-screen-only"><?= $block->escapeHtml(__('Preview Changes')); ?></span>
         </span>
         </div>
         <div id="gmt-panel-control-saver-publish" class="gmt-panel-control-tool">
-            <button id="gmt-panel-saver-button-publish" class="gmt-button gmt-button-success gmt-disabled tooltip-target" data-tooltip="<?= __('Saved'); ?> ({{{ctrlLabel}}} + S)">
+            <button id="gmt-panel-saver-button-publish" class="gmt-button gmt-button-success gmt-disabled tooltip-target"
+                    data-tooltip="<?= $block->escapeHtml(__('Saved')); ?> ({{{ctrlLabel}}} + S)">
             <span class="gmt-state-icon">
                 <i class="fa-circle-notch fas spinning" aria-hidden="true"></i>
             </span>
                 <span id="gmt-panel-saver-button-publish-label">
-                <?= __('Saved'); ?>
+                <?= $block->escapeHtml(__('Saved')); ?>
             </span>
             </button>
             <div id="gmt-panel-control-saver-options" class="gmt-panel-control-tool gmt-toggle-state">
-                <button id="gmt-panel-saver-button-save-options" class="gmt-button gmt-button-success tooltip-target gmt-disabled" data-tooltip="<?= __('Save Options'); ?>">
+                <button id="gmt-panel-saver-button-save-options" class="gmt-button gmt-button-success tooltip-target gmt-disabled"
+                        data-tooltip="<?= $block->escapeHtml(__('Save Options')); ?>">
                     <i class="fas fa-caret-up" aria-hidden="true"></i>
-                    <span class="gmt-screen-only"><?= __('Save Options'); ?></span>
+                    <span class="gmt-screen-only"><?= $block->escapeHtml(__('Save Options')); ?></span>
                 </button>
                 <div class="gmt-panel-control-sub-menu-wrapper">
                     <p class="gmt-last-edited-wrapper">
@@ -186,7 +203,7 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
                     <div class="gmt-panel-control-sub-menu">
                         <div id="gmt-panel-control-sub-menu-item-save-template" class="gmt-panel-control-sub-menu-item">
                             <i class="gmt-icon fa fa-folder" aria-hidden="true"></i>
-                            <span class="gmt-title"><?= __('Save as Template'); ?></span>
+                            <span class="gmt-title"><?= $block->escapeHtml(__('Save as Template')); ?></span>
                         </div>
                     </div>
                 </div>
@@ -194,13 +211,16 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
         </div>
     </div>
     <div class="gmt-panel-control-tools gmt-panel-control-tools-end">
-        <div id="gmt-panel-control-general-settings" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('Global Settings'); ?>">
+        <div id="gmt-panel-control-general-settings" class="gmt-panel-control-tool gmt-leave-open tooltip-target"
+             data-tooltip="<?= $block->escapeHtml(__('Global Settings')); ?>">
             <i class="fas fa-cogs" aria-hidden="true"></i>
         </div>
-        <div id="gmt-panel-control-help" onclick="$e.run('shortcuts/open')" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('Keyboard shortcuts'); ?> ({{{ctrlLabel}}} + ?)">
+        <div id="gmt-panel-control-help" onclick="$e.run('shortcuts/open')" class="gmt-panel-control-tool gmt-leave-open tooltip-target"
+             data-tooltip="<?= $block->escapeHtml(__('Keyboard shortcuts')); ?> ({{{ctrlLabel}}} + ?)">
             <i class="fas fa-question" aria-hidden="true"></i>
         </div>
-        <div id="gmt-panel-control-back-to-dashboard" class="gmt-panel-control-tool gmt-leave-open tooltip-target" data-tooltip="<?= __('Back To Magento'); ?>">
+        <div id="gmt-panel-control-back-to-dashboard" class="gmt-panel-control-tool gmt-leave-open tooltip-target"
+             data-tooltip="<?= $block->escapeHtml(__('Back To Magento')); ?>">
             <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
         </div>
     </div>
@@ -209,8 +229,8 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 <script type="text/template" id="tmpl-editor-content">
     <div class="gmt-panel-navigation">
         <div class="gmt-component-tab gmt-panel-navigation-tab gmt-tab-control-close tooltip-target"
-             data-tooltip-gravity="n" data-tooltip="<?= __('Close') ?>" data-tab="close">
-            <a href="#"><?= __('Close') ?></a>
+             data-tooltip-gravity="n" data-tooltip="<?= $block->escapeHtml(__('Close')) ?>" data-tab="close">
+            <a href="#"><?= $block->escapeHtml(__('Close')) ?></a>
         </div>
         <# _.each( elementData.tabs_controls, function( tabTitle, tabSlug ) {
         if ( 'content' !== tabSlug && ! goomento.userCan( 'save' ) ) {
@@ -226,9 +246,9 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
     </div>
     <# if ( elementData.reload_preview ) { #>
     <div class="gmt-update-preview">
-        <div class="gmt-update-preview-title"><?= __('Update changes to page'); ?></div>
+        <div class="gmt-update-preview-title"><?= $block->escapeHtml(__('Update changes to page')); ?></div>
         <div class="gmt-update-preview-button-wrapper">
-            <button class="gmt-update-preview-button gmt-button gmt-button-success"><?= __('Apply'); ?></button>
+            <button class="gmt-update-preview-button gmt-button gmt-button-success"><?= $block->escapeHtml(__('Apply')); ?></button>
         </div>
     </div>
     <# } #>
@@ -237,7 +257,7 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 <script type="text/template" id="tmpl-gmt-panel-schemes-disabled">
     <i class="gmt-nerd-box-icon fas fa-glasses" aria-hidden="true"></i>
-    <div class="gmt-nerd-box-title">{{{ '<?= __("%s are disabled"); ?>'.replace( '%s', disabledTitle ) }}}</div>
+    <div class="gmt-nerd-box-title">{{{ '<?= $block->escapeHtmlAttr(__("%s are disabled")); ?>'.replace( '%s', disabledTitle ) }}}</div>
     <div class="gmt-nerd-box-message">You can enable it from the <a href="%s" target="_blank">Goomento settings page.</a></div>
 </script>
 
@@ -269,27 +289,27 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
         foreach ($schemeFields as $optionName => $option):
             ?>
             <div class="gmt-panel-scheme-typography-item">
-                <div class="gmt-panel-scheme-item-title gmt-control-title"><?= $option['label']; ?></div>
+                <div class="gmt-panel-scheme-item-title gmt-control-title"><?=  /** @noEscape */ $option['label']; ?></div>
                 <div class="gmt-panel-scheme-typography-item-value">
                     <?php if ('select' === $option['type']): ?>
-                        <select name="<?= EscaperHelper::escapeHtml($optionName); ?>" class="gmt-panel-scheme-typography-item-field">
+                        <select name="<?= $block->escapeHtml($optionName); ?>" class="gmt-panel-scheme-typography-item-field">
                             <?php foreach ($option['options'] as $fieldKey => $fieldValue): ?>
-                                <option value="<?= EscaperHelper::escapeHtml($fieldKey); ?>"><?= $fieldValue; ?></option>
+                                <option value="<?= $block->escapeHtml($fieldKey); ?>"><?=  /** @noEscape */ $fieldValue; ?></option>
                             <?php endforeach; ?>
                         </select>
                     <?php elseif ('font' === $option['type']): ?>
-                        <select name="<?= EscaperHelper::escapeHtml($optionName); ?>" class="gmt-panel-scheme-typography-item-field">
-                            <option value=""><?= __('Default'); ?></option>
+                        <select name="<?= $block->escapeHtml($optionName); ?>" class="gmt-panel-scheme-typography-item-field">
+                            <option value=""><?= $block->escapeHtml(__('Default')); ?></option>
                             <?php foreach (Fonts::getFontGroups() as $groupType => $groupLabel): ?>
-                                <optgroup label="<?= EscaperHelper::escapeHtml($groupLabel); ?>">
+                                <optgroup label="<?= $block->escapeHtml($groupLabel); ?>">
                                     <?php foreach (Fonts::getFontsByGroups([ $groupType ]) as $fontTitle => $fontType): ?>
-                                        <option value="<?= EscaperHelper::escapeHtml($fontTitle); ?>"><?= $fontTitle; ?></option>
+                                        <option value="<?= $block->escapeHtml($fontTitle); ?>"><?=  /** @noEscape */ $fontTitle; ?></option>
                                     <?php endforeach; ?>
                                 </optgroup>
                             <?php endforeach; ?>
                         </select>
                     <?php elseif ('text' === $option['type']): ?>
-                        <input name="<?= EscaperHelper::escapeHtml($optionName); ?>" class="gmt-panel-scheme-typography-item-field" />
+                        <input name="<?= $block->escapeHtml($optionName); ?>" class="gmt-panel-scheme-typography-item-field" />
                     <?php endif; ?>
                 </div>
             </div>
@@ -333,18 +353,18 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 <script type="text/template" id="tmpl-gmt-repeater-row">
     <div class="gmt-repeater-row-tools <# if ( itemActions.sort )  {  #> tooltip-target <# } #>"
-    <# if ( itemActions.sort ) {  #> data-tooltip="<?= __( 'Drag me' ); ?>" <# } #>>
+    <# if ( itemActions.sort ) {  #> data-tooltip="<?= $block->escapeHtml(__('Drag me')); ?>" <# } #>>
     <div class="gmt-repeater-row-item-title"></div>
     <# if ( itemActions.duplicate ) {  #>
-    <div class="gmt-repeater-row-tool gmt-repeater-tool-duplicate tooltip-target" data-tooltip="<?= __( 'Duplicate' ); ?>">
+    <div class="gmt-repeater-row-tool gmt-repeater-tool-duplicate tooltip-target" data-tooltip="<?= $block->escapeHtml(__('Duplicate')); ?>">
         <i class="far fa-copy"></i>
-        <span class="gmt-screen-only"><?= __( 'Duplicate' ); ?></span>
+        <span class="gmt-screen-only"><?= $block->escapeHtml(__('Duplicate')); ?></span>
     </div>
     <# }
     if ( itemActions.remove ) {  #>
-    <div class="gmt-repeater-row-tool gmt-repeater-tool-remove tooltip-target" data-tooltip="<?= __( 'Remove' ); ?>">
+    <div class="gmt-repeater-row-tool gmt-repeater-tool-remove tooltip-target" data-tooltip="<?= $block->escapeHtml(__('Remove')); ?>">
         <i class="fas fa-times" aria-hidden="true"></i>
-        <span class="gmt-screen-only"><?= __( 'Remove' ); ?></span>
+        <span class="gmt-screen-only"><?= $block->escapeHtml(__('Remove')); ?></span>
     </div>
     <# } #>
     </div>

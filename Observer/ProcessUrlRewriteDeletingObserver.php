@@ -40,8 +40,7 @@ class ProcessUrlRewriteDeletingObserver implements ObserverInterface
         PageBuilderUrlRewriteGenerator $cmsPageUrlRewriteGenerator,
         UrlPersistInterface $urlPersist,
         Logger $logger
-    )
-    {
+    ) {
         $this->pageBuilderUrlRewriteGenerator = $cmsPageUrlRewriteGenerator;
         $this->urlPersist = $urlPersist;
         $this->logger = $logger;

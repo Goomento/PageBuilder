@@ -74,49 +74,49 @@ class Dimensions extends AbstractBaseUnits
             'bottom' => __('Bottom'),
             'left' => __('Left'),
         ]; ?>
-		<div class="gmt-control-field">
-			<label class="gmt-control-title">{{{ data.label }}}</label>
-			<?php $this->printUnitsTemplate(); ?>
-			<div class="gmt-control-input-wrapper">
-				<ul class="gmt-control-dimensions">
-					<?php
-                    foreach ($dimensions as $dimensionKey => $dimensionTitle) :
+        <div class="gmt-control-field">
+            <label class="gmt-control-title">{{{ data.label }}}</label>
+            <?php $this->printUnitsTemplate(); ?>
+            <div class="gmt-control-input-wrapper">
+                <ul class="gmt-control-dimensions">
+                    <?php
+                    foreach ($dimensions as $dimensionKey => $dimensionTitle):
                         $controlUid = $this->getControlUid($dimensionKey); ?>
-						<li class="gmt-control-dimension">
-							<input id="<?= $controlUid; ?>" type="number" data-setting="<?= EscaperHelper::escapeHtml($dimensionKey); ?>"
-								   placeholder="<#
-							   if ( _.isObject( data.placeholder ) ) {
-								if ( ! _.isUndefined( data.placeholder.<?= $dimensionKey; ?> ) ) {
-									print( data.placeholder.<?= $dimensionKey; ?> );
-								}
-							   } else {
-								print( data.placeholder );
-							   } #>"
-							<# if ( -1 === _.indexOf( allowed_dimensions, '<?= $dimensionKey; ?>' ) ) { #>
-								disabled
-								<# } #>
-									/>
-							<label for="<?= EscaperHelper::escapeHtml($controlUid); ?>" class="gmt-control-dimension-label"><?= $dimensionTitle; ?></label>
-						</li>
-					<?php endforeach; ?>
-					<li>
-						<button class="gmt-link-dimensions tooltip-target" data-tooltip="<?= __('Link values together'); ?>">
-							<span class="gmt-linked">
-								<i class="fas fa-link" aria-hidden="true"></i>
-								<span class="gmt-screen-only"><?= __('Link values together'); ?></span>
-							</span>
-							<span class="gmt-unlinked">
-								<i class="fas fa-unlink"></i>
-								<span class="gmt-screen-only"><?= __('Unlinked values'); ?></span>
-							</span>
-						</button>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<# if ( data.description ) { #>
-		<div class="gmt-control-field-description">{{{ data.description }}}</div>
-		<# } #>
-		<?php
+                        <li class="gmt-control-dimension">
+                            <input id="<?= $controlUid; ?>" type="number" data-setting="<?= EscaperHelper::escapeHtml($dimensionKey); ?>"
+                                   placeholder="<#
+                               if ( _.isObject( data.placeholder ) ) {
+                                if ( ! _.isUndefined( data.placeholder.<?= $dimensionKey; ?> ) ) {
+                                    print( data.placeholder.<?= $dimensionKey; ?> );
+                                }
+                               } else {
+                                print( data.placeholder );
+                               } #>"
+                            <# if ( -1 === _.indexOf( allowed_dimensions, '<?= $dimensionKey; ?>' ) ) { #>
+                                disabled
+                                <# } #>
+                                    />
+                            <label for="<?= EscaperHelper::escapeHtml($controlUid); ?>" class="gmt-control-dimension-label"><?= $dimensionTitle; ?></label>
+                        </li>
+                    <?php endforeach; ?>
+                    <li>
+                        <button class="gmt-link-dimensions tooltip-target" data-tooltip="<?= __('Link values together'); ?>">
+                            <span class="gmt-linked">
+                                <i class="fas fa-link" aria-hidden="true"></i>
+                                <span class="gmt-screen-only"><?= __('Link values together'); ?></span>
+                            </span>
+                            <span class="gmt-unlinked">
+                                <i class="fas fa-unlink"></i>
+                                <span class="gmt-screen-only"><?= __('Unlinked values'); ?></span>
+                            </span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <# if ( data.description ) { #>
+        <div class="gmt-control-field-description">{{{ data.description }}}</div>
+        <# } #>
+        <?php
     }
 }

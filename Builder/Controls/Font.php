@@ -40,27 +40,27 @@ class Font extends AbstractControlData
     public function contentTemplate()
     {
         $controlUid = $this->getControlUid(); ?>
-		<div class="gmt-control-field">
-			<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
-			<div class="gmt-control-input-wrapper">
-				<select id="<?= $controlUid; ?>" class="gmt-control-font-family" data-setting="{{ data.name }}">
-					<option value=""><?= __('Default'); ?></option>
-					<# _.each( data.groups, function( group_label, group_name ) {
-						var groupFonts = getFontsByGroups( group_name );
-						if ( ! _.isEmpty( groupFonts ) ) { #>
-						<optgroup label="{{ group_label }}">
-							<# _.each( groupFonts, function( fontType, fontName ) { #>
-								<option value="{{ fontName }}">{{{ fontName }}}</option>
-							<# } ); #>
-						</optgroup>
-						<# }
-					}); #>
-				</select>
-			</div>
-		</div>
-		<# if ( data.description ) { #>
-			<div class="gmt-control-field-description">{{{ data.description }}}</div>
-		<# } #>
-		<?php
+        <div class="gmt-control-field">
+            <label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+            <div class="gmt-control-input-wrapper">
+                <select id="<?= $controlUid; ?>" class="gmt-control-font-family" data-setting="{{ data.name }}">
+                    <option value=""><?= __('Default'); ?></option>
+                    <# _.each( data.groups, function( group_label, group_name ) {
+                        var groupFonts = getFontsByGroups( group_name );
+                        if ( ! _.isEmpty( groupFonts ) ) { #>
+                        <optgroup label="{{ group_label }}">
+                            <# _.each( groupFonts, function( fontType, fontName ) { #>
+                                <option value="{{ fontName }}">{{{ fontName }}}</option>
+                            <# } ); #>
+                        </optgroup>
+                        <# }
+                    }); #>
+                </select>
+            </div>
+        </div>
+        <# if ( data.description ) { #>
+            <div class="gmt-control-field-description">{{{ data.description }}}</div>
+        <# } #>
+        <?php
     }
 }

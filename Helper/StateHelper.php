@@ -25,6 +25,8 @@ use Magento\Framework\App\State;
  * @method static string getMode()
  * @see State::getMode()
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
+// phpcs:disable Magento2.Security.Superglobal.SuperglobalUsageWarning
 class StateHelper
 {
     use TraitStaticCaller;
@@ -41,12 +43,15 @@ class StateHelper
         if (php_sapi_name() === 'cli') {
             return true;
         }
+        // phpcs:ignore Magento2.Security.Superglobal.SuperglobalUsageError
         if (array_key_exists('SHELL', $_ENV)) {
             return true;
         }
+        // phpcs:ignore Magento2.Security.Superglobal.SuperglobalUsageError
         if (empty($_SERVER['REMOTE_ADDR']) and !isset($_SERVER['HTTP_USER_AGENT']) and count($_SERVER['argv']) > 0) {
             return true;
         }
+        // phpcs:ignore Magento2.Security.Superglobal.SuperglobalUsageError
         if (!array_key_exists('REQUEST_METHOD', $_SERVER)) {
             return true;
         }
@@ -131,7 +136,7 @@ class StateHelper
     /**
      * @inheritdoc
      */
-    static protected function getStaticInstance()
+    protected static function getStaticInstance()
     {
         return State::class;
     }

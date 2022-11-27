@@ -63,6 +63,8 @@ use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\LoggerHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
+// phpcs:disable Magento2.Functions.DiscouragedFunction.Discouraged
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class Controls
 {
     const TAB_CONTENT = 'content';
@@ -477,7 +479,7 @@ class Controls
         }
 
         if (empty($this->stacks[ $stackId ]['controls'][ $controlId ])) {
-            throw new Exception(
+            throw new \Goomento\PageBuilder\Exception\BuilderException(
                 'Cannot remove not-exists control.'
             );
         }
@@ -496,7 +498,7 @@ class Controls
     public function getControlFromStack($stackId, $controlId)
     {
         if (empty($this->stacks[ $stackId ]['controls'][ $controlId ])) {
-            throw new Exception(
+            throw new \Goomento\PageBuilder\Exception\BuilderException(
                 'Cannot get a not-exists control.'
             );
         }
@@ -640,7 +642,7 @@ class Controls
         $customCss = (string) $contentCss->getModel()->getSetting('custom_css');
 
         $documentManager = ObjectManagerHelper::getDocumentsManager();
-        $document = $documentManager->getByContent( $contentCss->getModel() );
+        $document = $documentManager->getByContent($contentCss->getModel());
 
         $customCss = trim($customCss);
 

@@ -46,4 +46,4 @@ if (!empty($settings['text_link']['url'])) {
     $title = sprintf('<a %1$s>%2$s</a>', $widget->getRenderAttributeString('url'), $title);
 }
 ?>
-<<?= $settings['text_tag'] ?> <?= $widget->getRenderAttributeString('title') ?>><?= /** @noEscape */ $title ?></<?= $settings['text_tag'] ?>>
+<<?=  /** @noEscape */ $settings['text_tag'] ?> <?= /** @noEscape */ $widget->getRenderAttributeString('title') ?>><?= /** @noEscape */ $title ?></<?=  /** @noEscape */ $settings['text_tag'] ?>>

@@ -107,7 +107,7 @@ class ContentCss extends AbstractCss
             ->setFlag('is_refreshing_assets', true)
             ->setFlag('direct_save', true);
 
-        BuildableContentHelper::saveBuildableContent( $this->getModel() );
+        BuildableContentHelper::saveBuildableContent($this->getModel());
 
         $this->getModel()
             ->removeFlag('is_refreshing_assets')
@@ -127,7 +127,7 @@ class ContentCss extends AbstractCss
             ->setFlag('is_refreshing_assets', true)
             ->setFlag('direct_save', true);
 
-        BuildableContentHelper::saveBuildableContent( $this->getModel() );
+        BuildableContentHelper::saveBuildableContent($this->getModel());
 
         $this->getModel()
             ->removeFlag('is_refreshing_assets')
@@ -202,8 +202,7 @@ class ContentCss extends AbstractCss
         array         $placeholders,
         array         $replacements,
         array         $allControls = null
-    )
-    {
+    ) {
         parent::addControlsStackStyleRules($controlsStack, $controls, $values, $placeholders, $replacements, $allControls);
 
         if ($controlsStack instanceof AbstractElement) {

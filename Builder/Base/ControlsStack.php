@@ -15,6 +15,7 @@ use Goomento\PageBuilder\Builder\Controls\AbstractControlData;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Schemes;
 use Goomento\PageBuilder\Builder\Managers\Tags;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
@@ -292,7 +293,7 @@ abstract class ControlsStack extends AbstractBase
 
             if (null !== $targetSectionArgs) {
                 if (!empty($args['section']) || ! empty($args['tab'])) {
-                    throw new Exception(
+                    throw new \Goomento\PageBuilder\Exception\BuilderException(
                         sprintf('Cannot redeclare control with `tab` or `section` args inside section "%s".', $id)
                     );
                 }
@@ -304,7 +305,7 @@ abstract class ControlsStack extends AbstractBase
                 }
             } elseif (empty($args['section']) && (! $options['overwrite'] || !ObjectManagerHelper::getControlsManager()
                         ->getControlFromStack($this->getUniqueName(), $id))) {
-                throw new Exception(
+                throw new \Goomento\PageBuilder\Exception\BuilderException(
                     'Cannot add a control outside of a section'
                 );
             }
@@ -425,7 +426,7 @@ abstract class ControlsStack extends AbstractBase
      * @return bool|array Position info.
      * @throws Exception
      */
-    final public function getPositionInfo(array $position)
+    public function getPositionInfo(array $position)
     {
         $defaultPosition = [
             'type' => 'control',
@@ -438,11 +439,10 @@ abstract class ControlsStack extends AbstractBase
 
         $position = array_merge($defaultPosition, $position);
 
-        if (
-            'control' === $position['type'] && in_array($position['at'], [ 'start', 'end' ], true) ||
+        if ('control' === $position['type'] && in_array($position['at'], [ 'start', 'end' ], true) ||
             'section' === $position['type'] && in_array($position['at'], [ 'before', 'after' ], true)
         ) {
-            throw new Exception(
+            throw new \Goomento\PageBuilder\Exception\BuilderException(
                 'Invalid position arguments. Use `before` / `after` for control or `start` / `end` for section.'
             );
         }
@@ -512,7 +512,7 @@ abstract class ControlsStack extends AbstractBase
      *
      * @return int Control key.
      */
-    final public function getControlKey($controlIndex)
+    public function getControlKey($controlIndex)
     {
         $registeredControls = $this->getControls();
 
@@ -531,7 +531,7 @@ abstract class ControlsStack extends AbstractBase
      *
      * @return false|int Control index.
      */
-    final public function getControlIndex($controlKey)
+    public function getControlIndex($controlKey)
     {
         $controls = $this->getControls();
 
@@ -550,7 +550,7 @@ abstract class ControlsStack extends AbstractBase
      *
      * @return array Section controls
      */
-    final public function getSectionControls($sectionId)
+    public function getSectionControls($sectionId)
     {
         $sectionIndex = $this->getControlIndex($sectionId);
 
@@ -593,12 +593,12 @@ abstract class ControlsStack extends AbstractBase
      *                           empty array.
      * @throws Exception
      */
-    final public function addGroupControl(?string $groupName, array $args = [], array $options = [])
+    public function addGroupControl(?string $groupName, array $args = [], array $options = [])
     {
         $group = ObjectManagerHelper::getControlsManager()->getControlGroups($groupName);
         if (!$group) {
-            throw new Exception(
-                sprintf('Group "%s" not found.',  $groupName)
+            throw new \Goomento\PageBuilder\Exception\BuilderException(
+                sprintf('Group "%s" not found.', $groupName)
             );
         }
 
@@ -613,7 +613,7 @@ abstract class ControlsStack extends AbstractBase
      *
      * @return array Scheme controls.
      */
-    final public function getSchemeControls()
+    public function getSchemeControls()
     {
         $enabledSchemes = Schemes::getEnabledSchemes();
 
@@ -637,7 +637,7 @@ abstract class ControlsStack extends AbstractBase
      *
      * @return array Style controls.
      */
-    final public function getStyleControls(array $controls = null, array $settings = null)
+    public function getStyleControls(array $controls = null, array $settings = null)
     {
         $controls = $this->getActiveControls($controls, $settings);
 
@@ -678,7 +678,7 @@ abstract class ControlsStack extends AbstractBase
      *
      * @return array Tabs controls.
      */
-    final public function getTabsControls()
+    public function getTabsControls()
     {
         return $this->getStack()['tabs'];
     }
@@ -696,7 +696,7 @@ abstract class ControlsStack extends AbstractBase
      *                        an empty array.
      * @throws Exception
      */
-    final public function addResponsiveControl($id, array $args, $options = [])
+    public function addResponsiveControl($id, array $args, $options = [])
     {
         $args['responsive'] = [];
 
@@ -780,7 +780,7 @@ abstract class ControlsStack extends AbstractBase
      * @param array $options Optional. Additional options.
      * @throws Exception
      */
-    final public function updateResponsiveControl($id, array $args, array $options = [])
+    public function updateResponsiveControl($id, array $args, array $options = [])
     {
         $this->addResponsiveControl($id, $args, [
             'overwrite' => true,
@@ -796,7 +796,7 @@ abstract class ControlsStack extends AbstractBase
      *
      * @param string $id Responsive control ID.
      */
-    final public function removeResponsiveControl($id)
+    public function removeResponsiveControl($id)
     {
         $devices = [
             self::RESPONSIVE_DESKTOP,
@@ -819,7 +819,7 @@ abstract class ControlsStack extends AbstractBase
      *
      * @return array|null The config.
      */
-    final public function getConfig()
+    public function getConfig()
     {
         if (null === $this->config) {
             $this->config = $this->_getInitialConfig();
@@ -836,7 +836,7 @@ abstract class ControlsStack extends AbstractBase
      *
      * @return array Settings keys for each control.
      */
-    final public function getFrontendSettingsKeys()
+    public function getFrontendSettingsKeys()
     {
         $controls = [];
 
@@ -1216,7 +1216,10 @@ abstract class ControlsStack extends AbstractBase
         $this->addControl($sectionId, $args);
 
         if (null !== $this->currentSection) {
-            exit(sprintf('Goomento: You can\'t start a section before the end of the previous section "%s".', $this->currentSection['section'])); // XSS ok.
+            throw new BuilderException(sprintf(
+                'Goomento: You can\'t start a section before the end of the previous section "%s".',
+                $this->currentSection['section']
+            ));
         }
 
         $this->currentSection = $this->getSectionArgs($sectionId);
@@ -1342,7 +1345,7 @@ abstract class ControlsStack extends AbstractBase
     public function startControlsTabs($tabsId, array $args = [])
     {
         if (null !== $this->currentTab) {
-            throw new Exception(
+            throw new \Goomento\PageBuilder\Exception\BuilderException(
                 sprintf('You can\'t start tabs before the end of the previous tabs "%s".', $this->currentTab['tabs_wrapper'])
             );
         }
@@ -1398,7 +1401,7 @@ abstract class ControlsStack extends AbstractBase
     public function startControlsTab($tabId, $args)
     {
         if (!empty($this->currentTab['inner_tab'])) {
-            throw new Exception(
+            throw new \Goomento\PageBuilder\Exception\BuilderException(
                 sprintf('Goomento: You can\'t start a tab before the end of the previous tab "%s".', $this->currentTab['inner_tab'])
             );
         }
@@ -1439,7 +1442,7 @@ abstract class ControlsStack extends AbstractBase
      * This method should be used inside `_register_controls()`.
      *
      */
-    final public function startPopover()
+    public function startPopover()
     {
         $this->currentPopover = [
             'initialized' => false,
@@ -1455,7 +1458,7 @@ abstract class ControlsStack extends AbstractBase
      * This method should be used inside `_register_controls()`.
      *
      */
-    final public function endPopover()
+    public function endPopover()
     {
         $this->currentPopover = null;
 
@@ -1482,6 +1485,7 @@ abstract class ControlsStack extends AbstractBase
      */
     public function printTemplate()
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
         ob_start();
 
         $template = $this->contentTemplate();
@@ -1511,10 +1515,10 @@ abstract class ControlsStack extends AbstractBase
             return;
         }
         ?>
-		<script type="text/html" id="tmpl-gmt-<?= EscaperHelper::escapeHtmlAttr($this->getName()); ?>-content">
-			<?php $this->printTemplateContent($templateContent); ?>
-		</script>
-		<?php
+        <script type="text/html" id="tmpl-gmt-<?= EscaperHelper::escapeHtmlAttr($this->getName()); ?>-content">
+            <?php $this->printTemplateContent($templateContent); ?>
+        </script>
+        <?php
     }
 
     /**
@@ -1531,10 +1535,10 @@ abstract class ControlsStack extends AbstractBase
      *     The position where to start the injection.
      *
      */
-    final public function startInjection(array $position)
+    public function startInjection(array $position)
     {
         if ($this->injectionPoint) {
-            throw new \Exception(
+            throw new \Goomento\PageBuilder\Exception\BuilderException(
                 'A controls injection is already opened. Please close current injection before starting a new one (use `endInjection`).'
             );
         }
@@ -1552,7 +1556,7 @@ abstract class ControlsStack extends AbstractBase
      * stack.
      *
      */
-    final public function endInjection()
+    public function endInjection()
     {
         $this->injectionPoint = null;
     }
@@ -1567,7 +1571,7 @@ abstract class ControlsStack extends AbstractBase
      * @return array|null An array when an injection point is defined, null
      *                    otherwise.
      */
-    final public function getInjectionPoint()
+    public function getInjectionPoint()
     {
         return $this->injectionPoint;
     }
@@ -1681,6 +1685,7 @@ abstract class ControlsStack extends AbstractBase
      */
     protected function printTemplateContent($templateContent)
     {
+        // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
         echo $templateContent;
     }
 

@@ -18,7 +18,7 @@ $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
 <div class="gmt-tabs" role="tablist">
     <div class="gmt-tabs-wrapper">
         <?php
-        foreach ($tabs as $index => $item) :
+        foreach ($tabs as $index => $item):
             $tabCount = $index + 1;
             $widget->addRenderAttribute('tab_title' . $index, [
                 'id' => 'gmt-tab-title-' . $idInt . $tabCount,
@@ -27,12 +27,12 @@ $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
                 'role' => 'tab',
                 'aria-controls' => 'gmt-tab-content-' . $idInt . $tabCount,
             ]); ?>
-            <div <?= $widget->getRenderAttributeString('tab_title' . $index); ?>><a href=""><?= /** @noEscape */ $item['tab_title']; ?></a></div>
+            <div <?= /** @noEscape */ $widget->getRenderAttributeString('tab_title' . $index); ?>><a href=""><?= /** @noEscape */ $item['tab_title']; ?></a></div>
         <?php endforeach; ?>
     </div>
     <div class="gmt-tabs-content-wrapper">
         <?php
-        foreach ($tabs as $index => $item) :
+        foreach ($tabs as $index => $item):
             $tabCount = $index + 1;
 
             $tabContentSettingKey = 'tabs.' . $index . '.tab_content';
@@ -53,8 +53,8 @@ $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
             ]);
 
             $widget->addInlineEditingAttributes($tabContentSettingKey, 'advanced'); ?>
-            <div <?= $widget->getRenderAttributeString($tabTitleMobileSettingKey); ?>><?= /** @noEscape */ $item['tab_title']; ?></div>
-            <div <?= $widget->getRenderAttributeString($tabContentSettingKey); ?>><?= /** @noEscape  */ $item['tab_content'] ?></div>
+            <div <?= /** @noEscape */ $widget->getRenderAttributeString($tabTitleMobileSettingKey); ?>><?= /** @noEscape */ $item['tab_title']; ?></div>
+            <div <?= /** @noEscape */ $widget->getRenderAttributeString($tabContentSettingKey); ?>><?= /** @noEscape */ $item['tab_content'] ?></div>
         <?php endforeach; ?>
     </div>
 </div>

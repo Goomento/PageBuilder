@@ -315,8 +315,7 @@ class ImageCarousel extends AbstractWidget
         string          $prefix = self::NAME . '_',
         string          $cssTarget = '.gmt-image-carousel',
         array           $args = []
-    )
-    {
+    ) {
         $widget->addControl(
             $prefix . 'heading_style_arrows',
             $args + [
@@ -456,8 +455,7 @@ class ImageCarousel extends AbstractWidget
         string          $prefix = self::NAME . '_',
         string          $cssTarget = '.gmt-image-carousel',
         array           $args = []
-    )
-    {
+    ) {
         $widget->addResponsiveControl(
             $prefix . 'gallery_vertical_align',
             $args + [

@@ -18,6 +18,7 @@ use Goomento\PageBuilder\Api\Data\ContentInterface;
  * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
  *
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class ThemeHelper extends \Goomento\Core\Helper\ThemeHelper
 {
     /**
@@ -93,7 +94,7 @@ class ThemeHelper extends \Goomento\Core\Helper\ThemeHelper
      */
     public static function onStyleLoaderSource($src = '')
     {
-        if(!preg_match('#((https?|ftp)://(\S*?\.\S*?))([\s)\[\]{},;"\':<]|\.\s|$)#i', $src)) {
+        if (!preg_match('#((https?|ftp)://(\S*?\.\S*?))([\s)\[\]{},;"\':<]|\.\s|$)#i', $src)) {
             $src = UrlBuilderHelper::urlStaticBuilder($src);
         }
 

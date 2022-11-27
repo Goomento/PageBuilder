@@ -137,13 +137,14 @@ abstract class AbstractDocument extends ControlsStack
      *
      * @param $data
      *
-     * @throws Exception If the widget was not found.
+     * @throws BuilderException If the widget was not found.
      *
      * @return string
      */
     public function renderElement($data)
     {
         // Start buffering
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
         ob_start();
 
         $elementManager = ObjectManagerHelper::getElementsManager();
@@ -151,7 +152,7 @@ abstract class AbstractDocument extends ControlsStack
         $widget = $elementManager->createElementInstance($data);
 
         if (!$widget) {
-            throw new Exception(
+            throw new BuilderException(
                 'Widget not found.'
             );
         }
@@ -185,7 +186,7 @@ abstract class AbstractDocument extends ControlsStack
     {
         static $url;
         if ($url === null) {
-            $url = UrlBuilderHelper::getContentViewUrl( $this->getModel() );
+            $url = UrlBuilderHelper::getContentViewUrl($this->getModel());
 
             /**
              *
@@ -445,14 +446,14 @@ abstract class AbstractDocument extends ControlsStack
             $elementsData = $this->getElementsData();
         }
         ?>
-		<div <?= DataHelper::renderHtmlAttributes($this->getContainerAttributes()); ?>>
-			<div class="gmt-inner">
-				<div class="gmt-section-wrap">
-					<?php $this->printElements($elementsData); ?>
-				</div>
-			</div>
-		</div>
-		<?php
+        <div <?= DataHelper::renderHtmlAttributes($this->getContainerAttributes()); ?>>
+            <div class="gmt-inner">
+                <div class="gmt-section-wrap">
+                    <?php $this->printElements($elementsData); ?>
+                </div>
+            </div>
+        </div>
+        <?php
     }
 
     /**
@@ -648,8 +649,8 @@ abstract class AbstractDocument extends ControlsStack
         if (!empty($data)) {
             $this->model = $data['model'] ?? [];
 
-            if (! $this->model ) {
-                throw new Exception(
+            if (! $this->model) {
+                throw new BuilderException(
                     'Content ID #%s does not exist.'
                 );
             }

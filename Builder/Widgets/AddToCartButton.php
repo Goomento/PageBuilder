@@ -110,6 +110,5 @@ class AddToCartButton extends AbstractWidget
         Button::registerButtonStyle($this, self::NAME . '_');
 
         $this->endControlsSection();
-
     }
 }

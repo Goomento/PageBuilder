@@ -11,6 +11,7 @@ namespace Goomento\PageBuilder\Builder;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\AssetsHelper;
 
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class Shapes
 {
 

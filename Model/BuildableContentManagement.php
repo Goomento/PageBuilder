@@ -125,12 +125,19 @@ class BuildableContentManagement implements BuildableContentManagementInterface
             ->setConditionType('in')
             ->create();
 
+        $status = $this->filterBuilder
+            ->setField(ContentInterface::IS_ACTIVE)
+            ->setValue(1)
+            ->setConditionType('eq')
+            ->create();
+
         $sortOrder = $this->sortOrderBuilder
             ->setField(ContentInterface::CONTENT_ID)
             ->setDescendingDirection()
             ->create();
 
         $this->searchCriteriaBuilder->addFilters([$pageTypes]);
+        $this->searchCriteriaBuilder->addFilters([$status]);
         $this->searchCriteriaBuilder->addSortOrder($sortOrder);
 
         $searchCriteria = $this->searchCriteriaBuilder->create();
@@ -143,9 +150,7 @@ class BuildableContentManagement implements BuildableContentManagementInterface
             $searchCriteria->setCurrentPage($currentPage);
         }
 
-        return $this->contentRepository->getList(
-            $searchCriteria
-        );
+        return $this->contentRepository->getList($searchCriteria);
     }
 
     /**

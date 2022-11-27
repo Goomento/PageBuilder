@@ -23,13 +23,13 @@ class Section extends AbstractControlUi
     public function contentTemplate()
     {
         ?>
-		<div class="gmt-panel-heading">
-			<div class="gmt-panel-heading-toggle gmt-section-toggle" data-collapse_id="{{ data.name }}">
-				<i class="gmt-icon" aria-hidden="true"></i>
-			</div>
-			<div class="gmt-panel-heading-title gmt-section-title">{{{ data.label }}}</div>
-		</div>
-		<?php
+        <div class="gmt-panel-heading">
+            <div class="gmt-panel-heading-toggle gmt-section-toggle" data-collapse_id="{{ data.name }}">
+                <i class="gmt-icon" aria-hidden="true"></i>
+            </div>
+            <div class="gmt-panel-heading-title gmt-section-title">{{{ data.label }}}</div>
+        </div>
+        <?php
     }
 
     /**

@@ -55,7 +55,7 @@ abstract class AbstractSchema extends AbstractEntity
      *
      * @return array System schemes.
      */
-    final public function getSystemSchemes()
+    public function getSystemSchemes()
     {
         if (null === $this->systemSchemes) {
             $this->systemSchemes = $this->_initSystemSchemes();
@@ -97,8 +97,10 @@ abstract class AbstractSchema extends AbstractEntity
     public function saveScheme(array $posted)
     {
         $schemeValue = $this->getSchemeValue();
-        ConfigHelper::setValue('scheme_' . static::NAME,
-            array_replace($schemeValue, array_intersect_key($posted, $schemeValue)));
+        ConfigHelper::setValue(
+            'scheme_' . static::NAME,
+            array_replace($schemeValue, array_intersect_key($posted, $schemeValue))
+        );
     }
 
     /**
@@ -132,35 +134,35 @@ abstract class AbstractSchema extends AbstractEntity
      * template.
      *
      */
-    final public function printTemplate()
+    public function printTemplate()
     {
         ?>
-		<script type="text/template" id="tmpl-gmt-panel-schemes-<?= static::NAME ?>">
-			<div class="gmt-panel-scheme-buttons">
+        <script type="text/template" id="tmpl-gmt-panel-schemes-<?= static::NAME ?>">
+            <div class="gmt-panel-scheme-buttons">
                 <div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-close">
                     <button class="gmt-button">
                         <i class="fas fa-chevron-left"></i>
                         <?= __('Close'); ?>
                     </button>
                 </div>
-				<div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-reset">
-					<button class="gmt-button">
-						<i class="fas fa-undo" aria-hidden="true"></i>
-						<?= __('Reset'); ?>
-					</button>
-				</div>
-				<div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-discard">
-					<button class="gmt-button">
-						<i class="fas fa-times" aria-hidden="true"></i>
-						<?= __('Discard'); ?>
-					</button>
-				</div>
-				<div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-save">
-					<button class="gmt-button gmt-button-success" disabled><?= __('Apply'); ?></button>
-				</div>
-			</div>
-			<?php $this->printTemplateContent(); ?>
-		</script>
-		<?php
+                <div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-reset">
+                    <button class="gmt-button">
+                        <i class="fas fa-undo" aria-hidden="true"></i>
+                        <?= __('Reset'); ?>
+                    </button>
+                </div>
+                <div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-discard">
+                    <button class="gmt-button">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                        <?= __('Discard'); ?>
+                    </button>
+                </div>
+                <div class="gmt-panel-scheme-button-wrapper gmt-panel-scheme-save">
+                    <button class="gmt-button gmt-button-success" disabled><?= __('Apply'); ?></button>
+                </div>
+            </div>
+            <?php $this->printTemplateContent(); ?>
+        </script>
+        <?php
     }
 }

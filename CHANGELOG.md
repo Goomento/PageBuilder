@@ -1,5 +1,9 @@
 # Magento 2 Goomento Page Builder
 
+## 0.3.10 Checked compatible
+- Checked compatible with Magento2
+- Fixed mirror bugs
+
 ## 0.3.9: Fixed mirror bugs
 - Fixed mirror bugs
 - Added widget preview

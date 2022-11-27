@@ -3,8 +3,13 @@
  * @package Goomento_PageBuilder
  * @link https://github.com/Goomento/PageBuilder
  */
-
 declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/**
+ * @var Template $block
+ */
 ?>
 
 <script type="text/template" id="tmpl-gmt-panel-history-page">
@@ -13,8 +18,8 @@ declare(strict_types=1);
 
 <script type="text/template" id="tmpl-gmt-panel-history-no-items">
     <i class="gmt-nerd-box-icon fas fa-glasses"></i>
-    <div class="gmt-nerd-box-title"><?= __('No History Yet'); ?></div>
-    <div class="gmt-nerd-box-message"><?= __('Once you start working, you\'ll be able to redo / undo any action you make in the editor.'); ?></div>
+    <div class="gmt-nerd-box-title"><?= $block->escapeHtml(__('No History Yet')); ?></div>
+    <div class="gmt-nerd-box-message"><?= $block->escapeHtml(__('Once you start working, you\'ll be able to redo / undo any action you make in the editor.')); ?></div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-history-item">

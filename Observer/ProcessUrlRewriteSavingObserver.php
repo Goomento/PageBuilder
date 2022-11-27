@@ -11,6 +11,7 @@ namespace Goomento\PageBuilder\Observer;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Logger\Logger;
 use Magento\Framework\Event\Observer as EventObserver;
+use Magento\UrlRewrite\Model\Exception\UrlAlreadyExistsException;
 use Magento\UrlRewrite\Model\UrlPersistInterface;
 use Magento\Framework\Event\ObserverInterface;
 use Goomento\PageBuilder\Model\PageBuilderUrlRewriteGenerator;
@@ -40,8 +41,7 @@ class ProcessUrlRewriteSavingObserver implements ObserverInterface
         PageBuilderUrlRewriteGenerator $cmsPageUrlRewriteGenerator,
         UrlPersistInterface $urlPersist,
         Logger $logger
-    )
-    {
+    ) {
         $this->pageBuilderUrlRewriteGenerator = $cmsPageUrlRewriteGenerator;
         $this->urlPersist = $urlPersist;
         $this->logger = $logger;
@@ -52,6 +52,7 @@ class ProcessUrlRewriteSavingObserver implements ObserverInterface
      *
      * @param EventObserver $observer
      * @return void
+     * @throws UrlAlreadyExistsException
      */
     public function execute(EventObserver $observer)
     {
@@ -60,7 +61,7 @@ class ProcessUrlRewriteSavingObserver implements ObserverInterface
             $content = $observer->getEvent()->getObject();
 
             if ($content->getType() === ContentInterface::TYPE_PAGE &&
-                $content->getUpdatedUrlRewriteFlag() !== true &&
+                $content->getFlag('updated_url_rewrite') !== true &&
                 ($content->dataHasChangedFor('identifier') || $content->dataHasChangedFor('store_ids'))) {
                 $urls = $this->pageBuilderUrlRewriteGenerator->generate($content);
 
@@ -71,7 +72,7 @@ class ProcessUrlRewriteSavingObserver implements ObserverInterface
 
                 $this->urlPersist->replace($urls);
 
-                $content->setUpdatedUrlRewriteFlag(true);
+                $content->setFlag('updated_url_rewrite', true);
             }
         } catch (\Exception $e) {
             $this->logger->error($e);

@@ -54,8 +54,7 @@ class BuildableContent extends AbstractHelper
         BuildableContentManagementInterface $contentManagement,
         ContentRegistryInterface            $contentRegistry,
         RevisionRepositoryInterface         $revisionRepository
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->contentRepository = $contentRepository;
         $this->contentManagement = $contentManagement;
@@ -111,7 +110,7 @@ class BuildableContent extends AbstractHelper
      */
     public function getContent($contentId)
     {
-        return $this->contentRegistry->getByIdentifier( (string) $contentId );
+        return $this->contentRegistry->getByIdentifier((string) $contentId);
     }
 
     /**
