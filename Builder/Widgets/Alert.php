@@ -121,9 +121,12 @@ class Alert extends AbstractWidget
      * @param array $args
      * @return void
      */
-    public static function registerAlertStyle(AbstractElement $widget, string $prefix = self::NAME . '_',
-                                              string          $cssTarget = '.gmt-alert', array $args = [])
-    {
+    public static function registerAlertStyle(
+        AbstractElement $widget,
+        string $prefix = self::NAME . '_',
+        string          $cssTarget = '.gmt-alert',
+        array $args = []
+    ) {
         $widget->addControl(
             $prefix . 'background',
             $args + [

@@ -15,6 +15,7 @@ use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 use Magento\Framework\ObjectManagerInterface;
 
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class PageBuilder implements SubSystemInterface
 {
     /**

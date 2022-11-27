@@ -19,7 +19,7 @@ $caption = trim((string) $settings['banner_caption']);
 
 $hasContent = !empty($title) || !empty($caption);
 
-if (!empty($settings['banner_image']['url'])) :
+if (!empty($settings['banner_image']['url'])):
     if (!empty($settings['banner_link']['url'])) {
         $widget->addRenderAttribute('link', 'href', $settings['banner_link']['url']);
 
@@ -46,28 +46,28 @@ if (!empty($settings['banner_image']['url'])) :
     }
     ?>
     <div class="gmt-banner-wrapper">
-        <figure class="gmt-banner-img"><?= /** @noEscape  */ $imageHtml ?></figure>
+        <figure class="gmt-banner-img"><?= /** @noEscape */ $imageHtml ?></figure>
         <?php
-        if ($hasContent) :
+        if ($hasContent):
             $widget->addRenderAttribute('box-content', 'class', 'gmt-banner-content');
             $widget->addRenderAttribute('box-content', 'class', 'gmt-banner-content-position-' . ($settings['banner_caption_position'] ?? ''));
             ?>
-            <div <?= $widget->getRenderAttributeString('box-content') ?>>
+            <div <?= /** @noEscape */ $widget->getRenderAttributeString('box-content') ?>>
                 <?php
-                if ($title) :
+                if ($title):
                     $widget->addInlineEditingAttributes(['title' => 'banner_title']);
                     $widget->addRenderAttribute('title', 'class', 'gmt-banner-title'); ?>
-                    <div <?= $widget->getRenderAttributeString('title') ?>><?= /** @noEscape */ $title ?></div>
+                    <div <?= /** @noEscape */ $widget->getRenderAttributeString('title') ?>><?= /** @noEscape */ $title ?></div>
                     <?php
                 endif;
-                if ($caption) :
+                if ($caption):
                     $widget->addRenderAttribute('caption', 'class', 'gmt-banner-description');
                     $widget->addInlineEditingAttributes(['caption' => 'banner_caption']);
                     ?>
-                    <div <?= $widget->getRenderAttributeString('caption') ?>><?= /** @noEscape */ $caption ?></div>
+                    <div <?= /** @noEscape */ $widget->getRenderAttributeString('caption') ?>><?= /** @noEscape */ $caption ?></div>
                 <?php  endif; ?>
             </div>
         <?php endif;  ?>
     </div>
-<?php
+    <?php
 endif;

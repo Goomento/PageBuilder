@@ -33,8 +33,7 @@ class Editor
     public function __construct(
         Data $dataHelper,
         UrlInterface $urlBuilder
-    )
-    {
+    ) {
         $this->dataHelper = $dataHelper;
         $this->urlBuilder = $urlBuilder;
     }
@@ -48,8 +47,7 @@ class Editor
     public function aroundGetElementHtml(
         FormEditor $subject,
         callable $proceed
-    )
-    {
+    ) {
         $isAssistanceActive = $this->dataHelper->isBuilderAssistanceActive();
         if ($isAssistanceActive) {
             $isAssistanceActive = $this->dataHelper->isBuilderAssistanceOnAllPage()

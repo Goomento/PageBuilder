@@ -252,7 +252,7 @@ class RevisionRepository implements RevisionRepositoryInterface
     {
         $statuses = Revision::getAvailableStatuses();
         unset($statuses[BuildableContentInterface::STATUS_AUTOSAVE]);
-        $items = $this->getListByContentId( $contentId, array_keys($statuses), 1, 1)->getItems();
+        $items = $this->getListByContentId($contentId, array_keys($statuses), 1, 1)->getItems();
         if (!empty($items)) {
             return array_values($items)[0];
         }

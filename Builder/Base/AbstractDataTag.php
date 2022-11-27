@@ -19,7 +19,7 @@ abstract class AbstractDataTag extends AbstractBaseTag
     /**
      * @return string
      */
-    final public function getContentType()
+    public function getContentType()
     {
         return 'plain';
     }

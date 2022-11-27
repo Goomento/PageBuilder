@@ -72,11 +72,11 @@ class Urls extends AbstractDataTag
         switch ($path) {
             case 'home':
                 /** @var StoreManagerInterface $storeManager */
-            $storeManager = ObjectManagerHelper::get(StoreManagerInterface::class);
-            $baseUrl = $storeManager->getStore()->getBaseUrl();
-            return [
+                $storeManager = ObjectManagerHelper::get(StoreManagerInterface::class);
+                $baseUrl = $storeManager->getStore()->getBaseUrl();
+                return [
                 'url' => $baseUrl
-            ];
+                ];
             default:
                 return '';
         }

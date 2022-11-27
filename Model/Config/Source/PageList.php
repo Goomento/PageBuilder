@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model\Config\Source;
 
+use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory;
@@ -41,9 +42,10 @@ class PageList implements OptionSourceInterface
     {
         if (null === $this->options) {
             $collection = $this->collectionFactory->create();
-            $collection->addFieldToFilter(ContentInterface::TYPE, [
+            $collection->addFieldToFilter(BuildableContentInterface::TYPE, [
                 'in' => [ContentInterface::TYPE_SECTION, ContentInterface::TYPE_PAGE]
             ]);
+            $collection->addFieldToFilter(ContentInterface::IS_ACTIVE, ['eq' => 1]);
             $this->options = [];
             /** @var ContentInterface $content */
             foreach ($collection->getItems() as $content) {

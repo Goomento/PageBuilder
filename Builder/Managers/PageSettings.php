@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Managers;
 
-
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractCss;
 use Goomento\PageBuilder\Builder\Css\ContentCss;
@@ -37,7 +36,7 @@ class PageSettings extends AbstractSettingsManager
 
         $editor = ObjectManagerHelper::getEditor();
 
-        return $editor->getBuildableContent() ? $this->getSettingModel( $editor->getBuildableContent() ) : null;
+        return $editor->getBuildableContent() ? $this->getSettingModel($editor->getBuildableContent()) : null;
     }
 
     /**
@@ -121,7 +120,7 @@ class PageSettings extends AbstractSettingsManager
             return null;
         }
 
-        return $this->getSettingModel( $cssFile->getModel() );
+        return $this->getSettingModel($cssFile->getModel());
     }
 
     /**

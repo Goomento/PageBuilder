@@ -64,7 +64,7 @@ trait TraitHttpContentAction
     {
         if ($inLastRevision && $this->getContent(true)->getLastRevision()) {
             return $this->getContent(true)->getLastRevision()->getSetting('layout');
-        } elseif(!$inLastRevision) {
+        } elseif (!$inLastRevision) {
             return $this->getContent(true)->getSetting('layout');
         }
 

@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
 use Goomento\PageBuilder\Builder\Managers\Icons;
-use Goomento\PageBuilder\Helper\EscaperHelper;
 
 /**
  * @var Widget $block
@@ -20,41 +19,41 @@ $idInt = substr((string) $block->getIdInt(), 0, 3);
 $hasIcon = !empty($settings['selected_icon']['value']); ?>
 <div class="gmt-toggle" role="tablist">
     <?php
-    foreach ($settings['tabs'] as $index => $item) :
-    $tabCount = $index + 1;
+    foreach ($settings['tabs'] as $index => $item):
+        $tabCount = $index + 1;
 
-    $tabTitleSettingKey = 'tabs.' . $index . '.tab_title';
-    $tabContentSettingKey = 'tabs.' . $index . '.tab_content';
+        $tabTitleSettingKey = 'tabs.' . $index . '.tab_title';
+        $tabContentSettingKey = 'tabs.' . $index . '.tab_content';
 
-    $widget->addRenderAttribute($tabTitleSettingKey, [
-        'id' => 'gmt-tab-title-' . $idInt . $tabCount,
-        'class' => [ 'gmt-tab-title' ],
-        'data-tab' => $tabCount,
-        'role' => 'tab',
-        'aria-controls' => 'gmt-tab-content-' . $idInt . $tabCount,
-    ]);
+        $widget->addRenderAttribute($tabTitleSettingKey, [
+            'id' => 'gmt-tab-title-' . $idInt . $tabCount,
+            'class' => [ 'gmt-tab-title' ],
+            'data-tab' => $tabCount,
+            'role' => 'tab',
+            'aria-controls' => 'gmt-tab-content-' . $idInt . $tabCount,
+        ]);
 
-    $widget->addRenderAttribute($tabContentSettingKey, [
-        'id' => 'gmt-tab-content-' . $idInt . $tabCount,
-        'class' => [ 'gmt-tab-content', 'gmt-clearfix' ],
-        'data-tab' => $tabCount,
-        'role' => 'tabpanel',
-        'aria-labelledby' => 'gmt-tab-title-' . $idInt . $tabCount,
-    ]);
+        $widget->addRenderAttribute($tabContentSettingKey, [
+            'id' => 'gmt-tab-content-' . $idInt . $tabCount,
+            'class' => [ 'gmt-tab-content', 'gmt-clearfix' ],
+            'data-tab' => $tabCount,
+            'role' => 'tabpanel',
+            'aria-labelledby' => 'gmt-tab-title-' . $idInt . $tabCount,
+        ]);
 
-    $widget->addInlineEditingAttributes($tabContentSettingKey, 'advanced'); ?>
+        $widget->addInlineEditingAttributes($tabContentSettingKey, 'advanced'); ?>
     <div class="gmt-toggle-item">
-        <<?= EscaperHelper::escapeHtml($settings['title_html_tag']); ?>
-        <?= $widget->getRenderAttributeString($tabTitleSettingKey); ?>>
-        <?php if ($hasIcon) : ?>
-            <span class="gmt-toggle-icon gmt-toggle-icon-<?= EscaperHelper::escapeHtml($settings['icon_align']); ?>" aria-hidden="true">
+        <<?= $block->escapeHtml($settings['title_html_tag']); ?>
+        <?= /** @noEscape */ $widget->getRenderAttributeString($tabTitleSettingKey); ?>>
+        <?php if ($hasIcon): ?>
+            <span class="gmt-toggle-icon gmt-toggle-icon-<?= $block->escapeHtml($settings['icon_align']); ?>" aria-hidden="true">
                 <span class="gmt-toggle-icon-closed"><?php Icons::renderIcon($settings['selected_icon']); ?></span>
                 <span class="gmt-toggle-icon-opened"><?php Icons::renderIcon($settings['selected_active_icon'], [ 'class' => 'gmt-toggle-icon-opened' ]); ?></span>
             </span>
         <?php endif; ?>
         <a href=""><?= /** @noEscape */ $item['tab_title']; ?></a>
-        </<?= EscaperHelper::escapeHtml($settings['title_html_tag']); ?>>
-        <div <?= $widget->getRenderAttributeString($tabContentSettingKey); ?>><?= /** @noEscape */ $item['tab_content']; ?></div>
+        </<?= $block->escapeHtml($settings['title_html_tag']); ?>>
+        <div <?= /** @noEscape */ $widget->getRenderAttributeString($tabContentSettingKey); ?>><?= /** @noEscape */ $item['tab_content']; ?></div>
     </div>
 <?php endforeach; ?>
 </div>

@@ -59,18 +59,17 @@ class FacebookLike extends AbstractWidget
         AbstractWidget $widget,
         string $prefix = self::NAME . '_',
         array $args = []
-    )
-    {
+    ) {
         $widget->addControl(
             $prefix . 'type',
             $args + [
-                'label' => __( 'Type' ),
+                'label' => __('Type'),
                 'type' => Controls::SELECT,
                 'default' => 'like',
                 'options' => [
-                    'like' => __( 'Like'),
-                    'recommend' => __( 'Recommend'),
-                    'comment' => __( 'Comment'),
+                    'like' => __('Like'),
+                    'recommend' => __('Recommend'),
+                    'comment' => __('Comment'),
                 ],
             ]
         );
@@ -78,14 +77,14 @@ class FacebookLike extends AbstractWidget
         $widget->addControl(
             $prefix . 'layout',
             $args + [
-                'label' => __( 'Layout' ),
+                'label' => __('Layout'),
                 'type' => Controls::SELECT,
                 'default' => 'standard',
                 'options' => [
-                    'standard' => __( 'Standard' ),
-                    'button' => __( 'Button' ),
-                    'button_count' => __( 'Button Count'),
-                    'box_count' => __( 'Box Count' ),
+                    'standard' => __('Standard'),
+                    'button' => __('Button'),
+                    'button_count' => __('Button Count'),
+                    'box_count' => __('Box Count'),
                 ],
                 'condition' => [
                     $prefix . 'type!' => 'comment'
@@ -96,12 +95,12 @@ class FacebookLike extends AbstractWidget
         $widget->addControl(
             $prefix . 'size',
             $args + [
-                'label' => __( 'Size' ),
+                'label' => __('Size'),
                 'type' => Controls::SELECT,
                 'default' => 'small',
                 'options' => [
-                    'small' => __( 'Small'),
-                    'large' => __( 'Large'),
+                    'small' => __('Small'),
+                    'large' => __('Large'),
                 ],
                 'condition' => [
                     $prefix . 'type!' => 'comment'
@@ -112,12 +111,12 @@ class FacebookLike extends AbstractWidget
         $widget->addControl(
             $prefix . 'colorscheme',
             $args + [
-                'label' => __( 'Color Scheme' ),
+                'label' => __('Color Scheme'),
                 'type' => Controls::SELECT,
                 'default' => 'light',
                 'options' => [
-                    'light' => __( 'Light'),
-                    'dark' => __( 'Dark'),
+                    'light' => __('Light'),
+                    'dark' => __('Dark'),
                 ],
             ]
         );
@@ -125,7 +124,7 @@ class FacebookLike extends AbstractWidget
         $widget->addControl(
             $prefix . 'show_share',
             $args + [
-                'label' => __( 'Share Button' ),
+                'label' => __('Share Button'),
                 'type' => Controls::SWITCHER,
                 'default' => '',
                 'condition' => [
@@ -137,7 +136,7 @@ class FacebookLike extends AbstractWidget
         $widget->addControl(
             $prefix . 'show_faces',
             $args + [
-                'label' => __( 'Faces' ),
+                'label' => __('Faces'),
                 'type' => Controls::SWITCHER,
                 'default' => '',
                 'condition' => [
@@ -149,7 +148,7 @@ class FacebookLike extends AbstractWidget
         $widget->addControl(
             $prefix . 'num_posts',
             $args + [
-                'label' => __( 'Number Of Comments' ),
+                'label' => __('Number Of Comments'),
                 'type' => Controls::NUMBER,
                 'default' => 5,
                 'description' => __('The number of comments to show by default. The minimum value is 1.'),
@@ -162,13 +161,13 @@ class FacebookLike extends AbstractWidget
         $widget->addControl(
             $prefix . 'order_by',
             $args + [
-                'label' => __( 'Order By' ),
+                'label' => __('Order By'),
                 'description' => __('The order to use when displaying comments.'),
                 'type' => Controls::SELECT,
                 'default' => 'reverse-time',
                 'options' => [
-                    'reverse-time' => __( 'Reverse Time'),
-                    'time' => __( 'Time'),
+                    'reverse-time' => __('Reverse Time'),
+                    'time' => __('Time'),
                 ],
                 'condition' => [
                     $prefix . 'type' => 'comment'
@@ -179,7 +178,7 @@ class FacebookLike extends AbstractWidget
         $widget->addControl(
             $prefix . 'width',
             $args + [
-                'label' => __( 'Width'),
+                'label' => __('Width'),
                 'type' => Controls::SLIDER,
                 'default' => [
                     'unit' => 'px',
@@ -198,8 +197,8 @@ class FacebookLike extends AbstractWidget
         $widget->addControl(
             $prefix . 'url_id',
             $args + [
-                'label' => __( 'URL ID' ),
-                'placeholder' => __( 'https://your-link.com' ),
+                'label' => __('URL ID'),
+                'placeholder' => __('https://your-link.com'),
                 'default' => 'https://goomento.com/',
                 'description' => __('The URL of the webpage that will be liked.'),
                 'separator' => 'before',
@@ -215,7 +214,7 @@ class FacebookLike extends AbstractWidget
         $this->startControlsSection(
             'facebook_like_section',
             [
-                'label' => __( 'Like Button' ),
+                'label' => __('Like Button'),
             ]
         );
 

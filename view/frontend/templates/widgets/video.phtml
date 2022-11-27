@@ -41,7 +41,7 @@ if ('other' === $settings['video_type']) {
 }
 
 if (empty($videoHtml)) {
-    echo $videoUrl;
+    echo /** @noEscape */ $videoUrl;
 
     return;
 }
@@ -53,13 +53,13 @@ if (!$settings['lightbox']) {
 }
 
 $widget->addRenderAttribute('video-wrapper', 'class', 'gmt-open-' . ($settings['lightbox'] ? 'lightbox' : 'inline')); ?>
-<div <?= $widget->getRenderAttributeString('video-wrapper'); ?>>
+<div <?= /** @noEscape */ $widget->getRenderAttributeString('video-wrapper'); ?>>
     <?php
     if (!$settings['lightbox']) {
-        echo $videoHtml; // XSS ok.
+        echo /** @noEscape */ $videoHtml; // XSS ok.
     }
 
-    if ($widget->hasImageOverlay()) :
+    if ($widget->hasImageOverlay()):
         $widget->addRenderAttribute('image-overlay', 'class', 'gmt-custom-embed-image-overlay');
 
         if ($settings['lightbox']) {
@@ -99,14 +99,14 @@ $widget->addRenderAttribute('video-wrapper', 'class', 'gmt-open-' . ($settings['
         } else {
             $widget->addRenderAttribute('image-overlay', 'style', 'background-image: url(' . $settings['image_overlay']['url'] ?? '' . ');');
         } ?>
-        <div <?= $widget->getRenderAttributeString('image-overlay'); ?>>
-            <?php if ($settings['lightbox']) : ?>
-                <?= ImageSizeGroup::getAttachmentImageHtml($settings, 'image_overlay'); ?>
+        <div <?= /** @noEscape */ $widget->getRenderAttributeString('image-overlay'); ?>>
+            <?php if ($settings['lightbox']): ?>
+                <?= /** @noEscape */ ImageSizeGroup::getAttachmentImageHtml($settings, 'image_overlay'); ?>
             <?php endif; ?>
-            <?php if ('yes' === $settings['show_play_icon']) : ?>
+            <?php if ('yes' === $settings['show_play_icon']): ?>
                 <div class="gmt-custom-embed-play" role="button">
                     <i class="far fa-play-circle"></i>
-                    <span class="gmt-screen-only"><?= __('Play Video'); ?></span>
+                    <span class="gmt-screen-only"><?= $block->escapeHtml(__('Play Video')); ?></span>
                 </div>
             <?php endif; ?>
         </div>

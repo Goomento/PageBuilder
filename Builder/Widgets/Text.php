@@ -157,8 +157,7 @@ class Text extends AbstractWidget
         string         $prefix = self::NAME . '_',
         string         $cssTarget = '.gmt-text-title',
         array          $args = []
-    )
-    {
+    ) {
         $widget->addControl(
             $prefix . 'color',
             $args + [
@@ -197,8 +196,7 @@ class Text extends AbstractWidget
         string         $prefix = self::NAME . '_',
         string         $cssTarget = '.gmt-text-title',
         array          $args = []
-    )
-    {
+    ) {
         $widget->addResponsiveControl(
             $prefix . 'align',
             $args + [

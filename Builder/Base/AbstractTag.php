@@ -20,6 +20,7 @@ abstract class AbstractTag extends AbstractBaseTag
      */
     public function getContent(array $options = [])
     {
+        // Magento2.Functions.DiscouragedFunction.Discouraged
         ob_start();
 
         $return = $this->render();
@@ -29,13 +30,17 @@ abstract class AbstractTag extends AbstractBaseTag
         return $value ?: $return;
     }
 
-
-    final public function getContentType()
+    /**
+     * @return string
+     */
+    public function getContentType()
     {
         return 'ui';
     }
 
-
+    /**
+     * @return array
+     */
     public function getEditorConfig()
     {
         $config = parent::getEditorConfig();

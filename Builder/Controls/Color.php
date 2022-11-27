@@ -43,28 +43,28 @@ class Color extends AbstractControlData
     public function contentTemplate()
     {
         ?>
-		<# var defaultValue = '', dataAlpha = '';
-			if ( data.default ) {
-				defaultValue = ' data-default-color=' + data.default; // Quotes added automatically.
-			}
+        <# var defaultValue = '', dataAlpha = '';
+            if ( data.default ) {
+                defaultValue = ' data-default-color=' + data.default; // Quotes added automatically.
+            }
 
-			if ( data.alpha ) {
-				dataAlpha = ' data-alpha=true';
-			} #>
-		<div class="gmt-control-field">
-			<label class="gmt-control-title">
-				<# if ( data.label ) { #>
-					{{{ data.label }}}
-				<# } #>
-				<# if ( data.description ) { #>
-					<span class="gmt-control-field-description">{{{ data.description }}}</span>
-				<# } #>
-			</label>
-			<div class="gmt-control-input-wrapper">
-				<input data-setting="{{ name }}" type="text" placeholder="Hex/rgba" {{ defaultValue }}{{ dataAlpha }} />
-			</div>
-		</div>
-		<?php
+            if ( data.alpha ) {
+                dataAlpha = ' data-alpha=true';
+            } #>
+        <div class="gmt-control-field">
+            <label class="gmt-control-title">
+                <# if ( data.label ) { #>
+                    {{{ data.label }}}
+                <# } #>
+                <# if ( data.description ) { #>
+                    <span class="gmt-control-field-description">{{{ data.description }}}</span>
+                <# } #>
+            </label>
+            <div class="gmt-control-input-wrapper">
+                <input data-setting="{{ name }}" type="text" placeholder="Hex/rgba" {{ defaultValue }}{{ dataAlpha }} />
+            </div>
+        </div>
+        <?php
     }
 
     /**

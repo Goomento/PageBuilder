@@ -59,8 +59,7 @@ class BetterCaching
         CacheInterface $cache,
         LockGuardedCacheLoader $lockGuardedCacheLoader,
         TypeListInterface $typeList
-    )
-    {
+    ) {
         $this->cache = $cache;
         $this->cacheTypeList = $typeList;
         $this->lockGuardedCacheLoader = $lockGuardedCacheLoader;
@@ -81,6 +80,7 @@ class BetterCaching
          * @return bool|float|int|string
          */
         $collectAction = function () use ($source) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
             return is_callable($source) ? call_user_func($source) : $source;
         };
 
@@ -112,29 +112,6 @@ class BetterCaching
             $collectAction,
             $saveAction
         );
-    }
-
-    /**
-     * Collect and Save to cache with no lock
-     *
-     * @param string $key
-     * @param callable|mixed|null $source Callable must return array to store
-     * @param array|string $tags
-     * @param int|null $timeout null then data will be saved forever
-     * @return bool|float|int|mixed|string
-     */
-    public function resolveNoLock(string $key, $source = false, $tags = self::FRONTEND_CACHE_TAG, ?int $timeout = self::DEFAULT_TIMEOUT)
-    {
-        $cachedData = $this->load($key);
-        if ($cachedData === false) {
-            $data = is_callable($source) ? call_user_func($source) : $source;
-            if ($data !== false) {
-                $this->save($data, $key, $tags, $timeout);
-            }
-            $cachedData = $data;
-        }
-
-        return $cachedData;
     }
 
     /**
@@ -191,7 +168,9 @@ class BetterCaching
             if (!is_scalar($data)) {
                 try {
                     $data = Zend_Json::encode($data);
-                } catch (\Exception $e) {}
+                } catch (\Exception $e) {
+
+                }
             }
             $this->cache->save($data, $identifier, (array) $tags, $timeout);
         }
@@ -207,7 +186,9 @@ class BetterCaching
         if ($result && (strpos($result, '{') !== 0 || strpos($result, '[') !== 0)) {
             try {
                 $result = Zend_Json::decode($result);
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+
+            }
         }
 
         return $result;

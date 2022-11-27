@@ -19,7 +19,7 @@ $settings = $widget->getSettingsForDisplay();
 $hasIcon = ! empty($settings['accordion_selected_icon']['value']);
 $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
     <div class="gmt-accordion" role="tablist">
-    <?php foreach ($settings['accordion_tabs'] as $index => $item) :
+    <?php foreach ($settings['accordion_tabs'] as $index => $item):
         $tabCount = $index + 1;
         $tabTitleSettingKey = 'accordion_tabs.' . $index . '.tab_title';
         $tabContentSettingKey = 'accordion_tabs.' . $index . '.accordion_tab_content';
@@ -42,16 +42,16 @@ $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
 
         $widget->addInlineEditingAttributes($tabContentSettingKey, 'advanced'); ?>
         <div class="gmt-accordion-item">
-        <<?= $settings['accordion_title_html_tag']; ?> <?= $widget->getRenderAttributeString($tabTitleSettingKey); ?>>
-            <?php if ($hasIcon) : ?>
-                <span class="gmt-accordion-icon gmt-accordion-icon-<?= EscaperHelper::escapeHtml($settings['accordion_icon_align']); ?>" aria-hidden="true">
+        <<?=  /** @noEscape */ $settings['accordion_title_html_tag']; ?> <?= /** @noEscape */ $widget->getRenderAttributeString($tabTitleSettingKey); ?>>
+            <?php if ($hasIcon): ?>
+                <span class="gmt-accordion-icon gmt-accordion-icon-<?= $block->escapeHtmlAttr($settings['accordion_icon_align']); ?>" aria-hidden="true">
                     <span class="gmt-accordion-icon-closed"><?php Icons::renderIcon($settings['accordion_selected_icon']); ?></span>
                         <span class="gmt-accordion-icon-opened"><?php Icons::renderIcon($settings['accordion_selected_active_icon']); ?></span>
                     </span>
             <?php endif; ?>
-        <a href=""><?= $item['accordion_tab_title']; ?></a>
-        </<?= $settings['accordion_title_html_tag']; ?>>
-        <div <?= $widget->getRenderAttributeString($tabContentSettingKey); ?>><?= /** @noEscape  */ $item['accordion_tab_content']; ?></div>
+        <a href=""><?=  /** @noEscape */ $item['accordion_tab_title']; ?></a>
+        </<?=  /** @noEscape */ $settings['accordion_title_html_tag']; ?>>
+        <div <?= /** @noEscape */ $widget->getRenderAttributeString($tabContentSettingKey); ?>><?= /** @noEscape */ $item['accordion_tab_content']; ?></div>
         </div>
     <?php endforeach; ?>
     </div>

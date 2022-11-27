@@ -87,6 +87,7 @@ class ContentRegistry implements ContentRegistryInterface
     /**
      * @param $value
      * @return ContentInterface|null
+     * @throws Exception
      */
     public function getBy($value)
     {
@@ -103,7 +104,8 @@ class ContentRegistry implements ContentRegistryInterface
             try {
                 $this->processing = null;
                 foreach ($actions as $action) {
-                    $result = call_user_func_array($action, [$value, $field]);
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
+                    $result = call_user_func($action, $value, $field);
                     if ($result) {
                         break;
                     }

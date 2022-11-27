@@ -91,9 +91,9 @@ class Spacer extends AbstractWidget
     protected function contentTemplate()
     {
         ?>
-		<div class="gmt-spacer">
-			<div class="gmt-spacer-inner"></div>
-		</div>
-		<?php
+        <div class="gmt-spacer">
+            <div class="gmt-spacer-inner"></div>
+        </div>
+        <?php
     }
 }

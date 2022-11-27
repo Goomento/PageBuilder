@@ -42,15 +42,15 @@ class Button extends AbstractControlUi
     public function contentTemplate()
     {
         ?>
-		<div class="gmt-control-field">
-			<label class="gmt-control-title">{{{ data.label }}}</label>
-			<div class="gmt-control-input-wrapper">
-				<button type="button" class="gmt-button gmt-button-{{{ data.button_type }}}" data-event="{{{ data.event }}}">{{{ data.text }}}</button>
-			</div>
-		</div>
-		<# if ( data.description ) { #>
-			<div class="gmt-control-field-description">{{{ data.description }}}</div>
-		<# } #>
-		<?php
+        <div class="gmt-control-field">
+            <label class="gmt-control-title">{{{ data.label }}}</label>
+            <div class="gmt-control-input-wrapper">
+                <button type="button" class="gmt-button gmt-button-{{{ data.button_type }}}" data-event="{{{ data.event }}}">{{{ data.text }}}</button>
+            </div>
+        </div>
+        <# if ( data.description ) { #>
+            <div class="gmt-control-field-description">{{{ data.description }}}</div>
+        <# } #>
+        <?php
     }
 }

@@ -27,6 +27,7 @@ use Goomento\Core\Traits\TraitStaticInstances;
  * @method static copy($origin, $destination)
  * @method static string[] parsePath($path)
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class AssetsHelper
 {
     use TraitStaticInstances;

@@ -40,8 +40,7 @@ class Wysiwyg extends Widget
         FormFactory $formFactory,
         Config $wysiwygConfig,
         array $data = []
-    )
-    {
+    ) {
         $this->formFactory = $formFactory;
         $this->wysiwygConfig = $wysiwygConfig;
         parent::__construct($context, $data);

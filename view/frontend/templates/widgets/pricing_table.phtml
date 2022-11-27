@@ -16,10 +16,16 @@ use Goomento\PageBuilder\Helper\EscaperHelper;
 $widget = $block->getWidget();
 $settings = $block->getSettingsForDisplay();
 $widget->addRenderAttribute('pricing_wrapper', 'class', 'gmt-pricing');
-$widget->addRenderAttribute('pricing_wrapper', 'class',
-    $settings['pricing_table_icon_enabled'] === 'yes' ? 'gmt-pricing-show-icon' : 'gmt-pricing-hide-icon');
-$widget->addRenderAttribute('pricing_wrapper', 'class',
-    $settings['pricing_table_onsale'] === 'yes' ? 'gmt-pricing-onsale' : '');
+$widget->addRenderAttribute(
+    'pricing_wrapper',
+    'class',
+    $settings['pricing_table_icon_enabled'] === 'yes' ? 'gmt-pricing-show-icon' : 'gmt-pricing-hide-icon'
+);
+$widget->addRenderAttribute(
+    'pricing_wrapper',
+    'class',
+    $settings['pricing_table_onsale'] === 'yes' ? 'gmt-pricing-onsale' : ''
+);
 $widget->addRenderAttribute('pricing_price_currency', 'class', 'gmt-currency-' . $settings['pricing_table_price_cur_placement']);
 $widget->addRenderAttribute([
     'pricing_head' => [
@@ -44,57 +50,57 @@ $widget->addRenderAttribute([
 $titleTag = $settings['pricing_table_title_size'] ?: 'span';
 $widget->addInlineEditingAttributes(['pricing_title' => 'pricing_table_title']);
 ?>
-<div <?= $widget->getRenderAttributeString('pricing_wrapper'); ?>>
-    <div <?= $widget->getRenderAttributeString('pricing_head'); ?>>
-        <<?= $titleTag ?> <?= $widget->getRenderAttributeString('pricing_title'); ?>><?= /** @noEscape  */ $settings['pricing_table_title'] ?></<?= $titleTag ?>>
+<div <?= /** @noEscape */ $widget->getRenderAttributeString('pricing_wrapper'); ?>>
+    <div <?= /** @noEscape */ $widget->getRenderAttributeString('pricing_head'); ?>>
+        <<?=  /** @noEscape */ $titleTag ?> <?= /** @noEscape */ $widget->getRenderAttributeString('pricing_title'); ?>><?= /** @noEscape */ $settings['pricing_table_title'] ?></<?=  /** @noEscape */ $titleTag ?>>
     </div>
-    <div <?= $widget->getRenderAttributeString('pricing_body'); ?>>
+    <div <?= /** @noEscape */ $widget->getRenderAttributeString('pricing_body'); ?>>
         <div class="gmt-pricing-prices">
             <span class="gmt-price-tag">
-                <?php if ($settings['pricing_table_onsale'] === 'yes') :
+                <?php if ($settings['pricing_table_onsale'] === 'yes'):
                     ?>
                     <del class="gmt-original-price">
-                        <span <?= $widget->getRenderAttributeString('pricing_price_currency'); ?>><?= /** @noEscape  */ $settings['pricing_table_price_cur'] ?></span>
-                        <span <?= $widget->getRenderAttributeString('pricing_table_price'); ?>><?= /** @noEscape  */ $settings['pricing_table_price'] ?></span>
+                        <span <?= /** @noEscape */ $widget->getRenderAttributeString('pricing_price_currency'); ?>><?= /** @noEscape */ $settings['pricing_table_price_cur'] ?></span>
+                        <span <?= /** @noEscape */ $widget->getRenderAttributeString('pricing_table_price'); ?>><?= /** @noEscape */ $settings['pricing_table_price'] ?></span>
                     </del>
                 <?php endif; ?>
                 <span class="gmt-sale-price">
-                    <span <?= $widget->getRenderAttributeString('pricing_price_currency'); ?>><?= /** @noEscape  */ $settings['pricing_table_price_cur'] ?></span>
-                    <span><?= /** @noEscape */$settings['pricing_table_onsale'] === 'yes' ?
-                        $settings['pricing_table_onsale_price'] : $settings['pricing_table_price'] ?></span>
+                    <span <?= /** @noEscape */ $widget->getRenderAttributeString('pricing_price_currency'); ?>><?= /** @noEscape */ $settings['pricing_table_price_cur'] ?></span>
+                    <span><?= /** @noEscape */ $settings['pricing_table_onsale'] === 'yes' ?
+                              /** @noEscape */ $settings['pricing_table_onsale_price'] : /** @noEscape */ $settings['pricing_table_price'] ?></span>
                 </span>
             </span>
             <span class="gmt-price-period">
-                <?= /** @noEscape */$settings['pricing_table_period_separator']
-                . $settings['pricing_table_price_period'] ?></span>
+                <?= /** @noEscape */ $settings['pricing_table_period_separator']
+                .   /** @noEscape */ $settings['pricing_table_price_period'] ?></span>
         </div>
-        <ul <?= $widget->getRenderAttributeString('pricing_features'); ?>>
+        <ul <?= /** @noEscape */ $widget->getRenderAttributeString('pricing_features'); ?>>
             <?php
-            foreach ($settings['pricing_table_items'] as $index => $item) :
+            foreach ($settings['pricing_table_items'] as $index => $item):
                 $key = 'pricing_table_items.' . $index . '.pricing_table_item';
                 $widget->addInlineEditingAttributes($key);
                 $widget->addRenderAttribute('pricing_feature_item' . $index, 'class', 'pricing-feature');
                 $widget->addRenderAttribute('pricing_feature_item' . $index, 'class', 'yes' === $item['pricing_table_item_active']
                     ? 'pricing-feature-active' : 'pricing-feature-disabled');
                 ?>
-                <li <?= $widget->getRenderAttributeString('pricing_feature_item' . $index); ?>>
-                    <?php if ('yes' === $settings['pricing_table_icon_enabled']) : ?>
-                        <span style="color:<?= $item['pricing_table_item_icon_color'] ?>;" >
+                <li <?= /** @noEscape */ $widget->getRenderAttributeString('pricing_feature_item' . $index); ?>>
+                    <?php if ('yes' === $settings['pricing_table_icon_enabled']): ?>
+                        <span style="color:<?=  /** @noEscape */ $item['pricing_table_item_icon_color'] ?>;" >
                             <?php if (!empty($item['pricing_table_item_selected_icon'])): ?>
                                 <?php Icons::renderIcon($item['pricing_table_item_selected_icon'], [ 'aria-hidden' => 'true' ]) ?>
                             <?php endif; ?>
                         </span>
                     <?php endif; ?>
-                    <?php if ('yes' !== $item['pricing_table_item_active']) : ?><del><?php endif; ?>
-                        <span <?= $widget->getRenderAttributeString($key); ?>><?= /** @noEscape */ $item['pricing_table_item'] ?></span>
-                    <?php if ('yes' !== $item['pricing_table_item_active']) : ?></del><?php endif; ?>
+                    <?php if ('yes' !== $item['pricing_table_item_active']): ?><del><?php endif; ?>
+                        <span <?= /** @noEscape */ $widget->getRenderAttributeString($key); ?>><?= /** @noEscape */ $item['pricing_table_item'] ?></span>
+                    <?php if ('yes' !== $item['pricing_table_item_active']): ?></del><?php endif; ?>
                 </li>
-            <?php
+                <?php
             endforeach;
             ?>
         </ul>
     </div>
-    <?php if($settings['pricing_table_button_show'] === 'yes') :
+    <?php if ($settings['pricing_table_button_show'] === 'yes'):
         if (!empty($settings['pricing_table_button_link']['url'])) {
             $widget->addRenderAttribute('button', 'href', $settings['pricing_table_button_link']['url']);
             $widget->addRenderAttribute('button', 'class', 'gmt-button-link');
@@ -139,15 +145,15 @@ $widget->addInlineEditingAttributes(['pricing_title' => 'pricing_table_title']);
         ]);
         $widget->addInlineEditingAttributes(['btn-text' => 'pricing_table_button_text']);
         ?>
-        <div <?= $widget->getRenderAttributeString('pricing_footer'); ?>>
-            <a <?= $widget->getRenderAttributeString('button'); ?>>
-                <?php if (!empty($settings['pricing_table_button_icon']) || ! empty($settings['pricing_table_button_selected_icon']['value'])) : ?>
-                    <em <?= $widget->getRenderAttributeString('btn-icon-align'); ?>>
+        <div <?= /** @noEscape */ $widget->getRenderAttributeString('pricing_footer'); ?>>
+            <a <?= /** @noEscape */ $widget->getRenderAttributeString('button'); ?>>
+                <?php if (!empty($settings['pricing_table_button_icon']) || ! empty($settings['pricing_table_button_selected_icon']['value'])): ?>
+                    <em <?= /** @noEscape */ $widget->getRenderAttributeString('btn-icon-align'); ?>>
                         <?php Icons::renderIcon($settings['pricing_table_button_selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
                     </em>
                 <?php endif; ?>
-                <span <?= $widget->getRenderAttributeString('btn-content-wrapper'); ?>>
-                    <span <?= $widget->getRenderAttributeString('btn-text'); ?>><?= /** @noEscape */ $settings['pricing_table_button_text']; ?></span>
+                <span <?= /** @noEscape */ $widget->getRenderAttributeString('btn-content-wrapper'); ?>>
+                    <span <?= /** @noEscape */ $widget->getRenderAttributeString('btn-text'); ?>><?= /** @noEscape */ $settings['pricing_table_button_text']; ?></span>
                 </span>
             </a>
         </div>

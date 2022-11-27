@@ -75,35 +75,35 @@ class TextShadow extends AbstractBaseMultiple
     public function contentTemplate()
     {
         ?>
-		<#
-		var defaultColorValue = '';
+        <#
+        var defaultColorValue = '';
 
-		if ( data.default.color ) {
-			defaultColorValue = ' data-default-color=' + data.default.color; // Quotes added automatically.
-		}
-		#>
-		<div class="gmt-control-field">
-			<label class="gmt-control-title"><?= __('Color'); ?></label>
-			<div class="gmt-control-input-wrapper">
-				<input data-setting="color" class="gmt-shadow-color-picker" type="text" placeholder="<?= EscaperHelper::escapeHtml('Hex/rgba'); ?>" data-alpha="true" {{{ defaultColorValue }}} />
-			</div>
-		</div>
-		<?php
-        foreach ($this->getSliders() as $sliderName => $slider) :
+        if ( data.default.color ) {
+            defaultColorValue = ' data-default-color=' + data.default.color; // Quotes added automatically.
+        }
+        #>
+        <div class="gmt-control-field">
+            <label class="gmt-control-title"><?= __('Color'); ?></label>
+            <div class="gmt-control-input-wrapper">
+                <input data-setting="color" class="gmt-shadow-color-picker" type="text" placeholder="<?= EscaperHelper::escapeHtml('Hex/rgba'); ?>" data-alpha="true" {{{ defaultColorValue }}} />
+            </div>
+        </div>
+        <?php
+        foreach ($this->getSliders() as $sliderName => $slider):
             $controlUid = $this->getControlUid($sliderName); ?>
-			<div class="gmt-shadow-slider gmt-control-type-slider">
-				<label for="<?= EscaperHelper::escapeHtml($controlUid); ?>" class="gmt-control-title"><?= $slider['label']; ?></label>
-				<div class="gmt-control-input-wrapper">
-					<div class="gmt-slider" data-input="<?= EscaperHelper::escapeHtml($sliderName); ?>"></div>
-					<div class="gmt-slider-input">
-						<input id="<?= EscaperHelper::escapeHtml($controlUid); ?>" type="number"
+            <div class="gmt-shadow-slider gmt-control-type-slider">
+                <label for="<?= EscaperHelper::escapeHtml($controlUid); ?>" class="gmt-control-title"><?= $slider['label']; ?></label>
+                <div class="gmt-control-input-wrapper">
+                    <div class="gmt-slider" data-input="<?= EscaperHelper::escapeHtml($sliderName); ?>"></div>
+                    <div class="gmt-slider-input">
+                        <input id="<?= EscaperHelper::escapeHtml($controlUid); ?>" type="number"
                                min="<?= EscaperHelper::escapeHtml($slider['min']); ?>"
                                max="<?= EscaperHelper::escapeHtml($slider['max']); ?>"
                                data-setting="<?= EscaperHelper::escapeHtml($sliderName); ?>"/>
-					</div>
-				</div>
-			</div>
-		<?php endforeach; ?>
-		<?php
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+        <?php
     }
 }

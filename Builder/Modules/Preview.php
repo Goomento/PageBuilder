@@ -58,7 +58,7 @@ class Preview
 
             $documentManager = ObjectManagerHelper::getDocumentsManager();
 
-            $document = $documentManager->getByContent( $this->contentModel );
+            $document = $documentManager->getByContent($this->contentModel);
 
             $attributes = $document->getContainerAttributes();
 

@@ -43,7 +43,7 @@ class RecentlyViewedProducts extends AbstractMagentoWidget
         $widget->addControl(
             $prefix . 'num_posts',
             $args + [
-                'label' => __( 'Number of Products to display' ),
+                'label' => __('Number of Products to display'),
                 'type' => Controls::NUMBER,
                 'default' => 5,
             ]
@@ -52,17 +52,17 @@ class RecentlyViewedProducts extends AbstractMagentoWidget
         $widget->addControl(
             $prefix . 'show_attributes',
             $args + [
-                'label' => __( 'Product attributes to show' ),
+                'label' => __('Product attributes to show'),
                 'type' => Controls::SELECT2,
                 'multiple' => true,
                 'default' => [
                     'name', 'image',
                 ],
                 'options' => [
-                    'name' => __( 'Name'),
-                    'image' => __( 'Image'),
-                    'price' => __( 'Price' ),
-                    'learn_more' => __( 'Learn More Link' ),
+                    'name' => __('Name'),
+                    'image' => __('Image'),
+                    'price' => __('Price'),
+                    'learn_more' => __('Learn More Link'),
                 ],
             ]
         );
@@ -70,16 +70,16 @@ class RecentlyViewedProducts extends AbstractMagentoWidget
         $widget->addControl(
             $prefix . 'show_buttons',
             $args + [
-                'label' => __( 'Buttons to show' ),
+                'label' => __('Buttons to show'),
                 'type' => Controls::SELECT2,
                 'multiple' => true,
                 'default' => [
                     'add_to_cart',
                 ],
                 'options' => [
-                    'add_to_cart' => __( 'Add to Cart'),
-                    'add_to_compare' => __( 'Add to Compare'),
-                    'add_to_wishlist' => __( 'Add to Wishlist' ),
+                    'add_to_cart' => __('Add to Cart'),
+                    'add_to_compare' => __('Add to Compare'),
+                    'add_to_wishlist' => __('Add to Wishlist'),
                 ],
             ]
         );
@@ -87,13 +87,13 @@ class RecentlyViewedProducts extends AbstractMagentoWidget
         $widget->addControl(
             $prefix . 'template',
             $args + [
-                'label' => __( 'Template' ),
+                'label' => __('Template'),
                 'type' => Controls::SELECT,
                 'default' => 'list',
                 'options' => [
-                    'grid' => __( 'Products Grid Template'),
-                    'list' => __( 'Products List Template'),
-                    'sidebar' => __( 'Products Sidebar Template' ),
+                    'grid' => __('Products Grid Template'),
+                    'list' => __('Products List Template'),
+                    'sidebar' => __('Products Sidebar Template'),
                 ],
             ]
         );
@@ -107,7 +107,7 @@ class RecentlyViewedProducts extends AbstractMagentoWidget
         $this->startControlsSection(
             'magento_recently_viewed_products_section',
             [
-                'label' => __( 'Recently Viewed Products' ),
+                'label' => __('Recently Viewed Products'),
             ]
         );
 

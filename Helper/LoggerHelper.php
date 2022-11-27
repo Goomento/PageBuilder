@@ -26,6 +26,7 @@ use Goomento\Core\Traits\TraitStaticInstances;
  * @method static info($message, array $context = array())
  * @method static debug($message, array $context = array())
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class LoggerHelper
 {
     use TraitStaticInstances;
@@ -34,7 +35,7 @@ class LoggerHelper
     /**
      * @inheritDoc
      */
-    static protected function getStaticInstance()
+    protected static function getStaticInstance()
     {
         return \Goomento\PageBuilder\Logger\Logger::class;
     }

@@ -80,8 +80,7 @@ class BuilderAssistance extends AbstractAction
         Data $dataHelper,
         PageList $pageList,
         BuildableContent $buildableContentHelper
-    )
-    {
+    ) {
         $this->buildableContentHelper = $buildableContentHelper;
         $this->pageList = $pageList;
         $this->contentRegistry = $contentRegistry;
@@ -115,10 +114,8 @@ class BuilderAssistance extends AbstractAction
 
                     if (!empty($data['html'])) {
                         $contentData = BuildableContent::getContentElementsWithHtml($data['html'], $contentData);
-                        $content = $this->buildableContentHelper->createContent($contentData);
-                    } else {
-                        $content = $this->buildableContentHelper->createContent($contentData);
                     }
+                    $content = $this->buildableContentHelper->createContent($contentData);
 
                     $result = [
                         'label' => BuildableContentHelper::getContentLabel($content),

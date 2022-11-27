@@ -41,8 +41,7 @@ abstract class AbstractAction extends Action
         Logger $logger,
         Registry $registry,
         Data $dataHelper
-    )
-    {
+    ) {
         $this->logger = $logger;
         $this->registry = $registry;
         $this->dataHelper = $dataHelper;

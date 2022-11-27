@@ -20,11 +20,12 @@ $settings = $block->getSettingsForDisplay();
 
 $type = $settings['facebook_content_type'] ?? '';
 
-if (!empty($type)) :
+if (!empty($type)):
     $attributes = [
         'data-height' => $settings['facebook_content_height']['size'],
         'data-width' => $settings['facebook_content_width']['size'],
     ];
+    $urlId = '';
     if ($type === 'page') {
         $urlId = $settings['facebook_content_page_url'] ?? '';
         $attributes = array_merge($attributes, [
@@ -33,7 +34,7 @@ if (!empty($type)) :
             'data-hide-cover' => $settings['facebook_content_show_cover'] ? 'false' : 'true',
             'data-show-facepile' => $settings['facebook_content_show_facepile'] ? 'true' : 'false',
             'data-hide-cta' => $settings['facebook_content_show_cta'] ? 'false' : 'true',
-            'data-tabs' => implode( ',', $settings['facebook_content_tabs'] ),
+            'data-tabs' => implode(',', $settings['facebook_content_tabs']),
         ]);
     } elseif ($type === 'post') {
         $urlId = $settings['facebook_content_post_url'] ?? '';
@@ -51,14 +52,14 @@ if (!empty($type)) :
             'show-captions' => $settings['facebook_content_video_show_captions'] ? 'true' : 'false',
         ]);
     }
-    if (!$urlId || ! filter_var( $urlId, FILTER_VALIDATE_URL ) ) :
+    if (!$urlId || ! filter_var($urlId, FILTER_VALIDATE_URL)):
         ?>
-        <p><?= __('Invalid URL.') ?></p>
-        <?php else :
-        $attributes['data-href'] = $urlId;
-        $widget->addRenderAttribute('facebook_content', $attributes); ?>
-        <div data-mage-init='{"facebook-sdk": {"app_id":"<?= /* @noEscape */ DataHelper::getFbAppId(); ?>"}}' <?=  $widget->getRenderAttributeString( 'facebook_content' ) ?>>
+        <p><?= $block->escapeHtml(__('Invalid URL.')) ?></p>
+        <?php else:
+            $attributes['data-href'] = $urlId;
+            $widget->addRenderAttribute('facebook_content', $attributes); ?>
+        <div data-mage-init='{"facebook-sdk": {"app_id":"<?= /* @noEscape */ DataHelper::getFbAppId(); ?>"}}' <?= /* @noEscape */ $widget->getRenderAttributeString('facebook_content') ?>>
         </div>
-    <?php
+            <?php
     endif;
 endif;

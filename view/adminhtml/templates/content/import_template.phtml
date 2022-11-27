@@ -22,12 +22,12 @@ use Magento\Backend\Block\Template;
             <div class="admin__field _required" >
                 <div class="admin__field-label">
                     <label>
-                        <span><?= __('File') ?></span>
+                        <span><?= $block->escapeHtml(__('File')) ?></span>
                     </label>
                 </div>
                 <div class="admin__field-control">
                     <input class="admin__control-text" type="file" name="file" accept=".json" data-validate='{"required":true}' />
-                    <small><?= __('Accepted: JSON files') ?></small>
+                    <small><?= $block->escapeHtml(__('Accepted: JSON files')) ?></small>
                 </div>
             </div>
             <div class="admin__field" >
@@ -37,7 +37,7 @@ use Magento\Backend\Block\Template;
                     </label>
                 </div>
                 <div class="admin__field-control">
-                    <button type="submit"><?= __('Import') ?></button>
+                    <button type="submit"><?= $block->escapeHtml(__('Import')) ?></button>
                 </div>
             </div>
         </fieldset>

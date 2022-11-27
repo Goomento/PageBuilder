@@ -96,8 +96,7 @@ class Content extends Template implements BlockInterface
         ContentDataProcessor     $contentHtmlProcessor,
         Logger                   $logger,
         array                    $data = []
-    )
-    {
+    ) {
         $this->logger = $logger;
         $this->dataHelper = $dataHelper;
         $this->filterProvider = $filterProvider;
@@ -194,7 +193,7 @@ class Content extends Template implements BlockInterface
             $contentId = $this->identifierIdMapping[$this->currentIdentifier] ?? null;
             $content = $contentId && isset($this->buildableContents[$contentId])
                 ? $this->buildableContents[$contentId] : null;
-            if(!$content) {
+            if (!$content) {
                 $content = $this->contentRegistry->getByIdentifier(
                     (string) $this->currentIdentifier
                 );
@@ -270,7 +269,7 @@ class Content extends Template implements BlockInterface
                 ThemeHelper::registerContentToPage($this->loadCurrentBuildableContent());
 
                 Profiler::start('PAGEBUILDER:RENDER');
-                $html = $this->contentDataProcessor->getHtml( $this->loadCurrentBuildableContent() );
+                $html = $this->contentDataProcessor->getHtml($this->loadCurrentBuildableContent());
                 Profiler::stop('PAGEBUILDER:RENDER');
 
                 Profiler::start('PAGEBUILDER:CMS_FILTER');

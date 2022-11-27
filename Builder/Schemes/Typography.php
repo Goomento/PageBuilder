@@ -131,7 +131,7 @@ class Typography extends AbstractSchema
     public function printTemplateContent()
     {
         ?>
-		<div class="gmt-panel-scheme-items"></div>
-		<?php
+        <div class="gmt-panel-scheme-items"></div>
+        <?php
     }
 }

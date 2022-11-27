@@ -25,14 +25,14 @@ class Wysiwyg extends AbstractControlData
     public function contentTemplate()
     {
         ?>
-		<div class="gmt-control-field">
-			<div class="gmt-control-title">{{{ data.label }}}</div>
-			<div class="gmt-control-input-wrapper gmt-control-tag-area"></div>
-		</div>
-		<# if ( data.description ) { #>
-		<div class="gmt-control-field-description">{{{ data.description }}}</div>
-		<# } #>
-		<?php
+        <div class="gmt-control-field">
+            <div class="gmt-control-title">{{{ data.label }}}</div>
+            <div class="gmt-control-input-wrapper gmt-control-tag-area"></div>
+        </div>
+        <# if ( data.description ) { #>
+        <div class="gmt-control-field-description">{{{ data.description }}}</div>
+        <# } #>
+        <?php
     }
 
     /**

@@ -47,8 +47,7 @@ class SampleImporter extends AbstractAction implements HttpGetActionInterface
         LocalSampleCollection $localSampleCollection,
         SampleImporterInterface $sampleImporter,
         Logger $logger
-    )
-    {
+    ) {
         $this->localSampleCollection = $localSampleCollection;
         $this->logger = $logger;
         $this->sampleImporter = $sampleImporter;

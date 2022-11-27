@@ -62,7 +62,7 @@ class Page extends AbstractSettings
     public function getCssWrapperSelector()
     {
         $documentManagers = ObjectManagerHelper::getDocumentsManager();
-        $document = $documentManagers->getByContent( $this->model );
+        $document = $documentManagers->getByContent($this->model);
         return $document->getCssWrapperSelector();
     }
 
@@ -75,7 +75,7 @@ class Page extends AbstractSettings
      * @return array {
      *    Panel settings.
      *
-     *    @type string $title The panel title.
+     * @type string $title The panel title.
      * }
      */
     public function getPanelPageSettings()
@@ -98,7 +98,7 @@ class Page extends AbstractSettings
         if ($this->model) {
 
             $documentManager = ObjectManagerHelper::getDocumentsManager();
-            $document = $documentManager->getByContent( $this->model );
+            $document = $documentManager->getByContent($this->model);
 
             if ($document) {
                 $controls = $document->getControls();

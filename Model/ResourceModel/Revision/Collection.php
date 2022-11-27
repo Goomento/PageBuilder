@@ -34,8 +34,10 @@ class Collection extends AbstractCollection
      */
     protected function _construct()
     {
-        $this->_init(\Goomento\PageBuilder\Model\Revision::class,
-            \Goomento\PageBuilder\Model\ResourceModel\Revision::class);
+        $this->_init(
+            \Goomento\PageBuilder\Model\Revision::class,
+            \Goomento\PageBuilder\Model\ResourceModel\Revision::class
+        );
     }
 
     /**

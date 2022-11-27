@@ -159,6 +159,6 @@ class Collection extends ContentCollection implements SearchResultInterface
      */
     protected function _renderFiltersBefore()
     {
-        $this->addFilter('type', $this->type , 'public');
+        $this->addFilter('type', $this->type, 'public');
     }
 }

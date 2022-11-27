@@ -63,7 +63,7 @@ interface BuildableContentInterface
      * @param $name
      * @return array|string|bool
      */
-    public function getSetting( $name );
+    public function getSetting($name);
 
     /**
      * Set setting
@@ -94,7 +94,7 @@ interface BuildableContentInterface
      * @param $name
      * @return bool
      */
-    public function hasSetting( $name ) : bool;
+    public function hasSetting($name) : bool;
 
     /**
      * Get ID

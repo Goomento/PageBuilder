@@ -914,11 +914,11 @@ class Column extends AbstractElement
     protected function contentTemplate()
     {
         ?>
-		<div class="gmt-column-wrap">
-			<div class="gmt-background-overlay"></div>
-			<div class="gmt-widget-wrap"></div>
-		</div>
-		<?php
+        <div class="gmt-column-wrap">
+            <div class="gmt-background-overlay"></div>
+            <div class="gmt-widget-wrap"></div>
+        </div>
+        <?php
     }
 
     /**
@@ -951,13 +951,13 @@ class Column extends AbstractElement
                 'class' => [ 'gmt-background-overlay' ],
             ],
         ]); ?>
-		<<?= $this->getHtmlTag() . ' ' . $this->getRenderAttributeString('_wrapper'); ?>>
-			<div <?= $this->getRenderAttributeString('_inner_wrapper'); ?>>
-			<?php if ($hasBackgroundOverlay) : ?>
-				<div <?= $this->getRenderAttributeString('_background_overlay'); ?>></div>
-			<?php endif; ?>
-		<div <?= $this->getRenderAttributeString('_widget_wrapper'); ?>>
-		<?php
+        <<?= $this->getHtmlTag() . ' ' . $this->getRenderAttributeString('_wrapper'); ?>>
+            <div <?= $this->getRenderAttributeString('_inner_wrapper'); ?>>
+            <?php if ($hasBackgroundOverlay): ?>
+                <div <?= $this->getRenderAttributeString('_background_overlay'); ?>></div>
+            <?php endif; ?>
+        <div <?= $this->getRenderAttributeString('_widget_wrapper'); ?>>
+        <?php
     }
 
     /**
@@ -969,10 +969,10 @@ class Column extends AbstractElement
     public function afterRender()
     {
         ?>
-				</div>
-			</div>
-		</<?= $this->getHtmlTag(); ?>>
-		<?php
+                </div>
+            </div>
+        </<?= $this->getHtmlTag(); ?>>
+        <?php
     }
 
     /**

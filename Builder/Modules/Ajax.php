@@ -94,7 +94,7 @@ class Ajax extends AbstractModule
     public function registerAjaxAction($tag, $callback)
     {
         if (! HooksHelper::didAction('pagebuilder/ajax/register_actions')) {
-            throw new \Exception(sprintf('Use `%s` hook to register ajax action', 'pagebuilder/ajax/register_actions'));
+            throw new \Goomento\PageBuilder\Exception\BuilderException(sprintf('Use `%s` hook to register ajax action', 'pagebuilder/ajax/register_actions'));
         }
 
         $this->registeredAjaxActions[ $tag ] = compact('tag', 'callback');
@@ -122,7 +122,7 @@ class Ajax extends AbstractModule
         HooksHelper::doAction('pagebuilder/ajax/register_actions', $this);
 
         try {
-            $this->ajaxRequestingActions = \Zend_Json::decode( $requestParams['actions'] ?? '' );
+            $this->ajaxRequestingActions = \Zend_Json::decode($requestParams['actions'] ?? '');
 
             $this->ajaxRequestingActions = EscaperHelper::filter($this->ajaxRequestingActions);
         } catch (\Exception $e) {
@@ -145,6 +145,7 @@ class Ajax extends AbstractModule
             }
 
             try {
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
                 $results = call_user_func(
                     $this->registeredAjaxActions[ $actionData['action'] ]['callback'],
                     $actionData['data'],

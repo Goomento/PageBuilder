@@ -78,6 +78,7 @@ class Save extends AbstractContent implements HttpPostActionInterface
                 $content->setTitle($data['title']);
 
                 if (!empty($data['content_data'])) {
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
                     $contentData = base64_decode($data['content_data']);
                     if ($contentData && DataHelper::isJson($contentData)) {
                         $contentData = \Zend_Json::decode($contentData);
@@ -110,8 +111,10 @@ class Save extends AbstractContent implements HttpPostActionInterface
                     );
                 }
 
-                $this->buildableContentManagement->saveBuildableContent($content,
-                    $isNewObject ? (string) __('Admin created content') : (string) __('Admin saved content'));
+                $this->buildableContentManagement->saveBuildableContent(
+                    $content,
+                    $isNewObject ? (string) __('Admin created content') : (string) __('Admin saved content')
+                );
 
                 $this->messageManager->addSuccessMessage(
                     __('You saved the content.')
@@ -168,7 +171,7 @@ class Save extends AbstractContent implements HttpPostActionInterface
         if (!empty($data['status'])) {
             $content->setStatus($data['status']);
         } else {
-            $content->setStatus(ContentInterface::STATUS_PENDING);
+            $content->setStatus(BuildableContentInterface::STATUS_PENDING);
         }
         $content->setMetaTitle($data[ContentInterface::META_TITLE]);
         $content->setMetaDescription($data[ContentInterface::META_DESCRIPTION]);
@@ -183,7 +186,11 @@ class Save extends AbstractContent implements HttpPostActionInterface
      */
     private function proceedSectionContent(ContentInterface $content, $data)
     {
-        $this->proceedTemplateContent($content, $data);
+        if (!empty($data['status'])) {
+            $content->setStatus($data['status']);
+        } else {
+            $content->setStatus(BuildableContentInterface::STATUS_PENDING);
+        }
     }
 
     /**
@@ -194,7 +201,7 @@ class Save extends AbstractContent implements HttpPostActionInterface
      */
     private function proceedTemplateContent(ContentInterface $content, $data)
     {
-        $content->setStatus(ContentInterface::STATUS_PENDING);
+        $content->setStatus(BuildableContentInterface::STATUS_PENDING);
     }
 
     /**
@@ -207,7 +214,7 @@ class Save extends AbstractContent implements HttpPostActionInterface
     protected function processResultRedirect(BuildableContentInterface $model, $resultRedirect, $data)
     {
         if ($this->getRequest()->getParam('back', false) === 'duplicate') {
-            $content = $this->buildableContentManagement->buildBuildableContent( ContentInterface::CONTENT,$data);
+            $content = $this->buildableContentManagement->buildBuildableContent(ContentInterface::CONTENT, $data);
             $content->setId(null);
             $title = $content->getTitle();
             $title .= ' ' .  __('(Duplicated)');

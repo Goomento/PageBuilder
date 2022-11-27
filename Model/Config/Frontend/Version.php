@@ -26,8 +26,7 @@ class Version extends Template implements RendererInterface
     public function __construct(
         Template\Context $context,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $data);
     }
 

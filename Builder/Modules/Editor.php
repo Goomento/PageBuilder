@@ -75,6 +75,7 @@ class Editor
             if (DataHelper::isJsMinifyFilesEnabled() && StateHelper::isProductionMode()) {
                 /** @var Config $requireJsConfig */
                 $requireJsConfig = ObjectManagerHelper::get(\Magento\Framework\RequireJs\Config::class);
+                // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
                 echo '<script>' . $requireJsConfig->getMinResolverCode() . '</script>';
             }
         }, 9); // Should print out at first
@@ -156,7 +157,7 @@ class Editor
     {
         if ($this->document === null) {
             $this->document = ObjectManagerHelper::getDocumentsManager()
-                ->getByContent( $this->getBuildableContent() );
+                ->getByContent($this->getBuildableContent());
         }
 
         return $this->document;
@@ -204,8 +205,11 @@ class Editor
             ['jquery']
         );
 
-        ThemeHelper::inlineScript('nouislider',
-            "require(['nouislider'], nouislider => {window.noUiSlider = window.noUiSlider || nouislider});", 'before');
+        ThemeHelper::inlineScript(
+            'nouislider',
+            "require(['nouislider'], nouislider => {window.noUiSlider = window.noUiSlider || nouislider});",
+            'before'
+        );
 
         ThemeHelper::registerScript(
             'perfect-scrollbar',
@@ -213,9 +217,11 @@ class Editor
             ['jquery']
         );
 
-        ThemeHelper::inlineScript('perfect-scrollbar',
+        ThemeHelper::inlineScript(
+            'perfect-scrollbar',
             "require(['perfect-scrollbar'], PerfectScrollbar => {window.PerfectScrollbar = window.PerfectScrollbar || PerfectScrollbar});",
-            'before');
+            'before'
+        );
 
         ThemeHelper::registerScript(
             'jquery-easing',
@@ -228,9 +234,11 @@ class Editor
             'Goomento_PageBuilder/lib/nprogress/nprogress.min'
         );
 
-        ThemeHelper::inlineScript('nprogress',
+        ThemeHelper::inlineScript(
+            'nprogress',
             "require(['nprogress'], NProgress => {window.NProgress = window.NProgress || NProgress});",
-            'before');
+            'before'
+        );
 
 
         ThemeHelper::registerScript(
@@ -545,15 +553,20 @@ class Editor
             'user' => [
                 'roles' => [
                     'view' => AuthorizationHelper::isCurrentUserCan(
-                        $document->getModel()->getOriginContent()->getRoleName('view')),
+                        $document->getModel()->getOriginContent()->getRoleName('view')
+                    ),
                     'save' => AuthorizationHelper::isCurrentUserCan(
-                        $document->getModel()->getOriginContent()->getRoleName('save')),
+                        $document->getModel()->getOriginContent()->getRoleName('save')
+                    ),
                     'publish' => AuthorizationHelper::isCurrentUserCan(
-                        $document->getModel()->getOriginContent()->getRoleName('publish')),
+                        $document->getModel()->getOriginContent()->getRoleName('publish')
+                    ),
                     'export' => AuthorizationHelper::isCurrentUserCan(
-                        $document->getModel()->getOriginContent()->getRoleName('export')),
+                        $document->getModel()->getOriginContent()->getRoleName('export')
+                    ),
                     'delete' => AuthorizationHelper::isCurrentUserCan(
-                        $document->getModel()->getOriginContent()->getRoleName('delete')),
+                        $document->getModel()->getOriginContent()->getRoleName('delete')
+                    ),
                     'import' => AuthorizationHelper::isCurrentUserCan('import'),
                     'manage_config' => AuthorizationHelper::isCurrentUserCan('manage_config')
                 ]
@@ -570,7 +583,6 @@ class Editor
         DataHelper::printJsConfig('goomento-editor', 'goomentoConfig', $config);
 
         ObjectManagerHelper::getControlsManager()->enqueueControlScripts();
-
     }
 
     /**

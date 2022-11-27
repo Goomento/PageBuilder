@@ -93,7 +93,7 @@ class Documents
 
         $buildableContent->setDataChanges(false);
 
-        $css = new ContentCss( $buildableContent );
+        $css = new ContentCss($buildableContent);
         $css->update();
 
         $buildableContent
@@ -183,14 +183,13 @@ class Documents
         $this->registerTypes();
         $cacheKey = $content->getUniqueIdentity();
         if (!$fromCache || ! isset($this->documents[$cacheKey])) {
-            $docTypeClass = $this->getDocumentType( $content->getOriginContent()->getType() );
+            $docTypeClass = $this->getDocumentType($content->getOriginContent()->getType());
             $this->documents[$cacheKey] = ObjectManagerHelper::create($docTypeClass, [
                     'data' => [
                         'id' => $content->getId(),
                         'model' => $content,
                     ]
-                ]
-            );
+                ]);
         }
 
         return $this->documents[$cacheKey];
@@ -256,7 +255,7 @@ class Documents
         $class = $this->getDocumentType($type);
 
         if (!$class) {
-            throw new Exception(
+            throw new \Goomento\PageBuilder\Exception\BuilderException(
                 sprintf('Type %s does not exist.', $type)
             );
         }
@@ -274,8 +273,7 @@ class Documents
             'data' => [
                 'id' => $content->getId(),
                 'model' => $content
-            ]]
-        );
+            ]]);
 
         $document->save([]);
 
@@ -298,7 +296,7 @@ class Documents
 
         $buildableContent->setData('status', $requestData['status'] ?? BuildableContentInterface::STATUS_REVISION);
 
-        $document = $this->getByContent( $buildableContent );
+        $document = $this->getByContent($buildableContent);
 
         $data = [
             'elements' => $requestData['elements'],
@@ -306,7 +304,7 @@ class Documents
             'label' => $requestData['label'] ?? null,
         ];
 
-        $document->save( $data );
+        $document->save($data);
 
         $returnData = [
             'config' => [

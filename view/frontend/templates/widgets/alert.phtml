@@ -28,18 +28,18 @@ $widget->addRenderAttribute('alert_title', 'class', 'gmt-alert-title');
 $widget->addInlineEditingAttributes('alert_title', 'none');
 
 ?>
-<div <?= $widget->getRenderAttributeString('wrapper'); ?>>
-    <span <?= $widget->getRenderAttributeString('alert_title'); ?>><?= $settings['alert_title']; ?></span>
+<div <?= /** @noEscape */ $widget->getRenderAttributeString('wrapper'); ?>>
+    <span <?= /** @noEscape */ $widget->getRenderAttributeString('alert_title'); ?>><?=  /** @noEscape */ $settings['alert_title']; ?></span>
     <?php
-    if (!empty($settings['alert_description'])) :
+    if (!empty($settings['alert_description'])):
         $widget->addRenderAttribute('alert_description', 'class', 'gmt-alert-description');
         $widget->addInlineEditingAttributes('alert_description'); ?>
-        <span <?= $widget->getRenderAttributeString('alert_description'); ?>><?= /** @noEscape */ $settings['alert_description']; ?></span>
+        <span <?= /** @noEscape */ $widget->getRenderAttributeString('alert_description'); ?>><?= /** @noEscape */ $settings['alert_description']; ?></span>
     <?php endif; ?>
-    <?php if ('show' === $settings['alert_show_dismiss']) : ?>
+    <?php if ('show' === $settings['alert_show_dismiss']): ?>
         <button type="button" class="gmt-alert-dismiss">
             <span aria-hidden="true">&times;</span>
-            <span class="gmt-screen-only"><?= __('Dismiss alert'); ?></span>
+            <span class="gmt-screen-only"><?= $block->escapeHtml(__('Dismiss alert')); ?></span>
         </button>
     <?php endif; ?>
 </div>

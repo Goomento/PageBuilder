@@ -89,14 +89,14 @@ abstract class AbstractBaseUnits extends AbstractBaseMultiple
     protected function printUnitsTemplate()
     {
         ?>
-		<# if ( data.size_units && data.size_units.length > 1 ) { #>
-		<div class="gmt-units-choices">
-			<# _.each( data.size_units, function( unit ) { #>
-			<input id="gmt-choose-{{ data._cid + data.name + unit }}" type="radio" name="gmt-choose-{{ data.name }}" data-setting="unit" value="{{ unit }}">
-			<label class="gmt-units-choices-label" for="gmt-choose-{{ data._cid + data.name + unit }}">{{{ unit }}}</label>
-			<# } ); #>
-		</div>
-		<# } #>
-		<?php
+        <# if ( data.size_units && data.size_units.length > 1 ) { #>
+        <div class="gmt-units-choices">
+            <# _.each( data.size_units, function( unit ) { #>
+            <input id="gmt-choose-{{ data._cid + data.name + unit }}" type="radio" name="gmt-choose-{{ data.name }}" data-setting="unit" value="{{ unit }}">
+            <label class="gmt-units-choices-label" for="gmt-choose-{{ data._cid + data.name + unit }}">{{{ unit }}}</label>
+            <# } ); #>
+        </div>
+        <# } #>
+        <?php
     }
 }

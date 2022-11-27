@@ -23,18 +23,18 @@ class Block extends AbstractWidget
     /**
      * @inheritDoc
      */
-	public function getTitle()
+    public function getTitle()
     {
-		return __( 'Magento Block' );
-	}
+        return __('Magento Block');
+    }
 
     /**
      * @inheritDoc
      */
-	public function getIcon()
+    public function getIcon()
     {
-		return 'fab fa-magento';
-	}
+        return 'fab fa-magento';
+    }
 
     /**
      * @inheritDoc
@@ -47,63 +47,64 @@ class Block extends AbstractWidget
     /**
      * @inheritDoc
      */
-	public function getKeywords()
+    public function getKeywords()
     {
-		return [ 'block', 'code' ];
-	}
+        return [ 'block', 'code' ];
+    }
 
     /**
      * @inheritDoc
      */
-	public function isReloadPreviewRequired()
+    public function isReloadPreviewRequired()
     {
-		return true;
-	}
+        return true;
+    }
 
     /**
      * @inheritDoc
      */
-	protected function registerControls()
+    protected function registerControls()
     {
-		$this->startControlsSection(
-			'section_block',
-			[
-				'label' => __( 'Block' ),
-			]
-		);
+        $this->startControlsSection(
+            'section_block',
+            [
+                'label' => __('Block'),
+            ]
+        );
 
-		$this->addControl(
-			'class',
-			[
-				'label' => __( 'Block class' ),
-				'type' => Controls::TEXT,
-				'dynamic' => [
-					'active' => true,
-				],
-				'placeholder' => '\Magento\Framework\View\Element\Template',
-				'default' => '',
-			]
-		);
+        $this->addControl(
+            'class',
+            [
+                'label' => __('Block class'),
+                'type' => Controls::TEXT,
+                'dynamic' => [
+                    'active' => true,
+                ],
+                'placeholder' => '\Magento\Framework\View\Element\Template',
+                'default' => '',
+            ]
+        );
 
-		$this->addControl(
-			'template',
-			[
-				'label' => __( 'Template' ),
-				'type' => Controls::TEXT,
-				'placeholder' => 'Your_Module::your_template.phtml',
-				'default' => '',
-			]
-		);
+        $this->addControl(
+            'template',
+            [
+                'label' => __('Template'),
+                'type' => Controls::TEXT,
+                'placeholder' => 'Your_Module::your_template.phtml',
+                'default' => '',
+            ]
+        );
 
-		$this->endControlsSection();
-	}
+        $this->endControlsSection();
+    }
 
     /**
      * @inheritDoc
      */
-	public function renderPlainContent()
+    public function renderPlainContent()
     {
-		// In plain mode, render without shortcode
-		echo $this->getSettings( 'block' );
-	}
+        // In plain mode, render without shortcode
+        // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
+        echo $this->getSettings('block');
+    }
 }

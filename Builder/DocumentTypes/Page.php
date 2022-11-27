@@ -12,6 +12,7 @@ use Goomento\PageBuilder\Builder\Base\AbstractDocumentType;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Model\Content;
 
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class Page extends AbstractDocumentType
 {
     /**

@@ -140,17 +140,17 @@ class Repeater extends AbstractControlData implements ImportInterface
     public function contentTemplate()
     {
         ?>
-		<label>
-			<span class="gmt-control-title">{{{ data.label }}}</span>
-		</label>
-		<ol class="gmt-repeater-fields-wrapper"></ol>
-		<# if ( itemActions.add ) { #>
-			<div class="gmt-button-wrapper">
-				<button class="gmt-button gmt-button-default gmt-repeater-add" type="button">
-					<i class="fas fa-plus" aria-hidden="true"></i><?= __('Add Item'); ?>
-				</button>
-			</div>
-		<# } #>
-		<?php
+        <label>
+            <span class="gmt-control-title">{{{ data.label }}}</span>
+        </label>
+        <ol class="gmt-repeater-fields-wrapper"></ol>
+        <# if ( itemActions.add ) { #>
+            <div class="gmt-button-wrapper">
+                <button class="gmt-button gmt-button-default gmt-repeater-add" type="button">
+                    <i class="fas fa-plus" aria-hidden="true"></i><?= __('Add Item'); ?>
+                </button>
+            </div>
+        <# } #>
+        <?php
     }
 }

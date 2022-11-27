@@ -53,8 +53,7 @@ class PageBuilderSitemapProvider implements ItemProviderInterface
         CmsPageConfigReader $configReader,
         Data $dataHelper,
         Logger $logger
-    )
-    {
+    ) {
         $this->collectionFactory = $collectionFactory;
         $this->itemFactory = $itemFactory;
         $this->configReader = $configReader;

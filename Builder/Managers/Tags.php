@@ -36,11 +36,11 @@ class Tags
     /**
      * Dynamic tags text category.
      */
-    public const TEXT_CATEGORY = 'text';
+    const TEXT_CATEGORY = 'text';
     /**
      * Dynamic tags WYSIWYG category.
      */
-    public const WYSIWYG_CATEGORY = 'wysiwyg';
+    const WYSIWYG_CATEGORY = 'wysiwyg';
     /**
      * Dynamic tags URL category.
      */
@@ -48,11 +48,11 @@ class Tags
     /**
      * Dynamic tags number category.
      */
-    public const NUMBER_CATEGORY = 'number';
+    const NUMBER_CATEGORY = 'number';
     /**
      * Base dynamic tag group.
      */
-    public const BASE_GROUP = 'base';
+    const BASE_GROUP = 'base';
     /**
      * Dynamic tags image category.
      */
@@ -87,15 +87,16 @@ class Tags
      * from the tag callback function.
      *
      *
-     * @param string   $text           Dynamic tag text.
-     * @param array    $settings       The dynamic tag settings.
+     * @param string $text Dynamic tag text.
+     * @param array $settings The dynamic tag settings.
      * @param callable $parseCallback The functions that renders the dynamic tag.
      *
      * @return string|string[]|mixed A single string or an array of strings with
      *                               the return values from each tag callback
      *                               function.
+     * @throws \Zend_Json_Exception
      */
-    public function parseTagsText($text, array $settings, callable $parseCallback)
+    public function parseTagsText(string $text, array $settings, callable $parseCallback)
     {
         if (!empty($settings['returnType']) && 'object' === $settings['returnType']) {
             $value = $this->parseTagText($text, $settings, $parseCallback);
@@ -115,15 +116,16 @@ class Tags
      * function.
      *
      *
-     * @param string   $tagText       Dynamic tag text.
-     * @param array    $settings       The dynamic tag settings.
+     * @param string $tagText Dynamic tag text.
+     * @param array $settings The dynamic tag settings.
      * @param callable $parseCallback The functions that renders the dynamic tag.
      *
      * @return string|array|mixed If the tag was not found an empty string or an
      *                            empty array will be returned, otherwise the
      *                            return value from the tag callback function.
+     * @throws \Zend_Json_Exception
      */
-    public function parseTagText($tagText, array $settings, callable $parseCallback)
+    public function parseTagText(string $tagText, array $settings, callable $parseCallback)
     {
         $tagData = $this->tagTextToTagData($tagText);
 
@@ -135,7 +137,8 @@ class Tags
             return '';
         }
 
-        return call_user_func_array($parseCallback, $tagData);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
+        return call_user_func($parseCallback, ...$tagData);
     }
 
     /**
@@ -143,8 +146,9 @@ class Tags
      * @param string $tagText
      *
      * @return array|null
+     * @throws \Zend_Json_Exception
      */
-    public function tagTextToTagData($tagText)
+    public function tagTextToTagData(string $tagText) :?array
     {
         preg_match('/id="(.*?(?="))"/', $tagText, $tagIdMatch);
         preg_match('/name="(.*?(?="))"/', $tagText, $tagNameMatch);
@@ -365,6 +369,7 @@ class Tags
         foreach ($data['tags'] as $tagKey) {
             $tagKeyParts = explode('-', $tagKey);
 
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
             $tagName = base64_decode($tagKeyParts[0]);
 
             $tagSettings = \Zend_Json::decode(urldecode(base64_decode($tagKeyParts[1])));

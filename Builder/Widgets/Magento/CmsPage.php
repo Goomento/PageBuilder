@@ -62,7 +62,7 @@ class CmsPage extends AbstractMagentoWidget
         $this->startControlsSection(
             'cms_page_section',
             [
-                'label' => __( 'Cms Page' ),
+                'label' => __('Cms Page'),
             ]
         );
 

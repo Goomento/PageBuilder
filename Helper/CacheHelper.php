@@ -30,6 +30,7 @@ use Goomento\PageBuilder\Model\Cache\Type\PageBuilderFrontend;
  * @see BetterCaching::load()
  * @method static createKey();
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class CacheHelper
 {
     use TraitStaticCaller;

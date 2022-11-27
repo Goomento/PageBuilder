@@ -6,8 +6,6 @@ Goomento is a _Free Magento Page Builder Extension_ that allows you to efficient
 dragging and dropping manipulation. Notably, it can reuse your previous content from current or other websites to 
 customize and redesign with your new creativity. All this process has an absence of coding involvement and configures instantly.
 
-Goomento is built for **designers**, **developers** and **marketers**, who want to optimize the process of creating and managing the Magento store.
-
 ### Table of contents
 
 [Installation](#install-goomento)

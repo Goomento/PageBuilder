@@ -3,11 +3,17 @@
  * @package Goomento_PageBuilder
  * @link https://github.com/Goomento/PageBuilder
  */
-
 declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/**
+ * @var Template $block
+ */
+
 ?>
 <script type="text/template" id="tmpl-gmt-navigator">
-    <div id="gmt-navigator__header" class="tooltip-target" data-tooltip-gravity="n" data-tooltip="<?= __('Drag navigator') ?>">
+    <div id="gmt-navigator__header" class="tooltip-target" data-tooltip-gravity="n" data-tooltip="<?= $block->escapeHtml(__('Drag navigator')) ?>">
         <i class="fas fa-ellipsis-h"></i>
     </div>
     <div id="gmt-navigator__elements"></div>
@@ -39,11 +45,11 @@ declare(strict_types=1);
 </script>
 
 <script type="text/template" id="tmpl-gmt-navigator__elements--empty">
-    <div class="gmt-empty-view__title"><?= __('Empty'); ?></div>
+    <div class="gmt-empty-view__title"><?= $block->escapeHtml(__('Empty')); ?></div>
 </script>
 
 <script type="text/template" id="tmpl-gmt-navigator__root--empty">
     <i class="gmt-nerd-box-icon fas fa-glasses" aria-hidden="true"></i>
-    <div class="gmt-nerd-box-title"><?= __('Easy Navigation is Here!'); ?></div>
-    <div class="gmt-nerd-box-message"><?= __('Once you fill your page with content, this window will give you an overview display of all the page elements. This way, you can easily move around any section, column, or widget.'); ?></div>
+    <div class="gmt-nerd-box-title"><?= $block->escapeHtml(__('Easy Navigation is Here!')); ?></div>
+    <div class="gmt-nerd-box-message"><?= $block->escapeHtml(__('Once you fill your page with content, this window will give you an overview display of all the page elements. This way, you can easily move around any section, column, or widget.')); ?></div>
 </script>

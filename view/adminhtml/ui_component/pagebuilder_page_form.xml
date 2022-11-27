@@ -73,6 +73,9 @@
                 <dataType>text</dataType>
                 <label translate="true">Enable</label>
                 <dataScope>is_active</dataScope>
+                <tooltip>
+                    <description>Share this content to inner website settings, config ...</description>
+                </tooltip>
             </settings>
             <formElements>
                 <checkbox>
@@ -97,6 +100,9 @@
                 <dataType>text</dataType>
                 <label translate="true">Publish</label>
                 <dataScope>status</dataScope>
+                <tooltip>
+                    <description>Publish this content to website, and can be accessible via API, GraphQL ...</description>
+                </tooltip>
             </settings>
             <formElements>
                 <checkbox>

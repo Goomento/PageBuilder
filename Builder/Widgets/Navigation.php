@@ -12,6 +12,7 @@ use Goomento\PageBuilder\Builder\Base\AbstractWidget;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
+// phpcs:disable Magento2.PHP.LiteralNamespaces.LiteralClassUsage
 class Navigation extends AbstractWidget
 {
     /**

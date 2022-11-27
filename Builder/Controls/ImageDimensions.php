@@ -58,26 +58,26 @@ class ImageDimensions extends AbstractBaseMultiple
     public function contentTemplate()
     {
         ?>
-		<# if ( data.description ) { #>
-			<div class="gmt-control-field-description">{{{ data.description }}}</div>
-		<# } #>
-		<div class="gmt-control-field">
-			<label class="gmt-control-title">{{{ data.label }}}</label>
-			<div class="gmt-control-input-wrapper">
-				<div class="gmt-image-dimensions-field">
-					<?php $controlUid = $this->getControlUid('width'); ?>
-					<input id="<?= $controlUid; ?>" type="text" data-setting="width" />
-					<label for="<?= $controlUid; ?>" class="gmt-image-dimensions-field-description"><?= __('Width'); ?></label>
-				</div>
-				<div class="gmt-image-dimensions-separator">x</div>
-				<div class="gmt-image-dimensions-field">
-					<?php $controlUid = $this->getControlUid('height'); ?>
-					<input id="<?= $controlUid; ?>" type="text" data-setting="height" />
-					<label for="<?= $controlUid; ?>" class="gmt-image-dimensions-field-description"><?= __('Height'); ?></label>
-				</div>
-				<button class="gmt-button gmt-button-success gmt-image-dimensions-apply-button"><?= __('Apply'); ?></button>
-			</div>
-		</div>
-		<?php
+        <# if ( data.description ) { #>
+            <div class="gmt-control-field-description">{{{ data.description }}}</div>
+        <# } #>
+        <div class="gmt-control-field">
+            <label class="gmt-control-title">{{{ data.label }}}</label>
+            <div class="gmt-control-input-wrapper">
+                <div class="gmt-image-dimensions-field">
+                    <?php $controlUid = $this->getControlUid('width'); ?>
+                    <input id="<?= $controlUid; ?>" type="text" data-setting="width" />
+                    <label for="<?= $controlUid; ?>" class="gmt-image-dimensions-field-description"><?= __('Width'); ?></label>
+                </div>
+                <div class="gmt-image-dimensions-separator">x</div>
+                <div class="gmt-image-dimensions-field">
+                    <?php $controlUid = $this->getControlUid('height'); ?>
+                    <input id="<?= $controlUid; ?>" type="text" data-setting="height" />
+                    <label for="<?= $controlUid; ?>" class="gmt-image-dimensions-field-description"><?= __('Height'); ?></label>
+                </div>
+                <button class="gmt-button gmt-button-success gmt-image-dimensions-apply-button"><?= __('Apply'); ?></button>
+            </div>
+        </div>
+        <?php
     }
 }

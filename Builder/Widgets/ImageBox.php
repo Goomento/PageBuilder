@@ -73,8 +73,7 @@ class ImageBox extends AbstractWidget
         string         $prefix = self::NAME . '_',
         string         $cssTarget = '.gmt-image-box-wrapper',
         array          $args = []
-    )
-    {
+    ) {
         $widget->addControl(
             $prefix . 'background_color',
             $args + [

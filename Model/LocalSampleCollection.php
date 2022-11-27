@@ -25,8 +25,7 @@ class LocalSampleCollection
      */
     public function __construct(
         array $samples = []
-    )
-    {
+    ) {
         $this->components = $samples;
     }
 

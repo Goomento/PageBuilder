@@ -11,6 +11,7 @@ use Goomento\PageBuilder\Helper\Data;
 use Magento\Framework\UrlInterface;
 use Magento\Ui\Component\Form\Element\AbstractElement;
 
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class BuilderAssistance
 {
     /**
@@ -29,8 +30,7 @@ class BuilderAssistance
     public function __construct(
         Data $dataHelper,
         UrlInterface $urlBuilder
-    )
-    {
+    ) {
         $this->dataHelper = $dataHelper;
         $this->urlBuilder = $urlBuilder;
     }

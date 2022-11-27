@@ -71,8 +71,7 @@ class Store
     public function afterSave(
         \Magento\Store\Model\ResourceModel\Store $object,
         ?\Magento\Store\Model\ResourceModel\Store $store
-    ): void
-    {
+    ): void {
         try {
             if ($store instanceof AbstractModel && $store->isObjectNew()) {
                 $this->urlPersist->replace(

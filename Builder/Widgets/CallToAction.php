@@ -66,8 +66,7 @@ class CallToAction extends AbstractWidget
         AbstractElement $widget,
         string          $prefix = self::NAME . '_',
         array           $args = []
-    )
-    {
+    ) {
         $widget->addControl(
             $prefix . 'trigger',
             $args + [

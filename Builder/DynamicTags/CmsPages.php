@@ -47,7 +47,7 @@ class CmsPages extends CmsBlocks
         $this->addControl(
             self::IDENTIFIER,
             [
-                'label' => __( 'Page URL Key'),
+                'label' => __('Page URL Key'),
                 'type' => Controls::TEXT,
                 'default' => '',
             ]

@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Helper;
 
-
 use Goomento\Core\Traits\TraitStaticCaller;
 use Goomento\Core\Traits\TraitStaticInstances;
 use Magento\Framework\App\Request\DataPersistorInterface;
@@ -23,6 +22,8 @@ use Magento\Framework\App\RequestInterface;
  * @method static getParams();
  * @method static getParam($param);
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
+// phpcs:disable Magento2.Security.Superglobal.SuperglobalUsageWarning
 class RequestHelper
 {
     use TraitStaticCaller;

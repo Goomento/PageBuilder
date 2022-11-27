@@ -8,17 +8,20 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Base;
 
+use Exception;
 use Goomento\PageBuilder\Builder\Modules\Frontend;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Icons;
 use Goomento\PageBuilder\Builder\Stylesheet;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Managers\Tags;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ConfigHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
+use Zend_Json_Exception;
 
 abstract class AbstractCss extends AbstractFile
 {
@@ -180,6 +183,7 @@ abstract class AbstractCss extends AbstractFile
         if (!$this->useExternalFile()) {
             $dep = $this->getInlineDependency();
             if (ThemeHelper::styleIs($dep, 'done')) {
+                // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
                 echo sprintf('<style id="%s">%s</style>', $this->getFileHandleId(), $meta['css']);
             } else {
                 ThemeHelper::inlineStyle($dep, $meta['css']);
@@ -242,8 +246,8 @@ abstract class AbstractCss extends AbstractFile
      */
     public function printCss()
     {
-        /** @var Frontend $frontend */
-        $frontend = ObjectManagerHelper::get(Frontend::class);
+        $frontend = ObjectManagerHelper::getFrontend();
+        // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
         echo '<style>' . $this->getContent() . '</style>'; // XSS ok.
         $frontend->printFontsLinks();
     }
@@ -264,6 +268,7 @@ abstract class AbstractCss extends AbstractFile
      */
     public function addControlRules(array $control, array $controlsStack, callable $valueCallback, array $placeholders, array $replacements)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
         $value = call_user_func($valueCallback, $control);
 
         if (null === $value || empty($control['selectors'])) {
@@ -303,13 +308,13 @@ abstract class AbstractCss extends AbstractFile
                                 return '';
                             }
 
-                            throw new \Exception();
+                            throw new BuilderException();
                         }
                     }
 
                     return $parsedValue;
                 }, $cssProperty);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 return;
             }
 
@@ -371,7 +376,7 @@ abstract class AbstractCss extends AbstractFile
     {
         if ($parserControlName) {
             $control = $controlsStack[ $parserControlName ];
-
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
             $value = call_user_func($valueCallback, $control);
         }
 
@@ -679,13 +684,13 @@ abstract class AbstractCss extends AbstractFile
      * Register new style rules for the dynamic control.
      *
      *
-     * @param array  $control The control.
-     * @param string $value   The value.
+     * @param array $control The control.
+     * @param string $value The value.
+     * @throws Zend_Json_Exception
      */
-    protected function addDynamicControlStyleRules(array $control, $value)
+    protected function addDynamicControlStyleRules(array $control, string $value)
     {
-        /** @var Tags $tagsManager */
-        $tagsManager = ObjectManagerHelper::get(Tags::class);
+        $tagsManager = ObjectManagerHelper::getTagsManager();
 
         $tagsManager->parseTagsText($value, $control, function ($id, $name, $settings) use ($tagsManager) {
             $tag = $tagsManager->createTag($id, $name, $settings);

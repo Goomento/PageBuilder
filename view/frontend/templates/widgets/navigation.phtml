@@ -27,10 +27,10 @@ if (class_exists('Snowdog\Menu\Block\Menu') && $menuId) {
     ])
         ->setTemplate('Goomento_PageBuilder::extensions/snowdog_menu/menu.phtml')
         ->toHtml();
-    if (!empty($menuHtml)) : ?>
-        <div class="gmt-widget-navigation-<?= $type ?>">
+    if (!empty($menuHtml)): ?>
+        <div class="gmt-widget-navigation-<?=  /** @noEscape */ $type ?>">
             <?= /** @noEscape */ $menuHtml ?>
         </div>
-    <?php
+        <?php
     endif;
 }

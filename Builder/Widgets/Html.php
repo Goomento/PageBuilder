@@ -84,7 +84,7 @@ class Html extends AbstractWidget
     protected function contentTemplate()
     {
         ?>
-		{{{ settings.html }}}
-		<?php
+        {{{ settings.html }}}
+        <?php
     }
 }

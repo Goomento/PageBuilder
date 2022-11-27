@@ -116,7 +116,8 @@ class Progress extends AbstractWidget
                 'show' => __('Show'),
                 'hide' => __('Hide'),
             ],
-        ]);
+            ]
+        );
 
         $widget->addControl(
             $prefix . 'inner_text',
@@ -144,8 +145,7 @@ class Progress extends AbstractWidget
         string         $prefix = self::NAME . '_',
         string         $cssTarget = '.gmt-progress-bar',
         array          $args = []
-    )
-    {
+    ) {
         $widget->addControl(
             $prefix . 'bar_color',
             $args + [

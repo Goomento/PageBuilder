@@ -43,6 +43,7 @@ use Magento\Store\Model\ScopeInterface;
  * @method static string getCustomMediaUrl()
  * @see Data::getCustomMediaUrl()
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class DataHelper
 {
     use TraitStaticInstances;
@@ -158,7 +159,9 @@ class DataHelper
             }
         }
 
-        if (!$full) $string = array_slice($string, 0, 1);
+        if (!$full) {
+            $string = array_slice($string, 0, 1);
+        }
         $string = $string ? implode(', ', $string) . ' ago' : 'just now';
         $string .= ' (' . $ago->format('F j, Y, g:i a') . ')';
         return $string;
@@ -236,6 +239,8 @@ class DataHelper
      * @param array $attributes
      *
      * @return string
+     *
+     * phpcs:ignore Generic.Metrics.NestingLevel.TooHigh
      */
     public static function renderHtmlAttributes(array $attributes)
     {
@@ -261,7 +266,11 @@ class DataHelper
                 $attributeValues = implode(' ', $attributeValues);
             }
 
-            $renderedAttributes[] = sprintf('%1$s="%2$s"', $attributeKey, EscaperHelper::escapeHtmlAttr($attributeValues));
+            $renderedAttributes[] = sprintf(
+                '%1$s="%2$s"',
+                EscaperHelper::escapeHtmlAttr($attributeKey),
+                EscaperHelper::escapeHtmlAttr($attributeValues)
+            );
         }
 
         return implode(' ', $renderedAttributes);
@@ -391,7 +400,7 @@ class DataHelper
     /**
      * @inheritDoc
      */
-    static protected function getStaticInstance()
+    protected static function getStaticInstance()
     {
         return Data::class;
     }

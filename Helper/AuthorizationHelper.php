@@ -20,6 +20,7 @@ use Goomento\Core\Traits\TraitStaticInstances;
  * @method static isAllowed($resource)
  * @see Authorization::isAllowed()
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class AuthorizationHelper
 {
     use TraitStaticCaller;

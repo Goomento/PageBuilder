@@ -40,40 +40,40 @@ class Select extends AbstractControlData
     public function contentTemplate()
     {
         $controlUid = $this->getControlUid(); ?>
-		<div class="gmt-control-field">
-			<# if ( data.label ) {#>
-				<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
-			<# } #>
-			<div class="gmt-control-input-wrapper">
-				<select id="<?= $controlUid; ?>" data-setting="{{ data.name }}">
-				<#
-					var printOptions = function( options ) {
-						_.each( options, function( option_title, option_value ) { #>
-								<option value="{{ option_value }}">{{{ option_title }}}</option>
-						<# } );
-					};
+        <div class="gmt-control-field">
+            <# if ( data.label ) {#>
+                <label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+            <# } #>
+            <div class="gmt-control-input-wrapper">
+                <select id="<?= $controlUid; ?>" data-setting="{{ data.name }}">
+                <#
+                    var printOptions = function( options ) {
+                        _.each( options, function( option_title, option_value ) { #>
+                                <option value="{{ option_value }}">{{{ option_title }}}</option>
+                        <# } );
+                    };
 
-					if ( data.groups ) {
-						for ( var groupIndex in data.groups ) {
-							var groupArgs = data.groups[ groupIndex ];
-								if ( groupArgs.options ) { #>
-									<optgroup label="{{ groupArgs.label }}">
-										<# printOptions( groupArgs.options ) #>
-									</optgroup>
-								<# } else if ( _.isString( groupArgs ) ) { #>
-									<option value="{{ groupIndex }}">{{{ groupArgs }}}</option>
-								<# }
-						}
-					} else {
-						printOptions( data.options );
-					}
-				#>
-				</select>
-			</div>
-		</div>
-		<# if ( data.description ) { #>
-			<div class="gmt-control-field-description">{{{ data.description }}}</div>
-		<# } #>
-		<?php
+                    if ( data.groups ) {
+                        for ( var groupIndex in data.groups ) {
+                            var groupArgs = data.groups[ groupIndex ];
+                                if ( groupArgs.options ) { #>
+                                    <optgroup label="{{ groupArgs.label }}">
+                                        <# printOptions( groupArgs.options ) #>
+                                    </optgroup>
+                                <# } else if ( _.isString( groupArgs ) ) { #>
+                                    <option value="{{ groupIndex }}">{{{ groupArgs }}}</option>
+                                <# }
+                        }
+                    } else {
+                        printOptions( data.options );
+                    }
+                #>
+                </select>
+            </div>
+        </div>
+        <# if ( data.description ) { #>
+            <div class="gmt-control-field-description">{{{ data.description }}}</div>
+        <# } #>
+        <?php
     }
 }

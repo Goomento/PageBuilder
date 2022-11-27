@@ -14,6 +14,7 @@ use Goomento\PageBuilder\Builder\Managers\Icons;
 use Magento\Framework\App\Action\Action;
 use Magento\Catalog\Model\Product;
 
+// phpcs:disable Magento2.Security.XssTemplate.FoundUnescaped
 /**
  * @var Widget $block
  */
@@ -38,7 +39,7 @@ if (trim((string) $productSku)) {
     }
 }
 
-if (!empty($postParams)) :
+if (!empty($postParams)):
     $widget->addRenderAttribute('wrapper', 'class', 'gmt-addcart-button-wrapper');
     $widget->addRenderAttribute('button', 'class', 'gmt-button gmt-addcart-button-button');
     $widget->addRenderAttribute('button', 'role', 'button');
@@ -55,15 +56,15 @@ if (!empty($postParams)) :
         $widget->addRenderAttribute('button', 'class', 'gmt-animation-' . $settings['addcart-button_hover_animation']);
     }
     ?>
-    <div <?= $widget->getRenderAttributeString('wrapper'); ?>>
-        <form data-product-sku="<?= $block->escapeHtmlAttr($product->getSku()) ?>" action="<?= $postParams['action'] ?>" data-role="tocart-form" method="post" >
+    <div <?= /** @noEscape */ $widget->getRenderAttributeString('wrapper'); ?>>
+        <form data-product-sku="<?= $block->escapeHtmlAttr($product->getSku()) ?>" action="<?=  /** @noEscape */ $postParams['action'] ?>" data-role="tocart-form" method="post" >
             <input type="hidden"
                    name="product"
                    value="<?= /* @noEscape */ $postParams['data']['product'] ?>">
             <input type="hidden" name="<?= /* @noEscape */ Action::PARAM_NAME_URL_ENCODED ?>"
                    value="<?= /* @noEscape */ $postParams['data'][Action::PARAM_NAME_URL_ENCODED] ?>">
             <?= $block->getBlockHtml('formkey') ?>
-            <button <?= $widget->getRenderAttributeString('button'); ?>>
+            <button <?= /** @noEscape */ $widget->getRenderAttributeString('button'); ?>>
                 <?php
                 $widget->addRenderAttribute([
                     'content-wrapper' => [
@@ -80,17 +81,17 @@ if (!empty($postParams)) :
                     ],
                 ]);
                 $widget->addInlineEditingAttributes(['text' => 'addcart-button_text'], 'none'); ?>
-                <?php if (!empty($settings['addcart-button_icon']) || ! empty($settings['addcart-button_selected_icon']['value'])) : ?>
-                    <em <?= $widget->getRenderAttributeString('icon-align'); ?>>
+                <?php if (!empty($settings['addcart-button_icon']) || ! empty($settings['addcart-button_selected_icon']['value'])): ?>
+                    <em <?= /** @noEscape */ $widget->getRenderAttributeString('icon-align'); ?>>
                         <?php Icons::renderIcon($settings['addcart-button_selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
                     </em>
                 <?php endif; ?>
-                <span <?= $widget->getRenderAttributeString('content-wrapper'); ?>>
-                    <span <?= $widget->getRenderAttributeString('text'); ?>><?= /** @noEscape */ $settings['addcart-button_text']; ?></span>
+                <span <?= /** @noEscape */ $widget->getRenderAttributeString('content-wrapper'); ?>>
+                    <span <?= /** @noEscape */ $widget->getRenderAttributeString('text'); ?>><?= /** @noEscape */ $settings['addcart-button_text']; ?></span>
                 </span>
             </button>
         </form>
-        <?php if (!StateHelper::isEditorMode()) : ?>
+        <?php if (!StateHelper::isEditorMode()): ?>
             <script type="text/x-magento-init">
         {
             "[data-role=tocart-form]": {
@@ -104,5 +105,5 @@ if (!empty($postParams)) :
         </script>
         <?php endif; ?>
     </div>
-<?php
+    <?php
 endif;

@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Sources;
 
 use Exception;
-use Goomento\PageBuilder\Api\BuildableContentManagementInterface;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractSource;
@@ -129,10 +128,11 @@ class Local extends AbstractSource
      *                    arguments. Default is an empty array.
      *
      * @return array Local templates.
+     * @throws Exception
      */
     public function getItems(array $args = [])
     {
-        $contents = (array) BuildableContentHelper::getBuildableTemplates(5, $args['page'] ?? null);
+        $contents = (array) BuildableContentHelper::getBuildableTemplates(200, $args['page'] ?? null);
         $templates = [];
 
         foreach ($contents as $content) {
@@ -348,13 +348,16 @@ class Local extends AbstractSource
         $this->sendFileHeaders($fileData['name'], strlen($fileData['content']));
 
         // Clear buffering just in case.
+        // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
         @ob_end_clean();
 
         flush();
 
         // Output file contents.
+        // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
         echo $fileData['content'];
 
+        // phpcs:ignore Magento2.Security.LanguageConstruct.ExitUsage
         die;
     }
 
@@ -367,7 +370,7 @@ class Local extends AbstractSource
     public function importTemplate($name, $path)
     {
         if (empty($path)) {
-            throw new Exception(
+            throw new BuilderException(
                 'Please upload a file to import'
             );
         }
@@ -399,16 +402,17 @@ class Local extends AbstractSource
      */
     private function importSingleTemplate($fileName)
     {
-        $data = \Zend_Json::decode(file_get_contents($fileName));
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
+        $data = Zend_Json::decode(file_get_contents($fileName));
 
         if (empty($data)) {
-            throw new Exception('Invalid file');
+            throw new BuilderException('Invalid file');
         }
 
         $content = $data['content'];
 
         if (! is_array($content)) {
-            throw new Exception('Invalid File');
+            throw new BuilderException('Invalid File');
         }
 
         $content = $this->processImportContent($content);
@@ -439,7 +443,7 @@ class Local extends AbstractSource
         ]);
 
         if (!$contentId) {
-            throw new Exception(
+            throw new BuilderException(
                 'Import error'
             );
         }
@@ -474,7 +478,7 @@ class Local extends AbstractSource
         ]);
 
         if (empty($templateData['content'])) {
-            throw new Exception('The template is empty');
+            throw new BuilderException('The template is empty');
         }
 
         $templateData['content'] = $this->processExportContent($templateData['content']);
@@ -538,8 +542,9 @@ class Local extends AbstractSource
      * @param string $fileName File name.
      * @param int    $fileSize File size.
      */
-    private function sendFileHeaders($fileName, $fileSize)
+    private function sendFileHeaders(string $fileName, int $fileSize)
     {
+        // phpcs:disable Magento2.Functions.DiscouragedFunction.Discouraged
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: attachment; filename=' . $fileName);
         header('Expires: 0');

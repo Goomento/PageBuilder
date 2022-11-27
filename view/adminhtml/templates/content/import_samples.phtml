@@ -27,30 +27,30 @@ $importProcessor = ObjectManagerHelper::get(
     <table class="data-grid">
         <thead>
             <tr>
-                <th class="data-grid-th" align="center"><?= __('Name') ?></th>
-                <th class="data-grid-th" align="center"><?= __('Templates') ?></th>
-                <th class="data-grid-th" align="center"><?= __('Actions') ?></th>
+                <th class="data-grid-th" align="center"><?= $block->escapeHtml(__('Name')) ?></th>
+                <th class="data-grid-th" align="center"><?= $block->escapeHtml(__('Templates')) ?></th>
+                <th class="data-grid-th" align="center"><?= $block->escapeHtml(__('Actions')) ?></th>
             </tr>
         </thead>
         <tbody>
-        <?php if (!empty($allSamples)) : ?>
-            <?php foreach ($allSamples as $sampleName => $sample) : ?>
+        <?php if (!empty($allSamples)): ?>
+            <?php foreach ($allSamples as $sampleName => $sample): ?>
                 <tr data-role="row">
                     <td>
                         <p><?= $block->escapeHtml($sample->getName()) ?></p>
                         <small><i><?= $block->escapeHtml($sample->getDescription()) ?></i></small>
                     </td>
                     <td style="padding: 0">
-                        <?php if ($sources = (array) $importProcessor->setSourceDir($sample->getSourceFiles())->getSourceFiles()) : ?>
+                        <?php if ($sources = (array) $importProcessor->setSourceDir($sample->getSourceFiles())->getSourceFiles()): ?>
                             <table class="data-grid">
                                 <tbody>
-                                <?php foreach ($sources as $sourceFile) :
+                                <?php foreach ($sources as $sourceFile):
                                     $fileName = basename($sourceFile);
                                     ?>
                                     <tr>
-                                        <td><?= $fileName ?></td>
+                                        <td><?=  /** @noEscape */ $fileName ?></td>
                                         <td>
-                                            <a href="?sample=<?= $block->escapeHtmlAttr($sampleName) ?>&filename=<?= $block->escapeHtmlAttr($fileName) ?>&import=1"><?= __('Import') ?></a>
+                                            <a href="?sample=<?= $block->escapeHtmlAttr($sampleName) ?>&filename=<?= $block->escapeHtmlAttr($fileName) ?>&import=1"><?= $block->escapeHtml(__('Import')) ?></a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -59,13 +59,13 @@ $importProcessor = ObjectManagerHelper::get(
                         <?php endif; ?>
                     </td>
                     <td align="center">
-                        <a href="?sample=<?= $block->escapeHtmlAttr($sampleName) ?>&import=1"><?= __('Import All') ?></a>
+                        <a href="?sample=<?= $block->escapeHtmlAttr($sampleName) ?>&import=1"><?= $block->escapeHtml(__('Import All')) ?></a>
                     </td>
                 </tr>
             <?php endforeach; ?>
-        <?php else : ?>
+        <?php else: ?>
             <tr align="center">
-                <td colspan="3"><small><?= __('Empty') ?></small></td>
+                <td colspan="3"><small><?= $block->escapeHtml(__('Empty')) ?></small></td>
             </tr>
         <?php endif; ?>
         </tbody>

@@ -47,7 +47,7 @@ class Elements
     public function parseSettingsForDisplay(array $elementData): array
     {
         if (!isset($elementData['elType'])) {
-            throw new Exception('Invalid Element Type for getting settings');
+            throw new \Goomento\PageBuilder\Exception\BuilderException('Invalid Element Type for getting settings');
         }
 
         $instance = $this->createElementInstance($elementData);

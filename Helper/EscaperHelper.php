@@ -31,6 +31,7 @@ use Magento\Framework\Escaper;
  * @method static escapeJsQuote($data, $quote = '\'')
  * @see Escaper::escapeJsQuote()
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class EscaperHelper
 {
     use TraitStaticInstances;
@@ -89,7 +90,7 @@ class EscaperHelper
     /**
      * @return Escaper
      */
-    static protected function getStaticInstance()
+    protected static function getStaticInstance()
     {
         return self::getInstance(Escaper::class);
     }

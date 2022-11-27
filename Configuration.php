@@ -12,6 +12,7 @@ namespace Goomento\PageBuilder;
  * Class Configuration
  * Stored config of Goomento
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class Configuration
 {
     /**

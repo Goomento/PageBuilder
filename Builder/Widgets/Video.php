@@ -683,6 +683,7 @@ class Video extends AbstractWidget
             $url = $this->getExternalVideoUrl();
         }
 
+        // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
         echo $url;
     }
 
@@ -872,7 +873,7 @@ class Video extends AbstractWidget
         }
 
         $videoParams = $this->getExternalParams(); ?>
-		<video class="gmt-video" src="<?= $videoUrl; ?>" <?= DataHelper::renderHtmlAttributes($videoParams); ?>></video>
-		<?php
+        <video class="gmt-video" src="<?= $videoUrl; ?>" <?= DataHelper::renderHtmlAttributes($videoParams); ?>></video>
+        <?php
     }
 }

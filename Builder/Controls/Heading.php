@@ -38,9 +38,9 @@ class Heading extends AbstractControlUi
     public function contentTemplate()
     {
         ?>
-		<div class="gmt-control-field">
-			<h3 class="gmt-control-title">{{ data.label }}</h3>
-		</div>
-		<?php
+        <div class="gmt-control-field">
+            <h3 class="gmt-control-title">{{ data.label }}</h3>
+        </div>
+        <?php
     }
 }

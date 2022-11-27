@@ -51,8 +51,7 @@ class SampleImporterProcessor implements SampleImporterInterface
     public function __construct(
         ContentImportProcessorInterface $importer,
         State $state
-    )
-    {
+    ) {
         $this->importer = $importer;
         $this->state = $state;
     }
@@ -115,10 +114,12 @@ class SampleImporterProcessor implements SampleImporterInterface
      */
     private function parseMediaDir($dir)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
         if (!$dir || !file_exists($dir)) {
             return [];
         }
 
+        // phpcs:ignore // phpcs:ignore Magento2.Functions.DiscouragedFunction.DiscouragedWithAlternative
         return glob(rtrim($dir, '\\/') . '/*');
     }
 
@@ -128,10 +129,12 @@ class SampleImporterProcessor implements SampleImporterInterface
      */
     private function parseSourceDir($dir): array
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
         if (!$dir || !file_exists($dir)) {
             return [];
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction.DiscouragedWithAlternative
         return glob(rtrim($dir, '\\/') . '/*.json');
     }
 
@@ -177,7 +180,7 @@ class SampleImporterProcessor implements SampleImporterInterface
      * @param SampleImportInterface $sampleImport
      * @return SampleImporterProcessor
      */
-    public function setSampleImport(SampleImportInterface $sampleImport ) : SampleImporterInterface
+    public function setSampleImport(SampleImportInterface $sampleImport) : SampleImporterInterface
     {
         $this->setMediaDir(
             $sampleImport->getMediaDir()
@@ -216,6 +219,7 @@ class SampleImporterProcessor implements SampleImporterInterface
             $fileSources = $this->getSourceFiles();
             if ($fileName !== null) {
                 $selectedFiles = array_filter($fileSources, function ($filePath) use ($fileName) {
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
                     return basename($filePath) == $fileName;
                 });
             } else {
@@ -224,6 +228,7 @@ class SampleImporterProcessor implements SampleImporterInterface
 
             if ($selectedFiles) {
                 foreach ($selectedFiles as $filePath) {
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
                     $data = file_get_contents($filePath);
                     $data = $this->replace($data);
                     $processed = array_merge($processed, $this->importer->import(

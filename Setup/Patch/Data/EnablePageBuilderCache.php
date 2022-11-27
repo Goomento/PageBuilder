@@ -32,8 +32,7 @@ class EnablePageBuilderCache implements DataPatchInterface
     public function __construct(
         CacheManager $cacheManager,
         StateInterface $cacheState
-    )
-    {
+    ) {
         $this->cacheState = $cacheState;
         $this->cacheManager = $cacheManager;
     }

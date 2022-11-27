@@ -38,14 +38,14 @@ $hasContent = !empty($settings['title_text']) || !empty($settings['description_t
             $imageHtml = '<a ' . $widget->getRenderAttributeString('link') . '>' . $imageHtml . '</a>';
         }
         ?>
-        <figure class="gmt-image-box-img"><?= $imageHtml ?></figure>
+        <figure class="gmt-image-box-img"><?=  /** @noEscape */ $imageHtml ?></figure>
         <?php
     }
 
-    if ($hasContent) : ?>
+    if ($hasContent): ?>
         <div class="gmt-image-box-content">
             <?php
-            if (!empty($settings['title_text'])) :
+            if (!empty($settings['title_text'])):
                 $widget->addRenderAttribute('title_text', 'class', 'gmt-image-box-title');
 
                 $widget->addInlineEditingAttributes('title_text', 'none');
@@ -57,19 +57,19 @@ $hasContent = !empty($settings['title_text']) || !empty($settings['description_t
                 }
 
                 ?>
-                <<?= $settings['title_size'] ?> <?= $widget->getRenderAttributeString('title_text') ?>>
-                    <?= $titleHtml ?>
-                </<?= $settings['title_size'] ?>>
+                <<?=  /** @noEscape */ $settings['title_size'] ?> <?= /** @noEscape */ $widget->getRenderAttributeString('title_text') ?>>
+                    <?=  /** @noEscape */ $titleHtml ?>
+                </<?=  /** @noEscape */ $settings['title_size'] ?>>
                 <?php
             endif;
 
-            if (!empty($settings['description_text'])) :
+            if (!empty($settings['description_text'])):
                 $widget->addRenderAttribute('description_text', 'class', 'gmt-image-box-description');
 
                 $widget->addInlineEditingAttributes('description_text');
 
                 ?>
-                <p <?= $widget->getRenderAttributeString('description_text') ?>>
+                <p <?= /** @noEscape */ $widget->getRenderAttributeString('description_text') ?>>
                     <?= /** @noEscape */ $settings['description_text'] ?>
                 </p>
             <?php endif ?>

@@ -3,8 +3,12 @@
  * @package Goomento_PageBuilder
  * @link https://github.com/Goomento/PageBuilder
  */
-
+/**
+ * @var Template $block
+ */
 declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
 
 ?>
 <script type="text/template" id="tmpl-gmt-panel-elements">
@@ -25,9 +29,8 @@ declare(strict_types=1);
 </script>
 
 <script type="text/template" id="tmpl-gmt-panel-element-search">
-    <label for="gmt-panel-elements-search-input" class="screen-reader-text"><?php
-        echo __('Search Widget:'); ?></label>
-    <input type="search" id="gmt-panel-elements-search-input" placeholder="<?= __('Search Widget...'); ?>" autocomplete="off"/>
+    <label for="gmt-panel-elements-search-input" class="screen-reader-text"><?= $block->escapeHtml(__('Search Widget:')); ?></label>
+    <input type="search" id="gmt-panel-elements-search-input" placeholder="<?= $block->escapeHtml(__('Search Widget...')); ?>" autocomplete="off"/>
     <i class="fas fa-search" aria-hidden="true"></i>
 </script>
 

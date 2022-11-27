@@ -58,8 +58,7 @@ class Config implements ConfigInterface
     public function __construct(
         ResourceModel\Config $configResource,
         BetterCaching $cache
-    )
-    {
+    ) {
         $this->configResource = $configResource;
         $this->cache = $cache;
     }

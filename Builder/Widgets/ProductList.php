@@ -117,7 +117,7 @@ class ProductList extends AbstractWidget
         $widget->addControl(
             $prefix . 'show_pager',
             $args + [
-                'label' => __( 'Display Page Control' ),
+                'label' => __('Display Page Control'),
                 'type' => Controls::SWITCHER,
                 'default' => 'yes',
             ]

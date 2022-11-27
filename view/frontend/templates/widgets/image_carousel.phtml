@@ -80,7 +80,7 @@ foreach ($settings['image-carousel_carousel'] as $index => $attachment) {
     $slides[] = $slideHtml;
 }
 
-if (!empty($slides)) :
+if (!empty($slides)):
     $widget->addRenderAttribute('_wrapper', 'class', 'gmt-invisible');
 
     $widget->addRenderAttribute([
@@ -101,26 +101,26 @@ if (!empty($slides)) :
     }
 
     $slidesCount = count($settings['image-carousel_carousel']); ?>
-    <div <?= $widget->getRenderAttributeString('carousel-wrapper'); ?>>
-        <div <?= $widget->getRenderAttributeString('carousel'); ?>>
-            <?= implode('', $slides); ?>
+    <div <?= /** @noEscape */ $widget->getRenderAttributeString('carousel-wrapper'); ?>>
+        <div <?= /** @noEscape */ $widget->getRenderAttributeString('carousel'); ?>>
+            <?= /** @noEscape */ implode('', $slides); ?>
         </div>
-        <?php if (1 < $slidesCount) : ?>
-            <?php if ($showDots) : ?>
+        <?php if (1 < $slidesCount): ?>
+            <?php if ($showDots): ?>
                 <div class="swiper-pagination"></div>
             <?php endif; ?>
-            <?php if ($showArrows) : ?>
+            <?php if ($showArrows): ?>
                 <div class="gmt-swiper-button gmt-swiper-button-prev">
                     <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                    <span class="gmt-screen-only"><?php __('Previous'); ?></span>
+                    <span class="gmt-screen-only"><?php $block->escapeHtml(__('Previous')); ?></span>
                 </div>
                 <div class="gmt-swiper-button gmt-swiper-button-next">
                     <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    <span class="gmt-screen-only"><?php __('Next'); ?></span>
+                    <span class="gmt-screen-only"><?php $block->escapeHtml(__('Next')); ?></span>
                 </div>
             <?php endif; ?>
         <?php endif; ?>
     </div>
-<?php
+    <?php
 endif;
 

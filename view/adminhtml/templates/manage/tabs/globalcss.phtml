@@ -14,7 +14,7 @@ use Goomento\PageBuilder\Block\Adminhtml\Manage\GlobalCss;
 <div>
     <label for="custom_css"></label>
     <textarea style="display: none" name="custom_css" id="custom_css"><?= $block->escapeHtml($block->getCustomCss()) ?></textarea>
-    <div id="global_css_editor"><?= __('Loading ...') ?></div>
+    <div id="global_css_editor"><?= $block->escapeHtml(__('Loading ...')) ?></div>
 </div>
 <script>
     require([

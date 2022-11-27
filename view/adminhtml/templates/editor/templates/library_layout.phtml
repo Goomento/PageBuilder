@@ -3,8 +3,14 @@
  * @package Goomento_PageBuilder
  * @link https://github.com/Goomento/PageBuilder
  */
-
 declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/**
+ * @var Template $block
+ */
+
 ?>
 <script type="text/template" id="tmpl-gmt-templates-modal__header">
     <div class="gmt-templates-modal__header__logo-area"></div>
@@ -13,10 +19,10 @@ declare(strict_types=1);
         <# if ( closeType ) { #>
             <div class="gmt-templates-modal__header__close gmt-templates-modal__header__close--{{{ closeType }}} gmt-templates-modal__header__item">
                 <# if ( 'skip' === closeType ) { #>
-                <span><?= __('Skip'); ?></span>
+                <span><?= $block->escapeHtml(__('Skip')); ?></span>
                 <# } #>
-                <i class="fas fa-times" aria-hidden="true" title="<?= __('Close'); ?>"></i>
-                <span class="gmt-screen-only"><?= __('Close'); ?></span>
+                <i class="fas fa-times" aria-hidden="true" title="<?= $block->escapeHtml(__('Close')); ?>"></i>
+                <span class="gmt-screen-only"><?= $block->escapeHtml(__('Close')); ?></span>
             </div>
         <# } #>
         <div id="gmt-template-library-header-tools"></div>

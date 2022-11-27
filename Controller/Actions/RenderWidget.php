@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Controller\Actions;
 
+use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Model\BetterCaching;
 use Goomento\PageBuilder\Model\ContentDataProcessor;
@@ -22,7 +23,6 @@ class RenderWidget extends AbstractActions
      * @var bool
      */
     private $init = false;
-
     /**
      * @var PageFactory
      */
@@ -57,8 +57,7 @@ class RenderWidget extends AbstractActions
         BetterCaching $betterCaching,
         ContentRegistry $contentRegistry,
         ContentDataProcessor $contentDataProcessor
-    )
-    {
+    ) {
         $this->pageFactory = $pageFactory;
         $this->filterProvider = $filterProvider;
         $this->betterCaching = $betterCaching;
@@ -101,7 +100,7 @@ class RenderWidget extends AbstractActions
         };
 
         $key = \Zend_Json::encode($actionData);
-        $rendered = $this->betterCaching->resolve(md5($key), $collect);
+        $rendered = $this->betterCaching->resolve(EncryptorHelper::uniqueStringId($key), $collect);
 
         return [
             'render' => $rendered

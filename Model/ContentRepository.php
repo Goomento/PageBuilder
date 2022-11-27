@@ -127,7 +127,7 @@ class ContentRepository implements ContentRepositoryInterface
     private function setAuthor(ContentInterface $content)
     {
         $currentAdminUser = $this->adminUser->getCurrentAdminUser();
-        if ( !$content->getId() ) {
+        if (!$content->getId()) {
             $content->setAuthorId($currentAdminUser ? $currentAdminUser->getId() : 0);
             $content->setLastEditorId($content->getAuthorId());
         } else {
@@ -191,7 +191,7 @@ class ContentRepository implements ContentRepositoryInterface
     {
         if (!$content->getIdentifier()) {
             $content->setIdentifier(
-                implode('-',[
+                implode('-', [
                     $content->getType(),
                     EncryptorHelper::uniqueString()
                 ])

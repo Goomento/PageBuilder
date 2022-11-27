@@ -82,39 +82,39 @@ class Media extends AbstractBaseMultiple implements ImportInterface
     public function contentTemplate()
     {
         ?>
-		<div class="gmt-control-field gmt-control-media">
-			<label class="gmt-control-title">{{{ data.label }}}</label>
-			<div class="gmt-control-input-wrapper gmt-aspect-ratio-219">
-				<div class="gmt-control-media__content gmt-control-tag-area gmt-control-preview-area gmt-fit-aspect-ratio">
-					<div class="gmt-control-media-upload-button gmt-fit-aspect-ratio">
-						<i class="fas fa-plus-circle" aria-hidden="true"></i>
-					</div>
-					<div class="gmt-control-media-area gmt-fit-aspect-ratio">
-						<div class="gmt-control-media__remove" title="<?= __('Remove'); ?>">
-							<i class="fas fa-trash"></i>
-						</div>
-						<# if( 'image' === data.media_type ) { #>
-						<div class="gmt-control-media__preview gmt-fit-aspect-ratio"></div>
-						<# } else if( 'video' === data.media_type ) { #>
-						<video class="gmt-control-media-video" preload="metadata"></video>
+        <div class="gmt-control-field gmt-control-media">
+            <label class="gmt-control-title">{{{ data.label }}}</label>
+            <div class="gmt-control-input-wrapper gmt-aspect-ratio-219">
+                <div class="gmt-control-media__content gmt-control-tag-area gmt-control-preview-area gmt-fit-aspect-ratio">
+                    <div class="gmt-control-media-upload-button gmt-fit-aspect-ratio">
+                        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+                    </div>
+                    <div class="gmt-control-media-area gmt-fit-aspect-ratio">
+                        <div class="gmt-control-media__remove" title="<?= __('Remove'); ?>">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                        <# if( 'image' === data.media_type ) { #>
+                        <div class="gmt-control-media__preview gmt-fit-aspect-ratio"></div>
+                        <# } else if( 'video' === data.media_type ) { #>
+                        <video class="gmt-control-media-video" preload="metadata"></video>
                         <i class="fas fa-video"></i>
-						<# } #>
-					</div>
-					<div class="gmt-control-media__tools">
-						<# if( 'image' === data.media_type ) { #>
-						<div class="gmt-control-media__tool gmt-control-media__replace"><?= __('Choose Image'); ?></div>
-						<# } else if( 'video' === data.media_type ) { #>
-						<div class="gmt-control-media__tool gmt-control-media__replace"><?= __('Choose Video'); ?></div>
-						<# } #>
-					</div>
-				</div>
-			</div>
-			<# if ( data.description ) { #>
-			<div class="gmt-control-field-description">{{{ data.description }}}</div>
-			<# } #>
-			<input type="hidden" data-setting="{{ data.name }}"/>
-		</div>
-		<?php
+                        <# } #>
+                    </div>
+                    <div class="gmt-control-media__tools">
+                        <# if( 'image' === data.media_type ) { #>
+                        <div class="gmt-control-media__tool gmt-control-media__replace"><?= __('Choose Image'); ?></div>
+                        <# } else if( 'video' === data.media_type ) { #>
+                        <div class="gmt-control-media__tool gmt-control-media__replace"><?= __('Choose Video'); ?></div>
+                        <# } #>
+                    </div>
+                </div>
+            </div>
+            <# if ( data.description ) { #>
+            <div class="gmt-control-field-description">{{{ data.description }}}</div>
+            <# } #>
+            <input type="hidden" data-setting="{{ data.name }}"/>
+        </div>
+        <?php
     }
 
     /**

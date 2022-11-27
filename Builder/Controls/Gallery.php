@@ -54,28 +54,28 @@ class Gallery extends AbstractControlData implements ImportInterface
     public function contentTemplate()
     {
         ?>
-		<div class="gmt-control-field">
-			<div class="gmt-control-title">{{{ data.label }}}</div>
-			<div class="gmt-control-input-wrapper">
-				<# if ( data.description ) { #>
-				<div class="gmt-control-field-description">{{{ data.description }}}</div>
-				<# } #>
-				<div class="gmt-control-media__content gmt-control-tag-area">
-					<div class="gmt-control-gallery-status">
-						<span class="gmt-control-gallery-status-title"></span>
-						<span class="gmt-control-gallery-clear"><i class="fas fa-trash" aria-hidden="true"></i></span>
-					</div>
-					<div class="gmt-control-gallery-content">
-						<div class="gmt-control-gallery-thumbnails"></div>
-						<div class="gmt-control-gallery-edit"><span><i class="fas fa-pencil-alt"></i></span></div>
-						<button class="gmt-button gmt-control-gallery-add" aria-label="<?= __('Add Images'); ?>">
+        <div class="gmt-control-field">
+            <div class="gmt-control-title">{{{ data.label }}}</div>
+            <div class="gmt-control-input-wrapper">
+                <# if ( data.description ) { #>
+                <div class="gmt-control-field-description">{{{ data.description }}}</div>
+                <# } #>
+                <div class="gmt-control-media__content gmt-control-tag-area">
+                    <div class="gmt-control-gallery-status">
+                        <span class="gmt-control-gallery-status-title"></span>
+                        <span class="gmt-control-gallery-clear"><i class="fas fa-trash" aria-hidden="true"></i></span>
+                    </div>
+                    <div class="gmt-control-gallery-content">
+                        <div class="gmt-control-gallery-thumbnails"></div>
+                        <div class="gmt-control-gallery-edit"><span><i class="fas fa-pencil-alt"></i></span></div>
+                        <button class="gmt-button gmt-control-gallery-add" aria-label="<?= __('Add Images'); ?>">
                             <i class="fas fa-plus-circle"></i>
                         </button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<?php
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
     }
 
     /**

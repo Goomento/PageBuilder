@@ -27,19 +27,19 @@ $widget->addRenderAttribute('wrapper', 'class', 'gmt-divider');
 if (!empty($svgCode)) {
     $widget->addRenderAttribute('wrapper', 'style', '--divider-pattern-url: url("data:image/svg+xml,' . $widget->svgToDataUri($svgCode) . '");');
 } ?>
-<div <?= $widget->getRenderAttributeString('wrapper'); ?>>
+<div <?= /** @noEscape */ $widget->getRenderAttributeString('wrapper'); ?>>
         <span class="gmt-divider-separator">
-        <?php if ($hasIcon) : ?>
+        <?php if ($hasIcon): ?>
             <div class="gmt-icon gmt-divider__element">
                 <?php
                 Icons::renderIcon($settings['icon'], [
                     'aria-hidden' => 'true',
                 ]); ?>
             </div>
-        <?php elseif ($hasText) :
+        <?php elseif ($hasText):
             $widget->addInlineEditingAttributes('text');
             $widget->addRenderAttribute('text', [ 'class' => [ 'gmt-divider__text', 'gmt-divider__element' ] ]); ?>
-            <span <?= $widget->getRenderAttributeString('text'); ?>><?= $settings['text']; ?></span>
+            <span <?= /** @noEscape */ $widget->getRenderAttributeString('text'); ?>><?=  /** @noEscape */ $settings['text']; ?></span>
         <?php endif; ?>
         </span>
 </div>

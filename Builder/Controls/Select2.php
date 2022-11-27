@@ -42,14 +42,14 @@ class Select2 extends AbstractControlData
     public function contentTemplate()
     {
         $controlUid = $this->getControlUid(); ?>
-		<div class="gmt-control-field">
-			<# if ( data.label ) {#>
-				<label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
-			<# } #>
-			<div class="gmt-control-input-wrapper">
-				<# var multiple = ( data.multiple ) ? 'multiple' : ''; #>
-				<select id="<?= $controlUid; ?>" class="gmt-select2" type="select2" {{ multiple }} data-setting="{{ data.name }}">
-					<#
+        <div class="gmt-control-field">
+            <# if ( data.label ) {#>
+                <label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
+            <# } #>
+            <div class="gmt-control-input-wrapper">
+                <# var multiple = ( data.multiple ) ? 'multiple' : ''; #>
+                <select id="<?= $controlUid; ?>" class="gmt-select2" type="select2" {{ multiple }} data-setting="{{ data.name }}">
+                    <#
                     if ( _.isEmpty( data.options ) && data.select2options.ajax ) {
                         _.each( data.controlValue , function( label ) {
                             #>
@@ -69,12 +69,12 @@ class Select2 extends AbstractControlData
                         <option {{ selected }} value="{{ option_value }}">{{{ option_title }}}</option>
                         <# } );
                     } #>
-				</select>
-			</div>
-		</div>
-		<# if ( data.description ) { #>
-			<div class="gmt-control-field-description">{{{ data.description }}}</div>
-		<# } #>
-		<?php
+                </select>
+            </div>
+        </div>
+        <# if ( data.description ) { #>
+            <div class="gmt-control-field-description">{{{ data.description }}}</div>
+        <# } #>
+        <?php
     }
 }

@@ -23,6 +23,7 @@ use Magento\Framework\View\LayoutInterface;
  * @method static BlockInterface createBlock($type, $name = '', array $arguments = [])
  * @method static BlockInterface|false getBlock(string $name)
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class LayoutHelper
 {
     use TraitStaticInstances;
@@ -30,7 +31,7 @@ class LayoutHelper
     /**
      * @inheriDoc
      */
-    static protected function getStaticInstance()
+    protected static function getStaticInstance()
     {
         return LayoutInterface::class;
     }

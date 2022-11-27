@@ -42,21 +42,21 @@ class PopoverToggle extends AbstractControlData
     public function contentTemplate()
     {
         $controlUid = $this->getControlUid(); ?>
-		<div class="gmt-control-field">
-			<label class="gmt-control-title">{{{ data.label }}}</label>
-			<div class="gmt-control-input-wrapper">
-				<input id="<?= $controlUid; ?>-custom" class="gmt-control-popover-toggle-toggle" type="radio" name="gmt-choose-{{ data.name }}-{{ data._cid }}" value="{{ data.return_value }}">
-				<label class="gmt-control-popover-toggle-toggle-label" for="<?= $controlUid; ?>-custom">
+        <div class="gmt-control-field">
+            <label class="gmt-control-title">{{{ data.label }}}</label>
+            <div class="gmt-control-input-wrapper">
+                <input id="<?= $controlUid; ?>-custom" class="gmt-control-popover-toggle-toggle" type="radio" name="gmt-choose-{{ data.name }}-{{ data._cid }}" value="{{ data.return_value }}">
+                <label class="gmt-control-popover-toggle-toggle-label" for="<?= $controlUid; ?>-custom">
                     <i class="far fa-edit"></i>
-					<span class="gmt-screen-only"><?= __('Edit'); ?></span>
-				</label>
-				<input id="<?= $controlUid; ?>-default" type="radio" name="gmt-choose-{{ data.name }}-{{ data._cid }}" value="">
-				<label class="gmt-control-popover-toggle-reset-label tooltip-target" for="<?= $controlUid; ?>-default" data-tooltip="<?= __('Back to default'); ?>" data-tooltip-pos="s">
+                    <span class="gmt-screen-only"><?= __('Edit'); ?></span>
+                </label>
+                <input id="<?= $controlUid; ?>-default" type="radio" name="gmt-choose-{{ data.name }}-{{ data._cid }}" value="">
+                <label class="gmt-control-popover-toggle-reset-label tooltip-target" for="<?= $controlUid; ?>-default" data-tooltip="<?= __('Back to default'); ?>" data-tooltip-pos="s">
                     <i class="fas fa-redo"></i>
-					<span class="gmt-screen-only"><?= __('Back to default'); ?></span>
-				</label>
-			</div>
-		</div>
-		<?php
+                    <span class="gmt-screen-only"><?= __('Back to default'); ?></span>
+                </label>
+            </div>
+        </div>
+        <?php
     }
 }

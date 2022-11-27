@@ -19,6 +19,7 @@ use Magento\Framework\Encryption\EncryptorInterface;
  * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
  *
  */
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class EncryptorHelper
 {
     const ACCESS_TOKEN = 'token';
@@ -54,21 +55,35 @@ class EncryptorHelper
      */
     public static function uniqueString(int $length = 6)
     {
-        return substr(md5(uniqid((string) rand(0, 99), true)), 1, $length);
+        $prefix = (string) rand(0, 99) . rand(0, 999);
+        return substr(sha1(uniqid($prefix)), 0, $length);
+    }
+
+    /**
+     * @param string $str
+     * @param int $length
+     * @return false|string
+     */
+    public static function uniqueStringId(string $str, int $length = 6)
+    {
+        return substr(sha1($str), 0, $length);
     }
 
     /**
      * @param string|null $token
-     * @param ContentInterface $content
+     * @param ContentInterface|int $content
      * @param int|null $userId
      * @return bool
      */
-    public static function isAllowed(?string $token, BuildableContentInterface $content, ?int $userId = 0)
+    public static function isAllowed(?string $token, $content, ?int $userId = 0)
     {
         if (null === $token) {
             $token = (string) RequestHelper::getParam(self::ACCESS_TOKEN);
         }
+
         $token = self::decrypt($token);
+
+        $contentId = $content;
 
         if (!empty($token)) {
             $token = explode('_', $token);
@@ -78,7 +93,11 @@ class EncryptorHelper
                 return false;
             }
 
-            if ($tokenContentId == $content->getOriginContent()->getId()) {
+            if ($content instanceof ContentInterface) {
+                $contentId = $content->getOriginContent()->getId();
+            }
+
+            if ($tokenContentId == $contentId) {
                 if ($userId && $tokenUserId != $userId) {
                     return false;
                 }
@@ -106,6 +125,7 @@ class EncryptorHelper
      */
     public static function decrypt(string $token)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
         $token = base64_decode($token);
         return self::getEncryptor()->decrypt($token);
     }

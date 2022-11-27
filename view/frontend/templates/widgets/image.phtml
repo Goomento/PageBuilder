@@ -61,23 +61,23 @@ if ($link) {
         $widget->addRenderAttribute('link', 'rel', 'nofollow');
     }
 } ?>
-<div <?= $widget->getRenderAttributeString('wrapper'); ?>>
-    <?php if ($hasCaption) : ?>
+<div <?= /** @noEscape */ $widget->getRenderAttributeString('wrapper'); ?>>
+    <?php if ($hasCaption): ?>
         <figure class="gmt-caption">
     <?php endif; ?>
-        <?php if ($link) : ?>
-            <a <?= $widget->getRenderAttributeString('link'); ?>>
+        <?php if ($link): ?>
+            <a <?= /** @noEscape */ $widget->getRenderAttributeString('link'); ?>>
                 <?php endif; ?>
-                <?= ImageSizeGroup::getAttachmentImageHtml($settings, 'image_image'); ?>
-                <?php if ($link) : ?>
+                <?= /** @noEscape */ ImageSizeGroup::getAttachmentImageHtml($settings, 'image_image'); ?>
+                <?php if ($link): ?>
             </a>
         <?php endif; ?>
-        <?php if ($hasCaption) : ?>
+        <?php if ($hasCaption): ?>
             <figcaption class="widget-image-caption image-caption-text">
-                <?= $settings['image_caption_source'] === 'custom' ? $settings['image_caption'] : ''; ?>
+                <?= /** @noEscape */ $settings['image_caption_source'] === 'custom' ? /** @noEscape */ $settings['image_caption'] : ''; ?>
             </figcaption>
         <?php endif; ?>
-    <?php if ($hasCaption) : ?>
+    <?php if ($hasCaption): ?>
         </figure>
     <?php endif; ?>
 </div>

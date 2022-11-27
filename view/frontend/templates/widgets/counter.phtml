@@ -31,11 +31,11 @@ if (!empty($settings['counter_thousand_separator'])) {
 } ?>
 <div class="gmt-counter">
     <div class="gmt-counter-number-wrapper">
-        <span class="gmt-counter-number-prefix"><?= $settings['counter_prefix']; ?></span>
-        <span <?= $widget->getRenderAttributeString('counter'); ?>><?= $settings['counter_starting_number']; ?></span>
-        <span class="gmt-counter-number-suffix"><?= $settings['counter_suffix']; ?></span>
+        <span class="gmt-counter-number-prefix"><?=  /** @noEscape */ $settings['counter_prefix']; ?></span>
+        <span <?= /** @noEscape */ $widget->getRenderAttributeString('counter'); ?>><?=  /** @noEscape */ $settings['counter_starting_number']; ?></span>
+        <span class="gmt-counter-number-suffix"><?=  /** @noEscape */ $settings['counter_suffix']; ?></span>
     </div>
-    <?php if ($settings['counter_title']) : ?>
-        <div <?= $widget->getRenderAttributeString('counter_title') ?>><?= /** @noEscape */ $settings['counter_title']; ?></div>
+    <?php if ($settings['counter_title']): ?>
+        <div <?= /** @noEscape */ $widget->getRenderAttributeString('counter_title') ?>><?= /** @noEscape */ $settings['counter_title']; ?></div>
     <?php endif; ?>
 </div>

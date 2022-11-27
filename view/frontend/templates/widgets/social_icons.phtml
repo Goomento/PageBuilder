@@ -23,7 +23,7 @@ if (!empty($settings['hover_animation'])) {
 ?>
 <div class="gmt-social-icons-wrapper">
     <?php
-    foreach ($settings['social_icon_list'] as $index => $item) :
+    foreach ($settings['social_icon_list'] as $index => $item):
         $social = '';
 
         if (isset($item['social_icon']['value']) && $item['social_icon']['value']) {
@@ -52,8 +52,8 @@ if (!empty($settings['hover_animation'])) {
         if ($item['link']['nofollow']) {
             $widget->addRenderAttribute($linkKey, 'rel', 'nofollow');
         } ?>
-        <a <?= $widget->getRenderAttributeString($linkKey); ?>>
-            <span class="gmt-screen-only"><?= ucwords($social); ?></span>
+        <a <?= /** @noEscape */ $widget->getRenderAttributeString($linkKey); ?>>
+            <span class="gmt-screen-only"><?= /** @noEscape */ ucwords($social); ?></span>
             <?php Icons::renderIcon($item['social_icon']); ?>
         </a>
     <?php endforeach; ?>

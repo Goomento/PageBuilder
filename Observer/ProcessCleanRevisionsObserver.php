@@ -15,7 +15,7 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
-class CleanRevisionsObserver implements ObserverInterface
+class ProcessCleanRevisionsObserver implements ObserverInterface
 {
     /**
      * @var Data
@@ -39,8 +39,7 @@ class CleanRevisionsObserver implements ObserverInterface
         Data $dataHelper,
         Logger $logger,
         ResourceConnection $resource
-    )
-    {
+    ) {
         $this->dataHelper = $dataHelper;
         $this->resource = $resource;
         $this->logger = $logger;
