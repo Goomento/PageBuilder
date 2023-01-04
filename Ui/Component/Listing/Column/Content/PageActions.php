@@ -84,13 +84,13 @@ class PageActions extends Column
 
             if (AuthorizationHelper::isCurrentUserCan($type)) {
                 if (AuthorizationHelper::isCurrentUserCan($content->getRoleName('save'))) {
+                    $item[$name]['editor'] = [
+                        'href' => UrlBuilderHelper::getLiveEditorUrl($content),
+                        'label' => __('Page Builder')
+                    ];
                     $item[$name]['edit'] = [
                         'href' => UrlBuilderHelper::getContentEditUrl($content),
                         'label' => __('Edit')
-                    ];
-                    $item[$name]['editor'] = [
-                        'href' => UrlBuilderHelper::getLiveEditorUrl($content),
-                        'label' => __('Editor')
                     ];
                 }
 

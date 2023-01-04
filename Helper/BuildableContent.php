@@ -115,16 +115,6 @@ class BuildableContent extends AbstractHelper
 
     /**
      * @param array $data
-     * @return ContentInterface
-     * @throws LocalizedException
-     */
-    public function create(array $data)
-    {
-        return $this->contentManagement->createContent($data);
-    }
-
-    /**
-     * @param array $data
      * @return BuildableContentInterface
      */
     public function createContent(array $data)
@@ -145,19 +135,19 @@ class BuildableContent extends AbstractHelper
     public static function getContentElementsWithHtml(string $html, array $data = []) : array
     {
         $data['elements'] = [[
-            'id' => EncryptorHelper::uniqueString(7),
+            'id' => EncryptorHelper::randomString(7),
             'isInner' => false,
             'elType' => Section::NAME,
             'settings' => [],
             'elements' => [[
-                'id' => EncryptorHelper::uniqueString(7),
+                'id' => EncryptorHelper::randomString(7),
                 'isInner' => false,
                 'elType' => Column::NAME,
                 'settings' => [
                     '_column_size' => 100
                 ],
                 'elements' => [[
-                    'id' => EncryptorHelper::uniqueString(7),
+                    'id' => EncryptorHelper::randomString(7),
                     'isInner' => false,
                     'elType' => TextEditor::TYPE,
                     'widgetType' => TextEditor::NAME,

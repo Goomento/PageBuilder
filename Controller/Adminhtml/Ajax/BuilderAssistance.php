@@ -105,7 +105,7 @@ class BuilderAssistance extends AbstractAction
             switch ($action) {
                 case 'create':
                     $contentData = [
-                        'title' => (string) ($data['title'] ?? __('Block %1', EncryptorHelper::uniqueString())),
+                        'title' => (string) ($data['title'] ?? __('Block %1', EncryptorHelper::randomString())),
                         'status' => BuildableContentInterface::STATUS_PENDING,
                         'type' => ContentInterface::TYPE_SECTION,
                         'elements' => [],
@@ -141,7 +141,7 @@ class BuilderAssistance extends AbstractAction
     private function getWysiwygBlock(array $data)
     {
         $storeId = $data['store_id'] ?? 0;
-        $elementId = $data['element_id'] ?? EncryptorHelper::uniqueString();
+        $elementId = $data['element_id'] ?? EncryptorHelper::randomString();
         $this->storeManager->setCurrentStore($storeId);
         $storeMediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
         return $this->layoutFactory->create()->createBlock(

@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
+use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
 
 /**
  * @var Widget $block
@@ -14,8 +15,8 @@ use Goomento\PageBuilder\Block\View\Element\Widget;
 $widget = $block->getWidget();
 
 $settings = $block->getSettingsForDisplay();
-$title = trim((string) $settings['banner_title']);
-$caption = trim((string) $settings['banner_caption']);
+$title = $settings['banner_title'] ?? '';
+$caption = $settings['banner_caption'] ?? '';
 
 $hasContent = !empty($title) || !empty($caption);
 
@@ -32,14 +33,7 @@ if (!empty($settings['banner_image']['url'])):
         }
     }
 
-    $widget->addRenderAttribute('image', 'src', $settings['banner_image']['url']);
-    $widget->addRenderAttribute('image', 'alt', '');
-    $widget->addRenderAttribute('image', 'title', '');
-
-    if ($settings['banner_hover_animation']) {
-        $widget->addRenderAttribute('image', 'class', 'gmt-animation-' . $settings['banner_hover_animation']);
-    }
-    $imageHtml = '<img ' . $widget->getRenderAttributeString('image') . '/>';
+    $imageHtml = ImageSizeGroup::getAttachmentImageHtml($settings, 'banner_image', 'thumbnail');
 
     if (!empty($settings['banner_link']['url'])) {
         $imageHtml = '<a ' . $widget->getRenderAttributeString('link') . '>' . $imageHtml . '</a>';
@@ -55,16 +49,18 @@ if (!empty($settings['banner_image']['url'])):
             <div <?= /** @noEscape */ $widget->getRenderAttributeString('box-content') ?>>
                 <?php
                 if ($title):
-                    $widget->addInlineEditingAttributes(['title' => 'banner_title']);
                     $widget->addRenderAttribute('title', 'class', 'gmt-banner-title'); ?>
-                    <div <?= /** @noEscape */ $widget->getRenderAttributeString('title') ?>><?= /** @noEscape */ $title ?></div>
+                    <div <?= /** @noEscape */ $widget->getRenderAttributeString('title') ?>>
+                        <?php $widget->printInlineEditingContent('banner_title'); ?>
+                    </div>
                     <?php
                 endif;
                 if ($caption):
                     $widget->addRenderAttribute('caption', 'class', 'gmt-banner-description');
-                    $widget->addInlineEditingAttributes(['caption' => 'banner_caption']);
                     ?>
-                    <div <?= /** @noEscape */ $widget->getRenderAttributeString('caption') ?>><?= /** @noEscape */ $caption ?></div>
+                    <div <?= /** @noEscape */ $widget->getRenderAttributeString('caption') ?>>
+                        <?php $widget->printInlineEditingContent('banner_caption'); ?>
+                    </div>
                 <?php  endif; ?>
             </div>
         <?php endif;  ?>

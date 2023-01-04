@@ -4,33 +4,33 @@
  */
 
 .gmt-star-rating {
-	color: @gray-mouse;
+    color: @gray-mouse;
     font-family: "Font Awesome 5 Free", serif;
-	display: inline-block;
+    display: inline-block;
 
-	i {
-		display: inline-block;
-		position: relative;
-		font-style: normal;
-		cursor: default;
+    i {
+        display: inline-block;
+        position: relative;
+        font-style: normal;
+        cursor: default;
 
-		&:before {
-			content: "\f005";
-			display: block;
-			font-size: inherit;
-			font-family: inherit;
-			position: absolute;
-			overflow: hidden;
-			color: @orange;
-			top: 0;
+        &:before {
+            content: "\f005";
+            display: block;
+            font-size: inherit;
+            font-family: inherit;
+            position: absolute;
+            overflow: hidden;
+            color: @orange;
+            top: 0;
             font-weight: 700;
-			.start(0);
-		}
-	}
+            .start(0);
+        }
+    }
 
-	.gmt-star-empty:before {
-		content: none;
-	}
+    .gmt-star-empty:before {
+        content: none;
+    }
 
     .gmt-star-1:before {
         width: 10%;
@@ -60,14 +60,14 @@
         width: 90%;
     }
 
-	&__wrapper {
-		display: flex;
-		align-items: center;
-	}
+    &__wrapper {
+        display: flex;
+        align-items: center;
+    }
 
-	&__title {
+    &__title {
         .css_direction_property(margin-right, margin-left, @space-md);
-	}
+    }
 }
 
 .star_rating_align_default() {
@@ -106,38 +106,38 @@
 
 .star_rating_align(@device) {
 
-	.gmt-star-rating {
+    .gmt-star-rating {
 
-		&@{device} {
+        &@{device} {
             .star_rating_align_default()
-		}
-	}
+        }
+    }
 }
 
 .gmt-star-rating {
     .star_rating_align_default()
 }
 @media (max-width: @screen-md) {
-	.star_rating_align(-tablet);
+    .star_rating_align(-tablet);
 }
 
 @media (max-width: @screen-sm) {
-	.star_rating_align(-mobile);
+    .star_rating_align(-mobile);
 }
 
 .last-star{
-	letter-spacing: 0;
+    letter-spacing: 0;
 }
 
 .gmt--star-style-star_unicode {
 
-	.gmt-star-rating {
-		font-family: 'Arial', 'Helvetica', sans-serif;
+    .gmt-star-rating {
+        font-family: 'Arial', 'Helvetica', sans-serif;
 
-		i:not(.gmt-star-empty):before {
-			content: '\002605';
-		}
-	}
+        i:not(.gmt-star-empty):before {
+            content: '\002605';
+        }
+    }
 }
 
 .gmt--star-style-star_fontawesome {

@@ -9,9 +9,12 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
+use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\HooksHelper;
 
 class Divider extends AbstractWidget
@@ -288,7 +291,7 @@ class Divider extends AbstractWidget
      * @param $value
      * @return array
      */
-    private function filterStylesBy($array, $key, $value)
+    private static function filterStylesBy($array, $key, $value)
     {
         return array_filter($array, function ($style) use ($key, $value) {
             return $value === $style[ $key ];
@@ -330,21 +333,19 @@ class Divider extends AbstractWidget
     }
 
     /**
-     * @inheritDoc
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
      */
-    protected function registerControls()
-    {
+    public static function registerDividerInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $styles = self::getSeparatorStyles();
 
-        $this->startControlsSection(
-            'section_divider',
-            [
-                'label' => __('Divider'),
-            ]
-        );
-
-        $this->addControl(
-            'style',
+        $widget->addControl(
+            $prefix . 'style',
             [
                 'label' => __('Style'),
                 'type' => Controls::SELECT,
@@ -357,14 +358,14 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'separator_type',
+        $widget->addControl(
+            $prefix . 'separator_type',
             [
                 'type' => Controls::HIDDEN,
                 'default' => 'pattern',
                 'prefix_class' => 'gmt-widget-divider--separator-type-',
                 'condition' => [
-                    'style!' => [
+                    $prefix . 'style!' => [
                         '',
                         'solid',
                         'double',
@@ -376,33 +377,33 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'pattern_spacing_flag',
+        $widget->addControl(
+            $prefix . 'pattern_spacing_flag',
             [
                 'type' => Controls::HIDDEN,
                 'default' => 'no-spacing',
                 'prefix_class' => 'gmt-widget-divider--',
                 'condition' => [
-                    'style' => array_keys($this->filterStylesBy($styles, 'supports_amount', false)),
+                    $prefix . 'style' => array_keys(self::filterStylesBy($styles, 'supports_amount', false)),
                 ],
                 'render_type' => 'template',
             ]
         );
 
-        $this->addControl(
-            'pattern_round_flag',
+        $widget->addControl(
+            $prefix . 'pattern_round_flag',
             [
                 'type' => Controls::HIDDEN,
                 'default' => 'bg-round',
                 'prefix_class' => 'gmt-widget-divider--',
                 'condition' => [
-                    'style' => array_keys($this->filterStylesBy($styles, 'round', true)),
+                    $prefix . 'style' => array_keys(self::filterStylesBy($styles, 'round', true)),
                 ],
             ]
         );
 
-        $this->addResponsiveControl(
-            'width',
+        $widget->addResponsiveControl(
+            $prefix . 'width',
             [
                 'label' => __('Width'),
                 'type' => Controls::SLIDER,
@@ -428,8 +429,8 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addResponsiveControl(
-            'align',
+        $widget->addResponsiveControl(
+            $prefix . 'align',
             [
                 'label' => __('Alignment'),
                 'type' => Controls::CHOOSE,
@@ -454,8 +455,8 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'look',
+        $widget->addControl(
+            $prefix . 'look',
             [
                 'label' => __('Add Element'),
                 'type' => Controls::CHOOSE,
@@ -479,23 +480,20 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'text',
+        $widget->addControl(
+            $prefix . 'text',
             [
                 'label' => __('Text'),
                 'type' => Controls::TEXT,
                 'condition' => [
-                    'look' => 'line_text',
+                    $prefix . 'look' => 'line_text',
                 ],
                 'default' => __('Divider'),
-                'dynamic' => [
-                    'active' => true,
-                ],
             ]
         );
 
-        $this->addControl(
-            'icon',
+        $widget->addControl(
+            $prefix . 'icon',
             [
                 'label' => __('Icon'),
                 'type' => Controls::ICONS,
@@ -504,26 +502,26 @@ class Divider extends AbstractWidget
                     'library' => 'fa-solid',
                 ],
                 'condition' => [
-                    'look' => 'line_icon',
+                    $prefix . 'look' => 'line_icon',
                 ],
             ]
         );
+    }
 
-        $this->endControlsSection();
-
-        $this->startControlsSection(
-            'section_divider_style',
-            [
-                'label' => __('Divider'),
-                'tab' => Controls::TAB_STYLE,
-                'condition' => [
-                    'style!' => 'none',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'color',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerDividerStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-divider'
+    ) {
+        $widget->addControl(
+            $prefix . 'color',
             [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
@@ -539,8 +537,10 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'weight',
+        $styles = self::getSeparatorStyles();
+
+        $widget->addControl(
+            $prefix . 'weight',
             [
                 'label' => __('Weight'),
                 'type' => Controls::SLIDER,
@@ -556,7 +556,7 @@ class Divider extends AbstractWidget
                 ],
                 'render_type' => 'template',
                 'condition' => [
-                    'style' => array_keys(self::getOptionsByGroups($styles, 'line')['options']),
+                    $prefix . 'style' => array_keys(self::getOptionsByGroups($styles, 'line')['options']),
                 ],
                 'selectors' => [
                     '{{WRAPPER}}' => '--divider-border-width: {{SIZE}}{{UNIT}}',
@@ -564,8 +564,8 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'pattern_height',
+        $widget->addControl(
+            $prefix . 'pattern_height',
             [
                 'label' => __('Size'),
                 'type' => Controls::SLIDER,
@@ -581,7 +581,7 @@ class Divider extends AbstractWidget
                     ],
                 ],
                 'condition' => [
-                    'style!' => [
+                    $prefix . 'style!' => [
                         '',
                         'solid',
                         'double',
@@ -592,8 +592,8 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'pattern_size',
+        $widget->addControl(
+            $prefix . 'pattern_size',
             [
                 'label' => __('Amount'),
                 'type' => Controls::SLIDER,
@@ -613,7 +613,7 @@ class Divider extends AbstractWidget
                     ],
                 ],
                 'condition' => [
-                    'style!' => array_merge(array_keys($this->filterStylesBy($styles, 'supports_amount', false)), [
+                    $prefix . 'style!' => array_merge(array_keys(self::filterStylesBy($styles, 'supports_amount', false)), [
                         '',
                         'solid',
                         'double',
@@ -624,8 +624,8 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addResponsiveControl(
-            'gap',
+        $widget->addResponsiveControl(
+            $prefix . 'gap',
             [
                 'label' => __('Gap'),
                 'type' => Controls::SLIDER,
@@ -639,27 +639,27 @@ class Divider extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-divider' => 'padding-top: {{SIZE}}{{UNIT}}; padding-bottom: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'padding-top: {{SIZE}}{{UNIT}}; padding-bottom: {{SIZE}}{{UNIT}};',
                 ],
                 'separator' => 'before',
             ]
         );
+    }
 
-        $this->endControlsSection();
-
-        $this->startControlsSection(
-            'section_text_style',
-            [
-                'label' => __('Text'),
-                'tab' => Controls::TAB_STYLE,
-                'condition' => [
-                    'look' => 'line_text',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'text_color',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerDividerTextStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-divider__text'
+    ) {
+        $widget->addControl(
+            $prefix . 'text_color',
             [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
@@ -668,22 +668,22 @@ class Divider extends AbstractWidget
                     'value' => Color::COLOR_2,
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-divider__text' => 'color: {{VALUE}}',
+                    '{{WRAPPER}} ' . $cssTarget => 'color: {{VALUE}}',
                 ],
             ]
         );
 
-        $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup::NAME,
+        $widget->addGroupControl(
+            TypographyGroup::NAME,
             [
-                'name' => 'typography',
+                'name' => $prefix . 'typography',
                 'scheme' => Typography::TYPOGRAPHY_2,
-                'selector' => '{{WRAPPER}} .gmt-divider__text',
+                'selector' => '{{WRAPPER}} ' . $cssTarget,
             ]
         );
 
-        $this->addControl(
-            'text_align',
+        $widget->addControl(
+            $prefix . 'text_align',
             [
                 'label' => __('Position'),
                 'type' => Controls::CHOOSE,
@@ -706,8 +706,8 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addResponsiveControl(
-            'text_spacing',
+        $widget->addResponsiveControl(
+            $prefix . 'text_spacing',
             [
                 'label' => __('Spacing'),
                 'type' => Controls::SLIDER,
@@ -722,22 +722,22 @@ class Divider extends AbstractWidget
                 ],
             ]
         );
+    }
 
-        $this->endControlsSection();
-
-        $this->startControlsSection(
-            'section_icon_style',
-            [
-                'label' => __('Icon'),
-                'tab' => Controls::TAB_STYLE,
-                'condition' => [
-                    'look' => 'line_icon',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'icon_view',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerDividerIconStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-icon'
+    ) {
+        $widget->addControl(
+            $prefix . 'icon_view',
             [
                 'label' => __('View'),
                 'type' => Controls::SELECT,
@@ -751,8 +751,8 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addResponsiveControl(
-            'icon_size',
+        $widget->addResponsiveControl(
+            $prefix . 'icon_size',
             [
                 'label' => __('Size'),
                 'type' => Controls::SLIDER,
@@ -768,13 +768,13 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'icon_padding',
+        $widget->addControl(
+            $prefix . 'icon_padding',
             [
                 'label' => __('Padding'),
                 'type' => Controls::SLIDER,
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon' => 'padding: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'padding: {{SIZE}}{{UNIT}};',
                 ],
                 'range' => [
                     'em' => [
@@ -783,21 +783,21 @@ class Divider extends AbstractWidget
                     ],
                 ],
                 'condition' => [
-                    'icon_view!' => 'default',
+                    $prefix . 'icon_view!' => 'default',
                 ],
             ]
         );
 
-        $this->addControl(
-            'primary_color',
+        $widget->addControl(
+            $prefix . 'primary_color',
             [
                 'label' => __('Primary Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
                 'selectors' => [
-                    '{{WRAPPER}}.gmt-view-stacked .gmt-icon' => 'background-color: {{VALUE}};',
-                    '{{WRAPPER}}.gmt-view-framed .gmt-icon, {{WRAPPER}}.gmt-view-default .gmt-icon' => 'color: {{VALUE}}; border-color: {{VALUE}};',
-                    '{{WRAPPER}}.gmt-view-framed .gmt-icon, {{WRAPPER}}.gmt-view-default .gmt-icon svg' => 'fill: {{VALUE}};',
+                    '{{WRAPPER}}.gmt-view-stacked ' . $cssTarget => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}}.gmt-view-framed ' . $cssTarget . ', {{WRAPPER}}.gmt-view-default ' . $cssTarget => 'color: {{VALUE}}; border-color: {{VALUE}};',
+                    '{{WRAPPER}}.gmt-view-framed ' . $cssTarget . ', {{WRAPPER}}.gmt-view-default ' . $cssTarget . ' svg' => 'fill: {{VALUE}};',
                 ],
                 'scheme' => [
                     'type' => Color::NAME,
@@ -806,25 +806,25 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'secondary_color',
+        $widget->addControl(
+            $prefix . 'secondary_color',
             [
                 'label' => __('Secondary Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
                 'condition' => [
-                    'icon_view!' => 'default',
+                    $prefix . 'icon_view!' => 'default',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}}.gmt-view-framed .gmt-icon' => 'background-color: {{VALUE}};',
-                    '{{WRAPPER}}.gmt-view-stacked .gmt-icon' => 'color: {{VALUE}};',
-                    '{{WRAPPER}}.gmt-view-stacked .gmt-icon svg' => 'fill: {{VALUE}};',
+                    '{{WRAPPER}}.gmt-view-framed ' . $cssTarget => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}}.gmt-view-stacked ' . $cssTarget => 'color: {{VALUE}};',
+                    '{{WRAPPER}}.gmt-view-stacked ' . $cssTarget . ' svg' => 'fill: {{VALUE}};',
                 ],
             ]
         );
 
-        $this->addControl(
-            'icon_align',
+        $widget->addControl(
+            $prefix . 'icon_align',
             [
                 'label' => __('Position'),
                 'type' => Controls::CHOOSE,
@@ -847,8 +847,8 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addResponsiveControl(
-            'icon_spacing',
+        $widget->addResponsiveControl(
+            $prefix . 'icon_spacing',
             [
                 'label' => __('Spacing'),
                 'type' => Controls::SLIDER,
@@ -864,8 +864,8 @@ class Divider extends AbstractWidget
             ]
         );
 
-        $this->addResponsiveControl(
-            'rotate',
+        $widget->addResponsiveControl(
+            $prefix . 'rotate',
             [
                 'label' => __('Rotate'),
                 'type' => Controls::SLIDER,
@@ -881,39 +881,99 @@ class Divider extends AbstractWidget
                     'unit' => 'deg',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon i, {{WRAPPER}} .gmt-icon svg' => 'transform: rotate({{SIZE}}{{UNIT}})',
+                    '{{WRAPPER}} ' . $cssTarget . ' i, {{WRAPPER}} ' . $cssTarget . ' svg' => 'transform: rotate({{SIZE}}{{UNIT}})',
                 ],
             ]
         );
 
-        $this->addControl(
-            'icon_border_width',
+        $widget->addControl(
+            $prefix . 'icon_border_width',
             [
                 'label' => __('Border Width'),
                 'type' => Controls::SLIDER,
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon' => 'border-width: {{SIZE}}{{UNIT}}',
+                    '{{WRAPPER}} ' . $cssTarget => 'border-width: {{SIZE}}{{UNIT}}',
                 ],
                 'condition' => [
-                    'icon_view' => 'framed',
+                    $prefix . 'icon_view' => 'framed',
                 ],
             ]
         );
 
-        $this->addControl(
-            'border_radius',
+        $widget->addControl(
+            $prefix . 'border_radius',
             [
                 'label' => __('Border Radius'),
                 'type' => Controls::SLIDER,
                 'size_units' => [ 'px', '%' ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon' => 'border-radius: {{SIZE}}{{UNIT}}',
+                    '{{WRAPPER}} ' . $cssTarget => 'border-radius: {{SIZE}}{{UNIT}}',
                 ],
                 'condition' => [
-                    'icon_view!' => 'default',
+                    $prefix . 'icon_view!' => 'default',
                 ],
             ]
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function registerControls()
+    {
+        $this->startControlsSection(
+            'section_divider',
+            [
+                'label' => __('Divider'),
+            ]
+        );
+
+        self::registerDividerInterface($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_divider_style',
+            [
+                'label' => __('Divider'),
+                'tab' => Controls::TAB_STYLE,
+                'condition' => [
+                    self::NAME . '_style!' => 'none',
+                ],
+            ]
+        );
+
+        self::registerDividerStyle($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_text_style',
+            [
+                'label' => __('Text'),
+                'tab' => Controls::TAB_STYLE,
+                'condition' => [
+                    self::NAME . '_look' => 'line_text',
+                ],
+            ]
+        );
+
+        self::registerDividerTextStyle($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_icon_style',
+            [
+                'label' => __('Icon'),
+                'tab' => Controls::TAB_STYLE,
+                'condition' => [
+                    self::NAME . '_look' => 'line_icon',
+                ],
+            ]
+        );
+
+        self::registerDividerIconStyle($this);
 
         $this->endControlsSection();
     }
@@ -930,13 +990,13 @@ class Divider extends AbstractWidget
     {
         $settings = $this->getSettingsForDisplay();
 
-        if ('pattern' !== $settings['separator_type'] || empty($settings['style'])) {
+        if ('pattern' !== $settings['divider_separator_type'] || empty($settings['divider_style'])) {
             return '';
         }
 
         $svgShapes = self::getSeparatorStyles();
 
-        $selectedPattern = $svgShapes[ $settings['style'] ];
+        $selectedPattern = $svgShapes[ $settings['divider_style'] ];
         $preserveAspectRatio = $selectedPattern['preserve_aspect_ratio'] ? 'xMidYMid meet' : 'none';
         $viewBox = $selectedPattern['view_box'] ?? '0 0 24 24';
 
@@ -948,11 +1008,11 @@ class Divider extends AbstractWidget
         ];
 
         if ('line' !== $selectedPattern['group']) {
-            $attr['fill'] = $settings['color'];
+            $attr['fill'] = $settings['divider_color'];
             $attr['stroke'] = 'none';
         } else {
-            $attr['stroke'] = $settings['color'];
-            $attr['stroke-width'] = $settings['weight']['size'];
+            $attr['stroke'] = $settings['divider_color'];
+            $attr['stroke-width'] = $settings['divider_weight']['size'];
             $attr['fill'] = 'none';
             $attr['stroke-linecap'] = 'square';
             $attr['stroke-miterlimit'] = '10';

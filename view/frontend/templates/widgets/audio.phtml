@@ -15,41 +15,39 @@ use Goomento\PageBuilder\Helper\RequestHelper;
 $widget = $block->getWidget();
 $settings = $block->getSettingsForDisplay();
 
-if (empty($settings['audio_link'])) {
-    return;
-}
+if (!empty($settings['audio_link'])):
+    $paramKeys = [
+        'auto_play',
+        'buying',
+        'liking',
+        'download',
+        'sharing',
+        'show_comments',
+        'show_playcount',
+        'show_user',
+        'show_artwork',
+        'visual',
+    ];
 
-$paramKeys = [
-    'auto_play',
-    'buying',
-    'liking',
-    'download',
-    'sharing',
-    'show_comments',
-    'show_playcount',
-    'show_user',
-    'show_artwork',
-    'visual',
-];
+    $url = 'https://w.soundcloud.com/player/';
 
-$url = 'https://w.soundcloud.com/player/';
+    $params = [
+        'url' => $settings['audio_link']['url']
+    ];
 
-$params = [
-    'url' => $settings['audio_link']['url']
-];
+    foreach ($paramKeys as $paramKey) {
+        $params[ $paramKey ] = 'yes' === $settings[ 'audio_sc_' . $paramKey ] ? 'true' : 'false';
+    }
 
-foreach ($paramKeys as $paramKey) {
-    $params[ $paramKey ] = 'yes' === $settings[ 'audio_sc_' . $paramKey ] ? 'true' : 'false';
-}
+    $params['color'] = str_replace('#', '', $settings['audio_sc_color']);
 
-$params['color'] = str_replace('#', '', $settings['audio_sc_color']);
+    $url = RequestHelper::appendQueryStringToUrl($url, $params);
 
-$url = RequestHelper::appendQueryStringToUrl($url, $params);
-
-?>
-<div class="gmt-soundcloud-wrapper">
-    <?= /** @noEscape */ sprintf(
-        '<iframe width="100%%" scrolling="no" frameborder="no" allow="autoplay" src="%s"></iframe>',
-        $url
-    ); ?>
-</div>
+    ?>
+    <div class="gmt-soundcloud-wrapper">
+        <?= /** @noEscape */ sprintf(
+            '<iframe width="100%%" scrolling="no" frameborder="no" allow="autoplay" src="%s"></iframe>',
+            $url
+        ); ?>
+    </div>
+<?php endif;

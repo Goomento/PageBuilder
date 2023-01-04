@@ -51,7 +51,9 @@ class Select2 extends AbstractControlData
                 <select id="<?= $controlUid; ?>" class="gmt-select2" type="select2" {{ multiple }} data-setting="{{ data.name }}">
                     <#
                     if ( _.isEmpty( data.options ) && data.select2options.ajax ) {
-                        _.each( data.controlValue , function( label ) {
+                        let controlValue = _.isArray(data.controlValue) ? data.controlValue : [data.controlValue];
+                        controlValue = _.filter(controlValue);
+                        _.each( controlValue , function( label ) {
                             #>
                             <option selected value="{{ label }}">{{{ label }}}</option>
                             <#

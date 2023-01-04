@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\BorderGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\BoxShadowGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\CssFilterGroup;
@@ -18,11 +19,14 @@ use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
 
 class Image extends AbstractWidget
 {
-
+    /**
+     * @inheirtDoc
+     */
     const NAME = 'image';
 
     /**
@@ -73,20 +77,19 @@ class Image extends AbstractWidget
     /**
      * Share image style
      *
-     * @param AbstractWidget $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
+     * @throws BuilderException
      */
-    public static function registerImageInterface(AbstractWidget $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerImageInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
             $prefix . 'image',
-            $args + [
+            [
                 'label' => __('Choose Image'),
                 'type' => Controls::MEDIA,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => [
                     'url' => DataHelper::getPlaceholderImageSrc(),
                 ],
@@ -95,7 +98,7 @@ class Image extends AbstractWidget
 
         $widget->addGroupControl(
             ImageSizeGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'image',
                 'default' => 'large',
                 'separator' => 'none',
@@ -104,7 +107,7 @@ class Image extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'align',
-            $args + [
+            [
                 'label' => __('Alignment'),
                 'type' => Controls::CHOOSE,
                 'options' => [
@@ -129,7 +132,7 @@ class Image extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'caption_source',
-            $args + [
+            [
                 'label' => __('Caption'),
                 'type' => Controls::SELECT,
                 'options' => [
@@ -142,23 +145,20 @@ class Image extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'caption',
-            $args + [
+            [
                 'label' => __('Custom Caption'),
                 'type' => Controls::TEXT,
                 'default' => '',
                 'placeholder' => __('Enter your image caption'),
                 'condition' => [
                     $prefix . 'caption_source' => 'custom',
-                ],
-                'dynamic' => [
-                    'active' => true,
-                ],
+                ]
             ]
         );
 
         $widget->addControl(
             $prefix . 'link_to',
-            $args + [
+            [
                 'label' => __('Link'),
                 'type' => Controls::SELECT,
                 'default' => 'none',
@@ -172,12 +172,9 @@ class Image extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'link',
-            $args + [
+            [
                 'label' => __('Link'),
                 'type' => Controls::URL,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'placeholder' => __('https://your-link.com'),
                 'condition' => [
                     $prefix . 'link_to' => 'custom',
@@ -188,7 +185,7 @@ class Image extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'open_lightbox',
-            $args + [
+            [
                 'label' => __('Lightbox'),
                 'type' => Controls::SELECT,
                 'default' => 'default',
@@ -210,17 +207,18 @@ class Image extends AbstractWidget
      * @param AbstractWidget $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
+     * @param string $cssHoverTarget
+     * @throws BuilderException
      */
     public static function registerImageStyle(
-        AbstractWidget $widget,
-        string         $prefix = self::NAME . '_',
-        string         $cssTarget = '.gmt-image',
-        array          $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-image img',
+        string $cssHoverTarget = '.gmt-image:hover img'
     ) {
         $widget->addResponsiveControl(
             $prefix . 'width',
-            $args + [
+            [
                 'label' => __('Width'),
                 'type' => Controls::SLIDER,
                 'default' => [
@@ -248,14 +246,14 @@ class Image extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} ' . $cssTarget . ' img' => 'width: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'width: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
 
         $widget->addResponsiveControl(
             $prefix . 'space',
-            $args + [
+            [
                 'label' => __('Max Width') . ' (%)',
                 'type' => Controls::SLIDER,
                 'default' => [
@@ -275,14 +273,14 @@ class Image extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} ' . $cssTarget . ' img' => 'max-width: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'max-width: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'separator_panel_style',
-            $args + [
+            [
                 'type' => Controls::DIVIDER,
                 'style' => 'thick',
             ]
@@ -299,7 +297,7 @@ class Image extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'opacity',
-            $args + [
+            [
                 'label' => __('Opacity'),
                 'type' => Controls::SLIDER,
                 'range' => [
@@ -310,16 +308,16 @@ class Image extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} ' . $cssTarget . ' img' => 'opacity: {{SIZE}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'opacity: {{SIZE}};',
                 ],
             ]
         );
 
         $widget->addGroupControl(
             CssFilterGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'css_filters',
-                'selector' => '{{WRAPPER}} ' . $cssTarget . ' img',
+                'selector' => '{{WRAPPER}} ' . $cssTarget,
             ]
         );
 
@@ -334,7 +332,7 @@ class Image extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'opacity_hover',
-            $args + [
+            [
                 'label' => __('Opacity'),
                 'type' => Controls::SLIDER,
                 'range' => [
@@ -345,7 +343,7 @@ class Image extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} ' . $cssTarget . ':hover img' => 'opacity: {{SIZE}};',
+                    '{{WRAPPER}} ' . $cssHoverTarget => 'opacity: {{SIZE}};',
                 ],
             ]
         );
@@ -354,13 +352,13 @@ class Image extends AbstractWidget
             CssFilterGroup::NAME,
             [
                 'name' => $prefix . 'css_filters_hover',
-                'selector' => '{{WRAPPER}} ' . $cssTarget . ':hover img',
+                'selector' => '{{WRAPPER}} ' . $cssHoverTarget,
             ]
         );
 
         $widget->addControl(
             $prefix . 'background_hover_transition',
-            $args + [
+            [
                 'label' => __('Transition Duration'),
                 'type' => Controls::SLIDER,
                 'range' => [
@@ -370,14 +368,14 @@ class Image extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} ' . $cssTarget . ' img' => 'transition-duration: {{SIZE}}s',
+                    '{{WRAPPER}} ' . $cssTarget => 'transition-duration: {{SIZE}}s',
                 ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'hover_animation',
-            $args + [
+            [
                 'label' => __('Hover Animation'),
                 'type' => Controls::HOVER_ANIMATION,
             ]
@@ -389,33 +387,33 @@ class Image extends AbstractWidget
 
         $widget->addGroupControl(
             BorderGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'image_border',
-                'selector' => '{{WRAPPER}} ' . $cssTarget . ' img',
+                'selector' => '{{WRAPPER}} ' . $cssTarget,
                 'separator' => 'before',
             ]
         );
 
         $widget->addResponsiveControl(
             $prefix . 'image_border_radius',
-            $args + [
+            [
                 'label' => __('Border Radius'),
                 'type' => Controls::DIMENSIONS,
                 'size_units' => [ 'px', '%' ],
                 'selectors' => [
-                    '{{WRAPPER}} ' . $cssTarget . ' img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
 
         $widget->addGroupControl(
             BoxShadowGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'image_box_shadow',
                 'exclude' => [
                     'box_shadow_position',
                 ],
-                'selector' => '{{WRAPPER}} ' . $cssTarget . ' img',
+                'selector' => '{{WRAPPER}} ' . $cssTarget,
             ]
         );
     }
@@ -423,20 +421,19 @@ class Image extends AbstractWidget
     /**
      * Share Image style
      *
-     * @param AbstractWidget $widget
+     * @param ControlsStack $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
+     * @throws BuilderException
      */
     public static function registerCaptionStyle(
-        AbstractWidget $widget,
-        string         $prefix = self::NAME . '_',
-        string         $cssTarget = '.gmt-image',
-        array          $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.widget-image-caption'
     ) {
         $widget->addControl(
             $prefix . 'caption_align',
-            $args + [
+            [
                 'label' => __('Alignment'),
                 'type' => Controls::CHOOSE,
                 'options' => [
@@ -459,19 +456,19 @@ class Image extends AbstractWidget
                 ],
                 'default' => '',
                 'selectors' => [
-                    '{{WRAPPER}} .widget-image-caption' => 'text-align: {{VALUE}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'text-align: {{VALUE}};',
                 ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'text_color',
-            $args + [
+            [
                 'label' => __('Text Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
                 'selectors' => [
-                    '{{WRAPPER}} .widget-image-caption' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'color: {{VALUE}};',
                 ],
                 'scheme' => [
                     'type' => Color::NAME,
@@ -482,35 +479,35 @@ class Image extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'caption_background_color',
-            $args + [
+            [
                 'label' => __('Background Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .widget-image-caption' => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'background-color: {{VALUE}};',
                 ],
             ]
         );
 
         $widget->addGroupControl(
             TypographyGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'caption_typography',
-                'selector' => '{{WRAPPER}} .widget-image-caption',
+                'selector' => '{{WRAPPER}} ' . $cssTarget,
                 'scheme' => Typography::TYPOGRAPHY_3,
             ]
         );
 
         $widget->addGroupControl(
             TextShadowGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'caption_text_shadow',
-                'selector' => '{{WRAPPER}} .widget-image-caption',
+                'selector' => '{{WRAPPER}} ' . $cssTarget,
             ]
         );
 
         $widget->addResponsiveControl(
             $prefix . 'caption_space',
-            $args + [
+            [
                 'label' => __('Spacing'),
                 'type' => Controls::SLIDER,
                 'range' => [
@@ -520,7 +517,7 @@ class Image extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .widget-image-caption' => 'margin-top: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'margin-top: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
@@ -550,7 +547,7 @@ class Image extends AbstractWidget
             ]
         );
 
-        self::registerImageStyle($this);
+        self::registerImageStyle($this, self::buildPrefixKey('image'));
 
         $this->endControlsSection();
 
@@ -560,7 +557,7 @@ class Image extends AbstractWidget
                 'label' => __('Caption'),
                 'tab'   => Controls::TAB_STYLE,
                 'condition' => [
-                    'image_caption_source!' => 'none',
+                    self::NAME . '_caption_source!' => 'none',
                 ],
             ]
         );

@@ -58,7 +58,7 @@ if (!empty($type)):
         <?php else:
             $attributes['data-href'] = $urlId;
             $widget->addRenderAttribute('facebook_content', $attributes); ?>
-        <div data-mage-init='{"facebook-sdk": {"app_id":"<?= /* @noEscape */ DataHelper::getFbAppId(); ?>"}}' <?= /* @noEscape */ $widget->getRenderAttributeString('facebook_content') ?>>
+        <div data-mage-init='{"goomento-facebook-sdk": {"app_id":"<?= /* @noEscape */ DataHelper::getFbAppId(); ?>"}}' <?= /* @noEscape */ $widget->getRenderAttributeString('facebook_content') ?>>
         </div>
             <?php
     endif;

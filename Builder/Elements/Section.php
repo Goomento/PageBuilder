@@ -13,12 +13,12 @@ use Goomento\PageBuilder\Builder\Controls\Groups\BackgroundGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\BorderGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\BoxShadowGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\CssFilterGroup;
-use Goomento\PageBuilder\Builder\Embed;
+use Goomento\PageBuilder\Helper\Embed;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Elements;
 use Goomento\PageBuilder\Builder\Managers\Schemes;
 use Goomento\PageBuilder\Builder\Schemes\Color;
-use Goomento\PageBuilder\Builder\Shapes;
+use Goomento\PageBuilder\Helper\Shapes;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
@@ -26,6 +26,8 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 class Section extends AbstractElement
 {
     const NAME = 'section';
+
+    const TYPE = 'section';
 
     /**
      * Section predefined columns presets.
@@ -1547,7 +1549,7 @@ class Section extends AbstractElement
         $settings = $this->getSettingsForDisplay(); ?>
         <<?= EscaperHelper::escapeHtml($this->getHtmlTag()); ?> <?php $this->printRenderAttributeString('_wrapper'); ?>>
             <?php
-            if ('video' === $settings['background_background']):
+            if (isset($settings['background_background']) && 'video' === $settings['background_background']):
                 if ($settings['background_video_link']):
                     $videoProperties = Embed::getVideoProperties($settings['background_video_link']);
 
@@ -1556,12 +1558,12 @@ class Section extends AbstractElement
                     if (!$settings['background_play_on_mobile']) {
                         $this->addRenderAttribute('background-video-container', 'class', 'gmt-hidden-phone');
                     } ?>
-                    <div <?= $this->getRenderAttributeString('background-video-container'); ?>>
+                    <div <?= /** @noEscape */ $this->getRenderAttributeString('background-video-container'); ?>>
                         <?php if ($videoProperties): ?>
                             <div class="gmt-background-video-embed"></div>
                             <?php
                         else:
-                                $videoTagAttributes = 'autoplay muted playsinline';
+                            $videoTagAttributes = 'autoplay muted playsinline';
                             if ('yes' !== $settings['background_play_once']):
                                 $videoTagAttributes .= ' loop';
                             endif; ?>
@@ -1572,23 +1574,31 @@ class Section extends AbstractElement
                 endif;
             endif;
 
-            $hasBackgroundOverlay = in_array($settings['background_overlay_background'], [ 'classic', 'gradient' ], true) ||
-                                    in_array($settings['background_overlay_hover_background'], [ 'classic', 'gradient' ], true);
+            $hasBackgroundOverlay = (
+                isset($settings['background_overlay_background']) &&
+                in_array($settings['background_overlay_background'], [ 'classic', 'gradient' ], true)
+                ) || (
+                    isset($settings['background_overlay_background']) &&
+                    in_array($settings['background_overlay_hover_background'], [ 'classic', 'gradient' ], true)
+                );
 
-            if ($hasBackgroundOverlay):
-                ?>
+        if ($hasBackgroundOverlay):
+            ?>
                 <div class="gmt-background-overlay"></div>
-                <?php
-            endif;
+            <?php
+        endif;
 
-            if ($settings['shape_divider_top']) {
-                $this->printShapeDivider('top');
-            }
+        if (isset($settings['shape_divider_top'])) {
+            $this->printShapeDivider('top');
+        }
 
-            if ($settings['shape_divider_bottom']) {
-                $this->printShapeDivider('bottom');
-            } ?>
-            <div class="gmt-container gmt-column-gap-<?= EscaperHelper::escapeHtml($settings['gap']); ?>">
+        if (isset($settings['shape_divider_bottom'])) {
+            $this->printShapeDivider('bottom');
+        }
+
+        ?>
+
+            <div class="gmt-container gmt-column-gap-<?= /** @noEscapes */ EscaperHelper::escapeHtml($settings['gap']); ?>">
                 <div class="gmt-row">
         <?php
     }

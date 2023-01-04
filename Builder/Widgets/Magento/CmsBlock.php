@@ -10,7 +10,9 @@ namespace Goomento\PageBuilder\Builder\Widgets\Magento;
 
 use Goomento\PageBuilder\Block\Cms\Block;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 class CmsBlock extends AbstractMagentoWidget
@@ -29,13 +31,15 @@ class CmsBlock extends AbstractMagentoWidget
     }
 
     /**
-     * @param AbstractWidget $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
-    public static function registerCmsBlockWidgetInterface(AbstractWidget $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerCmsBlockWidgetInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         /** @var \Magento\Cms\Model\Config\Source\Block $source */
         $source = ObjectManagerHelper::get(\Magento\Cms\Model\Config\Source\Block::class);
         $options = [];
@@ -44,7 +48,7 @@ class CmsBlock extends AbstractMagentoWidget
         }
         $widget->addControl(
             $prefix . 'id',
-            $args + [
+            [
                 'label' => __('Block'),
                 'type' => Controls::SELECT,
                 'default' => '',

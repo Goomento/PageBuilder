@@ -9,10 +9,12 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class Progress extends AbstractWidget
 {
@@ -53,21 +55,20 @@ class Progress extends AbstractWidget
     }
 
     /**
-     * @param AbstractWidget $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
-    public static function registerProcessInterface(AbstractWidget $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerProcessInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
             $prefix . 'title',
             [
                 'label' => __('Title'),
                 'type' => Controls::TEXT,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'placeholder' => __('Enter your title'),
                 'default' => __('My Skill'),
                 'label_block' => true,
@@ -99,9 +100,6 @@ class Progress extends AbstractWidget
                     'size' => 50,
                     'unit' => '%',
                 ],
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'label_block' => true,
             ]
         );
@@ -124,9 +122,6 @@ class Progress extends AbstractWidget
             [
                 'label' => __('Inner Text'),
                 'type' => Controls::TEXT,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'placeholder' => __('e.g. Web Designer'),
                 'default' => __('Web Designer'),
                 'label_block' => true,
@@ -135,20 +130,19 @@ class Progress extends AbstractWidget
     }
 
     /**
-     * @param AbstractWidget $widget
+     * @param ControlsStack $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
+     * @throws BuilderException
      */
     public static function registerProcessStyle(
-        AbstractWidget $widget,
-        string         $prefix = self::NAME . '_',
-        string         $cssTarget = '.gmt-progress-bar',
-        array          $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-progress-bar'
     ) {
         $widget->addControl(
             $prefix . 'bar_color',
-            $args + [
+            [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
                 'scheme' => [
@@ -163,7 +157,7 @@ class Progress extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'bar_bg_color',
-            $args + [
+            [
                 'label' => __('Background Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
@@ -174,7 +168,7 @@ class Progress extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'bar_height',
-            $args + [
+            [
                 'label' => __('Height'),
                 'type' => Controls::SLIDER,
                 'selectors' => [
@@ -185,7 +179,7 @@ class Progress extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'bar_border_radius',
-            $args + [
+            [
                 'label' => __('Border Radius'),
                 'type' => Controls::SLIDER,
                 'size_units' => [ 'px', '%' ],
@@ -197,7 +191,7 @@ class Progress extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'inner_text_heading',
-            $args + [
+            [
                 'label' => __('Inner Text'),
                 'type' => Controls::HEADING,
                 'separator' => 'before',
@@ -206,7 +200,7 @@ class Progress extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'bar_inline_color',
-            $args + [
+            [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [

@@ -6,13 +6,10 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\Builder;
-
-use Goomento\PageBuilder\Helper\HooksHelper;
+namespace Goomento\PageBuilder\Helper;
 
 class Fonts
 {
-
     /**
      * The system font name.
      */

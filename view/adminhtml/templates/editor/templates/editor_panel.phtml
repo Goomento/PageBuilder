@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 
 use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
-use Goomento\PageBuilder\Builder\Fonts;
+use Goomento\PageBuilder\Helper\Fonts;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Magento\Backend\Block\Template;
@@ -333,8 +333,8 @@ use Magento\Backend\Block\Template;
 
 <script type="text/template" id="tmpl-gmt-control-dynamic-switcher">
     <div class="gmt-control-dynamic-switcher-wrapper">
-        <div class="gmt-control-dynamic-switcher">
-            <i class="fa fa-ellipsis-h"></i>
+        <div class="gmt-control-dynamic-switcher tooltip-target" data-tooltip="<?= $block->escapeHtml(__('Dynamic value')) ?>">
+            <i class="fas fa-bolt"></i>
         </div>
     </div>
 </script>

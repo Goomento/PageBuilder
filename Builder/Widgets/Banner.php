@@ -10,14 +10,22 @@ namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\CssFilterGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
 
 class Banner extends AbstractWidget
 {
+    /**
+     * @inheirtDoc
+     */
     const NAME = 'banner';
 
+    /**
+     * @inheirtDoc
+     */
     protected $template = 'Goomento_PageBuilder::widgets/banner.phtml';
 
     /**
@@ -53,21 +61,20 @@ class Banner extends AbstractWidget
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
-    public static function registerBannerInterface(AbstractElement $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerBannerInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
             $prefix . 'image',
-            $args + [
+            [
                 'label' => __('Choose Image'),
                 'type' => Controls::MEDIA,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => [
                     'url' => DataHelper::getPlaceholderImageSrc(),
                 ],
@@ -76,7 +83,7 @@ class Banner extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'title',
-            $args + [
+            [
                 'label' => __('Title'),
                 'type' => Controls::TEXT,
                 'default' => __('Enter the title here.'),
@@ -86,7 +93,7 @@ class Banner extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'caption',
-            $args + [
+            [
                 'label' => __('Caption'),
                 'type' => Controls::TEXTAREA,
                 'default' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
@@ -96,7 +103,7 @@ class Banner extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'link',
-            $args + [
+            [
                 'label' => __('Link'),
                 'type' => Controls::URL,
                 'placeholder' => __('https://your-link.com'),
@@ -106,17 +113,16 @@ class Banner extends AbstractWidget
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
     public static function registerImageStyle(
-        AbstractElement $widget,
+        ControlsStack $widget,
         string $prefix = self::NAME . '_',
-        string          $cssTarget = '.gmt-banner-img',
-        array $args = []
+        string $cssTarget = '.gmt-banner-img'
     ) {
         $widget->addControl(
             $prefix . 'hover_animation',
@@ -145,7 +151,7 @@ class Banner extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'image_opacity',
-            $args + [
+            [
                 'label' => __('Opacity'),
                 'type' => Controls::SLIDER,
                 'range' => [
@@ -163,7 +169,7 @@ class Banner extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'background_hover_transition',
-            $args + [
+            [
                 'label' => __('Transition Duration'),
                 'type' => Controls::SLIDER,
                 'default' => [
@@ -200,7 +206,7 @@ class Banner extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'image_opacity_hover',
-            $args + [
+            [
                 'label' => __('Opacity'),
                 'type' => Controls::SLIDER,
                 'range' => [
@@ -222,39 +228,37 @@ class Banner extends AbstractWidget
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
     public static function registerTitleStyle(
-        AbstractElement $widget,
+        ControlsStack $widget,
         string $prefix = self::NAME . '_title_',
-        string $cssTarget = '.gmt-banner-title',
-        array $args = []
+        string $cssTarget = '.gmt-banner-title'
     ) {
-        Text::registerTextStyle($widget, $prefix, $cssTarget, $args);
+        Text::registerTextStyle($widget, $prefix, $cssTarget);
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
     public static function registerCaptionStyle(
-        AbstractElement $widget,
+        ControlsStack $widget,
         string $prefix = self::NAME . '_caption_',
-        string $cssTarget = '.gmt-banner-content',
-        array $args = []
+        string $cssTarget = '.gmt-banner-content'
     ) {
         Text::registerTextStyle($widget, $prefix, $cssTarget);
 
         $widget->addResponsiveControl(
             $prefix . 'position',
-            $args + [
+            [
                 'label' => __('Position'),
                 'type' => Controls::SELECT,
                 'default' => 'bottom-right',
@@ -274,7 +278,7 @@ class Banner extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'padding',
-            $args + [
+            [
                 'label' => __('Padding'),
                 'type' => Controls::SLIDER,
                 'default' => [
@@ -289,7 +293,7 @@ class Banner extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'margin',
-            $args + [
+            [
                 'label' => __('Margin'),
                 'type' => Controls::DIMENSIONS,
                 'size_units' => [ 'px', '%', 'rem' ],
@@ -301,7 +305,7 @@ class Banner extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'width',
-            $args + [
+            [
                 'label' => __('Width'),
                 'type' => Controls::SLIDER,
                 'default' => [
@@ -327,7 +331,7 @@ class Banner extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'background',
-            $args + [
+            [
                 'label' => __('Background'),
                 'type' => Controls::COLOR,
                 'default' => '',
@@ -362,7 +366,7 @@ class Banner extends AbstractWidget
             ]
         );
 
-        self::registerImageStyle($this);
+        self::registerImageStyle($this, self::buildPrefixKey('image'));
 
         $this->endControlsSection();
 

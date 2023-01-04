@@ -5,88 +5,88 @@
 
 .gmt-widget-icon-box {
 
-	@media (min-width: @screen-md) {
+    @media (min-width: @screen-md) {
 
-		&.gmt-position- {
+        &.gmt-position- {
 
-			&left,
-			&right {
+            &left,
+            &right {
 
-				.gmt-icon-box-wrapper {
-					display: flex;
-				}
+                .gmt-icon-box-wrapper {
+                    display: flex;
+                }
 
-				.gmt-icon-box-icon {
-					display: inline-flex;
-					flex: 0 0 auto; // Hack for Safari
-				}
-			}
+                .gmt-icon-box-icon {
+                    display: inline-flex;
+                    flex: 0 0 auto; // Hack for Safari
+                }
+            }
 
-			&right {
+            &right {
 
-				.gmt-icon-box-wrapper {
+                .gmt-icon-box-wrapper {
                     .css_direction_value(text-align, right, left);
                     .css_direction_value(flex-direction, row-reverse, row);
-				}
-			}
+                }
+            }
 
-			&left {
+            &left {
 
-				.gmt-icon-box-wrapper {
+                .gmt-icon-box-wrapper {
                     .css_direction_value(text-align, left, right);
                     .css_direction_value(flex-direction, row, row-reverse);
-				}
-			}
+                }
+            }
 
-			&top {
+            &top {
 
-				.gmt-icon-box-img {
-					margin: auto;
-				}
-			}
-		}
+                .gmt-icon-box-img {
+                    margin: auto;
+                }
+            }
+        }
 
-		&.gmt-vertical-align- {
+        &.gmt-vertical-align- {
 
-			&top {
+            &top {
 
-				.gmt-icon-box-wrapper {
-					align-items: flex-start;
-				}
-			}
+                .gmt-icon-box-wrapper {
+                    align-items: flex-start;
+                }
+            }
 
-			&middle {
+            &middle {
 
-				.gmt-icon-box-wrapper {
-					align-items: center;
-				}
-			}
+                .gmt-icon-box-wrapper {
+                    align-items: center;
+                }
+            }
 
-			&bottom {
+            &bottom {
 
-				.gmt-icon-box-wrapper {
-					align-items: flex-end;
-				}
-			}
-		}
-	}
+                .gmt-icon-box-wrapper {
+                    align-items: flex-end;
+                }
+            }
+        }
+    }
 
-	.gmt-icon-box-wrapper {
-		text-align: center;
-	}
+    .gmt-icon-box-wrapper {
+        text-align: center;
+    }
 
-	.gmt-icon-box-title {
+    .gmt-icon-box-title {
 
-		a {
-			color: inherit;
-		}
-	}
+        a {
+            color: inherit;
+        }
+    }
 
-	.gmt-icon-box-content {
-		flex-grow: 1;
-	}
+    .gmt-icon-box-content {
+        flex-grow: 1;
+    }
 
-	.gmt-icon-box-description {
-		margin: 0;
-	}
+    .gmt-icon-box-description {
+        margin: 0;
+    }
 }

@@ -7,7 +7,6 @@
 declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
-use Goomento\PageBuilder\Helper\DataHelper;
 
 /**
  * @var Widget $block
@@ -15,31 +14,33 @@ use Goomento\PageBuilder\Helper\DataHelper;
 $widget = $block->getWidget();
 $settings = $block->getSettingsForDisplay();
 
-if (empty($settings['alert_title'])) {
-    return;
-}
+if (!empty($settings['alert_title'])):
+    if (!empty($settings['alert_type'])) {
+        $widget->addRenderAttribute('wrapper', 'class', 'gmt-alert gmt-alert-' . $settings['alert_type']);
+    }
 
-if (!empty($settings['alert_type'])) {
-    $widget->addRenderAttribute('wrapper', 'class', 'gmt-alert gmt-alert-' . $settings['alert_type']);
-}
+    $widget->addRenderAttribute('wrapper', 'role', 'alert');
+    $widget->addRenderAttribute('alert_title', 'class', 'gmt-alert-title');
 
-$widget->addRenderAttribute('wrapper', 'role', 'alert');
-$widget->addRenderAttribute('alert_title', 'class', 'gmt-alert-title');
-$widget->addInlineEditingAttributes('alert_title', 'none');
+    ?>
+    <div <?= /** @noEscape */ $widget->getRenderAttributeString('wrapper'); ?>>
+        <span <?= /** @noEscape */ $widget->getRenderAttributeString('alert_title'); ?>>
+            <?php $widget->printInlineEditingContent('alert_title'); ?>
+        </span>
+        <?php
+        if (!empty($settings['alert_description'])):
+            $widget->addRenderAttribute('alert_description', 'class', 'gmt-alert-description'); ?>
+            <span <?= /** @noEscape */ $widget->getRenderAttributeString('alert_description'); ?>>
+                <?php $widget->printInlineEditingContent('alert_description'); ?>
+            </span>
+        <?php endif; ?>
+        <?php if ('show' === $settings['alert_show_dismiss']): ?>
+            <button type="button" class="gmt-alert-dismiss">
+                <span aria-hidden="true">&times;</span>
+                <span class="gmt-screen-only"><?= $block->escapeHtml(__('Dismiss alert')); ?></span>
+            </button>
+        <?php endif; ?>
+    </div>
+<?php endif;
 
-?>
-<div <?= /** @noEscape */ $widget->getRenderAttributeString('wrapper'); ?>>
-    <span <?= /** @noEscape */ $widget->getRenderAttributeString('alert_title'); ?>><?=  /** @noEscape */ $settings['alert_title']; ?></span>
-    <?php
-    if (!empty($settings['alert_description'])):
-        $widget->addRenderAttribute('alert_description', 'class', 'gmt-alert-description');
-        $widget->addInlineEditingAttributes('alert_description'); ?>
-        <span <?= /** @noEscape */ $widget->getRenderAttributeString('alert_description'); ?>><?= /** @noEscape */ $settings['alert_description']; ?></span>
-    <?php endif; ?>
-    <?php if ('show' === $settings['alert_show_dismiss']): ?>
-        <button type="button" class="gmt-alert-dismiss">
-            <span aria-hidden="true">&times;</span>
-            <span class="gmt-screen-only"><?= $block->escapeHtml(__('Dismiss alert')); ?></span>
-        </button>
-    <?php endif; ?>
-</div>
+

@@ -8,29 +8,29 @@
 }
 
 .gmt-progress-wrapper {
-	position: relative;
-	background-color: @gray;
-	color: @white;
-	height: 100%;
-	border-radius: 2px;
+    position: relative;
+    background-color: @gray;
+    color: @white;
+    height: 100%;
+    border-radius: 2px;
 }
 
 .gmt-progress-bar {
-	display: flex;
-	background-color: @success;
-	width: 0;
-	font-size: 11px;
-	height: 30px;
-	line-height: 30px;
-	border-radius: 2px;
-	transition: width 1s ease-in-out;
+    display: flex;
+    background-color: @success;
+    width: 0;
+    font-size: 11px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 2px;
+    transition: width 1s ease-in-out;
 }
 
 .gmt-progress-text {
-	flex-grow: 1;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     .css_direction_property(padding-left, padding-right, @space-lg);
 }
 
@@ -39,46 +39,46 @@
 }
 
 .gmt-widget-progress {
-	.gmt-progress-wrapper {
+    .gmt-progress-wrapper {
 
-		&.progress-info {
+        &.progress-info {
 
-			.gmt-progress-bar {
-				background-color: @info;
-			}
-		}
+            .gmt-progress-bar {
+                background-color: @info;
+            }
+        }
 
-		&.progress-success {
+        &.progress-success {
 
-			.gmt-progress-bar {
-				background-color: @success;
-			}
-		}
+            .gmt-progress-bar {
+                background-color: @success;
+            }
+        }
 
-		&.progress-warning {
+        &.progress-warning {
 
-			.gmt-progress-bar {
-				background-color: @warning;
-			}
-		}
+            .gmt-progress-bar {
+                background-color: @warning;
+            }
+        }
 
-		&.progress-danger {
+        &.progress-danger {
 
-			.gmt-progress-bar {
-				background-color: @danger;
-			}
-		}
-	}
+            .gmt-progress-bar {
+                background-color: @danger;
+            }
+        }
+    }
 }
 
 .gmt-progress .gmt-title {
-	display: block;
+    display: block;
 }
 
 // Responsive mode
 @media (max-width: @screen-sm) {
 
-	.gmt-progress-text {
+    .gmt-progress-text {
         .css_direction_property(padding-left, padding-right, @space-md);
-	}
+    }
 }

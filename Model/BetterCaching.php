@@ -19,6 +19,8 @@ use Zend_Json;
 
 class BetterCaching
 {
+    const FIFTEEN_MIN_TIME = 54000; // 15 mins
+
     const DAY_LIFE_TIME = 86400; // 01 day
 
     const HOUR_LIFE_TIME = 3600; // 01 hour

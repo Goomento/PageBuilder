@@ -48,10 +48,10 @@ class ProductList extends ProductsList
         if ($widget) {
             $name = $widget->getName();
             if ($cats = $this->getSettingsForDisplay("{$name}_category")) {
-                $this->setCategoryIds(explode(',', $cats));
+                $this->setCategoryIds($cats);
             }
             if ($skus = $this->getSettingsForDisplay("{$name}_product")) {
-                $this->setProductSkus(explode(',', $skus));
+                $this->setProductSkus($skus);
             }
             if ($productsPerPage = $this->getSettingsForDisplay("{$name}_products_per_page")) {
                 $this->setProductsPerPage((int) $productsPerPage);

@@ -24,8 +24,8 @@ class Font extends AbstractControlData
     protected function getDefaultSettings()
     {
         return [
-            'groups' => \Goomento\PageBuilder\Builder\Fonts::getFontGroups(),
-            'options' => \Goomento\PageBuilder\Builder\Fonts::getFonts(),
+            'groups' => \Goomento\PageBuilder\Helper\Fonts::getFontGroups(),
+            'options' => \Goomento\PageBuilder\Helper\Fonts::getFonts(),
         ];
     }
 

@@ -352,13 +352,7 @@ class DataHelper
             if (!empty($term['terms'])) {
                 $comparisonResult = self::check($term, $comparison);
             } else {
-                preg_match('/(\w+)(?:\[(\w+)])?/', $term['name'], $parsedName);
-
-                $value = $comparison[$parsedName[1]];
-
-                if (!empty($parsedName[2])) {
-                    $value = $value[$parsedName[2]];
-                }
+                $value = self::arrayGetValue($comparison, $term['name'], '.');
 
                 $operator = null;
 

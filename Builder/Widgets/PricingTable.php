@@ -8,10 +8,12 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\BorderGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\BoxShadowGroup;
 use Goomento\PageBuilder\Builder\Elements\Repeater;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class PricingTable extends AbstractWidget
 {
@@ -54,7 +56,7 @@ class PricingTable extends AbstractWidget
      */
     public function getKeywords()
     {
-        return [ 'product', ' pricing', 'table'];
+        return [ 'product', ' pricing', 'table', 'price'];
     }
 
     /**
@@ -66,32 +68,79 @@ class PricingTable extends AbstractWidget
     }
 
     /**
-     * @inheritDoc
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
      */
-    protected function registerControls()
-    {
-        $this->startControlsSection(
-            'section_pricing_table_general',
+    public static function registerPricingTableFeature(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $widget->addControl(
+            $prefix . 'item',
             [
-                'label' => __('General'),
+                'label'       => __('List Item'),
+                'type'        => Controls::TEXT,
+                'label_block' => true,
+                'default'     => __('Pricing table list item'),
             ]
         );
 
-        $this->addControl(
-            'pricing_table_title',
+        $widget->addControl(
+            $prefix . 'item_selected_icon',
+            [
+                'label'            => __('List Icon'),
+                'type'             => Controls::ICONS,
+                'default'          => [
+                    'value'   => 'fas fa-check',
+                    'library' => 'fa-solid',
+                ],
+            ]
+        );
+
+        $widget->addControl(
+            $prefix . 'item_active',
+            [
+                'label'        => __('Item Active?'),
+                'type'         => Controls::SWITCHER,
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            ]
+        );
+
+        $widget->addControl(
+            $prefix . 'item_icon_color',
+            [
+                'label'   => __('Icon Color'),
+                'type'    => Controls::COLOR,
+                'default' => '#23a455',
+            ]
+        );
+    }
+
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerPricingTableTitleInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $widget->addControl(
+            $prefix . 'title',
             [
                 'label'       => __('Title'),
                 'type'        => Controls::TEXT,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'label_block' => false,
                 'default'     => __('General Package'),
             ]
         );
 
-        $this->addControl(
-            'pricing_table_title_size',
+        $widget->addControl(
+            $prefix . 'title_size',
             [
                 'label' => __('Title HTML Tag'),
                 'type' => Controls::SELECT,
@@ -109,18 +158,20 @@ class PricingTable extends AbstractWidget
                 'default' => 'span',
             ]
         );
+    }
 
-        $this->endControlsSection();
-
-        $this->startControlsSection(
-            'section_pricing_table_price',
-            [
-                'label' => __('Price'),
-            ]
-        );
-
-        $this->addControl(
-            'pricing_table_price',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerPricingTablePriceInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $widget->addControl(
+            $prefix . 'price',
             [
                 'label'       => __('Price'),
                 'type'        => Controls::TEXT,
@@ -128,8 +179,8 @@ class PricingTable extends AbstractWidget
                 'default'     => '100',
             ]
         );
-        $this->addControl(
-            'pricing_table_onsale',
+        $widget->addControl(
+            $prefix . 'onsale',
             [
                 'label'        => __('On Sale?'),
                 'type'         => Controls::SWITCHER,
@@ -137,20 +188,20 @@ class PricingTable extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'pricing_table_onsale_price',
+        $widget->addControl(
+            $prefix . 'onsale_price',
             [
                 'label'       => __('Sale Price'),
                 'type'        => Controls::TEXT,
                 'default'     => 95,
                 'condition'   => [
-                    'pricing_table_onsale' => 'yes',
+                    $prefix . 'onsale' => 'yes',
                 ],
             ]
         );
 
-        $this->addControl(
-            'pricing_table_price_cur',
+        $widget->addControl(
+            $prefix . 'price_cur',
             [
                 'label'       => __('Price Currency'),
                 'type'        => Controls::TEXT,
@@ -159,8 +210,8 @@ class PricingTable extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'pricing_table_price_cur_placement',
+        $widget->addControl(
+            $prefix . 'price_cur_placement',
             [
                 'label'       => __('Currency Placement'),
                 'type'        => Controls::SELECT,
@@ -173,19 +224,18 @@ class PricingTable extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'pricing_table_price_period',
+        $widget->addControl(
+            $prefix . 'price_period',
             [
                 'label'       => __('Price Period (per)'),
                 'type'        => Controls::TEXT,
-                'dynamic' => ['active' => true],
                 'label_block' => false,
                 'default'     => __('Month'),
             ]
         );
 
-        $this->addControl(
-            'pricing_table_period_separator',
+        $widget->addControl(
+            $prefix . 'period_separator',
             [
                 'label'       => __('Period Separator'),
                 'type'        => Controls::TEXT,
@@ -193,61 +243,24 @@ class PricingTable extends AbstractWidget
                 'default'     => '/ ',
             ]
         );
+    }
 
-        $this->endControlsSection();
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerPricingTableFeatures(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $repeater = new Repeater;
 
-        $this->startControlsSection(
-            'section_pricing_table_feature',
-            [
-                'label' => __('Feature'),
-            ]
-        );
+        self::registerPricingTableFeature($repeater, $prefix);
 
-        $repeater = new Repeater();
-
-        $repeater->addControl(
-            'pricing_table_item',
-            [
-                'label'       => __('List Item'),
-                'type'        => Controls::TEXT,
-                'label_block' => true,
-                'default'     => __('Pricing table list item'),
-            ]
-        );
-
-        $repeater->addControl(
-            'pricing_table_item_selected_icon',
-            [
-                'label'            => __('List Icon'),
-                'type'             => Controls::ICONS,
-                'default'          => [
-                    'value'   => 'fas fa-check',
-                    'library' => 'fa-solid',
-                ],
-            ]
-        );
-
-        $repeater->addControl(
-            'pricing_table_item_active',
-            [
-                'label'        => __('Item Active?'),
-                'type'         => Controls::SWITCHER,
-                'return_value' => 'yes',
-                'default'      => 'yes',
-            ]
-        );
-
-        $repeater->addControl(
-            'pricing_table_item_icon_color',
-            [
-                'label'   => __('Icon Color'),
-                'type'    => Controls::COLOR,
-                'default' => '#23a455',
-            ]
-        );
-
-        $this->addControl(
-            'pricing_table_icon_enabled',
+        $widget->addControl(
+            $prefix . 'icon_enabled',
             [
                 'label'        => __('Show Icon'),
                 'type'         => Controls::SWITCHER,
@@ -255,8 +268,8 @@ class PricingTable extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'pricing_table_items',
+        $widget->addControl(
+            $prefix . 'items',
             [
                 'type'        => Controls::REPEATER,
                 'seperator'   => 'before',
@@ -268,9 +281,46 @@ class PricingTable extends AbstractWidget
                     ['pricing_table_item' => '24/7 support'],
                 ],
                 'fields'      => $repeater->getControls(),
-                'title_field' => '{{pricing_table_item}}',
+                'title_field' => '{{ ' . $prefix . 'item }}',
             ]
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function registerControls()
+    {
+        $this->startControlsSection(
+            'section_pricing_table_general',
+            [
+                'label' => __('General'),
+            ]
+        );
+
+        self::registerPricingTableTitleInterface($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_pricing_table_price',
+            [
+                'label' => __('Price'),
+            ]
+        );
+
+        self::registerPricingTablePriceInterface($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_pricing_table_feature',
+            [
+                'label' => __('Features'),
+            ]
+        );
+
+        self::registerPricingTableFeatures($this);
 
         $this->endControlsSection();
 
@@ -290,20 +340,18 @@ class PricingTable extends AbstractWidget
             ]
         );
 
-        Button::registerButtonInterface($this, self::NAME . '_button_', [
-            'condition' => [
-                'pricing_table_button_show' => 'yes'
-            ]
-        ]);
+        $prefixKey = self::buildPrefixKey(Button::NAME);
 
-        $this->removeControl(self::NAME . '_button_align');
+        Button::registerButtonInterface($this, $prefixKey);
+
+        $this->removeControl($prefixKey . 'align');
 
         $this->endControlsSection();
 
         $this->startControlsSection(
             'section_pricing_table_style',
             [
-                'label' => __('Pricing Table'),
+                'label' => __('General'),
                 'tab'   => Controls::TAB_STYLE,
             ]
         );
@@ -349,6 +397,7 @@ class PricingTable extends AbstractWidget
         );
 
         Text::registerTextStyle($this, self::NAME . '_title_', '.gmt-pricing-head');
+
         ImageBox::registerBoxStyle($this, self::NAME . '_head_wrapper_', '.gmt-pricing-head');
 
         $this->endControlsSection();
@@ -361,21 +410,12 @@ class PricingTable extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'pricing_table_original_price_style',
-            [
-                'label'     => __('Original Price'),
-                'type'      => Controls::HEADING,
-                'separator' => 'before',
-            ]
-        );
-
         Text::registerSimpleTextStyle($this, self::NAME . '_op_', '.gmt-pricing-body .gmt-original-price');
 
         $this->addControl(
             'pricing_table_original_price_currency_style',
             [
-                'label'     => __('Original Price Currency'),
+                'label'     => __('Currency'),
                 'type'      => Controls::HEADING,
                 'separator' => 'before',
             ]
@@ -383,48 +423,39 @@ class PricingTable extends AbstractWidget
 
         Text::registerSimpleTextStyle($this, self::NAME . '_opc_', '.gmt-pricing-body .gmt-original-price .gmt-price-currency');
 
-        $this->addControl(
-            'pricing_table_onsale_price_style',
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_pricing_table_sale_price_style',
             [
-                'label'     => __('Sale Price'),
-                'type'      => Controls::HEADING,
-                'separator' => 'before',
+                'label' => __('Sale Price'),
+                'tab'   => Controls::TAB_STYLE,
                 'condition' => [
-                    'pricing_table_onsale' => 'yes'
+                    self::NAME . '_onsale' => 'yes'
                 ]
             ]
         );
 
-        Text::registerSimpleTextStyle($this, self::NAME . '_onp_', '.gmt-pricing-body .gmt-sale-price', [
-            'condition' => [
-                'pricing_table_onsale' => 'yes'
-            ]
-        ]);
+        Text::registerSimpleTextStyle($this, self::NAME . '_onp_', '.gmt-pricing-body .gmt-sale-price');
 
         $this->addControl(
             'pricing_table_onsale_price_currency_style',
             [
-                'label'     => __('Sale Price Currency'),
+                'label'     => __('Currency'),
                 'type'      => Controls::HEADING,
-                'separator' => 'before',
-                'condition' => [
-                    'pricing_table_onsale' => 'yes'
-                ]
+                'separator' => 'before'
             ]
         );
 
-        Text::registerSimpleTextStyle($this, self::NAME . '_onpc_', '.gmt-pricing-body .gmt-sale-price .gmt-price-currency', [
-            'condition' => [
-                'pricing_table_onsale' => 'yes'
-            ]
-        ]);
+        Text::registerSimpleTextStyle($this, self::NAME . '_onpc_', '.gmt-pricing-body .gmt-sale-price .gmt-price-currency');
 
-        $this->addControl(
+        $this->endControlsSection();
+
+        $this->startControlsSection(
             'pricing_table_pricing_period_style',
             [
                 'label'     => __('Pricing Period'),
-                'type'      => Controls::HEADING,
-                'separator' => 'before',
+                'tab'       => Controls::TAB_STYLE,
             ]
         );
 
@@ -491,17 +522,36 @@ class PricingTable extends AbstractWidget
         $this->endControlsSection();
 
         $this->startControlsSection(
-            'section_pricing_table_footer_style',
+            'section_pricing_table_footer_button_style',
             [
                 'label' => __('Footer & Button'),
                 'tab'   => Controls::TAB_STYLE,
                 'condition' => [
-                    'pricing_table_button_show' => 'yes'
+                    self::NAME . '_button_show' => 'yes'
                 ]
             ]
         );
 
+        $this->addControl(
+            'section_pricing_table_button_style',
+            [
+                'label' => __('Button'),
+                'type' => Controls::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
         Button::registerButtonStyle($this, self::NAME . '_button_', '.gmt-button');
+
+        $this->addControl(
+            'section_pricing_table_footer_style',
+            [
+                'label' => __('Footer'),
+                'type' => Controls::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
         ImageBox::registerBoxStyle($this, self::NAME . '_footer_wrapper_', '.gmt-pricing-footer');
 
         $this->endControlsSection();

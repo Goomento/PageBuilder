@@ -13,10 +13,13 @@ use Goomento\PageBuilder\Builder\Managers\Controls;
 
 class Html extends AbstractWidget
 {
+    /**
+     * @inheritDoc
+     */
     const NAME = 'html';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $template = 'Goomento_PageBuilder::widgets/html.phtml';
 

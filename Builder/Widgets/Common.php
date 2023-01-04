@@ -48,9 +48,6 @@ class Common extends AbstractWidget
             [
                 'label' => __('CSS ID'),
                 'type' => Controls::TEXT,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => '',
                 'title' => __('Add your custom id WITHOUT the Pound key. e.g: my-id'),
                 'description' => __('Please make sure the ID is unique and not used elsewhere on the page this element is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces.'),
@@ -65,9 +62,6 @@ class Common extends AbstractWidget
             [
                 'label' => __('CSS Classes'),
                 'type' => Controls::TEXT,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'prefix_class' => '',
                 'title' => __('Add your custom class WITHOUT the dot. e.g: my-class'),
                 'classes' => 'gmt-control-direction-ltr',

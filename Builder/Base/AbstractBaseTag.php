@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Base;
 
-use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
@@ -138,6 +138,7 @@ abstract class AbstractBaseTag extends ControlsStack
 
     /**
      * @return void
+     * @throws BuilderException
      */
     protected function initControls()
     {

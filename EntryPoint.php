@@ -42,16 +42,6 @@ class EntryPoint extends BuilderRegister
      */
     public function beforeRegisterScripts()
     {
-        /**
-         * Use `pagebuilderWidgetRegister` to register js handling which responsible for specify widget
-         */
-        ThemeHelper::registerScript(
-            'pagebuilderRegister',
-            'Goomento_PageBuilder/js/action/pagebuilderRegister',
-            ['jquery']
-        );
-
-        ThemeHelper::enqueueScript('pagebuilderRegister');
     }
 
     /**
@@ -59,14 +49,16 @@ class EntryPoint extends BuilderRegister
      */
     public function registerScripts()
     {
-        $minSuffix = Configuration::debug() ? '' : '.min';
+        ThemeHelper::registerScript(
+            'goomento-widget-base',
+            'Goomento_PageBuilder/js/widgets/base'
+        );
 
         ThemeHelper::registerScript(
             'jquery-numerator',
             'Goomento_PageBuilder/lib/jquery-numerator/jquery-numerator.min',
             [
-                'jquery',
-                'jquery/ui'
+                'jquery'
             ]
         );
 
@@ -83,13 +75,7 @@ class EntryPoint extends BuilderRegister
 
         ThemeHelper::registerScript(
             'swiper',
-            'Goomento_PageBuilder/lib/swiper/swiper.min'
-        );
-
-        ThemeHelper::inlineScript(
-            'swiper',
-            "require(['swiper'], Swiper => {window.Swiper = window.Swiper || Swiper});",
-            'before'
+            'Goomento_PageBuilder/js/view/swiper-wrapper'
         );
 
         ThemeHelper::registerScript(
@@ -109,9 +95,8 @@ class EntryPoint extends BuilderRegister
         );
 
         ThemeHelper::registerScript(
-            'banner-slider',
-            'Goomento_PageBuilder/js/widgets/banner-slider',
-            ['goomento-frontend']
+            'goomento-widget-banner-slider',
+            'Goomento_PageBuilder/js/widgets/banner-slider'
         );
 
         ThemeHelper::registerScript(
@@ -120,8 +105,23 @@ class EntryPoint extends BuilderRegister
         );
 
         ThemeHelper::registerScript(
-            'facebook-sdk',
+            'goomento-facebook-sdk',
             'Goomento_PageBuilder/js/widgets/facebook-sdk'
+        );
+
+        ThemeHelper::registerScript(
+            'goomento-widget-image-carousel',
+            'Goomento_PageBuilder/js/widgets/image-carousel'
+        );
+
+        ThemeHelper::registerScript(
+            'goomento-widget-product-slider',
+            'Goomento_PageBuilder/js/widgets/product-slider'
+        );
+
+        ThemeHelper::registerScript(
+            'goomento-widget-alert',
+            'Goomento_PageBuilder/js/widgets/alert'
         );
     }
 

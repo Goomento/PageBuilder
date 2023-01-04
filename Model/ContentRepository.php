@@ -193,7 +193,7 @@ class ContentRepository implements ContentRepositoryInterface
             $content->setIdentifier(
                 implode('-', [
                     $content->getType(),
-                    EncryptorHelper::uniqueString()
+                    EncryptorHelper::randomString()
                 ])
             );
         }

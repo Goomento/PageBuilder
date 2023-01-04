@@ -11,12 +11,15 @@ namespace Goomento\PageBuilder\Builder\Base;
 use Exception;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Widgets\Common;
+use Goomento\PageBuilder\Exception\BuilderException;
+use Goomento\PageBuilder\Helper\CacheHelper;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\TemplateHelper;
 
+// phpcs:disable Magento2.Security.LanguageConstruct.DirectOutput
 abstract class AbstractWidget extends AbstractElement
 {
     /**
@@ -44,6 +47,11 @@ abstract class AbstractWidget extends AbstractElement
     protected $renderer = '';
 
     /**
+     * @var null|string
+     */
+    private $prefixSettingKey;
+
+    /**
      * Widget base constructor.
      *
      * Initializing the widget base class.
@@ -59,11 +67,16 @@ abstract class AbstractWidget extends AbstractElement
     {
         parent::__construct($data, $args);
 
+        if (isset($data['prefix_setting_key'])) {
+            $this->setPrefixSettingKey($data['prefix_setting_key']);
+            unset($data['prefix_setting_key']);
+        }
+
         $isTypeInstance = $this->isTypeInstance();
 
         if (!$isTypeInstance && null === $args) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
-                '`$args` argument is required when initializing a full widget instance.'
+            throw new BuilderException(
+                'arguments is required when initializing a full widget instance.'
             );
         }
     }
@@ -74,7 +87,6 @@ abstract class AbstractWidget extends AbstractElement
     protected function initControls()
     {
         parent::initControls();
-
         HooksHelper::doAction('pagebuilder/widget/' . static::NAME . '/registered_controls', $this);
     }
 
@@ -269,9 +281,7 @@ abstract class AbstractWidget extends AbstractElement
             'preview_helper' => $this->getPreviewHelper(),
         ];
 
-        /** @var Controls $managersControls */
-        $managersControls = ObjectManagerHelper::get(Controls::class);
-        $stack = $managersControls->getElementStack($this);
+        $stack = ObjectManagerHelper::getControlsManager()->getElementStack($this);
 
         if ($stack) {
             $config['controls'] = $this->getStack(false)['controls'];
@@ -281,7 +291,9 @@ abstract class AbstractWidget extends AbstractElement
         return array_merge(parent::_getInitialConfig(), $config);
     }
 
-
+    /**
+     * @return bool
+     */
     protected function shouldPrintEmpty()
     {
         return false;
@@ -360,8 +372,6 @@ abstract class AbstractWidget extends AbstractElement
      *
      * Used to generate the final HTML displayed on the frontend.
      *
-     * Note that if skin is selected, it will be rendered by the skin itself,
-     * not the widget.
      *
      */
     public function renderContent()
@@ -381,7 +391,6 @@ abstract class AbstractWidget extends AbstractElement
             ob_start();
 
             $widgetReturn = $this->render();
-
         } catch (\Exception $e) {
             if (DataHelper::isDebugMode() && StateHelper::isBuildable()) {
                 $this->addRenderAttribute('_container', 'class', 'gmt-widget-debug');
@@ -408,9 +417,19 @@ abstract class AbstractWidget extends AbstractElement
             $this->addRenderAttribute('_container', 'class', 'gmt-animation-' . trim($settings['_hover_animation']));
         }
 
-        $container = $this->getRenderAttributeString('_container');
+        if ($this->getScriptDepends()) {
+            $frontendSettings = $this->getFrontendSettings();
+            $initScripts = [];
+
+            foreach ($this->getScriptDepends() as $script) {
+                $initScripts[$script] = $frontendSettings ?: [];
+            }
+            // Use `_container` for render via AJAX
+            $this->addRenderAttribute('_container', 'data-mage-init', \Zend_Json::encode($initScripts));
+        }
+
         ?>
-        <div <?= $container ?>>
+        <div <?= /** @noEscape */ $this->getRenderAttributeString('_container') ?>>
             <?php
 
             /**
@@ -424,7 +443,6 @@ abstract class AbstractWidget extends AbstractElement
              */
             $widgetContent = HooksHelper::applyFilters('pagebuilder/widget/render_content', $widgetContent, $this)->getResult();
 
-            // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
             echo $widgetContent; // XSS ok.
             ?>
         </div>
@@ -437,7 +455,7 @@ abstract class AbstractWidget extends AbstractElement
      */
     public function renderPlainContent()
     {
-        $this->renderContent();
+        $this->printContent();
     }
 
     /**
@@ -495,7 +513,7 @@ abstract class AbstractWidget extends AbstractElement
             if (StateHelper::isFrontend()) {
                 ob_start();
 
-                $this->renderContent();
+                $this->printContent();
 
                 $data['htmlCache'] = ob_get_clean();
             } else {
@@ -512,9 +530,21 @@ abstract class AbstractWidget extends AbstractElement
      * Output the widget final HTML on the frontend.
      *
      */
-    protected function _printContent()
+    public function printContent()
     {
-        $this->renderContent();
+        $cacheLifetime = $this->getCacheLifetime();
+        $collect = function () {
+            ob_start();
+            $this->renderContent();
+            return ob_get_clean();
+        };
+
+        if ($cacheLifetime > 0) {
+            $cacheKey = $this->getCacheKey();
+            echo CacheHelper::resolve($cacheKey, $collect, CacheHelper::FRONTEND_CACHE_TAG, $cacheLifetime);
+        } else {
+            echo $collect();
+        }
     }
 
     /**
@@ -546,8 +576,7 @@ abstract class AbstractWidget extends AbstractElement
      */
     protected function _getDefaultChildType(array $elementData)
     {
-        $managersElements = ObjectManagerHelper::getElementsManager();
-        return $managersElements->getElementTypes('section');
+        return ObjectManagerHelper::getElementsManager()->getElementTypes('section');
     }
 
     /**
@@ -566,15 +595,17 @@ abstract class AbstractWidget extends AbstractElement
      */
     public function addInlineEditingAttributes($key, string $toolbar = 'none')
     {
-        if (!StateHelper::isEditorMode()) {
-            return;
-        }
-
         if (is_string($key)) {
             $key = [$key => $key];
         }
 
+        $prefixSettingKey = $this->getPrefixSettingKey();
+
         foreach ($key as $elementName => $backendKey) {
+            if ($prefixSettingKey) {
+                $backendKey = $prefixSettingKey . $backendKey;
+            }
+
             $this->addRenderAttribute($elementName, [
                 'class' => 'gmt-inline-editing',
                 'data-gmt-setting-key' => $backendKey,
@@ -586,6 +617,54 @@ abstract class AbstractWidget extends AbstractElement
         }
     }
 
+    /**
+     * Get content of inline text
+     *
+     * @param string $settingKey
+     * @param string $toolbar
+     * @param string $wrapperTag
+     * @return void
+     */
+    public function printInlineEditingContent(string $settingKey, string $toolbar = 'none', string $wrapperTag = 'div') : void
+    {
+        static $count;
+
+        $content = $this->getSettingsForDisplay($settingKey);
+
+        $wrapperElementKey = implode('_', [
+            static::TYPE,
+            static::NAME,
+            $settingKey,
+            ++$count,
+        ]);
+
+        $keys = [
+            $wrapperElementKey => $settingKey
+        ];
+
+        $this->addInlineEditingAttributes($keys, $toolbar);
+
+        if (is_scalar($content)) {
+            $contentHtml = $content;
+        } elseif (is_object($content) && method_exists($content, '__toString')) {
+            $contentHtml = $content->__toString();
+        } else {
+            $contentHtml = print_r($content, true);
+        }
+
+        ?>
+        <!-- gmt:editor -->
+            <<?= /** @noEscape */ $wrapperTag ?> <?= /** @noEscape */ $this->getRenderAttributeString($wrapperElementKey) ?>>
+        <!-- /gmt:editor -->
+
+            <?= /** @noEscape */ $contentHtml ?>
+
+        <!-- gmt:editor -->
+            </<?= /** @noEscape */ $wrapperTag ?>>
+        <!-- /gmt:editor -->
+        <?php
+    }
+
 
     /**
      * @param string $pluginTitle Plugin's title
@@ -594,7 +673,7 @@ abstract class AbstractWidget extends AbstractElement
      * @param string $replacement Widget replacement
      * @throws Exception
      */
-    protected function deprecatedNotice($pluginTitle, $since, $last = '', $replacement = '')
+    protected function deprecatedNotice(string $pluginTitle, string $since, string $last = '', string $replacement = '')
     {
         $this->startControlsSection(
             'Deprecated',
@@ -626,5 +705,25 @@ abstract class AbstractWidget extends AbstractElement
     protected function renderPreview() : bool
     {
         return true;
+    }
+
+    /**
+     * Use for stores the parent-child mapping key, for example maps parent setting which rendered in child - inline editing.
+     *
+     * @return null|string
+     */
+    public function getPrefixSettingKey() : ?string
+    {
+        return $this->prefixSettingKey;
+    }
+
+    /**
+     * @param string $key
+     * @return $this
+     */
+    public function setPrefixSettingKey(string $key) : AbstractWidget
+    {
+        $this->prefixSettingKey = $key;
+        return $this;
     }
 }

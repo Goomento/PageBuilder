@@ -12,15 +12,15 @@ use Goomento\PageBuilder\Builder\Widgets\Divider;
 
 /**
  * @var Widget $block
- * @var Divider $widget
  */
+/** @var Divider $widget */
 $widget = $block->getWidget();
 
 $settings = $widget->getSettingsForDisplay();
 
 $svgCode = $widget->buildSvg();
-$hasIcon = 'line_icon' === ($settings['look']) && ! empty($settings['icon']);
-$hasText = 'line_text' === ($settings['look']) && ! empty($settings['text']);
+$hasIcon = 'line_icon' === $settings['divider_look'] && !empty($settings['divider_icon']);
+$hasText = 'line_text' === $settings['divider_look'] && !empty($settings['divider_text']);
 
 $widget->addRenderAttribute('wrapper', 'class', 'gmt-divider');
 
@@ -32,14 +32,15 @@ if (!empty($svgCode)) {
         <?php if ($hasIcon): ?>
             <div class="gmt-icon gmt-divider__element">
                 <?php
-                Icons::renderIcon($settings['icon'], [
+                Icons::renderIcon($settings['divider_icon'], [
                     'aria-hidden' => 'true',
                 ]); ?>
             </div>
         <?php elseif ($hasText):
-            $widget->addInlineEditingAttributes('text');
             $widget->addRenderAttribute('text', [ 'class' => [ 'gmt-divider__text', 'gmt-divider__element' ] ]); ?>
-            <span <?= /** @noEscape */ $widget->getRenderAttributeString('text'); ?>><?=  /** @noEscape */ $settings['text']; ?></span>
+            <span <?= /** @noEscape */ $widget->getRenderAttributeString('text'); ?>>
+                <?php $widget->printInlineEditingContent('divider_text') ?>
+            </span>
         <?php endif; ?>
         </span>
 </div>
