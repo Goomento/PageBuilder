@@ -46,11 +46,18 @@ class ImageSizeGroup extends AbstractControlGroup
      *
      * @return string Image HTML.
      */
-    public static function getAttachmentImageHtml(array $settings, string $imageKey = 'image')
-    {
+    public static function getAttachmentImageHtml(
+        array $settings,
+        string $imageKey = 'image',
+        string $sizeKey = null
+    ) {
+        if (null === $sizeKey) {
+            $sizeKey = $imageKey;
+        }
+
         $image = $settings[ $imageKey ];
 
-        $imageClass = isset($settings['hover_animation']) && empty($settings['hover_animation'])
+        $imageClass = !empty($settings['hover_animation'])
             ? 'gmt-animation-' . $settings['hover_animation']
             : '';
 
@@ -58,14 +65,22 @@ class ImageSizeGroup extends AbstractControlGroup
 
         $attrs = [];
 
+        if (!empty($settings[$imageKey . '_classes'])) {
+            $imageClass .= ' ' . $settings[$imageKey . '_classes'];
+        }
+
+        if (!empty($settings[$imageKey . '_hover_animation'])) {
+            $imageClass .= ' gmt-animation-' . $settings[$imageKey . '_hover_animation'];
+        }
+
         $attrs['class'] = $imageClass;
         $attrs['src'] = $image['url'];
         $attrs['title'] = $image['title'] ?? basename($attrs['src']);
         $attrs['alt'] = $image['alt'] ?? $attrs['title'];
 
-        if (isset($settings[$imageKey . '_size']) && $settings[$imageKey . '_size'] === 'custom') {
-            $height = $settings[$imageKey . '_custom_dimension']['height'] ?: false;
-            $width = $settings[$imageKey . '_custom_dimension']['width'] ?: false;
+        if (isset($settings[$sizeKey . '_size']) && $settings[$sizeKey . '_size'] === 'custom') {
+            $height = $settings[$sizeKey . '_custom_dimension']['height'] ?: false;
+            $width = $settings[$sizeKey . '_custom_dimension']['width'] ?: false;
             if ($height) {
                 $attrs['height'] = $height;
             }

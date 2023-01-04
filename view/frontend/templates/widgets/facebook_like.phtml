@@ -46,6 +46,6 @@ elseif ($type):
         $attributes['class'] = 'fb-comments';
     }
     $widget->addRenderAttribute('facebook_like', $attributes); ?>
-    <div data-mage-init='{"facebook-sdk": {"app_id":"<?= /* @noEscape */ DataHelper::getFbAppId(); ?>"}}' <?= /* @noEscape */ $widget->getRenderAttributeString('facebook_like') ?>> </div>
+    <div data-mage-init='{"goomento-facebook-sdk": {"app_id":"<?= /* @noEscape */ DataHelper::getFbAppId(); ?>"}}' <?= /* @noEscape */ $widget->getRenderAttributeString('facebook_like') ?>> </div>
     <?php
 endif;

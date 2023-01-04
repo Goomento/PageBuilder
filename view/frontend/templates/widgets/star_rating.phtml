@@ -12,8 +12,8 @@ use Goomento\PageBuilder\Helper\DataHelper;
 
 /**
  * @var Widget $block
- * @var StarRating $widget
  */
+/** @var StarRating $widget */
 $widget = $block->getWidget();
 $settings = $widget->getSettingsForDisplay();
 
@@ -21,10 +21,10 @@ $ratingData = $widget->getRating();
 $textualRating = $ratingData[0] . '/' . $ratingData[1];
 $icon = '';
 
-if ('star_unicode' === $settings['star_style']) {
+if ('star_unicode' === $settings['start-rating_star_style']) {
     $icon = '&#9733;';
 
-    if ('outline' === $settings['unmarked_star_style']) {
+    if ('outline' === $settings['start-rating_unmarked_star_style']) {
         $icon = '&#9734;';
     }
 }
@@ -40,15 +40,16 @@ $widget->addRenderAttribute('icon_wrapper', [
 $widget->addRenderAttribute('title', [
     'class' => 'gmt-star-rating__title',
 ]);
-$widget->addInlineEditingAttributes('title');
-$widget->addRenderAttribute('icon_wrapper', 'class', 'gmt-star-unmarked-' . ($settings['unmarked_star_style'] ?? ''));
+$widget->addRenderAttribute('icon_wrapper', 'class', 'gmt-star-unmarked-' . ($settings['start-rating_unmarked_star_style'] ?? ''));
 
 $schemaRating = '<span itemprop="ratingValue" class="gmt-screen-only">' . $textualRating . '</span>';
 $starsElement = '<div ' . $widget->getRenderAttributeString('icon_wrapper') . '>' . $widget->renderStars($icon) . ' ' . $schemaRating . '</div>'; ?>
 
 <div class="gmt-star-rating__wrapper">
-    <?php if (!empty($settings['title'])): ?>
-        <div <?= /** @noEscape */ $widget->getRenderAttributeString('title') ?>><?= /** @noEscape */ $settings['title']; ?></div>
+    <?php if (!empty($settings['start-rating_title'])): ?>
+        <div <?= /** @noEscape */ $widget->getRenderAttributeString('title') ?>>
+            <?php $widget->printInlineEditingContent('start-rating_title'); ?>
+        </div>
     <?php endif; ?>
     <?=  /** @noEscape */ $starsElement; ?>
 </div>

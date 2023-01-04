@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
 use Goomento\PageBuilder\Builder\Managers\Icons;
-use Goomento\PageBuilder\Helper\EscaperHelper;
 
 /**
  * @var Widget $block
@@ -38,21 +37,22 @@ $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
             'data-tab' => $tabCount,
             'role' => 'tabpanel',
             'aria-labelledby' => 'gmt-tab-title-' . $idInt . $tabCount,
-        ]);
-
-        $widget->addInlineEditingAttributes($tabContentSettingKey, 'advanced'); ?>
+        ]); ?>
         <div class="gmt-accordion-item">
-        <<?=  /** @noEscape */ $settings['accordion_title_html_tag']; ?> <?= /** @noEscape */ $widget->getRenderAttributeString($tabTitleSettingKey); ?>>
-            <?php if ($hasIcon): ?>
-                <span class="gmt-accordion-icon gmt-accordion-icon-<?= $block->escapeHtmlAttr($settings['accordion_icon_align']); ?>" aria-hidden="true">
-                    <span class="gmt-accordion-icon-closed"><?php Icons::renderIcon($settings['accordion_selected_icon']); ?></span>
+            <<?=  /** @noEscape */ $settings['accordion_title_html_tag']; ?> <?= /** @noEscape */ $widget->getRenderAttributeString($tabTitleSettingKey); ?>>
+                <?php if ($hasIcon): ?>
+                    <span class="gmt-accordion-icon gmt-accordion-icon-<?= $block->escapeHtmlAttr($settings['accordion_icon_align']); ?>" aria-hidden="true">
+                        <span class="gmt-accordion-icon-closed"><?php Icons::renderIcon($settings['accordion_selected_icon']); ?></span>
                         <span class="gmt-accordion-icon-opened"><?php Icons::renderIcon($settings['accordion_selected_active_icon']); ?></span>
                     </span>
-            <?php endif; ?>
-        <a href=""><?=  /** @noEscape */ $item['accordion_tab_title']; ?></a>
-        </<?=  /** @noEscape */ $settings['accordion_title_html_tag']; ?>>
-        <div <?= /** @noEscape */ $widget->getRenderAttributeString($tabContentSettingKey); ?>><?= /** @noEscape */ $item['accordion_tab_content']; ?></div>
+                <?php endif; ?>
+                <a href=""><?=  /** @noEscape */ $item['accordion_tab_title']; ?></a>
+            </<?=  /** @noEscape */ $settings['accordion_title_html_tag']; ?>>
+
+            <div <?= /** @noEscape */ $widget->getRenderAttributeString($tabContentSettingKey); ?>>
+                <?php $widget->printInlineEditingContent($tabContentSettingKey, 'advanced'); ?>
+            </div>
         </div>
-    <?php endforeach; ?>
+        <?php endforeach; ?>
     </div>
 <?php

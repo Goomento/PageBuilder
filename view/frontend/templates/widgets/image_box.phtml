@@ -14,27 +14,26 @@ use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
  */
 $widget = $block->getWidget();
 $settings = $widget->getSettingsForDisplay();
-$hasContent = !empty($settings['title_text']) || !empty($settings['description_text']);
+$hasContent = !empty($settings['image-box_title_text']) || !empty($settings['image-box_description_text']);
 ?>
 <div class="gmt-image-box-wrapper">
     <?php
-    if (!empty($settings['link']['url'])) {
-        $widget->addRenderAttribute('link', 'href', $settings['link']['url']);
+    if (!empty($settings['image-box_link']['url'])) {
+        $widget->addRenderAttribute('link', 'href', $settings['image-box_link']['url']);
 
-        if ($settings['link']['is_external']) {
+        if ($settings['image-box_link']['is_external']) {
             $widget->addRenderAttribute('link', 'target', '_blank');
         }
 
-        if (!empty($settings['link']['nofollow'])) {
+        if (!empty($settings['image-box_link']['nofollow'])) {
             $widget->addRenderAttribute('link', 'rel', 'nofollow');
         }
     }
 
-    if (!empty($settings['image']['url'])) {
+    if (!empty($settings['image-box_image']['url'])) {
+        $imageHtml = ImageSizeGroup::getAttachmentImageHtml($settings, 'image-box_image');
 
-        $imageHtml = ImageSizeGroup::getAttachmentImageHtml($settings);
-
-        if (!empty($settings['link']['url'])) {
+        if (!empty($settings['image-box_link']['url'])) {
             $imageHtml = '<a ' . $widget->getRenderAttributeString('link') . '>' . $imageHtml . '</a>';
         }
         ?>
@@ -45,33 +44,27 @@ $hasContent = !empty($settings['title_text']) || !empty($settings['description_t
     if ($hasContent): ?>
         <div class="gmt-image-box-content">
             <?php
-            if (!empty($settings['title_text'])):
+            if (!empty($settings['image-box_title_text'])):
                 $widget->addRenderAttribute('title_text', 'class', 'gmt-image-box-title');
-
-                $widget->addInlineEditingAttributes('title_text', 'none');
-
-                $titleHtml = /** @noEscape */ $settings['title_text'];
-
-                if (!empty($settings['link']['url'])) {
-                    $titleHtml = '<a ' . $widget->getRenderAttributeString('link') . '>' . $titleHtml . '</a>';
-                }
-
                 ?>
-                <<?=  /** @noEscape */ $settings['title_size'] ?> <?= /** @noEscape */ $widget->getRenderAttributeString('title_text') ?>>
-                    <?=  /** @noEscape */ $titleHtml ?>
-                </<?=  /** @noEscape */ $settings['title_size'] ?>>
+                <<?=  /** @noEscape */ $settings['image-box_title_size'] ?> <?= /** @noEscape */ $widget->getRenderAttributeString('title_text') ?>>
+                    <?php if (!empty($settings['image-box_link']['url'])): ?>
+                        <a <?= /** @noEscape */ $widget->getRenderAttributeString('link') ?>>
+                    <?php endif; ?>
+                        <?php $widget->printInlineEditingContent('image-box_title_text'); ?>
+                    <?php if (!empty($settings['image-box_link']['url'])): ?>
+                        </a>
+                    <?php endif; ?>
+                </<?=  /** @noEscape */ $settings['image-box_title_size'] ?>>
                 <?php
             endif;
 
-            if (!empty($settings['description_text'])):
+            if (!empty($settings['image-box_description_text'])):
                 $widget->addRenderAttribute('description_text', 'class', 'gmt-image-box-description');
-
-                $widget->addInlineEditingAttributes('description_text');
-
                 ?>
-                <p <?= /** @noEscape */ $widget->getRenderAttributeString('description_text') ?>>
-                    <?= /** @noEscape */ $settings['description_text'] ?>
-                </p>
+                <div <?= /** @noEscape */ $widget->getRenderAttributeString('description_text') ?>>
+                    <?php $widget->printInlineEditingContent('image-box_description_text'); ?>
+                </div>
             <?php endif ?>
         </div>
     <?php endif; ?>

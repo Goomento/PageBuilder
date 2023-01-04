@@ -9,8 +9,6 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\DocumentTypes;
 
 use Goomento\PageBuilder\Builder\Base\AbstractDocumentType;
-use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Model\Content;
 
 // phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class Page extends AbstractDocumentType
@@ -21,31 +19,7 @@ class Page extends AbstractDocumentType
     protected function registerControls()
     {
         parent::registerControls();
-        self::registerStatusControl($this);
-    }
-
-    /**
-     * @param AbstractDocumentType $page
-     * @throws \Exception
-     */
-    public static function registerStatusControl(AbstractDocumentType $page)
-    {
-        $page->startInjection([
-            'of' => 'document_settings'
-        ]);
-
-        $page->addControl('layout', [
-            'label' => __('Layout'),
-            'type' => Controls::SELECT,
-            'default' => $page->getModel()->getSetting('layout') ?: 'pagebuilder_content_fullwidth',
-            'options' => [
-                'pagebuilder_content_1column' => __('1-Column'),
-                'pagebuilder_content_fullwidth' => __('Full width'),
-                'pagebuilder_content_empty' => __('Empty'),
-            ],
-        ]);
-
-        $page->endInjection();
+        Section::registerLayoutControl($this, 'pagebuilder_content_1column');
     }
 
     /**

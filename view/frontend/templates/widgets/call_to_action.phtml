@@ -7,7 +7,6 @@
 declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
-use Goomento\PageBuilder\Helper\EscaperHelper;
 
 /**
  * @var Widget $block
@@ -17,7 +16,7 @@ $widget = $block->getWidget();
 $widgetId = $widget->getId();
 $triggerId = $settings['calltoaction_trigger_id'];
 $dataMageInit = [
-    'code' => EscaperHelper::escapeHtml($settings['calltoaction_code']),
+    'code' => $block->escapeHtml($settings['calltoaction_code']),
     'trigger' => $settings['calltoaction_trigger'],
     'action' => $settings['calltoaction_action'],
     'target_element_id' => "#{$settings['calltoaction_target_id']}",

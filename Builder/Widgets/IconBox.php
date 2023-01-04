@@ -9,13 +9,18 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
+use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class IconBox extends AbstractWidget
 {
-
+    /**
+     * @inheirtDoc
+     */
     const NAME = 'icon-box';
 
     /**
@@ -56,46 +61,19 @@ class IconBox extends AbstractWidget
     }
 
     /**
-     * @inheritDoc
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
      */
-    protected function registerControls()
-    {
-        $this->startControlsSection(
-            'section_icon',
-            [
-                'label' => __('Icon Box'),
-            ]
-        );
+    public static function registerIconBoxInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        Icon::registerIconInterface($widget, $prefix . 'icon_');
 
-        $this->addControl(
-            'selected_icon',
-            [
-                'label' => __('Icon'),
-                'type' => Controls::ICONS,
-                'default' => [
-                    'value' => 'fas fa-star',
-                    'library' => 'fa-solid',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'view',
-            [
-                'label' => __('View'),
-                'type' => Controls::SELECT,
-                'options' => [
-                    'default' => __('Default'),
-                    'stacked' => __('Stacked'),
-                    'framed' => __('Framed'),
-                ],
-                'default' => 'default',
-                'prefix_class' => 'gmt-view-',
-            ]
-        );
-
-        $this->addControl(
-            'shape',
+        $widget->addControl(
+            $prefix . 'shape',
             [
                 'label' => __('Shape'),
                 'type' => Controls::SELECT,
@@ -105,35 +83,29 @@ class IconBox extends AbstractWidget
                 ],
                 'default' => 'circle',
                 'condition' => [
-                    'view!' => 'default',
-                    'selected_icon[value]!' => '',
+                    $prefix . 'view!' => 'default',
+                    $prefix . 'icon_selected_icon.value!' => '',
                 ],
                 'prefix_class' => 'gmt-shape-',
             ]
         );
 
-        $this->addControl(
-            'title_text',
+        $widget->addControl(
+            $prefix . 'title_text',
             [
                 'label' => __('Title & Description'),
                 'type' => Controls::TEXT,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => __('This is the heading'),
                 'placeholder' => __('Enter your title'),
-                'label_block' => true,
+                'separator' => 'before',
             ]
         );
 
-        $this->addControl(
-            'description_text',
+        $widget->addControl(
+            $prefix . 'description_text',
             [
                 'label' => '',
                 'type' => Controls::TEXTAREA,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
                 'placeholder' => __('Enter your description'),
                 'rows' => 10,
@@ -142,21 +114,8 @@ class IconBox extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'link',
-            [
-                'label' => __('Link'),
-                'type' => Controls::URL,
-                'dynamic' => [
-                    'active' => true,
-                ],
-                'placeholder' => __('https://your-link.com'),
-                'separator' => 'before',
-            ]
-        );
-
-        $this->addControl(
-            'position',
+        $widget->addControl(
+            $prefix . 'position',
             [
                 'label' => __('Icon Position'),
                 'type' => Controls::CHOOSE,
@@ -181,7 +140,7 @@ class IconBox extends AbstractWidget
                     'relation' => 'or',
                     'terms' => [
                         [
-                            'name' => 'selected_icon[value]',
+                            'name' => $prefix . 'icon_selected_icon.value',
                             'operator' => '!=',
                             'value' => '',
                         ],
@@ -190,8 +149,8 @@ class IconBox extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'title_size',
+        $widget->addControl(
+            $prefix . 'title_size',
             [
                 'label' => __('Title HTML Tag'),
                 'type' => Controls::SELECT,
@@ -209,38 +168,33 @@ class IconBox extends AbstractWidget
                 'default' => 'h3',
             ]
         );
+    }
 
-        $this->endControlsSection();
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @param string $cssIconTarget
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerIconBoxIconStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-icon',
+        string $cssIconTarget = '.gmt-icon-box-icon'
+    ) {
+        $widget->startControlsTabs('icon_colors');
 
-        $this->startControlsSection(
-            'section_style_icon',
-            [
-                'label' => __('Icon'),
-                'tab'   => Controls::TAB_STYLE,
-                'conditions' => [
-                    'relation' => 'or',
-                    'terms' => [
-                        [
-                            'name' => 'selected_icon[value]',
-                            'operator' => '!=',
-                            'value' => '',
-                        ],
-                    ],
-                ],
-            ]
-        );
-
-        $this->startControlsTabs('icon_colors');
-
-        $this->startControlsTab(
-            'icon_colors_normal',
+        $widget->startControlsTab(
+            $prefix . 'icon_colors_normal',
             [
                 'label' => __('Normal'),
             ]
         );
 
-        $this->addControl(
-            'primary_color',
+        $widget->addControl(
+            $prefix . 'primary_color',
             [
                 'label' => __('Primary Color'),
                 'type' => Controls::COLOR,
@@ -250,80 +204,80 @@ class IconBox extends AbstractWidget
                 ],
                 'default' => '',
                 'selectors' => [
-                    '{{WRAPPER}}.gmt-view-stacked .gmt-icon' => 'background-color: {{VALUE}};',
-                    '{{WRAPPER}}.gmt-view-framed .gmt-icon, {{WRAPPER}}.gmt-view-default .gmt-icon' => 'fill: {{VALUE}}; color: {{VALUE}}; border-color: {{VALUE}};',
+                    '{{WRAPPER}}.gmt-view-stacked ' . $cssTarget => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}}.gmt-view-framed ' . $cssTarget . ', {{WRAPPER}}.gmt-view-default ' . $cssTarget => 'fill: {{VALUE}}; color: {{VALUE}}; border-color: {{VALUE}};',
                 ],
             ]
         );
 
-        $this->addControl(
-            'secondary_color',
+        $widget->addControl(
+            $prefix . 'secondary_color',
             [
                 'label' => __('Secondary Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
                 'condition' => [
-                    'view!' => 'default',
+                    $prefix . 'view!' => 'default',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}}.gmt-view-framed .gmt-icon' => 'background-color: {{VALUE}};',
-                    '{{WRAPPER}}.gmt-view-stacked .gmt-icon' => 'fill: {{VALUE}}; color: {{VALUE}};',
+                    '{{WRAPPER}}.gmt-view-framed ' . $cssTarget => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}}.gmt-view-stacked ' . $cssTarget => 'fill: {{VALUE}}; color: {{VALUE}};',
                 ],
             ]
         );
 
-        $this->endControlsTab();
+        $widget->endControlsTab();
 
-        $this->startControlsTab(
+        $widget->startControlsTab(
             'icon_colors_hover',
             [
                 'label' => __('Hover'),
             ]
         );
 
-        $this->addControl(
-            'hover_primary_color',
+        $widget->addControl(
+            $prefix . 'hover_primary_color',
             [
                 'label' => __('Primary Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
                 'selectors' => [
-                    '{{WRAPPER}}.gmt-view-stacked .gmt-icon:hover' => 'background-color: {{VALUE}};',
-                    '{{WRAPPER}}.gmt-view-framed .gmt-icon:hover, {{WRAPPER}}.gmt-view-default .gmt-icon:hover' => 'fill: {{VALUE}}; color: {{VALUE}}; border-color: {{VALUE}};',
+                    '{{WRAPPER}}.gmt-view-stacked ' . $cssTarget . ':hover' => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}}.gmt-view-framed ' . $cssTarget . ':hover, {{WRAPPER}}.gmt-view-default .gmt-icon:hover' => 'fill: {{VALUE}}; color: {{VALUE}}; border-color: {{VALUE}};',
                 ],
             ]
         );
 
-        $this->addControl(
-            'hover_secondary_color',
+        $widget->addControl(
+            $prefix . 'hover_secondary_color',
             [
                 'label' => __('Secondary Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
                 'condition' => [
-                    'view!' => 'default',
+                    $prefix . 'view!' => 'default',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}}.gmt-view-framed .gmt-icon:hover' => 'background-color: {{VALUE}};',
-                    '{{WRAPPER}}.gmt-view-stacked .gmt-icon:hover' => 'fill: {{VALUE}}; color: {{VALUE}};',
+                    '{{WRAPPER}}.gmt-view-framed ' . $cssTarget . ':hover' => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}}.gmt-view-stacked ' . $cssTarget . ':hover' => 'fill: {{VALUE}}; color: {{VALUE}};',
                 ],
             ]
         );
 
-        $this->addControl(
-            'hover_animation',
+        $widget->addControl(
+            $prefix . 'hover_animation',
             [
                 'label' => __('Hover Animation'),
                 'type' => Controls::HOVER_ANIMATION,
             ]
         );
 
-        $this->endControlsTab();
+        $widget->endControlsTab();
 
-        $this->endControlsTabs();
+        $widget->endControlsTabs();
 
-        $this->addResponsiveControl(
-            'icon_space',
+        $widget->addResponsiveControl(
+            $prefix . 'icon_space',
             [
                 'label' => __('Spacing'),
                 'type' => Controls::SLIDER,
@@ -337,16 +291,16 @@ class IconBox extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}}.gmt-position-right .gmt-icon-box-icon' => 'margin-left: {{SIZE}}{{UNIT}};',
-                    '{{WRAPPER}}.gmt-position-left .gmt-icon-box-icon' => 'margin-right: {{SIZE}}{{UNIT}};',
-                    '{{WRAPPER}}.gmt-position-top .gmt-icon-box-icon' => 'margin-bottom: {{SIZE}}{{UNIT}};',
-                    '(mobile){{WRAPPER}} .gmt-icon-box-icon' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}}.gmt-position-right ' . $cssIconTarget => 'margin-left: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}}.gmt-position-left ' . $cssIconTarget => 'margin-right: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}}.gmt-position-top ' . $cssIconTarget => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                    '(mobile){{WRAPPER}} ' . $cssIconTarget => 'margin-bottom: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
 
-        $this->addResponsiveControl(
-            'icon_size',
+        $widget->addResponsiveControl(
+            $prefix . 'icon_size',
             [
                 'label' => __('Size'),
                 'type' => Controls::SLIDER,
@@ -357,18 +311,18 @@ class IconBox extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon' => 'font-size: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'font-size: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
 
-        $this->addControl(
-            'icon_padding',
+        $widget->addControl(
+            $prefix . 'icon_padding',
             [
                 'label' => __('Padding'),
                 'type' => Controls::SLIDER,
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon' => 'padding: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'padding: {{SIZE}}{{UNIT}};',
                 ],
                 'range' => [
                     'em' => [
@@ -377,13 +331,13 @@ class IconBox extends AbstractWidget
                     ],
                 ],
                 'condition' => [
-                    'view!' => 'default',
+                    $prefix . 'view!' => 'default',
                 ],
             ]
         );
 
-        $this->addControl(
-            'rotate',
+        $widget->addControl(
+            $prefix . 'rotate',
             [
                 'label' => __('Rotate'),
                 'type' => Controls::SLIDER,
@@ -392,52 +346,59 @@ class IconBox extends AbstractWidget
                     'unit' => 'deg',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon i' => 'transform: rotate({{SIZE}}{{UNIT}});',
+                    '{{WRAPPER}} ' . $cssTarget . ' i' => 'transform: rotate({{SIZE}}{{UNIT}});',
                 ],
             ]
         );
 
-        $this->addControl(
-            'border_width',
+        $widget->addControl(
+            $prefix . 'border_width',
             [
                 'label' => __('Border Width'),
                 'type' => Controls::DIMENSIONS,
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
                 'condition' => [
-                    'view' => 'framed',
+                    $prefix . 'view' => 'framed',
                 ],
             ]
         );
 
-        $this->addControl(
-            'border_radius',
+        $widget->addControl(
+            $prefix . 'border_radius',
             [
                 'label' => __('Border Radius'),
                 'type' => Controls::DIMENSIONS,
                 'size_units' => [ 'px', '%' ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
                 'condition' => [
-                    'view!' => 'default',
+                    $prefix . 'view!' => 'default',
                 ],
             ]
         );
+    }
 
-        $this->endControlsSection();
-
-        $this->startControlsSection(
-            'section_style_content',
-            [
-                'label' => __('Content'),
-                'tab'   => Controls::TAB_STYLE,
-            ]
-        );
-
-        $this->addResponsiveControl(
-            'text_align',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @param string $cssTitleTarget
+     * @param string $cssDescriptionTarget
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerIconBoxContentStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-icon-box-wrapper',
+        string $cssTitleTarget = '.gmt-icon-box-content .gmt-icon-box-title',
+        string $cssDescriptionTarget = '.gmt-icon-box-content .gmt-icon-box-description'
+    ) {
+        $widget->addResponsiveControl(
+            $prefix . 'text_align',
             [
                 'label' => __('Alignment'),
                 'type' => Controls::CHOOSE,
@@ -460,13 +421,13 @@ class IconBox extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-box-wrapper' => 'text-align: {{VALUE}};',
-                ],
+                    '{{WRAPPER}} ' . $cssTarget => 'text-align: {{VALUE}};',
+                ]
             ]
         );
 
-        $this->addControl(
-            'content_vertical_alignment',
+        $widget->addControl(
+            $prefix . 'content_vertical_alignment',
             [
                 'label' => __('Vertical Alignment'),
                 'type' => Controls::SELECT,
@@ -477,10 +438,13 @@ class IconBox extends AbstractWidget
                 ],
                 'default' => 'top',
                 'prefix_class' => 'gmt-vertical-align-',
+                'condition' => [
+                    $prefix . 'position' => ['left', 'right']
+                ]
             ]
         );
 
-        $this->addControl(
+        $widget->addControl(
             'heading_title',
             [
                 'label' => __('Title'),
@@ -489,8 +453,8 @@ class IconBox extends AbstractWidget
             ]
         );
 
-        $this->addResponsiveControl(
-            'title_bottom_space',
+        $widget->addResponsiveControl(
+            $prefix . 'title_bottom_space',
             [
                 'label' => __('Spacing'),
                 'type' => Controls::SLIDER,
@@ -501,19 +465,19 @@ class IconBox extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-box-title' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTitleTarget => 'margin-bottom: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
 
-        $this->addControl(
-            'title_color',
+        $widget->addControl(
+            $prefix . 'title_color',
             [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-box-content .gmt-icon-box-title' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} ' . $cssTitleTarget => 'color: {{VALUE}};',
                 ],
                 'scheme' => [
                     'type' => Color::NAME,
@@ -522,17 +486,17 @@ class IconBox extends AbstractWidget
             ]
         );
 
-        $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup::NAME,
+        $widget->addGroupControl(
+            TypographyGroup::NAME,
             [
-                'name' => 'title_typography',
-                'selector' => '{{WRAPPER}} .gmt-icon-box-content .gmt-icon-box-title',
+                'name' => $prefix . 'title_typography',
+                'selector' => '{{WRAPPER}} ' . $cssTitleTarget,
                 'scheme' => Typography::TYPOGRAPHY_1,
             ]
         );
 
-        $this->addControl(
-            'heading_description',
+        $widget->addControl(
+            $prefix . 'heading_description',
             [
                 'label' => __('Description'),
                 'type' => Controls::HEADING,
@@ -540,14 +504,14 @@ class IconBox extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'description_color',
+        $widget->addControl(
+            $prefix . 'description_color',
             [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-box-content .gmt-icon-box-description' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} ' . $cssDescriptionTarget => 'color: {{VALUE}};',
                 ],
                 'scheme' => [
                     'type' => Color::NAME,
@@ -556,14 +520,63 @@ class IconBox extends AbstractWidget
             ]
         );
 
-        $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup::NAME,
+        $widget->addGroupControl(
+            TypographyGroup::NAME,
             [
-                'name' => 'description_typography',
-                'selector' => '{{WRAPPER}} .gmt-icon-box-content .gmt-icon-box-description',
+                'name' => $prefix . 'description_typography',
+                'selector' => '{{WRAPPER}} ' . $cssDescriptionTarget,
                 'scheme' => Typography::TYPOGRAPHY_3,
             ]
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function registerControls()
+    {
+        $this->startControlsSection(
+            'section_icon',
+            [
+                'label' => __('Icon Box'),
+            ]
+        );
+
+        self::registerIconBoxInterface($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_style_icon',
+            [
+                'label' => __('Icon'),
+                'tab'   => Controls::TAB_STYLE,
+                'conditions' => [
+                    'relation' => 'or',
+                    'terms' => [
+                        [
+                            'name' => self::NAME . '_icon_selected_icon.value',
+                            'operator' => '!=',
+                            'value' => '',
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        self::registerIconBoxIconStyle($this, self::buildPrefixKey('icon'));
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_style_content',
+            [
+                'label' => __('Content'),
+                'tab'   => Controls::TAB_STYLE,
+            ]
+        );
+
+        self::registerIconBoxContentStyle($this);
 
         $this->endControlsSection();
     }

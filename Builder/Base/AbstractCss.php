@@ -12,7 +12,7 @@ use Exception;
 use Goomento\PageBuilder\Builder\Modules\Frontend;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Icons;
-use Goomento\PageBuilder\Builder\Stylesheet;
+use Goomento\PageBuilder\Builder\Modules\Stylesheet;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Managers\Tags;
 use Goomento\PageBuilder\Exception\BuilderException;

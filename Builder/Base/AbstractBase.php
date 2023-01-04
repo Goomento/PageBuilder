@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Base;
 
+use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 
 abstract class AbstractBase extends AbstractEntity
@@ -73,7 +74,7 @@ abstract class AbstractBase extends AbstractEntity
     protected static function getItems(array $haystack, $needle = null)
     {
         if ($needle) {
-            return $haystack[$needle] ?? null;
+            return DataHelper::arrayGetValue($haystack, $needle, '.');
         }
 
         return $haystack;

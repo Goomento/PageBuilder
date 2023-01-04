@@ -10,13 +10,7 @@ namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
 use Goomento\PageBuilder\Builder\Controls\Groups\BoxShadowGroup;
-use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
-use Goomento\PageBuilder\Builder\Elements\Repeater;
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Builder\Schemes\Color;
-use Goomento\PageBuilder\Builder\Schemes\Typography;
-use Goomento\PageBuilder\Helper\DataHelper;
-use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 class Toggle extends AbstractWidget
 {
@@ -63,6 +57,7 @@ class Toggle extends AbstractWidget
         return [ 'tabs', 'accordion', 'toggle' ];
     }
 
+
     /**
      * @inheritDoc
      */
@@ -75,96 +70,7 @@ class Toggle extends AbstractWidget
             ]
         );
 
-        $repeater = ObjectManagerHelper::create(Repeater::class);
-
-        $repeater->addControl(
-            'tab_title',
-            [
-                'label' => __('Title & Description'),
-                'type' => Controls::TEXT,
-                'default' => __('Toggle Title'),
-                'label_block' => true,
-            ]
-        );
-
-        $repeater->addControl(
-            'tab_content',
-            [
-                'label' => __('Content'),
-                'type' => Controls::WYSIWYG,
-                'default' => __('Toggle Content'),
-                'show_label' => false,
-            ]
-        );
-
-        $this->addControl(
-            'tabs',
-            [
-                'label' => __('Toggle Items'),
-                'type' => Controls::REPEATER,
-                'fields' => $repeater->getControls(),
-                'default' => [
-                    [
-                        'tab_title' => __('Toggle #1'),
-                        'tab_content' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
-                    ],
-                    [
-                        'tab_title' => __('Toggle #2'),
-                        'tab_content' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
-                    ],
-                ],
-                'title_field' => '{{{ tab_title }}}',
-            ]
-        );
-
-        $this->addControl(
-            'selected_icon',
-            [
-                'label' => __('Icon'),
-                'type' => Controls::ICONS,
-                'separator' => 'before',
-                'fa4compatibility' => 'icon',
-                'default' => [
-                    'value' => 'fas fa-caret' . (DataHelper::isRtl() ? '-left' : '-right'),
-                    'library' => 'fa-solid',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'selected_active_icon',
-            [
-                'label' => __('Active Icon'),
-                'type' => Controls::ICONS,
-                'fa4compatibility' => 'icon_active',
-                'default' => [
-                    'value' => 'fas fa-caret-up',
-                    'library' => 'fa-solid',
-                ],
-                'condition' => [
-                    'selected_icon[value]!' => '',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'title_html_tag',
-            [
-                'label' => __('Title HTML AbstractTag'),
-                'type' => Controls::SELECT,
-                'options' => [
-                    'h1' => 'H1',
-                    'h2' => 'H2',
-                    'h3' => 'H3',
-                    'h4' => 'H4',
-                    'h5' => 'H5',
-                    'h6' => 'H6',
-                    'div' => 'div',
-                ],
-                'default' => 'div',
-                'separator' => 'before',
-            ]
-        );
+        Accordion::registerAccordionInterface($this, self::buildPrefixKey());
 
         $this->endControlsSection();
 
@@ -241,62 +147,10 @@ class Toggle extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'title_background',
-            [
-                'label' => __('Background'),
-                'type' => Controls::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-toggle .gmt-tab-title' => 'background-color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'title_color',
-            [
-                'label' => __('Color'),
-                'type' => Controls::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-toggle .gmt-tab-title' => 'color: {{VALUE}};',
-                ],
-                'scheme' => [
-                    'type' => Color::NAME,
-                    'value' => Color::COLOR_1,
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'tab_active_color',
-            [
-                'label' => __('Active Color'),
-                'type' => Controls::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-toggle .gmt-tab-title.gmt-active' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->addGroupControl(
-            TypographyGroup::NAME,
-            [
-                'name' => 'title_typography',
-                'selector' => '{{WRAPPER}} .gmt-toggle .gmt-tab-title',
-                'scheme' => Typography::TYPOGRAPHY_1,
-            ]
-        );
-
-        $this->addResponsiveControl(
-            'title_padding',
-            [
-                'label' => __('Padding'),
-                'type' => Controls::DIMENSIONS,
-                'size_units' => [ 'px', 'em', '%' ],
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-toggle .gmt-tab-title' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
+        Accordion::registerAccordionTitleStyle(
+            $this,
+            self::buildPrefixKey(),
+            '.gmt-toggle .gmt-tab-title'
         );
 
         $this->endControlsSection();
@@ -307,72 +161,16 @@ class Toggle extends AbstractWidget
                 'label' => __('Icon'),
                 'tab' => Controls::TAB_STYLE,
                 'condition' => [
-                    'selected_icon[value]!' => '',
+                    self::buildPrefixKey() . 'selected_icon.value!' => '',
                 ],
             ]
         );
 
-        $this->addControl(
-            'icon_align',
-            [
-                'label' => __('Alignment'),
-                'type' => Controls::CHOOSE,
-                'options' => [
-                    'left' => [
-                        'title' => __('Start'),
-                        'icon' => 'fas fa-align-left',
-                    ],
-                    'right' => [
-                        'title' => __('End'),
-                        'icon' => 'fas fa-align-right',
-                    ],
-                ],
-                'default' => DataHelper::isRtl() ? 'right' : 'left',
-                'toggle' => false,
-                'label_block' => false,
-            ]
-        );
-
-        $this->addControl(
-            'icon_color',
-            [
-                'label' => __('Color'),
-                'type' => Controls::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-toggle .gmt-tab-title .gmt-toggle-icon i:before' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .gmt-toggle .gmt-tab-title .gmt-toggle-icon svg' => 'fill: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'icon_active_color',
-            [
-                'label' => __('Active Color'),
-                'type' => Controls::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-toggle .gmt-tab-title.gmt-active .gmt-toggle-icon i:before' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .gmt-toggle .gmt-tab-title.gmt-active .gmt-toggle-icon svg' => 'fill: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->addResponsiveControl(
-            'icon_space',
-            [
-                'label' => __('Spacing'),
-                'type' => Controls::SLIDER,
-                'range' => [
-                    'px' => [
-                        'min' => 0,
-                        'max' => 100,
-                    ],
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-toggle .gmt-toggle-icon.gmt-toggle-icon-left' => 'margin-right: {{SIZE}}{{UNIT}};',
-                    '{{WRAPPER}} .gmt-toggle .gmt-toggle-icon.gmt-toggle-icon-right' => 'margin-left: {{SIZE}}{{UNIT}};',
-                ],
-            ]
+        Accordion::registerAccordionIconStyle(
+            $this,
+            self::buildPrefixKey(),
+            '.gmt-toggle .gmt-toggle-icon',
+            '.gmt-toggle .gmt-tab-title.gmt-active .gmt-toggle-icon'
         );
 
         $this->endControlsSection();
@@ -385,51 +183,10 @@ class Toggle extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'content_background_color',
-            [
-                'label' => __('Background'),
-                'type' => Controls::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-toggle .gmt-tab-content' => 'background-color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'content_color',
-            [
-                'label' => __('Color'),
-                'type' => Controls::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-toggle .gmt-tab-content' => 'color: {{VALUE}};',
-                ],
-                'scheme' => [
-                    'type' => Color::NAME,
-                    'value' => Color::COLOR_3,
-                ],
-            ]
-        );
-
-        $this->addGroupControl(
-            TypographyGroup::NAME,
-            [
-                'name' => 'content_typography',
-                'selector' => '{{WRAPPER}} .gmt-toggle .gmt-tab-content',
-                'scheme' => Typography::TYPOGRAPHY_3,
-            ]
-        );
-
-        $this->addResponsiveControl(
-            'content_padding',
-            [
-                'label' => __('Padding'),
-                'type' => Controls::DIMENSIONS,
-                'size_units' => [ 'px', 'em', '%' ],
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-toggle .gmt-tab-content' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
+        Accordion::registerAccordionContentStyle(
+            $this,
+            self::buildPrefixKey(),
+            '.gmt-toggle .gmt-tab-content'
         );
 
         $this->endControlsSection();

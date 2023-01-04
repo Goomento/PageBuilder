@@ -8,19 +8,17 @@ declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
 use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
-use Goomento\PageBuilder\Builder\Embed;
+use Goomento\PageBuilder\Helper\Embed;
 use Goomento\PageBuilder\Builder\Widgets\Video;
-use Goomento\PageBuilder\Helper\StateHelper;
 
 /**
  * @var Widget $block
- * @var Video $widget
  */
+/** @var Video $widget */
 $widget = $block->getWidget();
 $settings = $widget->getSettingsForDisplay();
-$settings = $widget->getSettingsForDisplay();
 
-$videoUrl = $settings[ $settings['video_type'] . '_url' ] ?? '';
+$videoUrl = $settings[ implode('_', [Video::NAME, $settings['video_type'],  'url']) ] ?? '';
 
 if ('other' === $settings['video_type']) {
     $videoUrl = $widget->getExternalVideoUrl();
@@ -48,21 +46,21 @@ if (empty($videoHtml)) {
 
 $widget->addRenderAttribute('video-wrapper', 'class', 'gmt-wrapper');
 
-if (!$settings['lightbox']) {
+if (!$settings['video_lightbox']) {
     $widget->addRenderAttribute('video-wrapper', 'class', 'gmt-fit-aspect-ratio');
 }
 
-$widget->addRenderAttribute('video-wrapper', 'class', 'gmt-open-' . ($settings['lightbox'] ? 'lightbox' : 'inline')); ?>
+$widget->addRenderAttribute('video-wrapper', 'class', 'gmt-open-' . ($settings['video_lightbox'] ? 'lightbox' : 'inline')); ?>
 <div <?= /** @noEscape */ $widget->getRenderAttributeString('video-wrapper'); ?>>
     <?php
-    if (!$settings['lightbox']) {
+    if (!$settings['video_lightbox']) {
         echo /** @noEscape */ $videoHtml; // XSS ok.
     }
 
     if ($widget->hasImageOverlay()):
         $widget->addRenderAttribute('image-overlay', 'class', 'gmt-custom-embed-image-overlay');
 
-        if ($settings['lightbox']) {
+        if ($settings['video_lightbox']) {
             if ('other' === $settings['video_type']) {
                 $lightboxUrl = $videoUrl;
             } else {
@@ -75,10 +73,10 @@ $widget->addRenderAttribute('video-wrapper', 'class', 'gmt-open-' . ($settings['
                 'url' => $lightboxUrl,
                 'modalOptions' => [
                     'id' => 'gmt-lightbox-' . $widget->getId(),
-                    'entranceAnimation' => $settings['lightbox_content_animation'],
-                    'entranceAnimation_tablet' => $settings['lightbox_content_animation_tablet'],
-                    'entranceAnimation_mobile' => $settings['lightbox_content_animation_mobile'],
-                    'videoAspectRatio' => $settings['aspect_ratio'],
+                    'entranceAnimation' => $settings['video_lightbox_content_animation'],
+                    'entranceAnimation_tablet' => $settings['video_lightbox_content_animation_tablet'],
+                    'entranceAnimation_mobile' => $settings['video_lightbox_content_animation_mobile'],
+                    'videoAspectRatio' => $settings['video_aspect_ratio'],
                 ],
             ];
 
@@ -91,19 +89,19 @@ $widget->addRenderAttribute('video-wrapper', 'class', 'gmt-open-' . ($settings['
                 'data-gmt-lightbox' => Zend_Json::encode($lightboxOptions),
             ]);
 
-            if (StateHelper::isEditorMode()) {
+            if ($block->isEnteredBuilderMode()) {
                 $widget->addRenderAttribute('image-overlay', [
                     'class' => 'gmt-clickable',
                 ]);
             }
         } else {
-            $widget->addRenderAttribute('image-overlay', 'style', 'background-image: url(' . $settings['image_overlay']['url'] ?? '' . ');');
+            $widget->addRenderAttribute('image-overlay', 'style', 'background-image: url(' . $settings['video_image_overlay']['url'] ?? '' . ');');
         } ?>
         <div <?= /** @noEscape */ $widget->getRenderAttributeString('image-overlay'); ?>>
-            <?php if ($settings['lightbox']): ?>
-                <?= /** @noEscape */ ImageSizeGroup::getAttachmentImageHtml($settings, 'image_overlay'); ?>
+            <?php if ($settings['video_lightbox']): ?>
+                <?= /** @noEscape */ ImageSizeGroup::getAttachmentImageHtml($settings, 'video_image_overlay'); ?>
             <?php endif; ?>
-            <?php if ('yes' === $settings['show_play_icon']): ?>
+            <?php if ('yes' === $settings['video_show_play_icon']): ?>
                 <div class="gmt-custom-embed-play" role="button">
                     <i class="far fa-play-circle"></i>
                     <span class="gmt-screen-only"><?= $block->escapeHtml(__('Play Video')); ?></span>

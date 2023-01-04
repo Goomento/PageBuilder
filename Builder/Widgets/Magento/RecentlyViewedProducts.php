@@ -8,8 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Widgets\Magento;
 
-use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class RecentlyViewedProducts extends AbstractMagentoWidget
 {
@@ -33,16 +34,18 @@ class RecentlyViewedProducts extends AbstractMagentoWidget
 
 
     /**
-     * @param AbstractWidget $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
-    public static function registerProductWidgetInterface(AbstractWidget $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerProductWidgetInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
             $prefix . 'num_posts',
-            $args + [
+            [
                 'label' => __('Number of Products to display'),
                 'type' => Controls::NUMBER,
                 'default' => 5,
@@ -51,7 +54,7 @@ class RecentlyViewedProducts extends AbstractMagentoWidget
 
         $widget->addControl(
             $prefix . 'show_attributes',
-            $args + [
+            [
                 'label' => __('Product attributes to show'),
                 'type' => Controls::SELECT2,
                 'multiple' => true,
@@ -69,7 +72,7 @@ class RecentlyViewedProducts extends AbstractMagentoWidget
 
         $widget->addControl(
             $prefix . 'show_buttons',
-            $args + [
+            [
                 'label' => __('Buttons to show'),
                 'type' => Controls::SELECT2,
                 'multiple' => true,
@@ -86,7 +89,7 @@ class RecentlyViewedProducts extends AbstractMagentoWidget
 
         $widget->addControl(
             $prefix . 'template',
-            $args + [
+            [
                 'label' => __('Template'),
                 'type' => Controls::SELECT,
                 'default' => 'list',

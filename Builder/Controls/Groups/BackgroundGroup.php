@@ -251,14 +251,13 @@ class BackgroundGroup extends AbstractControlGroup
                 'bottom center' => __('Bottom Center'),
                 'bottom right' => __('Bottom Right'),
                 'initial' => __('Custom'),
-
             ],
             'selectors' => [
                 '{{SELECTOR}}' => 'background-position: {{VALUE}};',
             ],
             'condition' => [
                 'background' => [ 'classic' ],
-                'image[url]!' => '',
+                'image.url!' => '',
             ],
         ];
 
@@ -303,7 +302,7 @@ class BackgroundGroup extends AbstractControlGroup
             'condition' => [
                 'background' => [ 'classic' ],
                 'position' => [ 'initial' ],
-                'image[url]!' => '',
+                'image.url!' => '',
             ],
             'required' => true,
             'device_args' => [
@@ -369,7 +368,7 @@ class BackgroundGroup extends AbstractControlGroup
             'condition' => [
                 'background' => [ 'classic' ],
                 'position' => [ 'initial' ],
-                'image[url]!' => '',
+                'image.url!' => '',
             ],
             'required' => true,
             'device_args' => [
@@ -408,7 +407,7 @@ class BackgroundGroup extends AbstractControlGroup
             ],
             'condition' => [
                 'background' => [ 'classic' ],
-                'image[url]!' => '',
+                'image.url!' => '',
             ],
         ];
 
@@ -419,7 +418,7 @@ class BackgroundGroup extends AbstractControlGroup
             'separator' => 'none',
             'condition' => [
                 'background' => [ 'classic' ],
-                'image[url]!' => '',
+                'image.url!' => '',
                 'attachment' => 'fixed',
             ],
         ];
@@ -441,7 +440,7 @@ class BackgroundGroup extends AbstractControlGroup
             ],
             'condition' => [
                 'background' => [ 'classic' ],
-                'image[url]!' => '',
+                'image.url!' => '',
             ],
         ];
 
@@ -462,7 +461,7 @@ class BackgroundGroup extends AbstractControlGroup
             ],
             'condition' => [
                 'background' => [ 'classic' ],
-                'image[url]!' => '',
+                'image.url!' => '',
             ],
         ];
 
@@ -497,7 +496,7 @@ class BackgroundGroup extends AbstractControlGroup
             'condition' => [
                 'background' => [ 'classic' ],
                 'size' => [ 'initial' ],
-                'image[url]!' => '',
+                'image.url!' => '',
             ],
             'device_args' => [
                 ControlsStack::RESPONSIVE_TABLET => [

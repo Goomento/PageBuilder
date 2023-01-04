@@ -9,8 +9,10 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\CssFilterGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class GoogleMaps extends AbstractWidget
 {
@@ -64,32 +66,28 @@ class GoogleMaps extends AbstractWidget
     }
 
     /**
-     * @inheritDoc
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
      */
-    protected function registerControls()
-    {
-        $this->startControlsSection(
-            'section_map',
-            [
-                'label' => __('Map'),
-            ]
-        );
-
-        $defaultAddress = 'Hang Sơn Đoòng';
-
-        $this->addControl(
-            'address',
+    public static function registerGoogleMapInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $widget->addControl(
+            $prefix . 'address',
             [
                 'label' => __('Location'),
                 'type' => Controls::TEXT,
-                'placeholder' => $defaultAddress,
-                'default' => $defaultAddress,
+                'placeholder' => 'Your address',
+                'default' => 'Son Doong cave, Quang Binh Province, Vietnam',
                 'label_block' => true,
             ]
         );
 
-        $this->addControl(
-            'zoom',
+        $widget->addControl(
+            $prefix . 'zoom',
             [
                 'label' => __('Zoom'),
                 'type' => Controls::SLIDER,
@@ -106,8 +104,8 @@ class GoogleMaps extends AbstractWidget
             ]
         );
 
-        $this->addResponsiveControl(
-            'height',
+        $widget->addResponsiveControl(
+            $prefix . 'height',
             [
                 'label' => __('Height'),
                 'type' => Controls::SLIDER,
@@ -122,6 +120,89 @@ class GoogleMaps extends AbstractWidget
                 ],
             ]
         );
+    }
+
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerGoogleMapStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = 'iframe'
+    ) {
+        $widget->startControlsTabs($prefix . 'map_filter');
+
+        $widget->startControlsTab(
+            $prefix . 'normal',
+            [
+                'label' => __('Normal'),
+            ]
+        );
+
+        $widget->addGroupControl(
+            CssFilterGroup::NAME,
+            [
+                'name' => $prefix . 'css_filters',
+                'selector' => '{{WRAPPER}} ' . $cssTarget,
+            ]
+        );
+
+        $widget->endControlsTab();
+
+        $widget->startControlsTab(
+            $prefix . 'hover',
+            [
+                'label' => __('Hover'),
+            ]
+        );
+
+        $widget->addGroupControl(
+            CssFilterGroup::NAME,
+            [
+                'name' => $prefix . 'css_filters_hover',
+                'selector' => '{{WRAPPER}}:hover ' . $cssTarget,
+            ]
+        );
+
+        $widget->addControl(
+            $prefix . 'hover_transition',
+            [
+                'label' => __('Transition Duration'),
+                'type' => Controls::SLIDER,
+                'range' => [
+                    'px' => [
+                        'max' => 3,
+                        'step' => 0.1,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget => 'transition-duration: {{SIZE}}s',
+                ],
+            ]
+        );
+
+        $widget->endControlsTab();
+
+        $widget->endControlsTabs();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function registerControls()
+    {
+        $this->startControlsSection(
+            'section_map',
+            [
+                'label' => __('Map'),
+            ]
+        );
+
+        self::registerGoogleMapInterface($this);
 
         $this->endControlsSection();
 
@@ -133,60 +214,7 @@ class GoogleMaps extends AbstractWidget
             ]
         );
 
-        $this->startControlsTabs('map_filter');
-
-        $this->startControlsTab(
-            'normal',
-            [
-                'label' => __('Normal'),
-            ]
-        );
-
-        $this->addGroupControl(
-            CssFilterGroup::NAME,
-            [
-                'name' => 'css_filters',
-                'selector' => '{{WRAPPER}} iframe',
-            ]
-        );
-
-        $this->endControlsTab();
-
-        $this->startControlsTab(
-            'hover',
-            [
-                'label' => __('Hover'),
-            ]
-        );
-
-        $this->addGroupControl(
-            CssFilterGroup::NAME,
-            [
-                'name' => 'css_filters_hover',
-                'selector' => '{{WRAPPER}}:hover iframe',
-            ]
-        );
-
-        $this->addControl(
-            'hover_transition',
-            [
-                'label' => __('Transition Duration'),
-                'type' => Controls::SLIDER,
-                'range' => [
-                    'px' => [
-                        'max' => 3,
-                        'step' => 0.1,
-                    ],
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} iframe' => 'transition-duration: {{SIZE}}s',
-                ],
-            ]
-        );
-
-        $this->endControlsTab();
-
-        $this->endControlsTabs();
+        self::registerGoogleMapStyle($this);
 
         $this->endControlsSection();
     }

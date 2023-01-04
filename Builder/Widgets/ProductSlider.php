@@ -73,7 +73,7 @@ class ProductSlider extends AbstractWidget
      */
     public function getScriptDepends()
     {
-        return ['product-slider'];
+        return ['goomento-widget-product-slider'];
     }
 
     /**
@@ -101,52 +101,9 @@ class ProductSlider extends AbstractWidget
             ]
         );
 
-        $slidesToShow = range(1, 10);
-        $slidesToShow = array_combine($slidesToShow, $slidesToShow);
+        ImageCarousel::registerCarouselImagesControl($this, '');
 
-        $this->addResponsiveControl(
-            'slides_to_show',
-            [
-                'label' => __('Slides to Show'),
-                'type' => Controls::SELECT,
-                'options' => [
-                        '' => __('Default'),
-                    ] + $slidesToShow,
-                'frontend_available' => true,
-            ]
-        );
-
-        $this->addResponsiveControl(
-            'slides_to_scroll',
-            [
-                'label' => __('Slides to Scroll'),
-                'type' => Controls::SELECT,
-                'description' => __('Set how many slides are scrolled per swipe.'),
-                'options' => [
-                        '' => __('Default'),
-                    ] + $slidesToShow,
-                'condition' => [
-                    'slides_to_show!' => '1',
-                ],
-                'frontend_available' => true,
-            ]
-        );
-
-        $this->addControl(
-            'navigation',
-            [
-                'label' => __('Navigation'),
-                'type' => Controls::SELECT,
-                'default' => 'both',
-                'options' => [
-                    'both' => __('Arrows and Dots'),
-                    'arrows' => __('Arrows'),
-                    'dots' => __('Dots'),
-                    'none' => __('None'),
-                ],
-                'frontend_available' => true,
-            ]
-        );
+        $this->removeControl('link_to');
 
         $this->endControlsSection();
 
@@ -157,7 +114,7 @@ class ProductSlider extends AbstractWidget
             ]
         );
 
-        ImageCarousel::registerCarouselControl($this, self::NAME . '_');
+        ImageCarousel::registerCarouselControl($this, '');
 
         $this->endControlsSection();
 
@@ -172,7 +129,7 @@ class ProductSlider extends AbstractWidget
             ]
         );
 
-        ImageCarousel::registerNavigationStyle($this, self::NAME . '_', '.gmt-product-carousel-wrapper');
+        ImageCarousel::registerNavigationStyle($this, '', '.gmt-product-carousel-wrapper');
 
         $this->endControlsSection();
     }

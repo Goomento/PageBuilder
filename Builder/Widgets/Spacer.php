@@ -63,7 +63,7 @@ class Spacer extends AbstractWidget
         );
 
         $this->addResponsiveControl(
-            'space',
+            'spacer_space',
             [
                 'label' => __('Space'),
                 'type' => Controls::SLIDER,

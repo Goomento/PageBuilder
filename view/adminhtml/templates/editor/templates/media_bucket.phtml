@@ -27,14 +27,17 @@ if ($storeIds) {
 if (DataHelper::getCustomMediaUrl()) {
     $mediaUrl = DataHelper::getCustomMediaUrl();
 } else {
-    $mediaUrl = UrlBuilderHelper::getFrontendUrl('', ['_type' => UrlInterface::URL_TYPE_MEDIA]);
+    $mediaUrl = UrlBuilderHelper::getFrontendUrl('', [
+        '_type' => UrlInterface::URL_TYPE_MEDIA,
+        'store_id' => $storeId,
+    ]);
 }
 ?>
 <div class="image-bucket" data-bind="scope: 'uploader'" style="height: 0;width: 0">
     <input type="hidden" id="image-bucket">
 </div>
 <script>
-    window.mediaUrl = "<?=  /** @noEscape */ $mediaUrl ?>";
+    window.goomentoMediaUrl = "<?=  /** @noEscape */ $mediaUrl ?>";
 </script>
 <script type="text/x-magento-init">
 {

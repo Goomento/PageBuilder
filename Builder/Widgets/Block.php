@@ -77,9 +77,6 @@ class Block extends AbstractWidget
             [
                 'label' => __('Block class'),
                 'type' => Controls::TEXT,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'placeholder' => '\Magento\Framework\View\Element\Template',
                 'default' => '',
             ]

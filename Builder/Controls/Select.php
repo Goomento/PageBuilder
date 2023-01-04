@@ -45,7 +45,7 @@ class Select extends AbstractControlData
                 <label for="<?= $controlUid; ?>" class="gmt-control-title">{{{ data.label }}}</label>
             <# } #>
             <div class="gmt-control-input-wrapper">
-                <select id="<?= $controlUid; ?>" data-setting="{{ data.name }}">
+                <select id="<?= $controlUid; ?>" <# if ( data.multiple ) { #>multiple<# } #> data-setting="{{ data.name }}">
                 <#
                     var printOptions = function( options ) {
                         _.each( options, function( option_title, option_value ) { #>

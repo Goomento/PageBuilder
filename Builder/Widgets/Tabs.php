@@ -9,20 +9,23 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Elements\Repeater;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
-use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class Tabs extends AbstractWidget
 {
-
+    /**
+     * @inheritDoc
+     */
     const NAME = 'tabs';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $template = 'Goomento_PageBuilder::widgets/tabs.phtml';
 
@@ -59,64 +62,41 @@ class Tabs extends AbstractWidget
     }
 
     /**
-     * @inheritDoc
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
      */
-    protected function registerControls()
-    {
-        $this->startControlsSection(
-            'section_tabs',
-            [
-                'label' => __('Tabs'),
-            ]
-        );
+    public static function registerTabsInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $repeater = new Repeater;
 
-        /** @var Repeater $repeater */
-        $repeater = ObjectManagerHelper::create(Repeater::class);
+        Accordion::registerAccordionItemInterface($repeater, $prefix);
 
-        $repeater->addControl(
-            'tab_title',
+        $widget->addControl(
+            $prefix . 'tabs',
             [
-                'label' => __('Title & Description'),
-                'type' => Controls::TEXT,
-                'default' => __('Tab Title'),
-                'placeholder' => __('Tab Title'),
-                'label_block' => true,
-            ]
-        );
-
-        $repeater->addControl(
-            'tab_content',
-            [
-                'label' => __('Content'),
-                'default' => __('Tab Content'),
-                'placeholder' => __('Tab Content'),
-                'type' => Controls::WYSIWYG,
-                'show_label' => false,
-            ]
-        );
-
-        $this->addControl(
-            'tabs',
-            [
-                'label' => __('Tabs Items'),
+                'label' => __('Items'),
                 'type' => Controls::REPEATER,
                 'fields' => $repeater->getControls(),
                 'default' => [
                     [
-                        'tab_title' => __('Tab #1'),
-                        'tab_content' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
+                        $prefix . 'tab_title' => __('Tab #1'),
+                        $prefix . 'tab_content' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
                     ],
                     [
-                        'tab_title' => __('Tab #2'),
-                        'tab_content' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
+                        $prefix . 'tab_title' => __('Tab #2'),
+                        $prefix . 'tab_content' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
                     ],
                 ],
-                'title_field' => '{{{ tab_title }}}',
+                'title_field' => '{{{ ' . $prefix . 'tab_title }}}',
             ]
         );
 
-        $this->addControl(
-            'type',
+        $widget->addControl(
+            $prefix . 'type',
             [
                 'label' => __('Type'),
                 'type' => Controls::SELECT,
@@ -129,19 +109,20 @@ class Tabs extends AbstractWidget
                 'separator' => 'before',
             ]
         );
+    }
 
-        $this->endControlsSection();
-
-        $this->startControlsSection(
-            'section_tabs_style',
-            [
-                'label' => __('Tabs'),
-                'tab' => Controls::TAB_STYLE,
-            ]
-        );
-
-        $this->addControl(
-            'navigation_width',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerTabsStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $widget->addControl(
+            $prefix . 'navigation_width',
             [
                 'label' => __('Navigation Width'),
                 'type' => Controls::SLIDER,
@@ -158,13 +139,13 @@ class Tabs extends AbstractWidget
                     '{{WRAPPER}} .gmt-tabs-wrapper' => 'width: {{SIZE}}{{UNIT}}',
                 ],
                 'condition' => [
-                    'type' => 'vertical',
+                    $prefix . 'type' => 'vertical',
                 ],
             ]
         );
 
-        $this->addControl(
-            'border_width',
+        $widget->addControl(
+            $prefix . 'border_width',
             [
                 'label' => __('Border Width'),
                 'type' => Controls::SLIDER,
@@ -183,8 +164,8 @@ class Tabs extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'border_color',
+        $widget->addControl(
+            $prefix . 'border_color',
             [
                 'label' => __('Border Color'),
                 'type' => Controls::COLOR,
@@ -194,8 +175,8 @@ class Tabs extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'background_color',
+        $widget->addControl(
+            $prefix . 'background_color',
             [
                 'label' => __('Background Color'),
                 'type' => Controls::COLOR,
@@ -206,8 +187,8 @@ class Tabs extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'heading_title',
+        $widget->addControl(
+            $prefix . 'heading_title',
             [
                 'label' => __('Title'),
                 'type' => Controls::HEADING,
@@ -215,8 +196,8 @@ class Tabs extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'tab_color',
+        $widget->addControl(
+            $prefix . 'tab_color',
             [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
@@ -230,8 +211,8 @@ class Tabs extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'tab_active_color',
+        $widget->addControl(
+            $prefix . 'tab_active_color',
             [
                 'label' => __('Active Color'),
                 'type' => Controls::COLOR,
@@ -245,17 +226,17 @@ class Tabs extends AbstractWidget
             ]
         );
 
-        $this->addGroupControl(
+        $widget->addGroupControl(
             TypographyGroup::NAME,
             [
-                'name' => 'tab_typography',
+                'name' => $prefix . 'tab_typography',
                 'selector' => '{{WRAPPER}} .gmt-tab-title',
                 'scheme' => Typography::TYPOGRAPHY_1,
             ]
         );
 
-        $this->addControl(
-            'heading_content',
+        $widget->addControl(
+            $prefix . 'heading_content',
             [
                 'label' => __('Content'),
                 'type' => Controls::HEADING,
@@ -263,8 +244,8 @@ class Tabs extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'content_color',
+        $widget->addControl(
+            $prefix . 'content_color',
             [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
@@ -278,7 +259,7 @@ class Tabs extends AbstractWidget
             ]
         );
 
-        $this->addGroupControl(
+        $widget->addGroupControl(
             TypographyGroup::NAME,
             [
                 'name' => 'content_typography',
@@ -286,6 +267,33 @@ class Tabs extends AbstractWidget
                 'scheme' => Typography::TYPOGRAPHY_3,
             ]
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function registerControls()
+    {
+        $this->startControlsSection(
+            'section_tabs',
+            [
+                'label' => __('Tabs'),
+            ]
+        );
+
+        self::registerTabsInterface($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_tabs_style',
+            [
+                'label' => __('Tabs'),
+                'tab' => Controls::TAB_STYLE,
+            ]
+        );
+
+        self::registerTabsStyle($this);
 
         $this->endControlsSection();
     }

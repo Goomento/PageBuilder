@@ -59,6 +59,7 @@ use Goomento\PageBuilder\Builder\Controls\TextShadow;
 use Goomento\PageBuilder\Builder\Controls\Url;
 use Goomento\PageBuilder\Builder\Controls\Wysiwyg;
 use Goomento\PageBuilder\Builder\Css\ContentCss;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\LoggerHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
@@ -381,7 +382,7 @@ class Controls
     {
         $stackId = $controlsStack->getUniqueName();
 
-        $this->stacks[ $stackId ] = new \Goomento\PageBuilder\Builder\Base\DataCache([
+        $this->stacks[ $stackId ] = new DataCache([
             'tabs' => [],
             'controls' => [],
         ]);
@@ -417,9 +418,7 @@ class Controls
         $controlTypeInstance = $this->getControl($controlData['type']);
 
         if (!$controlTypeInstance) {
-            LoggerHelper::error(
-                sprintf('AbstractControl type "%s" not found.', $controlData['type'])
-            );
+            LoggerHelper::error(sprintf('AbstractControl type "%s" not found.', $controlData['type']));
             return false;
         }
 
@@ -479,8 +478,8 @@ class Controls
         }
 
         if (empty($this->stacks[ $stackId ]['controls'][ $controlId ])) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
-                'Cannot remove not-exists control.'
+            throw new BuilderException(
+                sprintf('Cannot remove not-exists control: %s', $controlId)
             );
         }
 
@@ -498,7 +497,7 @@ class Controls
     public function getControlFromStack($stackId, $controlId)
     {
         if (empty($this->stacks[ $stackId ]['controls'][ $controlId ])) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 'Cannot get a not-exists control.'
             );
         }

@@ -74,7 +74,7 @@ Enable these caches in `Production mode` for best performance at `System > Tools
 
 ## Demo site
 
-Storefront: [https://goomento.com](https://goomento.com/)
+Editor: [https://goomento.com](https://goomento.com/goomento-the-free-magento-page-builder-extension)
 
 ## Custom Templates
 

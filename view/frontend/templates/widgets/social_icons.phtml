@@ -17,13 +17,13 @@ $settings = $widget->getSettingsForDisplay();
 
 $classAnimation = '';
 
-if (!empty($settings['hover_animation'])) {
-    $classAnimation = ' gmt-animation-' . $settings['hover_animation'];
+if (!empty($settings['social_icons_hover_animation'])) {
+    $classAnimation = ' gmt-animation-' . $settings['social_icons_hover_animation'];
 }
 ?>
 <div class="gmt-social-icons-wrapper">
     <?php
-    foreach ($settings['social_icon_list'] as $index => $item):
+    foreach ($settings['social_icons_list'] as $index => $item):
         $social = '';
 
         if (isset($item['social_icon']['value']) && $item['social_icon']['value']) {
@@ -42,7 +42,7 @@ if (!empty($settings['hover_animation'])) {
             'gmt-icon',
             'gmt-social-icon',
             'gmt-social-icon-' . $className . $classAnimation,
-            'gmt-repeater-item-' . $item['_id'],
+            'gmt-repeater-item-' . ($item['_id'] ?? ''),
         ]);
 
         if ($item['link']['is_external']) {

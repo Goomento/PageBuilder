@@ -111,20 +111,15 @@ class Content extends Template implements BlockInterface
     protected function _construct()
     {
         if ($this->hasData('identifier')) {
-            $this->currentIdentifier = (string) $this->getData('identifier');
+            $this->setIdentifier((string) $this->getData('identifier'));
             $this->unsetData('identifier');
         }
+
         if ($this->hasData('content_id')) {
-            $this->currentIdentifier = (int) $this->getData('content_id');
+            $this->setContentId((int) $this->getData('content_id'));
             $this->unsetData('content_id');
         }
 
-        if (!$this->currentIdentifier || !$this->currentContentId) {
-            $contentId = (int) $this->getRequest()->getParam(ContentInterface::CONTENT_ID);
-            if ($contentId) {
-                $this->setContentId($contentId);
-            }
-        }
         parent::_construct();
     }
 

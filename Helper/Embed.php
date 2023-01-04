@@ -6,15 +6,10 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\Builder;
-
-use Goomento\PageBuilder\Helper\HooksHelper;
-use Goomento\PageBuilder\Helper\EscaperHelper;
-use Goomento\PageBuilder\Helper\RequestHelper;
+namespace Goomento\PageBuilder\Helper;
 
 class Embed
 {
-
     /**
      * Provider match masks.
      *

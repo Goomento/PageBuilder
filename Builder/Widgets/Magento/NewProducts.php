@@ -9,7 +9,9 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets\Magento;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class NewProducts extends AbstractMagentoWidget
 {
@@ -32,16 +34,18 @@ class NewProducts extends AbstractMagentoWidget
     }
 
     /**
-     * @param AbstractWidget $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
-    public static function registerProductWidgetInterface(AbstractWidget $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerProductWidgetInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
             $prefix . 'display_type',
-            $args + [
+            [
                 'label' => __('Display Type'),
                 'type' => Controls::SELECT,
                 'default' => 'new_products',
@@ -54,7 +58,7 @@ class NewProducts extends AbstractMagentoWidget
 
         $widget->addControl(
             $prefix . 'show_pager',
-            $args + [
+            [
                 'label' => __('Display Page Control'),
                 'type' => Controls::SWITCHER,
                 'default' => 'yes',
@@ -63,7 +67,7 @@ class NewProducts extends AbstractMagentoWidget
 
         $widget->addControl(
             $prefix . 'products_per_page',
-            $args + [
+            [
                 'label' => __('Number of Products per Page'),
                 'type' => Controls::NUMBER,
                 'default' => 5,
@@ -72,7 +76,7 @@ class NewProducts extends AbstractMagentoWidget
 
         $widget->addControl(
             $prefix . 'num_posts',
-            $args + [
+            [
                 'label' => __('Number of Products to display'),
                 'type' => Controls::NUMBER,
                 'default' => 10,
@@ -81,7 +85,7 @@ class NewProducts extends AbstractMagentoWidget
 
         $widget->addControl(
             $prefix . 'template',
-            $args + [
+            [
                 'label' => __('Template'),
                 'type' => Controls::SELECT,
                 'default' => 'grid',

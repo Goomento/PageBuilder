@@ -15,12 +15,12 @@ use Goomento\PageBuilder\Helper\DataHelper;
 $widget = $block->getWidget();
 $settings = $block->getSettingsForDisplay();
 
-if (empty($settings['address'])) {
+if (empty($settings['google_maps_address'])) {
     return;
 }
 
-if (0 === (int) $settings['zoom']['size']) {
-    $settings['zoom']['size'] = 10;
+if (0 === (int) $settings['google_maps_zoom']['size']) {
+    $settings['google_maps_zoom']['size'] = 10;
 }
 
 $apiKey = DataHelper::getGoogleMapsKey();
@@ -28,19 +28,19 @@ if (!empty($apiKey)):
     $url = sprintf(
         'https://www.google.com/maps/embed/v1/place?key=%s&amp;q=%s&amp;zoom=%d',
         $apiKey,
-        rawurlencode($settings['address']),
-        (int) $settings['zoom']['size']
+        rawurlencode($settings['google_maps_address']),
+        (int) $settings['google_maps_zoom']['size']
     );
 else:
     $url = sprintf(
         'https://maps.google.com/maps?q=%s&amp;t=m&amp;z=%d&amp;output=embed&amp;iwloc=near',
-        rawurlencode($settings['address']),
-        (int) $settings['zoom']['size']
+        rawurlencode($settings['google_maps_address']),
+        (int) $settings['google_maps_zoom']['size']
     );
 endif;
 
 ?>
 <div class="gmt-custom-embed">
     <iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-            src="<?=  /** @noEscape */ $url ?>" aria-label="<?= $block->escapeHtmlAttr($settings['address']) ?>"></iframe>
+            src="<?=  /** @noEscape */ $url ?>" aria-label="<?= $block->escapeHtmlAttr($settings['google_maps_address']) ?>"></iframe>
 </div>

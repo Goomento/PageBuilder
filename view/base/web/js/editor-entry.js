@@ -17,6 +17,8 @@ define([
 ) {
     'use strict';
 
+    window.$ = window.$ || $;
+
     setTimeout(() => {
         window.goomento = window.goomento || new App;
         goomento.helpers = goomento.helpers || {};

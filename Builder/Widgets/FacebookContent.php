@@ -9,7 +9,9 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class FacebookContent extends AbstractWidget
 {
@@ -52,17 +54,16 @@ class FacebookContent extends AbstractWidget
      *
      * @param AbstractWidget $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
     public static function registerFbContentInterface(
-        AbstractWidget $widget,
-        string $prefix = self::NAME . '_',
-        array $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
     ) {
         $widget->addControl(
             $prefix . 'type',
-            $args + [
+            [
                 'label' => __('Type'),
                 'type' => Controls::SELECT,
                 'default' => 'page',
@@ -76,7 +77,7 @@ class FacebookContent extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'tabs',
-            $args + [
+            [
                 'label' => __('Layout'),
                 'type' => Controls::SELECT2,
                 'multiple' => true,
@@ -97,7 +98,7 @@ class FacebookContent extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'small_header',
-            $args + [
+            [
                 'label' => __('Small Header'),
                 'type' => Controls::SWITCHER,
                 'default' => '',
@@ -109,7 +110,7 @@ class FacebookContent extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'show_cover',
-            $args + [
+            [
                 'label' => __('Cover Photo'),
                 'type' => Controls::SWITCHER,
                 'default' => 'yes',
@@ -121,7 +122,7 @@ class FacebookContent extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'show_facepile',
-            $args + [
+            [
                 'label' => __('Profile Photos'),
                 'type' => Controls::SWITCHER,
                 'default' => 'yes',
@@ -133,7 +134,7 @@ class FacebookContent extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'show_cta',
-            $args + [
+            [
                 'label' => __('Custom CTA Button'),
                 'type' => Controls::SWITCHER,
                 'default' => 'yes',
@@ -145,7 +146,7 @@ class FacebookContent extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'height',
-            $args + [
+            [
                 'label' => __('Height'),
                 'type' => Controls::SLIDER,
                 'default' => [
@@ -167,7 +168,7 @@ class FacebookContent extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'width',
-            $args + [
+            [
                 'label' => __('Width'),
                 'type' => Controls::SLIDER,
                 'default' => [
@@ -186,7 +187,7 @@ class FacebookContent extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'show_text',
-            $args + [
+            [
                 'label' => __('Full Post'),
                 'type' => Controls::SWITCHER,
                 'default' => '',
@@ -199,7 +200,7 @@ class FacebookContent extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'video_allowfullscreen',
-            $args + [
+            [
                 'label' => __('Allow Full Screen'),
                 'type' => Controls::SWITCHER,
                 'default' => '',
@@ -211,7 +212,7 @@ class FacebookContent extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'video_autoplay',
-            $args + [
+            [
                 'label' => __('Autoplay'),
                 'type' => Controls::SWITCHER,
                 'default' => '',
@@ -223,7 +224,7 @@ class FacebookContent extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'video_show_captions',
-            $args + [
+            [
                 'label' => __('Captions'),
                 'type' => Controls::SWITCHER,
                 'default' => '',
@@ -236,11 +237,12 @@ class FacebookContent extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'page_url',
-            $args + [
+            [
                 'label' => __('Page URL'),
                 'placeholder' => __('https://your-link.com'),
                 'default' => 'https://www.facebook.com/facebook/',
                 'description' => __('The URL of the Facebook Page.'),
+                'type' => Controls::TEXT,
                 'separator' => 'before',
                 'condition' => [
                     $prefix . 'type' => 'page',
@@ -250,12 +252,13 @@ class FacebookContent extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'post_url',
-            $args + [
+            [
                 'label' => __('Post URL'),
                 'placeholder' => __('https://your-link.com'),
                 'default' => 'https://www.facebook.com/20531316728/posts/10154009990506729/',
                 'description' => __('The absolute URL of the post.'),
                 'separator' => 'before',
+                'type' => Controls::TEXT,
                 'condition' => [
                     $prefix . 'type' => 'post',
                 ],
@@ -264,12 +267,13 @@ class FacebookContent extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'video_url',
-            $args + [
+            [
                 'label' => __('Video URL'),
                 'placeholder' => __('https://your-link.com'),
                 'default' => 'https://www.facebook.com/facebook/videos/10153231379946729/',
                 'description' => __('The absolute URL of the video.'),
                 'separator' => 'before',
+                'type' => Controls::TEXT,
                 'condition' => [
                     $prefix . 'type' => 'video',
                 ],

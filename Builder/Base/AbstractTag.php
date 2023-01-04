@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Base;
 
+use Goomento\PageBuilder\Helper\StateHelper;
+
 abstract class AbstractTag extends AbstractBaseTag
 {
     const WRAPPED_TAG = false;
@@ -23,7 +25,9 @@ abstract class AbstractTag extends AbstractBaseTag
         // Magento2.Functions.DiscouragedFunction.Discouraged
         ob_start();
 
-        $return = $this->render();
+        $return = StateHelper::emulateFrontend(function () {
+            return $this->render();
+        });
 
         $value = ob_get_clean();
 

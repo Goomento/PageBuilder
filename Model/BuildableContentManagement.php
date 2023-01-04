@@ -15,7 +15,6 @@ use Goomento\PageBuilder\Api\Data\ContentSearchResultsInterface;
 use Goomento\PageBuilder\Api\ContentRepositoryInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Api\RevisionRepositoryInterface;
-use Goomento\PageBuilder\Api\ConfigInterface;
 use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
@@ -62,10 +61,6 @@ class BuildableContentManagement implements BuildableContentManagementInterface
      */
     private $revisionFactory;
     /**
-     * @var Config
-     */
-    private $config;
-    /**
      * @var BetterCaching
      */
     private $cache;
@@ -84,7 +79,6 @@ class BuildableContentManagement implements BuildableContentManagementInterface
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterBuilder $filterBuilder
      * @param SortOrderBuilder $sortOrderBuilder
-     * @param ConfigInterface $config
      * @param BetterCaching $cache
      */
     public function __construct(
@@ -96,7 +90,6 @@ class BuildableContentManagement implements BuildableContentManagementInterface
         SearchCriteriaBuilder $searchCriteriaBuilder,
         FilterBuilder $filterBuilder,
         SortOrderBuilder $sortOrderBuilder,
-        ConfigInterface $config,
         BetterCaching $cache
     ) {
         $this->contentFactory = $contentFactory;
@@ -107,7 +100,6 @@ class BuildableContentManagement implements BuildableContentManagementInterface
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->filterBuilder = $filterBuilder;
         $this->sortOrderBuilder = $sortOrderBuilder;
-        $this->config = $config;
         $this->cache = $cache;
     }
 
@@ -151,30 +143,6 @@ class BuildableContentManagement implements BuildableContentManagementInterface
         }
 
         return $this->contentRepository->getList($searchCriteria);
-    }
-
-    /**
-     * @param array $data
-     * @return ContentInterface
-     * @throws LocalizedException
-     */
-    public function createContent(array $data): ContentInterface
-    {
-        $currentUser = $this->userHelper->getCurrentAdminUser();
-        $data = array_merge(
-            self::defaultContentData(),
-            $data,
-            [
-                'author_id' => $currentUser ? $currentUser->getId() : 0,
-                'last_editor_id' => $currentUser ? $currentUser->getId() : 0,
-            ]
-        );
-
-        $model = $this->contentFactory->create();
-        $model->addData($data);
-        $model->setStatus($data['status'] ?? null);
-        $model->setType($data['type'] ?? null);
-        return $this->contentRepository->save($model);
     }
 
     /**
@@ -301,7 +269,7 @@ class BuildableContentManagement implements BuildableContentManagementInterface
      */
     public static function generateRevisionHash() : string
     {
-        return EncryptorHelper::uniqueString(12);
+        return EncryptorHelper::randomString(12);
     }
 
     /**
