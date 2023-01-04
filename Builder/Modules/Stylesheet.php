@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\Builder;
+namespace Goomento\PageBuilder\Builder\Modules;
 
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Magento\Framework\Code\Minifier\Adapter\Css\CSSmin;

@@ -9,17 +9,25 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\CssFilterGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\TextShadowGroup;
-use Goomento\PageBuilder\Builder\Embed;
+use Goomento\PageBuilder\Helper\Embed;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Tags as TagsModule;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
 
 class Video extends AbstractWidget
 {
+    /**
+     * @inheritDoc
+     */
     const NAME = 'video';
 
+    /**
+     * @inheritDoc
+     */
     protected $template = 'Goomento_PageBuilder::widgets/video.phtml';
 
     /**
@@ -63,19 +71,17 @@ class Video extends AbstractWidget
     }
 
     /**
-     * @inheritDoc
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
      */
-    protected function registerControls()
-    {
-        $this->startControlsSection(
-            'section_video',
-            [
-                'label' => __('Video'),
-            ]
-        );
-
-        $this->addControl(
-            'video_type',
+    public static function registerVideoInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $widget->addControl(
+            $prefix . 'type',
             [
                 'label' => __('Source'),
                 'type' => Controls::SELECT,
@@ -89,112 +95,88 @@ class Video extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'youtube_url',
+        $widget->addControl(
+            $prefix . 'youtube_url',
             [
                 'label' => __('Link'),
                 'type' => Controls::TEXT,
-                'dynamic' => [
-                    'active' => true,
-                    'categories' => [
-                        TagsModule::URL_CATEGORY,
-                    ],
-                ],
                 'placeholder' => __('Enter your URL') . ' (YouTube)',
                 'default' => 'https://www.youtube.com/watch?v=og_1u8RFmuI',
                 'label_block' => true,
                 'condition' => [
-                    'video_type' => 'youtube',
+                    $prefix . 'type' => 'youtube',
                 ],
             ]
         );
 
-        $this->addControl(
-            'vimeo_url',
+        $widget->addControl(
+            $prefix . 'vimeo_url',
             [
                 'label' => __('Link'),
                 'type' => Controls::TEXT,
-                'dynamic' => [
-                    'active' => true,
-                    'categories' => [
-                        TagsModule::URL_CATEGORY,
-                    ],
-                ],
                 'placeholder' => __('Enter your URL (Vimeo)'),
                 'default' => 'https://vimeo.com/242163982',
                 'label_block' => true,
                 'condition' => [
-                    'video_type' => 'vimeo',
+                    $prefix . 'type' => 'vimeo',
                 ],
             ]
         );
 
-        $this->addControl(
-            'dailymotion_url',
+        $widget->addControl(
+            $prefix . 'dailymotion_url',
             [
                 'label' => __('Link'),
                 'type' => Controls::TEXT,
-                'dynamic' => [
-                    'active' => true,
-                    'categories' => [
-                        TagsModule::URL_CATEGORY,
-                    ],
-                ],
                 'placeholder' => __('Enter your URL') . ' (Dailymotion)',
                 'default' => 'https://www.dailymotion.com/video/x2jtzvr',
                 'label_block' => true,
                 'condition' => [
-                    'video_type' => 'dailymotion',
+                    $prefix . 'type' => 'dailymotion',
                 ],
             ]
         );
 
-        $this->addControl(
-            'external_url',
+        $widget->addControl(
+            $prefix . 'external_url',
             [
                 'label' => __('URL'),
-                'type' => Controls::URL,
-                'dynamic' => [
-                    'active' => true,
-                    'categories' => [
-                        TagsModule::URL_CATEGORY,
-                    ],
-                ],
+                'type' => Controls::TEXT,
                 'media_type' => 'video',
                 'placeholder' => __('Enter your URL'),
                 'condition' => [
-                    'video_type' => 'other',
+                    $prefix . 'type' => 'other',
                 ],
             ]
         );
 
-        $this->addControl(
-            'start',
+        $widget->addControl(
+            $prefix . 'start',
             [
                 'label' => __('Start Time'),
                 'type' => Controls::NUMBER,
                 'description' => __('Specify a start time (in seconds)'),
                 'condition' => [
-                    'loop' => '',
+                    $prefix . 'loop' => '',
                 ],
             ]
         );
 
-        $this->addControl(
-            'end',
+        $widget->addControl(
+            $prefix . 'end',
             [
                 'label' => __('End Time'),
                 'type' => Controls::NUMBER,
                 'description' => __('Specify an end time (in seconds)'),
                 'condition' => [
-                    'loop' => '',
-                    'video_type' => [ 'youtube', 'other' ],
+                    $prefix . 'loop' => '',
+                    $prefix . 'type' => [ 'youtube', 'other' ],
                 ],
             ]
         );
 
-        $this->addControl(
-            'video_options',
+        $widget->addControl(
+            $prefix . 'options',
             [
                 'label' => __('Video Options'),
                 'type' => Controls::HEADING,
@@ -202,35 +184,35 @@ class Video extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'autoplay',
+        $widget->addControl(
+            $prefix . 'autoplay',
             [
                 'label' => __('Autoplay'),
                 'type' => Controls::SWITCHER,
             ]
         );
 
-        $this->addControl(
-            'mute',
+        $widget->addControl(
+            $prefix . 'mute',
             [
                 'label' => __('Mute'),
                 'type' => Controls::SWITCHER,
             ]
         );
 
-        $this->addControl(
-            'loop',
+        $widget->addControl(
+            $prefix . 'loop',
             [
                 'label' => __('Loop'),
                 'type' => Controls::SWITCHER,
                 'condition' => [
-                    'video_type!' => 'dailymotion',
+                    $prefix . 'type!' => 'dailymotion',
                 ],
             ]
         );
 
-        $this->addControl(
-            'controls',
+        $widget->addControl(
+            $prefix . 'controls',
             [
                 'label' => __('Player Controls'),
                 'type' => Controls::SWITCHER,
@@ -238,13 +220,13 @@ class Video extends AbstractWidget
                 'label_on' => __('Show'),
                 'default' => 'yes',
                 'condition' => [
-                    'video_type!' => 'vimeo',
+                    $prefix . 'type!' => 'vimeo',
                 ],
             ]
         );
 
-        $this->addControl(
-            'showinfo',
+        $widget->addControl(
+            $prefix . 'showinfo',
             [
                 'label' => __('Video Info'),
                 'type' => Controls::SWITCHER,
@@ -252,25 +234,25 @@ class Video extends AbstractWidget
                 'label_on' => __('Show'),
                 'default' => 'yes',
                 'condition' => [
-                    'video_type' => [ 'dailymotion' ],
+                    $prefix . 'type' => [ 'dailymotion' ],
                 ],
             ]
         );
 
-        $this->addControl(
-            'modestbranding',
+        $widget->addControl(
+            $prefix . 'modestbranding',
             [
                 'label' => __('Modest Branding'),
                 'type' => Controls::SWITCHER,
                 'condition' => [
-                    'video_type' => [ 'youtube' ],
-                    'controls' => 'yes',
+                    $prefix . 'type' => [ 'youtube' ],
+                    $prefix . 'controls' => 'yes',
                 ],
             ]
         );
 
-        $this->addControl(
-            'logo',
+        $widget->addControl(
+            $prefix . 'logo',
             [
                 'label' => __('Logo'),
                 'type' => Controls::SWITCHER,
@@ -278,38 +260,38 @@ class Video extends AbstractWidget
                 'label_on' => __('Show'),
                 'default' => 'yes',
                 'condition' => [
-                    'video_type' => [ 'dailymotion' ],
+                    $prefix . 'type' => [ 'dailymotion' ],
                 ],
             ]
         );
 
-        $this->addControl(
-            'color',
+        $widget->addControl(
+            $prefix . 'color',
             [
                 'label' => __('Controls Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
                 'condition' => [
-                    'video_type' => [ 'vimeo', 'dailymotion' ],
+                    $prefix . 'type' => [ 'vimeo', 'dailymotion' ],
                 ],
             ]
         );
 
         // YouTube.
-        $this->addControl(
-            'yt_privacy',
+        $widget->addControl(
+            $prefix . 'yt_privacy',
             [
                 'label' => __('Privacy Mode'),
                 'type' => Controls::SWITCHER,
                 'description' => __('When you turn on privacy mode, YouTube won\'t store information about visitors on your website unless they play the video.'),
                 'condition' => [
-                    'video_type' => 'youtube',
+                    $prefix . 'type' => 'youtube',
                 ],
             ]
         );
 
-        $this->addControl(
-            'rel',
+        $widget->addControl(
+            $prefix . 'rel',
             [
                 'label' => __('Suggested Videos'),
                 'type' => Controls::SELECT,
@@ -318,14 +300,14 @@ class Video extends AbstractWidget
                     'yes' => __('Any Video'),
                 ],
                 'condition' => [
-                    'video_type' => 'youtube',
+                    $prefix . 'type' => 'youtube',
                 ],
             ]
         );
 
         // Vimeo.
-        $this->addControl(
-            'vimeo_title',
+        $widget->addControl(
+            $prefix . 'vimeo_title',
             [
                 'label' => __('Intro Title'),
                 'type' => Controls::SWITCHER,
@@ -333,13 +315,13 @@ class Video extends AbstractWidget
                 'label_on' => __('Show'),
                 'default' => 'yes',
                 'condition' => [
-                    'video_type' => 'vimeo',
+                    $prefix . 'type' => 'vimeo',
                 ],
             ]
         );
 
-        $this->addControl(
-            'vimeo_portrait',
+        $widget->addControl(
+            $prefix . 'vimeo_portrait',
             [
                 'label' => __('Intro Portrait'),
                 'type' => Controls::SWITCHER,
@@ -347,13 +329,13 @@ class Video extends AbstractWidget
                 'label_on' => __('Show'),
                 'default' => 'yes',
                 'condition' => [
-                    'video_type' => 'vimeo',
+                    $prefix . 'type' => 'vimeo',
                 ],
             ]
         );
 
-        $this->addControl(
-            'vimeo_byline',
+        $widget->addControl(
+            $prefix . 'vimeo_byline',
             [
                 'label' => __('Intro Byline'),
                 'type' => Controls::SWITCHER,
@@ -361,46 +343,48 @@ class Video extends AbstractWidget
                 'label_on' => __('Show'),
                 'default' => 'yes',
                 'condition' => [
-                    'video_type' => 'vimeo',
+                    $prefix . 'type' => 'vimeo',
                 ],
             ]
         );
 
-        $this->addControl(
-            'download_button',
+        $widget->addControl(
+            $prefix . 'download_button',
             [
                 'label' => __('Download Button'),
                 'type' => Controls::SWITCHER,
                 'label_off' => __('Hide'),
                 'label_on' => __('Show'),
                 'condition' => [
-                    'video_type' => 'other',
+                    $prefix . 'type' => 'other',
                 ],
             ]
         );
 
-        $this->addControl(
-            'poster',
+        $widget->addControl(
+            $prefix . 'poster',
             [
                 'label' => __('Poster'),
                 'type' => Controls::MEDIA,
                 'condition' => [
-                    'video_type' => 'other',
+                    $prefix . 'type' => 'other',
                 ],
             ]
         );
+    }
 
-        $this->endControlsSection();
-
-        $this->startControlsSection(
-            'section_image_overlay',
-            [
-                'label' => __('Image Overlay'),
-            ]
-        );
-
-        $this->addControl(
-            'show_image_overlay',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerVideoImageOverlayInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $widget->addControl(
+            $prefix . 'show_image_overlay',
             [
                 'label' => __('Image Overlay'),
                 'type' => Controls::SWITCHER,
@@ -409,51 +393,48 @@ class Video extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'image_overlay',
+        $widget->addControl(
+            $prefix . 'image_overlay',
             [
                 'label' => __('Choose Image'),
                 'type' => Controls::MEDIA,
                 'default' => [
                     'url' => DataHelper::getPlaceholderImageSrc(),
                 ],
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'condition' => [
-                    'show_image_overlay' => 'yes',
+                    $prefix . 'show_image_overlay' => 'yes',
                 ],
             ]
         );
 
-        $this->addControl(
-            'lazy_load',
+        $widget->addControl(
+            $prefix . 'lazy_load',
             [
                 'label' => __('Lazy Load'),
                 'type' => Controls::SWITCHER,
                 'condition' => [
-                    'show_image_overlay' => 'yes',
-                    'video_type!' => 'other',
+                    $prefix . 'show_image_overlay' => 'yes',
+                    $prefix . 'type!' => 'other',
                 ],
             ]
         );
 
 
-        $this->addControl(
-            'show_play_icon',
+        $widget->addControl(
+            $prefix . 'show_play_icon',
             [
                 'label' => __('Play Icon'),
                 'type' => Controls::SWITCHER,
                 'default' => 'yes',
                 'condition' => [
-                    'show_image_overlay' => 'yes',
-                    'image_overlay[url]!' => '',
+                    $prefix . 'show_image_overlay' => 'yes',
+                    $prefix . 'image_overlay.url!' => '',
                 ],
             ]
         );
 
-        $this->addControl(
-            'lightbox',
+        $widget->addControl(
+            $prefix . 'lightbox',
             [
                 'label' => __('Lightbox'),
                 'type' => Controls::SWITCHER,
@@ -461,25 +442,26 @@ class Video extends AbstractWidget
                 'label_off' => __('Off'),
                 'label_on' => __('On'),
                 'condition' => [
-                    'show_image_overlay' => 'yes',
-                    'image_overlay[url]!' => '',
+                    $prefix . 'show_image_overlay' => 'yes',
+                    $prefix . 'image_overlay.url!' => '',
                 ],
                 'separator' => 'before',
             ]
         );
+    }
 
-        $this->endControlsSection();
-
-        $this->startControlsSection(
-            'section_video_style',
-            [
-                'label' => __('Video'),
-                'tab' => Controls::TAB_STYLE,
-            ]
-        );
-
-        $this->addControl(
-            'aspect_ratio',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerVideoStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $widget->addControl(
+            $prefix . 'aspect_ratio',
             [
                 'label' => __('Aspect Ratio'),
                 'type' => Controls::SELECT,
@@ -497,29 +479,29 @@ class Video extends AbstractWidget
             ]
         );
 
-        $this->addGroupControl(
+        $widget->addGroupControl(
             CssFilterGroup::NAME,
             [
-                'name' => 'css_filters',
+                'name' => $prefix . 'css_filters',
                 'selector' => '{{WRAPPER}} .gmt-wrapper',
             ]
         );
 
-        $this->addControl(
-            'play_icon_title',
+        $widget->addControl(
+            $prefix . 'play_icon_title',
             [
                 'label' => __('Play Icon'),
                 'type' => Controls::HEADING,
                 'condition' => [
-                    'show_image_overlay' => 'yes',
-                    'show_play_icon' => 'yes',
+                    $prefix . 'show_image_overlay' => 'yes',
+                    $prefix . 'show_play_icon' => 'yes',
                 ],
                 'separator' => 'before',
             ]
         );
 
-        $this->addControl(
-            'play_icon_color',
+        $widget->addControl(
+            $prefix . 'play_icon_color',
             [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
@@ -527,14 +509,14 @@ class Video extends AbstractWidget
                     '{{WRAPPER}} .gmt-custom-embed-play i' => 'color: {{VALUE}}',
                 ],
                 'condition' => [
-                    'show_image_overlay' => 'yes',
-                    'show_play_icon' => 'yes',
+                    $prefix . 'show_image_overlay' => 'yes',
+                    $prefix . 'show_play_icon' => 'yes',
                 ],
             ]
         );
 
-        $this->addResponsiveControl(
-            'play_icon_size',
+        $widget->addResponsiveControl(
+            $prefix . 'play_icon_size',
             [
                 'label' => __('Size'),
                 'type' => Controls::SLIDER,
@@ -548,16 +530,16 @@ class Video extends AbstractWidget
                     '{{WRAPPER}} .gmt-custom-embed-play i' => 'font-size: {{SIZE}}{{UNIT}}',
                 ],
                 'condition' => [
-                    'show_image_overlay' => 'yes',
-                    'show_play_icon' => 'yes',
+                    $prefix . 'show_image_overlay' => 'yes',
+                    $prefix . 'show_play_icon' => 'yes',
                 ],
             ]
         );
 
-        $this->addGroupControl(
+        $widget->addGroupControl(
             TextShadowGroup::NAME,
             [
-                'name' => 'play_icon_text_shadow',
+                'name' => $prefix . 'play_icon_text_shadow',
                 'selector' => '{{WRAPPER}} .gmt-custom-embed-play i',
                 'fields_options' => [
                     'text_shadow_type' => [
@@ -565,29 +547,25 @@ class Video extends AbstractWidget
                     ],
                 ],
                 'condition' => [
-                    'show_image_overlay' => 'yes',
-                    'show_play_icon' => 'yes',
+                    $prefix . 'show_image_overlay' => 'yes',
+                    $prefix . 'show_play_icon' => 'yes',
                 ],
             ]
         );
+    }
 
-        $this->endControlsSection();
-
-        $this->startControlsSection(
-            'section_lightbox_style',
-            [
-                'label' => __('Lightbox'),
-                'tab' => Controls::TAB_STYLE,
-                'condition' => [
-                    'show_image_overlay' => 'yes',
-                    'image_overlay[url]!' => '',
-                    'lightbox' => 'yes',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'lightbox_color',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerVideoLightBoxStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $widget->addControl(
+            $prefix . 'lightbox_color',
             [
                 'label' => __('Background Color'),
                 'type' => Controls::COLOR,
@@ -597,8 +575,8 @@ class Video extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'lightbox_ui_color',
+        $widget->addControl(
+            $prefix . 'lightbox_ui_color',
             [
                 'label' => __('UI Color'),
                 'type' => Controls::COLOR,
@@ -608,8 +586,8 @@ class Video extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'lightbox_ui_color_hover',
+        $widget->addControl(
+            $prefix . 'lightbox_ui_color_hover',
             [
                 'label' => __('UI Hover Color'),
                 'type' => Controls::COLOR,
@@ -620,8 +598,8 @@ class Video extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'lightbox_video_width',
+        $widget->addControl(
+            $prefix . 'lightbox_video_width',
             [
                 'label' => __('Content Width'),
                 'type' => Controls::SLIDER,
@@ -639,8 +617,8 @@ class Video extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'lightbox_content_position',
+        $widget->addControl(
+            $prefix . 'lightbox_content_position',
             [
                 'label' => __('Content Position'),
                 'type' => Controls::SELECT,
@@ -658,33 +636,71 @@ class Video extends AbstractWidget
             ]
         );
 
-        $this->addResponsiveControl(
-            'lightbox_content_animation',
+        $widget->addResponsiveControl(
+            $prefix . 'lightbox_content_animation',
             [
                 'label' => __('Entrance Animation'),
                 'type' => Controls::ANIMATION,
                 'frontend_available' => true,
             ]
         );
-
-        $this->endControlsSection();
     }
 
     /**
      * @inheritDoc
      */
-    public function renderPlainContent()
+    protected function registerControls()
     {
-        $settings = $this->getSettingsForDisplay();
+        $this->startControlsSection(
+            'section_video',
+            [
+                'label' => __('Video'),
+            ]
+        );
 
-        if ('other' !== $settings['video_type']) {
-            $url = $settings[ $settings['video_type'] . '_url' ];
-        } else {
-            $url = $this->getExternalVideoUrl();
-        }
+        self::registerVideoInterface($this);
 
-        // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
-        echo $url;
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_image_overlay',
+            [
+                'label' => __('Image Overlay'),
+            ]
+        );
+
+        self::registerVideoImageOverlayInterface($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_video_style',
+            [
+                'label' => __('Video'),
+                'tab' => Controls::TAB_STYLE,
+            ]
+        );
+
+        self::registerVideoStyle($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_lightbox_style',
+            [
+                'label' => __('Lightbox'),
+                'tab' => Controls::TAB_STYLE,
+                'condition' => [
+                    self::NAME . '_show_image_overlay' => 'yes',
+                    self::NAME . '_image_overlay.url!' => '',
+                    self::NAME . '_lightbox' => 'yes',
+                ],
+            ]
+        );
+
+        self::registerVideoLightBoxStyle($this);
+
+        $this->endControlsSection();
     }
 
     /**
@@ -701,7 +717,7 @@ class Video extends AbstractWidget
 
         $params = [];
 
-        if ($settings['autoplay'] && ! $this->hasImageOverlay()) {
+        if ($settings['video_autoplay'] && ! $this->hasImageOverlay()) {
             $params['autoplay'] = '1';
         }
 
@@ -716,15 +732,15 @@ class Video extends AbstractWidget
                 'modestbranding',
             ];
 
-            if ($settings['loop']) {
-                $videoProperties = Embed::getVideoProperties($settings['youtube_url']);
+            if ($settings['video_loop']) {
+                $videoProperties = Embed::getVideoProperties($settings['video_youtube_url']);
 
                 $params['playlist'] = $videoProperties['video_id'];
             }
 
-            $params['start'] = $settings['start'];
+            $params['start'] = $settings['video_start'];
 
-            $params['end'] = $settings['end'];
+            $params['end'] = $settings['video_end'];
 
             $params['wmode'] = 'opaque';
         } elseif ('vimeo' === $settings['video_type']) {
@@ -736,7 +752,7 @@ class Video extends AbstractWidget
                 'vimeo_byline' => 'byline',
             ];
 
-            $params['color'] = str_replace('#', '', $settings['color']);
+            $params['color'] = str_replace('#', '', $settings['video_color']);
 
             $params['autopause'] = '0';
         } elseif ('dailymotion' === $settings['video_type']) {
@@ -747,9 +763,9 @@ class Video extends AbstractWidget
                 'logo' => 'ui-logo',
             ];
 
-            $params['ui-highlight'] = str_replace('#', '', $settings['color']);
+            $params['ui-highlight'] = str_replace('#', '', $settings['video_color']);
 
-            $params['start'] = $settings['start'];
+            $params['start'] = $settings['video_start'];
 
             $params['endscreen-enable'] = '0';
         }
@@ -760,6 +776,8 @@ class Video extends AbstractWidget
             if (is_string($key)) {
                 $settingName = $key;
             }
+
+            $settingName = 'video_' . $settingName;
 
             $settingValue = $settings[ $settingName ] ? '1' : '0';
 
@@ -781,7 +799,7 @@ class Video extends AbstractWidget
     {
         $settings = $this->getSettingsForDisplay();
 
-        return ! empty($settings['image_overlay']['url']) && 'yes' === $settings['show_image_overlay'];
+        return ! empty($settings['video_image_overlay']['url']) && 'yes' === $settings['video_show_image_overlay'];
     }
 
     /**
@@ -794,12 +812,12 @@ class Video extends AbstractWidget
         $embedOptions = [];
 
         if ('youtube' === $settings['video_type']) {
-            $embedOptions['privacy'] = $settings['yt_privacy'];
+            $embedOptions['privacy'] = $settings['video_yt_privacy'];
         } elseif ('vimeo' === $settings['video_type']) {
-            $embedOptions['start'] = $settings['start'];
+            $embedOptions['start'] = $settings['video_start'];
         }
 
-        $embedOptions['lazy_load'] = ! empty($settings['lazy_load']);
+        $embedOptions['lazy_load'] = ! empty($settings['video_lazy_load']);
 
         return $embedOptions;
     }
@@ -813,22 +831,23 @@ class Video extends AbstractWidget
 
         $videoParams = [];
 
-        foreach ([ 'autoplay', 'loop', 'controls' ] as $optionName) {
+        foreach ([ 'video_autoplay', 'video_loop', 'video_controls' ] as $optionName) {
+            $optionName = substr($optionName, 6);
             if ($settings[ $optionName ]) {
                 $videoParams[ $optionName ] = '';
             }
         }
 
-        if ($settings['mute']) {
+        if ($settings['video_mute']) {
             $videoParams['muted'] = 'muted';
         }
 
-        if (!$settings['download_button']) {
+        if (!$settings['video_download_button']) {
             $videoParams['controlsList'] = 'nodownload';
         }
 
-        if ($settings['poster']['url']) {
-            $videoParams['poster'] = $settings['poster']['url'];
+        if ($settings['video_poster']['url']) {
+            $videoParams['poster'] = $settings['video_poster']['url'];
         }
 
         return $videoParams;
@@ -841,22 +860,22 @@ class Video extends AbstractWidget
     {
         $settings = $this->getSettingsForDisplay();
 
-        $videoUrl = $settings['external_url']['url'];
+        $videoUrl = $settings['video_external_url'];
 
         if (empty($videoUrl)) {
             return '';
         }
 
-        if ($settings['start'] || $settings['end']) {
+        if ($settings['video_start'] || $settings['video_end']) {
             $videoUrl .= '#t=';
         }
 
-        if ($settings['start']) {
-            $videoUrl .= $settings['start'];
+        if ($settings['video_start']) {
+            $videoUrl .= $settings['video_start'];
         }
 
-        if ($settings['end']) {
-            $videoUrl .= ',' . $settings['end'];
+        if ($settings['video_end']) {
+            $videoUrl .= ',' . $settings['video_end'];
         }
 
         return $videoUrl;
@@ -873,7 +892,7 @@ class Video extends AbstractWidget
         }
 
         $videoParams = $this->getExternalParams(); ?>
-        <video class="gmt-video" src="<?= $videoUrl; ?>" <?= DataHelper::renderHtmlAttributes($videoParams); ?>></video>
+        <video class="gmt-video" src="<?= $videoUrl; ?>" <?= /** @noEscape */ DataHelper::renderHtmlAttributes($videoParams); ?>></video>
         <?php
     }
 }

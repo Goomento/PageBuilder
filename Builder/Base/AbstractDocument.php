@@ -81,7 +81,7 @@ abstract class AbstractDocument extends ControlsStack
      * Retrieve the element title.
      *
      *
-     * @return string Element title.
+     * @return string|mixed Element title.
      */
     public static function getTitle()
     {
@@ -147,9 +147,8 @@ abstract class AbstractDocument extends ControlsStack
         // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
         ob_start();
 
-        $elementManager = ObjectManagerHelper::getElementsManager();
-        /** @var AbstractWidget $widget */
-        $widget = $elementManager->createElementInstance($data);
+        $widget = ObjectManagerHelper::getElementsManager()
+            ->createElementInstance($data);
 
         if (!$widget) {
             throw new BuilderException(
@@ -157,13 +156,16 @@ abstract class AbstractDocument extends ControlsStack
             );
         }
 
-        $widget->setBuildableContent($this->getModel()->getOriginContent());
-
-        $widget->renderContent();
+        $widget
+            ->setBuildableContent($this->getModel()->getOriginContent())
+            ->printContent();
 
         return ob_get_clean();
     }
 
+    /**
+     * @return array
+     */
     public function getContainerAttributes()
     {
         $attributes = [
@@ -217,7 +219,7 @@ abstract class AbstractDocument extends ControlsStack
             'settings' => $settings['page'],
             'version' => $this->getModel()->getSetting('version'),
             'remoteLibrary' => $this->getRemoteLibraryConfig(),
-            'last_edited' => $this->getLastEdited(), // TODO remove this
+            'last_edited' => $this->getLastEdited(),
             'date' => date(DATE_ATOM, strtotime($this->getModel()->getUpdateTime())),
             'panel' => static::getEditorPanelConfig(),
             'container' => 'body',
@@ -406,7 +408,7 @@ abstract class AbstractDocument extends ControlsStack
      */
     public function getElementsRawData($data = null, $withHtmlContent = false)
     {
-        if (is_null($data)) {
+        if (null === $data) {
             $data = $this->getElementsData();
         }
 

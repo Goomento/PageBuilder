@@ -15,6 +15,7 @@ $widget = $block->getWidget();
 $html = $widget->getSettingsForDisplay('text-editor_editor');
 
 $widget->addRenderAttribute('editor', 'class', [ 'gmt-text-editor', 'gmt-clearfix' ]);
-
-$widget->addInlineEditingAttributes(['editor' => 'text-editor_editor' ], 'advanced'); ?>
-<div <?= /** @noEscape */ $widget->getRenderAttributeString('editor'); ?>><?= /** @noEscape */ $html; ?></div>
+?>
+<div <?= /** @noEscape */ $widget->getRenderAttributeString('editor'); ?>>
+    <?php $widget->printInlineEditingContent('text-editor_editor', 'advanced'); ?>
+</div>

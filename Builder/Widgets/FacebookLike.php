@@ -9,7 +9,9 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class FacebookLike extends AbstractWidget
 {
@@ -52,17 +54,16 @@ class FacebookLike extends AbstractWidget
      *
      * @param AbstractWidget $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
     public static function registerFbLikeInterface(
-        AbstractWidget $widget,
-        string $prefix = self::NAME . '_',
-        array $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
     ) {
         $widget->addControl(
             $prefix . 'type',
-            $args + [
+            [
                 'label' => __('Type'),
                 'type' => Controls::SELECT,
                 'default' => 'like',
@@ -76,7 +77,7 @@ class FacebookLike extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'layout',
-            $args + [
+            [
                 'label' => __('Layout'),
                 'type' => Controls::SELECT,
                 'default' => 'standard',
@@ -94,7 +95,7 @@ class FacebookLike extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'size',
-            $args + [
+            [
                 'label' => __('Size'),
                 'type' => Controls::SELECT,
                 'default' => 'small',
@@ -110,7 +111,7 @@ class FacebookLike extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'colorscheme',
-            $args + [
+            [
                 'label' => __('Color Scheme'),
                 'type' => Controls::SELECT,
                 'default' => 'light',
@@ -123,7 +124,7 @@ class FacebookLike extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'show_share',
-            $args + [
+            [
                 'label' => __('Share Button'),
                 'type' => Controls::SWITCHER,
                 'default' => '',
@@ -135,7 +136,7 @@ class FacebookLike extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'show_faces',
-            $args + [
+            [
                 'label' => __('Faces'),
                 'type' => Controls::SWITCHER,
                 'default' => '',
@@ -147,7 +148,7 @@ class FacebookLike extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'num_posts',
-            $args + [
+            [
                 'label' => __('Number Of Comments'),
                 'type' => Controls::NUMBER,
                 'default' => 5,
@@ -160,7 +161,7 @@ class FacebookLike extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'order_by',
-            $args + [
+            [
                 'label' => __('Order By'),
                 'description' => __('The order to use when displaying comments.'),
                 'type' => Controls::SELECT,
@@ -177,7 +178,7 @@ class FacebookLike extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'width',
-            $args + [
+            [
                 'label' => __('Width'),
                 'type' => Controls::SLIDER,
                 'default' => [
@@ -196,7 +197,7 @@ class FacebookLike extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'url_id',
-            $args + [
+            [
                 'label' => __('URL ID'),
                 'placeholder' => __('https://your-link.com'),
                 'default' => 'https://goomento.com/',

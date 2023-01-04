@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Block\Content;
 
+use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Block\Content;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 
@@ -27,5 +28,16 @@ class Published extends Content
         $this->pageConfig->setKeywords($content->getMetaKeywords());
         $this->pageConfig->setDescription($content->getMetaDescription());
         return parent::_prepareLayout();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function _construct()
+    {
+        parent::_construct();
+        if ($contentId = (int) $this->getRequest()->getParam(ContentInterface::CONTENT_ID)) {
+            $this->setContentId($contentId);
+        }
     }
 }

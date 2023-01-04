@@ -25,6 +25,8 @@ class Column extends AbstractElement
 {
     const NAME = 'column';
 
+    const TYPE = 'column';
+
     /**
      * Get column title.
      *
@@ -200,8 +202,8 @@ class Column extends AbstractElement
         ];
 
         $options = [
-            '' => __('Default'),
-        ] + array_combine($possibleTags, $possibleTags);
+                '' => __('Default'),
+            ] + array_combine($possibleTags, $possibleTags);
 
         $this->addControl(
             'html_tag',
@@ -236,7 +238,7 @@ class Column extends AbstractElement
             BackgroundGroup::NAME,
             [
                 'name' => 'background',
-                'types' => [ 'classic', 'gradient', 'slideshow' ],
+                'types' => ['classic', 'gradient', 'slideshow'],
                 'selector' => '{{WRAPPER}}:not(.gmt-motion-effects-element-type-background) > .gmt-element-populated, {{WRAPPER}} > .gmt-column-wrap > .gmt-motion-effects-container > .gmt-motion-effects-layer',
                 'fields_options' => [
                     'background' => [
@@ -295,7 +297,7 @@ class Column extends AbstractElement
                 'label' => __('Background Overlay'),
                 'tab' => Controls::TAB_STYLE,
                 'condition' => [
-                    'background_background' => [ 'classic', 'gradient' ],
+                    'background_background' => ['classic', 'gradient'],
                 ],
             ]
         );
@@ -335,7 +337,7 @@ class Column extends AbstractElement
                     '{{WRAPPER}} > .gmt-element-populated >  .gmt-background-overlay' => 'opacity: {{SIZE}};',
                 ],
                 'condition' => [
-                    'background_overlay_background' => [ 'classic', 'gradient' ],
+                    'background_overlay_background' => ['classic', 'gradient'],
                 ],
             ]
         );
@@ -406,7 +408,7 @@ class Column extends AbstractElement
                     '{{WRAPPER}}:hover > .gmt-element-populated >  .gmt-background-overlay' => 'opacity: {{SIZE}};',
                 ],
                 'condition' => [
-                    'background_overlay_hover_background' => [ 'classic', 'gradient' ],
+                    'background_overlay_hover_background' => ['classic', 'gradient'],
                 ],
             ]
         );
@@ -474,7 +476,7 @@ class Column extends AbstractElement
             [
                 'label' => __('Border Radius'),
                 'type' => Controls::DIMENSIONS,
-                'size_units' => [ 'px', '%' ],
+                'size_units' => ['px', '%'],
                 'selectors' => [
                     '{{WRAPPER}} > .gmt-element-populated, {{WRAPPER}} > .gmt-element-populated > .gmt-background-overlay, {{WRAPPER}} > .gmt-background-slideshow' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
@@ -511,7 +513,7 @@ class Column extends AbstractElement
             [
                 'label' => __('Border Radius'),
                 'type' => Controls::DIMENSIONS,
-                'size_units' => [ 'px', '%' ],
+                'size_units' => ['px', '%'],
                 'selectors' => [
                     '{{WRAPPER}}:hover > .gmt-element-populated, {{WRAPPER}}:hover > .gmt-element-populated > .gmt-background-overlay' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
@@ -720,7 +722,7 @@ class Column extends AbstractElement
             [
                 'type' => Controls::HIDDEN,
                 'condition' => [
-                    'screen_sm' => [ 'custom' ],
+                    'screen_sm' => ['custom'],
                 ],
                 'prefix_class' => 'gmt-sm-',
             ]
@@ -744,7 +746,7 @@ class Column extends AbstractElement
             [
                 'label' => __('Margin'),
                 'type' => Controls::DIMENSIONS,
-                'size_units' => [ 'px', '%' ],
+                'size_units' => ['px', '%'],
                 'selectors' => [
                     '{{WRAPPER}} > .gmt-element-populated' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
@@ -756,7 +758,7 @@ class Column extends AbstractElement
             [
                 'label' => __('Padding'),
                 'type' => Controls::DIMENSIONS,
-                'size_units' => [ 'px', 'em', '%' ],
+                'size_units' => ['px', 'em', '%'],
                 'selectors' => [
                     '{{WRAPPER}} > .gmt-element-populated' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
@@ -931,10 +933,15 @@ class Column extends AbstractElement
     {
         $settings = $this->getSettingsForDisplay();
 
-        $hasBackgroundOverlay = in_array($settings['background_overlay_background'], [ 'classic', 'gradient' ], true) ||
-                                  in_array($settings['background_overlay_hover_background'], [ 'classic', 'gradient' ], true);
+        $hasBackgroundOverlay = (
+                isset($settings['background_overlay_background']) &&
+                in_array($settings['background_overlay_background'], ['classic', 'gradient'], true)
+            ) || (
+                isset($settings['background_overlay_hover_background']) &&
+                in_array($settings['background_overlay_hover_background'], ['classic', 'gradient'], true)
+            );
 
-        $columnWrapClasses = [ 'gmt-column-wrap' ];
+        $columnWrapClasses = ['gmt-column-wrap'];
 
         if ($this->getChildren()) {
             $columnWrapClasses[] = ' gmt-element-populated';
@@ -945,17 +952,17 @@ class Column extends AbstractElement
                 'class' => $columnWrapClasses,
             ],
             '_widget_wrapper' => [
-                'class' => [ 'gmt-widget-wrap' ],
+                'class' => ['gmt-widget-wrap'],
             ],
             '_background_overlay' => [
-                'class' => [ 'gmt-background-overlay' ],
+                'class' => ['gmt-background-overlay'],
             ],
         ]); ?>
         <<?= $this->getHtmlTag() . ' ' . $this->getRenderAttributeString('_wrapper'); ?>>
-            <div <?= $this->getRenderAttributeString('_inner_wrapper'); ?>>
-            <?php if ($hasBackgroundOverlay): ?>
-                <div <?= $this->getRenderAttributeString('_background_overlay'); ?>></div>
-            <?php endif; ?>
+        <div <?= $this->getRenderAttributeString('_inner_wrapper'); ?>>
+        <?php if ($hasBackgroundOverlay): ?>
+        <div <?= $this->getRenderAttributeString('_background_overlay'); ?>></div>
+        <?php endif; ?>
         <div <?= $this->getRenderAttributeString('_widget_wrapper'); ?>>
         <?php
     }
@@ -969,8 +976,8 @@ class Column extends AbstractElement
     public function afterRender()
     {
         ?>
-                </div>
-            </div>
+        </div>
+        </div>
         </<?= $this->getHtmlTag(); ?>>
         <?php
     }
@@ -987,7 +994,7 @@ class Column extends AbstractElement
 
         $isInner = $this->getData('isInner');
 
-        $columnType = ! empty($isInner) ? 'inner' : 'top';
+        $columnType = !empty($isInner) ? 'inner' : 'top';
 
         $settings = $this->getSettings();
 

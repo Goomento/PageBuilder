@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Modules;
 
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
-use Goomento\PageBuilder\Builder\Fonts;
+use Goomento\PageBuilder\Helper\Fonts;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Base\AbstractApp;
 use Goomento\PageBuilder\Builder\Css\ContentCss;
@@ -110,7 +110,6 @@ class Frontend extends AbstractApp
                 'jquery',
                 'dialogs-manager',
                 'waypoints',
-                'pagebuilderRegister',
                 'goomento-frontend-modules',
             ]
         );

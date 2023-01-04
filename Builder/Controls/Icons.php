@@ -82,21 +82,11 @@ class Icons extends AbstractBaseMultiple
         return [
             'label_block' => true,
             'dynamic' => [
-                'categories' => [TagsModule::IMAGE_CATEGORY],
+                'categories' => [TagsModule::ICON_CATEGORY],
                 'returnType' => 'object',
             ],
             'search_bar' => true,
             'recommended' => false,
         ];
-    }
-
-    /**
-     * @param $mimes
-     * @return mixed
-     */
-    public function supportSvgImport($mimes)
-    {
-        $mimes['svg'] = 'image/svg+xml';
-        return $mimes;
     }
 }

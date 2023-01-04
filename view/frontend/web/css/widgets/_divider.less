@@ -4,146 +4,146 @@
  */
 
 .gmt-widget-divider {
-	--divider-border-style: none;
-	--divider-border-width: 1px;
-	--divider-border-color: #2C2C2C;
-	--divider-icon-size: @space-xl;
-	--divider-element-spacing: @space-md;
-	--divider-pattern-height: 24px;
-	--divider-pattern-size: @space-xl;
-	--divider-pattern-url: none;
-	--divider-pattern-repeat: repeat-x;
+    --divider-border-style: none;
+    --divider-border-width: 1px;
+    --divider-border-color: #2C2C2C;
+    --divider-icon-size: @space-xl;
+    --divider-element-spacing: @space-md;
+    --divider-pattern-height: 24px;
+    --divider-pattern-size: @space-xl;
+    --divider-pattern-url: none;
+    --divider-pattern-repeat: repeat-x;
 
 
-	/* Backwards compatibility */
-	&:not(.gmt-widget-divider--view-line_text):not(.gmt-widget-divider--view-line_icon):not(.gmt-widget-divider--separator-type-pattern) {
+    /* Backwards compatibility */
+    &:not(.gmt-widget-divider--view-line_text):not(.gmt-widget-divider--view-line_icon):not(.gmt-widget-divider--separator-type-pattern) {
 
-		.gmt-divider-separator {
-			display: inline-block;
-		}
-	}
+        .gmt-divider-separator {
+            display: inline-block;
+        }
+    }
 
-	.gmt-divider {
-		line-height: 0;
-		font-size: 0;
+    .gmt-divider {
+        line-height: 0;
+        font-size: 0;
 
-		&__text {
-			font-size: @space-lg;
-			line-height: 1;
-		}
+        &__text {
+            font-size: @space-lg;
+            line-height: 1;
+        }
 
-		&__element {
-			margin: 0 var(--divider-element-spacing);
-			flex-shrink: 0;
-		}
-	}
+        &__element {
+            margin: 0 var(--divider-element-spacing);
+            flex-shrink: 0;
+        }
+    }
 
-	.gmt-icon {
-		font-size: var(--divider-icon-size);
-	}
+    .gmt-icon {
+        font-size: var(--divider-icon-size);
+    }
 
-	.gmt-divider-separator {
-		display: flex;
-		margin: 0;
-		direction: ltr;
-	}
+    .gmt-divider-separator {
+        display: flex;
+        margin: 0;
+        direction: ltr;
+    }
 
-	&--view {
+    &--view {
 
-		&-line_text, &-line_icon {
-			.gmt-divider-separator{
-				align-items: center;
+        &-line_text, &-line_icon {
+            .gmt-divider-separator{
+                align-items: center;
 
-				&:before, &:after {
-					display: block;
-					content: '';
-					border-bottom: 0;
-					flex-grow: 1;
-					border-top: var(--divider-border-width) var(--divider-border-style) var(--divider-border-color);
-				}
-			}
-		}
-	}
+                &:before, &:after {
+                    display: block;
+                    content: '';
+                    border-bottom: 0;
+                    flex-grow: 1;
+                    border-top: var(--divider-border-width) var(--divider-border-style) var(--divider-border-color);
+                }
+            }
+        }
+    }
 
-	&--element-align {
+    &--element-align {
 
-		&-left {
+        &-left {
 
-			.gmt-divider {
+            .gmt-divider {
 
-				.gmt-divider-separator > .gmt-divider__svg:first-of-type {
-					flex-grow: 0;
-					flex-shrink: 100;
-				}
+                .gmt-divider-separator > .gmt-divider__svg:first-of-type {
+                    flex-grow: 0;
+                    flex-shrink: 100;
+                }
 
-				&-separator:before {
-					content: none;
-				}
+                &-separator:before {
+                    content: none;
+                }
 
-				&__element {
-					margin-left: 0;
-				}
-			}
-		}
+                &__element {
+                    margin-left: 0;
+                }
+            }
+        }
 
-		&-right {
+        &-right {
 
-			.gmt-divider {
+            .gmt-divider {
 
-				.gmt-divider-separator > .gmt-divider__svg:last-of-type {
-					flex-grow: 0;
-					flex-shrink: 100;
-				}
+                .gmt-divider-separator > .gmt-divider__svg:last-of-type {
+                    flex-grow: 0;
+                    flex-shrink: 100;
+                }
 
-				&-separator:after {
-					content: none;
-				}
+                &-separator:after {
+                    content: none;
+                }
 
-				&__element {
-					margin-right: 0;
-				}
-			}
-		}
-	}
+                &__element {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
 
-	&:not(.gmt-widget-divider--view-line_text):not(.gmt-widget-divider--view-line_icon) {
-		.gmt-divider-separator {
-			border-top: var(--divider-border-width) var(--divider-border-style) var(--divider-border-color);
-		}
-	}
+    &:not(.gmt-widget-divider--view-line_text):not(.gmt-widget-divider--view-line_icon) {
+        .gmt-divider-separator {
+            border-top: var(--divider-border-width) var(--divider-border-style) var(--divider-border-color);
+        }
+    }
 
-	&--separator-type {
+    &--separator-type {
 
-		&-pattern {
-			--divider-border-style: none;
+        &-pattern {
+            --divider-border-style: none;
 
-			.gmt-divider-separator, .gmt-divider-separator:before, .gmt-divider-separator:after {
-				width: 100%;
-				min-height: var(--divider-pattern-height);
-				background-image: var(--divider-pattern-url);
-				background-size: var(--divider-pattern-size) 100%;
-				background-repeat: var(--divider-pattern-repeat);
-			}
+            .gmt-divider-separator, .gmt-divider-separator:before, .gmt-divider-separator:after {
+                width: 100%;
+                min-height: var(--divider-pattern-height);
+                background-image: var(--divider-pattern-url);
+                background-size: var(--divider-pattern-size) 100%;
+                background-repeat: var(--divider-pattern-repeat);
+            }
 
-			&.gmt-widget-divider--view {
-				&-line_text, &-line_icon {
-					.gmt-divider-separator {
-						background-image: none;
-					}
-				}
-			}
-		}
-	}
+            &.gmt-widget-divider--view {
+                &-line_text, &-line_icon {
+                    .gmt-divider-separator {
+                        background-image: none;
+                    }
+                }
+            }
+        }
+    }
 
-	&--no-spacing {
-		--divider-pattern-size: auto;
-	}
+    &--no-spacing {
+        --divider-pattern-size: auto;
+    }
 
-	&--bg-round {
-		--divider-pattern-repeat: round;
-	}
+    &--bg-round {
+        --divider-pattern-repeat: round;
+    }
 }
 
 .rtl .gmt-widget-divider .gmt-divider__text {
-	direction: rtl;
+    direction: rtl;
 }

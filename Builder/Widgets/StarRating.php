@@ -9,9 +9,12 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
+use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
 
 class StarRating extends AbstractWidget
@@ -59,19 +62,17 @@ class StarRating extends AbstractWidget
     }
 
     /**
-     * @inheritDoc
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
      */
-    protected function registerControls()
-    {
-        $this->startControlsSection(
-            'section_rating',
-            [
-                'label' => __('Rating'),
-            ]
-        );
-
-        $this->addControl(
-            'rating_scale',
+    public static function registerStarRatingInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $widget->addControl(
+            $prefix . 'rating_scale',
             [
                 'label' => __('Rating Scale'),
                 'type' => Controls::SELECT,
@@ -83,8 +84,8 @@ class StarRating extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'rating',
+        $widget->addControl(
+            $prefix . 'rating',
             [
                 'label' => __('Rating'),
                 'type' => Controls::NUMBER,
@@ -92,14 +93,11 @@ class StarRating extends AbstractWidget
                 'max' => 10,
                 'step' => 0.1,
                 'default' => 5,
-                'dynamic' => [
-                    'active' => true,
-                ],
             ]
         );
 
-        $this->addControl(
-            'star_style',
+        $widget->addControl(
+            $prefix . 'star_style',
             [
                 'label' => __('Icon'),
                 'type' => Controls::SELECT,
@@ -114,8 +112,8 @@ class StarRating extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'unmarked_star_style',
+        $widget->addControl(
+            $prefix . 'unmarked_star_style',
             [
                 'label' => __('Unmarked Style'),
                 'type' => Controls::CHOOSE,
@@ -134,20 +132,17 @@ class StarRating extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'title',
+        $widget->addControl(
+            $prefix . 'title',
             [
                 'label' => __('Title'),
                 'type' => Controls::TEXT,
-                'separator' => 'before',
-                'dynamic' => [
-                    'active' => true,
-                ],
+                'separator' => 'before'
             ]
         );
 
-        $this->addResponsiveControl(
-            'align',
+        $widget->addResponsiveControl(
+            $prefix . 'align',
             [
                 'label' => __('Alignment'),
                 'type' => Controls::CHOOSE,
@@ -175,22 +170,22 @@ class StarRating extends AbstractWidget
                 ],
             ]
         );
+    }
 
-        $this->endControlsSection();
-
-        $this->startControlsSection(
-            'section_title_style',
-            [
-                'label' => __('Title'),
-                'tab' => Controls::TAB_STYLE,
-                'condition' => [
-                    'title!' => '',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'title_color',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerStarRatingTitleStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-star-rating__title'
+    ) {
+        $widget->addControl(
+            $prefix . 'title_color',
             [
                 'label' => __('Text Color'),
                 'type' => Controls::COLOR,
@@ -199,22 +194,22 @@ class StarRating extends AbstractWidget
                     'value' => Color::COLOR_3,
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-star-rating__title' => 'color: {{VALUE}}',
+                    '{{WRAPPER}} ' . $cssTarget => 'color: {{VALUE}}',
                 ],
             ]
         );
 
-        $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup::NAME,
+        $widget->addGroupControl(
+            TypographyGroup::NAME,
             [
-                'name' => 'title_typography',
-                'selector' => '{{WRAPPER}} .gmt-star-rating__title',
+                'name' => $prefix . 'title_typography',
+                'selector' => '{{WRAPPER}} ' . $cssTarget,
                 'scheme' => Typography::TYPOGRAPHY_3,
             ]
         );
 
-        $this->addResponsiveControl(
-            'title_gap',
+        $widget->addResponsiveControl(
+            $prefix . 'title_gap',
             [
                 'label' => __('Gap'),
                 'type' => Controls::SLIDER,
@@ -225,11 +220,112 @@ class StarRating extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    'body:not(.rtl) {{WRAPPER}}:not(.gmt-star-rating--align-justify) .gmt-star-rating__title' => 'margin-right: {{SIZE}}{{UNIT}}',
-                    'body.rtl {{WRAPPER}}:not(.gmt-star-rating--align-justify) .gmt-star-rating__title' => 'margin-left: {{SIZE}}{{UNIT}}',
+                    'body:not(.rtl) {{WRAPPER}}:not(.gmt-star-rating--align-justify) ' . $cssTarget => 'margin-right: {{SIZE}}{{UNIT}}',
+                    'body.rtl {{WRAPPER}}:not(.gmt-star-rating--align-justify) ' . $cssTarget => 'margin-left: {{SIZE}}{{UNIT}}',
                 ],
             ]
         );
+    }
+
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerStarRatingIconStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-star-rating'
+    ) {
+        $widget->addResponsiveControl(
+            $prefix . 'icon_size',
+            [
+                'label' => __('Size'),
+                'type' => Controls::SLIDER,
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget => 'font-size: {{SIZE}}{{UNIT}}',
+                ],
+            ]
+        );
+
+        $widget->addResponsiveControl(
+            $prefix . 'icon_space',
+            [
+                'label' => __('Spacing'),
+                'type' => Controls::SLIDER,
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 50,
+                    ],
+                ],
+                'selectors' => [
+                    'body:not(.rtl) {{WRAPPER}} ' . $cssTarget . ' i:not(:last-of-type)' => 'margin-right: {{SIZE}}{{UNIT}}',
+                    'body.rtl {{WRAPPER}} ' . $cssTarget . ' i:not(:last-of-type)' => 'margin-left: {{SIZE}}{{UNIT}}',
+                ],
+            ]
+        );
+
+        $widget->addControl(
+            $prefix . 'stars_color',
+            [
+                'label' => __('Color'),
+                'type' => Controls::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget . ' i:before' => 'color: {{VALUE}}',
+                ],
+                'separator' => 'before',
+            ]
+        );
+
+        $widget->addControl(
+            $prefix . 'stars_unmarked_color',
+            [
+                'label' => __('Unmarked Color'),
+                'type' => Controls::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget . ' i' => 'color: {{VALUE}}',
+                ],
+            ]
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function registerControls()
+    {
+        $this->startControlsSection(
+            'section_rating',
+            [
+                'label' => __('Rating'),
+            ]
+        );
+
+        self::registerStarRatingInterface($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_title_style',
+            [
+                'label' => __('Title'),
+                'tab' => Controls::TAB_STYLE,
+                'condition' => [
+                    self::NAME . '_title!' => '',
+                ],
+            ]
+        );
+
+        self::registerStarRatingTitleStyle($this);
 
         $this->endControlsSection();
 
@@ -241,63 +337,7 @@ class StarRating extends AbstractWidget
             ]
         );
 
-        $this->addResponsiveControl(
-            'icon_size',
-            [
-                'label' => __('Size'),
-                'type' => Controls::SLIDER,
-                'range' => [
-                    'px' => [
-                        'min' => 0,
-                        'max' => 100,
-                    ],
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-star-rating' => 'font-size: {{SIZE}}{{UNIT}}',
-                ],
-            ]
-        );
-
-        $this->addResponsiveControl(
-            'icon_space',
-            [
-                'label' => __('Spacing'),
-                'type' => Controls::SLIDER,
-                'range' => [
-                    'px' => [
-                        'min' => 0,
-                        'max' => 50,
-                    ],
-                ],
-                'selectors' => [
-                    'body:not(.rtl) {{WRAPPER}} .gmt-star-rating i:not(:last-of-type)' => 'margin-right: {{SIZE}}{{UNIT}}',
-                    'body.rtl {{WRAPPER}} .gmt-star-rating i:not(:last-of-type)' => 'margin-left: {{SIZE}}{{UNIT}}',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'stars_color',
-            [
-                'label' => __('Color'),
-                'type' => Controls::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-star-rating i:before' => 'color: {{VALUE}}',
-                ],
-                'separator' => 'before',
-            ]
-        );
-
-        $this->addControl(
-            'stars_unmarked_color',
-            [
-                'label' => __('Unmarked Color'),
-                'type' => Controls::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-star-rating i' => 'color: {{VALUE}}',
-                ],
-            ]
-        );
+        self::registerStarRatingIconStyle($this);
 
         $this->endControlsSection();
     }
@@ -308,8 +348,8 @@ class StarRating extends AbstractWidget
     public function getRating()
     {
         $settings = $this->getSettingsForDisplay();
-        $ratingScale = (int) $settings['rating_scale'];
-        $rating = (float) $settings['rating'] > $ratingScale ? $ratingScale : $settings['rating'];
+        $ratingScale = (int) $settings['start-rating_rating_scale'];
+        $rating = (float) $settings['start-rating_rating'] > $ratingScale ? $ratingScale : $settings['start-rating_rating'];
 
         return [ $rating, $ratingScale ];
     }

@@ -19,6 +19,7 @@ use Goomento\PageBuilder\Builder\Base\AbstractBaseTag;
 use Goomento\PageBuilder\Builder\Base\AbstractTag;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Traits\TraitComponentsLoader;
 use Zend_Json;
 
@@ -57,6 +58,10 @@ class Tags
      * Dynamic tags image category.
      */
     public const IMAGE_CATEGORY = 'image';
+    /**
+     * Dynamic tags config category.
+     */
+    public const ICON_CATEGORY = 'icon';
 
     private $tagsGroups = [];
 
@@ -94,7 +99,6 @@ class Tags
      * @return string|string[]|mixed A single string or an array of strings with
      *                               the return values from each tag callback
      *                               function.
-     * @throws \Zend_Json_Exception
      */
     public function parseTagsText(string $text, array $settings, callable $parseCallback)
     {
@@ -123,7 +127,6 @@ class Tags
      * @return string|array|mixed If the tag was not found an empty string or an
      *                            empty array will be returned, otherwise the
      *                            return value from the tag callback function.
-     * @throws \Zend_Json_Exception
      */
     public function parseTagText(string $tagText, array $settings, callable $parseCallback)
     {
@@ -138,7 +141,7 @@ class Tags
         }
 
         // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
-        return call_user_func($parseCallback, ...$tagData);
+        return call_user_func_array($parseCallback, $tagData);
     }
 
     /**
@@ -146,7 +149,6 @@ class Tags
      * @param string $tagText
      *
      * @return array|null
-     * @throws \Zend_Json_Exception
      */
     public function tagTextToTagData(string $tagText) :?array
     {

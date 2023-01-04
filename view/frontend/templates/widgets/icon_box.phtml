@@ -7,8 +7,7 @@
 declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
-use Goomento\PageBuilder\Builder\Managers\Icons;
-use Goomento\PageBuilder\Helper\DataHelper;
+use Goomento\PageBuilder\Builder\Widgets\Icon;
 
 /**
  * @var Widget $block
@@ -17,52 +16,38 @@ $widget = $block->getWidget();
 
 $settings = $widget->getSettingsForDisplay();
 
-$widget->addRenderAttribute('icon', 'class', [ 'gmt-icon', 'gmt-animation-' . $settings['hover_animation'] ]);
-
 $iconTag = 'span';
-
-$hasIcon = !empty($settings['selected_icon']['value']);
-
-if (!empty($settings['link']['url'])) {
-    $widget->addRenderAttribute('link', 'href', $settings['link']['url']);
+if (!empty($settings['icon-box_link']['url'])) {
+    $widget->addRenderAttribute('icon-box_link', 'href', $settings['link']['url']);
     $iconTag = 'a';
 
-    if ($settings['link']['is_external']) {
+    if ($settings['icon-box_link']['is_external']) {
         $widget->addRenderAttribute('link', 'target', '_blank');
     }
 
-    if ($settings['link']['nofollow']) {
+    if ($settings['icon-box_link']['nofollow']) {
         $widget->addRenderAttribute('link', 'rel', 'nofollow');
     }
 }
 
-if ($hasIcon) {
-    $widget->addRenderAttribute('i', 'class', $settings['selected_icon']['library']);
-    $widget->addRenderAttribute('i', 'aria-hidden', 'true');
-}
-
-$iconAttributes = $widget->getRenderAttributeString('icon');
 $linkAttributes = $widget->getRenderAttributeString('link');
-
 $widget->addRenderAttribute('description_text', 'class', 'gmt-icon-box-description');
 
-$widget->addInlineEditingAttributes('title_text', 'none');
-$widget->addInlineEditingAttributes('description_text');
 ?>
 <div class="gmt-icon-box-wrapper">
-    <?php if ($hasIcon): ?>
     <div class="gmt-icon-box-icon">
-        <<?= /** @noEscape */ implode(' ', [ $iconTag, $iconAttributes, $linkAttributes ]); ?>>
-            <?php Icons::renderIcon($settings['selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
-        </<?= /** @noEscape */ $iconTag; ?>>
+        <?= /** @noEscape  */ $block->getWidgetHtml(Icon::NAME) ?>
     </div>
-    <?php endif; ?>
     <div class="gmt-icon-box-content">
-        <<?=  /** @noEscape */ $settings['title_size']; ?> class="gmt-icon-box-title">
-            <<?= /** @noEscape */ implode(' ', [ $iconTag, $linkAttributes ]); ?><?= /** @noEscape */ $widget->getRenderAttributeString('title_text'); ?>><?=  /** @noEscape */ $settings['title_text']; ?></<?=  /** @noEscape */ $iconTag; ?>>
-        </<?=  /** @noEscape */ $settings['title_size']; ?>>
-        <?php if (!empty($settings['description_text'])): ?>
-            <p <?= /** @noEscape */ $widget->getRenderAttributeString('description_text'); ?>><?= /** @noEscape */ $settings['description_text']; ?></p>
+        <<?=  /** @noEscape */ $settings['icon-box_title_size']; ?> class="gmt-icon-box-title">
+            <<?= /** @noEscape */ implode(' ', [ $iconTag, $linkAttributes ]); ?> <?= /** @noEscape */ $widget->getRenderAttributeString('title_text'); ?>>
+                <?php $widget->printInlineEditingContent('icon-box_title_text'); ?>
+            </<?=  /** @noEscape */ $iconTag; ?>>
+        </<?=  /** @noEscape */ $settings['icon-box_title_size']; ?>>
+        <?php if (!empty($settings['icon-box_description_text'])): ?>
+            <div <?= /** @noEscape */ $widget->getRenderAttributeString('description_text'); ?>>
+                <?php $widget->printInlineEditingContent('icon-box_description_text', 'none', 'span'); ?>
+            </div>
         <?php endif; ?>
     </div>
 </div>

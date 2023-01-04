@@ -4,27 +4,17 @@
  */
 define([
     'jquery',
-    'pagebuilderRegister',
+    'goomento-widget-base',
     'jquery/jquery.cookie',
     'Magento_Ui/js/modal/modal',
-], function ($, pagebuilderRegister) {
+], function ($) {
     'use strict';
 
     /**
-     * For call to action
-     *
-     * @param config
+     * Call to action widget
      */
-    const callToAction = function (config) {
-        this.config = Object.assign({}, this.config, config);
-        this.initialize();
-    };
-
-    /**
-     * Adding Prototype
-     */
-    callToAction.prototype = {
-        config: {
+    $.widget('goomento.callToAction', $.goomento.base, {
+        options: {
             code: "",
             trigger: "",
             action: "",
@@ -39,11 +29,11 @@ define([
          * Init
          * @private
          */
-        initialize: function () {
+        _init: function () {
             if (!this._validateInSeconds()) {
                 return;
             }
-            switch (this.config.trigger) {
+            switch (this.options.trigger) {
                 case "load":
                     this.onPageLoad();
                     break;
@@ -62,8 +52,8 @@ define([
          * @private
          */
         _validateInSeconds: function() {
-            let rememberInSeconds = parseInt(this.config.remember_in_seconds),
-                cookieName = `pagebuilder_ris_${this.config.element_id}`,
+            let rememberInSeconds = parseInt(this.options.remember_in_seconds),
+                cookieName = `pagebuilder_ris_${this.options.element_id}`,
                 cookieValue = rememberInSeconds ? $.cookie(cookieName) : null;
 
             if (rememberInSeconds) {
@@ -85,7 +75,7 @@ define([
         doAction: function () {
             this.onStartDoingAction();
 
-            switch (this.config.action) {
+            switch (this.options.action) {
                 case "code":
                     this.insertCode();
                     break;
@@ -119,7 +109,6 @@ define([
          * @return {callToAction}
          */
         onStoppingDoingAction: function () {
-            pagebuilderRegister.runReadyTrigger(this._getTarget());
             return this;
         },
         /**
@@ -128,11 +117,11 @@ define([
          * @private
          */
         _getTarget: function () {
-            if (typeof this.config.$target === "undefined") {
-                this.config.$target = $(this.config.target_element_id);
+            if (typeof this.options.$target === "undefined") {
+                this.options.$target = $(this.options.target_element_id);
             }
 
-            return this.config.$target;
+            return this.options.$target;
         },
         /**
          * Get options of popup
@@ -203,16 +192,16 @@ define([
          * @private
          */
         _getPopup: function () {
-            if (typeof this.config.$popup === "undefined") {
+            if (typeof this.options.$popup === "undefined") {
                 let $target = this._getTarget(),
                     settings = $target.data('settings') || {};
                 if (!$target.length || !settings || settings.popup_enabled !== 'ok') {
-                    this.config.$popup = $();
+                    this.options.$popup = $();
                 } else {
-                    this.config.$popup = $target.modal(this._getPopupOptions());
+                    this.options.$popup = $target.modal(this._getPopupOptions());
                 }
             }
-            return this.config.$popup;
+            return this.options.$popup;
         },
         /**
          * Show popup
@@ -242,10 +231,10 @@ define([
          * Insert HTML within document
          */
         insertCode: function () {
-            let $element = $(this.config.element_data_id);
-            if ($element.length && this.config.code) {
+            let $element = $(this.options.element_data_id);
+            if ($element.length && this.options.code) {
                 let textArea = document.createElement('textarea');
-                textArea.innerHTML = this.config.code;
+                textArea.innerHTML = this.options.code;
                 $element.html(textArea.value);
             }
         },
@@ -259,16 +248,16 @@ define([
          * On Timeout
          */
         onTimeout: function () {
-            let timeout = parseInt(this.config.timout);
+            let timeout = parseInt(this.options.timout);
             setTimeout(this.doAction.bind(this), timeout*1000);
         },
         /**
          * On Click action
          */
         onClick: function () {
-            $(document).on('click', this.config.trigger_element_id, this.doAction.bind(this));
+            $(document).on('click', this.options.trigger_element_id, this.doAction.bind(this));
         }
-    }
+    });
 
-    return callToAction;
+    return $.goomento.callToAction;
 })

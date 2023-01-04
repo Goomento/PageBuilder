@@ -8,9 +8,8 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Traits;
 
-use Exception;
-use Goomento\PageBuilder\Api\ContentRegistryInterface;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
+use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
@@ -64,12 +63,7 @@ trait TraitBuildableModel
      */
     public function getElements(bool $forDisplay = false) : array
     {
-        $elements = (array) $this->getData(self::ELEMENTS);
-        if ($forDisplay === true) {
-//            return $elements; // TODO implement late
-        }
-
-        return $elements;
+        return (array) $this->getData(self::ELEMENTS);
     }
 
     /**
@@ -229,7 +223,6 @@ trait TraitBuildableModel
         return $this;
     }
 
-
     /**
      * @inheritDoc
      */
@@ -307,6 +300,22 @@ trait TraitBuildableModel
         }
 
         $this->setUpdateTime($this->dateTime->gmtDate());
+
+        if (!$this->getSetting('layout') && $this->getData('type')) {
+            switch ($this->getData('type')) {
+                case ContentInterface::TYPE_SECTION:
+                    $this->setSetting('layout', 'pagebuilder_content_empty');
+                    break;
+                case ContentInterface::TYPE_TEMPLATE:
+                    $this->setSetting('layout', 'pagebuilder_content_fullwidth');
+                    break;
+                case ContentInterface::TYPE_PAGE:
+                default:
+                    $this->setSetting('layout', 'pagebuilder_content_1column');
+                    break;
+            }
+        }
+
         return parent::beforeSave();
     }
 }

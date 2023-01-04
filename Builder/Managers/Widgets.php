@@ -97,7 +97,7 @@ class Widgets
      */
     public function getWidgetTypes(?string $name = null)
     {
-        if (is_null($this->components)) {
+        if (null === $this->components) {
             $this->initWidgets();
         }
 

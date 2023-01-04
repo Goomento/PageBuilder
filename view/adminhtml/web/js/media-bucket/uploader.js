@@ -55,17 +55,32 @@ define([
          */
         _getFileUrl: function (rawUrl) {
             let matched = rawUrl.match(/___directive\/([a-zA-Z0-9,]*)/i),
-                url = '';
+                url = rawUrl;
             if (matched && matched[1]) {
                 let widget = Base64.mageDecode(matched[1]);
                 widget = widget.match(/url=\"([^"]+)\"/i);
                 if (widget[1]) {
                     url = widget[1];
                 }
-                return mediaUrl + url;
-            } else {
-                return rawUrl;
             }
+
+            return this._isUrl(url) ?
+                url : goomentoMediaUrl.replace(/\/$/, '') + '/' + url;
+        },
+        /**
+         * Check whether is url or not
+         * @param urlString
+         * @returns {boolean}
+         * @private
+         */
+        _isUrl: function (urlString) {
+            var urlPattern = new RegExp('^(https?:\\/\\/)?'+ // validate protocol
+                '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
+                '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
+                '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // validate port and path
+                '(\\?[;&a-z\\d%_.~+=-]*)?'+ // validate query string
+                '(\\#[-a-z\\d_]*)?$','i'); // validate fragment locator
+            return !!urlPattern.test(urlString);
         },
         /**
          * Construct the bucket

@@ -10,16 +10,23 @@ namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class Counter extends AbstractWidget
 {
-
+    /**
+     * @inheirtDoc
+     */
     const NAME = 'counter';
 
+    /**
+     * @inheirtDoc
+     */
     protected $template = 'Goomento_PageBuilder::widgets/counter.phtml';
 
     /**
@@ -65,26 +72,25 @@ class Counter extends AbstractWidget
     /**
      * @param AbstractElement $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
-    public static function registerCounterInterface(AbstractElement $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerCounterInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
             $prefix . 'starting_number',
-            $args + [
+            [
                 'label' => __('Starting Number'),
                 'type' => Controls::NUMBER,
                 'default' => 0,
-                'dynamic' => [
-                    'active' => true,
-                ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'ending_number',
-            $args + [
+            [
                 'label' => __('Ending Number'),
                 'type' => Controls::NUMBER,
                 'default' => 100,
@@ -96,7 +102,7 @@ class Counter extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'prefix',
-            $args + [
+            [
                 'label' => __('Number Prefix'),
                 'type' => Controls::TEXT,
                 'dynamic' => [
@@ -109,12 +115,9 @@ class Counter extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'suffix',
-            $args + [
+            [
                 'label' => __('Number Suffix'),
                 'type' => Controls::TEXT,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => '',
                 'placeholder' => __('Plus'),
             ]
@@ -122,7 +125,7 @@ class Counter extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'duration',
-            $args + [
+            [
                 'label' => __('Animation Duration'),
                 'type' => Controls::NUMBER,
                 'default' => 2000,
@@ -133,7 +136,7 @@ class Counter extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'thousand_separator',
-            $args + [
+            [
                 'label' => __('Thousand Separator'),
                 'type' => Controls::SWITCHER,
                 'default' => 'yes',
@@ -144,11 +147,11 @@ class Counter extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'thousand_separator_char',
-            $args + [
+            [
                 'label' => __('Separator'),
                 'type' => Controls::SELECT,
                 'condition' => [
-                    'thousand_separator' => 'yes',
+                    $prefix . 'separator' => 'yes',
                 ],
                 'options' => [
                     '' => 'Default',
@@ -160,13 +163,10 @@ class Counter extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'title',
-            $args + [
+            [
                 'label' => __('Title'),
                 'type' => Controls::TEXT,
                 'label_block' => true,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => __('Cool Number'),
                 'placeholder' => __('Cool Number'),
             ]
@@ -177,18 +177,17 @@ class Counter extends AbstractWidget
      * @param AbstractWidget $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
     public static function registerNumberStyles(
         AbstractWidget $widget,
-        string         $prefix = self::NAME . '_',
-        string         $cssTarget = '.gmt-counter-number-wrapper',
-        array          $args = []
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-counter-number-wrapper'
     ) {
         $widget->addControl(
             $prefix . 'number_color',
-            $args + [
+            [
                 'label' => __('Text Color'),
                 'type' => Controls::COLOR,
                 'scheme' => [
@@ -203,7 +202,7 @@ class Counter extends AbstractWidget
 
         $widget->addGroupControl(
             TypographyGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'typography_number',
                 'scheme' => Typography::TYPOGRAPHY_1,
                 'selector' => '{{WRAPPER}} ' . $cssTarget,
@@ -215,18 +214,17 @@ class Counter extends AbstractWidget
      * @param AbstractWidget $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
     public static function registerTitleStyles(
-        AbstractWidget $widget,
-        string         $prefix = self::NAME . '_',
-        string         $cssTarget = '.gmt-counter-title',
-        array          $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-counter-title'
     ) {
         $widget->addControl(
             $prefix . 'title_color',
-            $args + [
+            [
                 'label' => __('Text Color'),
                 'type' => Controls::COLOR,
                 'scheme' => [
@@ -241,7 +239,7 @@ class Counter extends AbstractWidget
 
         $widget->addGroupControl(
             TypographyGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'typography_title',
                 'scheme' => Typography::TYPOGRAPHY_2,
                 'selector' => '{{WRAPPER}} ' . $cssTarget,

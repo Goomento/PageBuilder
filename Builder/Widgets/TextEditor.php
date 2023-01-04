@@ -9,18 +9,22 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class TextEditor extends AbstractWidget
 {
-
+    /**
+     * @inheritDoc
+     */
     const NAME = 'text-editor';
 
     /**
-     * @var string
+     * @inheritDoc
      */
     protected $template = 'Goomento_PageBuilder::widgets/text_editor.phtml';
 
@@ -65,28 +69,27 @@ class TextEditor extends AbstractWidget
     }
 
     /**
-     * @param AbstractWidget $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
-    public static function registerTextEditorInterface(AbstractWidget $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerTextEditorInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
             $prefix . 'editor',
-            $args + [
+            [
                 'label' => '',
                 'type' => Controls::WYSIWYG,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
             ]
         );
 
         $widget->addControl(
             $prefix . 'drop_cap',
-            $args + [
+            [
                 'label' => __('Drop Cap'),
                 'type' => Controls::SWITCHER,
                 'label_off' => __('Off'),
@@ -99,21 +102,20 @@ class TextEditor extends AbstractWidget
     }
 
     /**
-     * @param AbstractWidget $widget
+     * @param ControlsStack $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
     public static function registerTextEditorStyle(
-        AbstractWidget $widget,
+        ControlsStack $widget,
         string $prefix = self::NAME . '_',
-        string         $cssTarget = '.gmt-text-editor',
-        array $args = []
+        string $cssTarget = '.gmt-text-editor'
     ) {
         $widget->addResponsiveControl(
             $prefix . 'align',
-            $args + [
+            [
                 'label' => __('Alignment'),
                 'type' => Controls::CHOOSE,
                 'options' => [
@@ -142,7 +144,7 @@ class TextEditor extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'color',
-            $args + [
+            [
                 'label' => __('Text Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
@@ -170,7 +172,7 @@ class TextEditor extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'columns',
-            $args + [
+            [
                 'label' => __('Columns'),
                 'type' => Controls::SELECT,
                 'separator' => 'before',
@@ -183,7 +185,7 @@ class TextEditor extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'column_gap',
-            $args + [
+            [
                 'label' => __('Columns Gap'),
                 'type' => Controls::SLIDER,
                 'size_units' => [ 'px', '%', 'em', 'vw' ],
@@ -215,19 +217,17 @@ class TextEditor extends AbstractWidget
      * @param AbstractWidget $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
     public static function registerDropCapStyles(
         AbstractWidget $widget,
         string $prefix = self::NAME . '_',
-        string         $cssTarget = '.gmt-drop-cap',
-        array $args = []
+        string $cssTarget = '.gmt-drop-cap'
     ) {
-
         $widget->addControl(
             $prefix . 'drop_cap_view',
-            $args + [
+            [
                 'label' => __('View'),
                 'type' => Controls::SELECT,
                 'options' => [
@@ -242,7 +242,7 @@ class TextEditor extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'drop_cap_primary_color',
-            $args + [
+            [
                 'label' => __('Primary Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
@@ -256,31 +256,24 @@ class TextEditor extends AbstractWidget
             ]
         );
 
-        $conditionArgs = [
-            'condition' => [
-                self::NAME . '_drop_cap_view!' => 'default',
-            ],
-        ];
-
-        if (isset($args['condition'])) {
-            $conditionArgs = array_merge($conditionArgs, $args['condition']);
-        }
-
         $widget->addControl(
             $prefix . 'drop_cap_secondary_color',
-            $conditionArgs + $args + [
+            [
                 'label' => __('Secondary Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
                     '{{WRAPPER}}.gmt-drop-cap-view-framed ' . $cssTarget => 'background-color: {{VALUE}};',
                     '{{WRAPPER}}.gmt-drop-cap-view-stacked ' . $cssTarget => 'color: {{VALUE}};',
                 ],
+                'condition' => [
+                    $prefix . 'drop_cap_view!' => 'default',
+                ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'drop_cap_size',
-            $conditionArgs + $args + [
+            [
                 'label' => __('Size'),
                 'type' => Controls::SLIDER,
                 'default' => [
@@ -294,12 +287,15 @@ class TextEditor extends AbstractWidget
                 'selectors' => [
                     '{{WRAPPER}} ' . $cssTarget => 'padding: {{SIZE}}{{UNIT}};',
                 ],
+                'condition' => [
+                    $prefix . 'drop_cap_view!' => 'default',
+                ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'drop_cap_space',
-            $args + [
+            [
                 'label' => __('Space'),
                 'type' => Controls::SLIDER,
                 'default' => [
@@ -319,7 +315,7 @@ class TextEditor extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'drop_cap_border_radius',
-            $args + [
+            [
                 'label' => __('Border Radius'),
                 'type' => Controls::SLIDER,
                 'size_units' => [ '%', 'px' ],
@@ -337,24 +333,23 @@ class TextEditor extends AbstractWidget
             ]
         );
 
-        unset($conditionArgs['condition'][self::NAME . '_drop_cap_view!']);
-
-        $conditionArgs['condition'][self::NAME . '_drop_cap_view'] = 'framed';
-
         $widget->addControl(
             $prefix . 'drop_cap_border_width',
-            $conditionArgs + $args + [
+            [
                 'label' => __('Border Width'),
                 'type' => Controls::DIMENSIONS,
                 'selectors' => [
                     '{{WRAPPER}} ' . $cssTarget => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+                'condition' => [
+                    $prefix . 'drop_cap_view' => 'framed',
                 ],
             ]
         );
 
         $widget->addGroupControl(
             TypographyGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'drop_cap_typography',
                 'selector' => '{{WRAPPER}} .gmt-drop-cap-letter',
                 'exclude' => [
@@ -403,11 +398,7 @@ class TextEditor extends AbstractWidget
             ]
         );
 
-        self::registerDropCapStyles($this, self::NAME . '_', '.gmt-drop-cap', [
-            'condition' => [
-                self::NAME . '_drop_cap' => 'yes',
-            ],
-        ]);
+        self::registerDropCapStyles($this);
 
         $this->endControlsSection();
     }

@@ -10,15 +10,22 @@ namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class Alert extends AbstractWidget
 {
-
+    /**
+     * @inheirtDoc
+     */
     const NAME = 'alert';
 
+    /**
+     * @inheirtDoc
+     */
     protected $template = 'Goomento_PageBuilder::widgets/alert.phtml';
 
     /**
@@ -48,22 +55,32 @@ class Alert extends AbstractWidget
     /**
      * @inheritDoc
      */
+    public function getScriptDepends()
+    {
+        return ['goomento-widget-alert'];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getKeywords()
     {
         return [ 'alert', 'notice', 'message' ];
     }
 
     /**
-     * @param AbstractWidget $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
-    public static function registerAlertInterface(AbstractWidget $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerAlertInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
             $prefix . 'type',
-            $args + [
+            [
                 'label' => __('Type'),
                 'type' => Controls::SELECT,
                 'default' => 'info',
@@ -79,7 +96,7 @@ class Alert extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'title',
-            $args + [
+            [
                 'label' => __('Title & Description'),
                 'type' => Controls::TEXT,
                 'placeholder' => __('Enter your title'),
@@ -90,7 +107,7 @@ class Alert extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'description',
-            $args + [
+            [
                 'label' => __('Content'),
                 'type' => Controls::TEXTAREA,
                 'placeholder' => __('Enter your description'),
@@ -102,7 +119,7 @@ class Alert extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'show_dismiss',
-            $args + [
+            [
                 'label' => __('Dismiss Button'),
                 'type' => Controls::SELECT,
                 'default' => 'show',
@@ -115,21 +132,20 @@ class Alert extends AbstractWidget
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
     public static function registerAlertStyle(
-        AbstractElement $widget,
+        ControlsStack $widget,
         string $prefix = self::NAME . '_',
-        string          $cssTarget = '.gmt-alert',
-        array $args = []
+        string $cssTarget = '.gmt-alert'
     ) {
         $widget->addControl(
             $prefix . 'background',
-            $args + [
+            [
                 'label' => __('Background Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
@@ -140,7 +156,7 @@ class Alert extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'border_color',
-            $args + [
+            [
                 'label' => __('Border Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
@@ -151,7 +167,7 @@ class Alert extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'border_left-width',
-            $args + [
+            [
                 'label' => __('Left Border Width'),
                 'type' => Controls::SLIDER,
                 'range' => [

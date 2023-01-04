@@ -55,6 +55,9 @@ class DataConfig extends AbstractDataTag
                 'label' => __('Config Path'),
                 'type' => Controls::TEXT,
                 'default' => '',
+                'dynamic' => [
+                    'active' => false
+                ]
             ]
         );
     }

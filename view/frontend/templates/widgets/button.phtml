@@ -43,11 +43,17 @@ if (!empty($settings['button_size'])) {
     $widget->addRenderAttribute('button', 'class', 'gmt-size-' . $settings['button_size']);
 }
 
+if (!empty($settings['button_type'])) {
+    $widget->addRenderAttribute('button', 'type', $settings['button_type']);
+}
+
 if ($settings['button_hover_animation']) {
     $widget->addRenderAttribute('button', 'class', 'gmt-animation-' . $settings['button_hover_animation']);
-} ?>
+}
+$buttonTag = !empty($settings['button_tag']) ? $settings['button_tag'] : 'a';
+?>
     <div <?= /** @noEscape */ $widget->getRenderAttributeString('wrapper'); ?>>
-        <a <?= /** @noEscape */ $widget->getRenderAttributeString('button'); ?>>
+        <<?= /** @noEscape */ $buttonTag ?> <?= /** @noEscape */ $widget->getRenderAttributeString('button'); ?>>
             <?php
 
             $widget->addRenderAttribute([
@@ -64,16 +70,17 @@ if ($settings['button_hover_animation']) {
                     'class' => 'gmt-button-text',
                 ],
             ]);
-
-            $widget->addInlineEditingAttributes(['text' => 'button_text' ], 'none'); ?>
-            <span <?= /** @noEscape */ $widget->getRenderAttributeString('content-wrapper'); ?>>
-            <?php if (!empty($settings['button_icon']) || ! empty($settings['button_selected_icon']['value'])): ?>
-                <span <?= /** @noEscape */ $widget->getRenderAttributeString('icon-align'); ?>>
-                    <?php Icons::renderIcon($settings['button_selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
+            ?>
+            <div <?= /** @noEscape */ $widget->getRenderAttributeString('content-wrapper'); ?>>
+                <?php if (!empty($settings['button_icon']) || ! empty($settings['button_selected_icon']['value'])): ?>
+                    <div <?= /** @noEscape */ $widget->getRenderAttributeString('icon-align'); ?>>
+                        <?php Icons::renderIcon($settings['button_selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
+                    </div>
+                <?php endif; ?>
+                <span <?= /** @noEscape */ $widget->getRenderAttributeString('text'); ?>>
+                    <?php $widget->printInlineEditingContent('button_text'); ?>
                 </span>
-            <?php endif; ?>
-                <span <?= /** @noEscape */ $widget->getRenderAttributeString('text'); ?>><?= /** @noEscape */ $settings['button_text']; ?></span>
-            </span>
-        </a>
+            </div>
+        </<?= /** @noEscape */ $buttonTag ?>>
     </div>
 <?php

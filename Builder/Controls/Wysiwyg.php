@@ -50,6 +50,7 @@ class Wysiwyg extends AbstractControlData
             'label_block' => true,
             'dynamic' => [
                 'categories' => [TagsModule::WYSIWYG_CATEGORY, TagsModule::TEXT_CATEGORY],
+                'active' => true
             ],
         ];
     }

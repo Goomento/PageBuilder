@@ -10,16 +10,29 @@ namespace Goomento\PageBuilder\Builder\Base;
 
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Helper\DataHelper;
+use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
+use Magento\Framework\Phrase;
 use Zend_Json;
 
 abstract class AbstractElement extends ControlsStack
 {
+    /**
+     * @inheirtDoc
+     */
     const TYPE = 'element';
 
+    /**
+     * @inheirtDoc
+     */
     const NAME = 'base';
+
+    /**
+     * Default cache lifetime as per element in second
+     */
+    const CACHE_LIFETIME = 300;
 
     /**
      * Child elements.
@@ -85,6 +98,44 @@ abstract class AbstractElement extends ControlsStack
     private $buildableContent;
 
     /**
+     * @var null|AbstractElement
+     */
+    private $parent;
+
+    /**
+     * Element base constructor.
+     *
+     * Initializing the element base class using `$data` and `$args`.
+     *
+     * The `$data` parameter is required for a normal instance because of the
+     * way Goomento renders data when initializing elements.
+     *
+     *
+     * @param array      $data Optional. Element data. Default is an empty array.
+     * @param array|null $args Optional. Element default arguments. Default is null.
+     **/
+    public function __construct(array $data = [], array $args = null)
+    {
+        if ($data) {
+            $this->isTypeInstance = false;
+        } elseif ($args) {
+            $this->defaultArgs = $args;
+        }
+
+        if (isset($data['parent']) && $data['parent'] instanceof AbstractElement) {
+            $this->setParent($data['parent']);
+            unset($data['parent']);
+        }
+
+        if (isset($data['buildable_content']) && $data['buildable_content'] instanceof BuildableContentInterface) {
+            $this->setBuildableContent($data['buildable_content']);
+            unset($data['buildable_content']);
+        }
+
+        parent::__construct($data);
+    }
+
+    /**
      * Add script depends.
      *
      * Register new script to enqueue by the handler.
@@ -92,7 +143,7 @@ abstract class AbstractElement extends ControlsStack
      *
      * @param string $handler Depend script handler.
      */
-    public function addScriptDepends($handler)
+    public function addScriptDepends(string $handler)
     {
         $this->dependedScripts[] = $handler;
     }
@@ -114,7 +165,7 @@ abstract class AbstractElement extends ControlsStack
      *
      * @param string $handler Depend style handler.
      */
-    public function addStyleDepends($handler)
+    public function addStyleDepends(string $handler)
     {
         $this->dependedStyles[] = $handler;
     }
@@ -212,7 +263,7 @@ abstract class AbstractElement extends ControlsStack
      * Retrieve the element title.
      *
      *
-     * @return string Element title.
+     * @return string|Phrase Element title.
      */
     public function getTitle()
     {
@@ -246,7 +297,11 @@ abstract class AbstractElement extends ControlsStack
         return false;
     }
 
-
+    /**
+     * This config use for printing empty element such as empty HTML content
+     *
+     * @return bool
+     */
     protected function shouldPrintEmpty()
     {
         return true;
@@ -307,11 +362,11 @@ abstract class AbstractElement extends ControlsStack
             return false;
         }
 
-        $elementsManager = ObjectManagerHelper::getElementsManager();
-        $child = $elementsManager->createElementInstance($childData, $childArgs, $childType);
+        $child = ObjectManagerHelper::getElementsManager()
+            ->createElementInstance($childData, $childArgs, $childType);
 
         if ($child) {
-            $this->children[] = $child;
+            $this->children[$child->getId()] = $child;
         }
 
         return $child;
@@ -363,7 +418,7 @@ abstract class AbstractElement extends ControlsStack
             $this->renderAttributes[ $element ][ $key ] = [];
         }
 
-        settype($value, 'array');
+        $value = (array) $value;
 
         if ($overwrite) {
             $this->renderAttributes[ $element ][ $key ] = $value;
@@ -437,11 +492,11 @@ abstract class AbstractElement extends ControlsStack
      * or value/s from an HTML element's render attribute.
      *
      *
-     * @param string $element       The HTML element.
-     * @param string $key           Optional. Attribute key. Default is null.
-     * @param array|string $values   Optional. Attribute value/s. Default is null.
+     * @param string $element The HTML element.
+     * @param string|null $key Optional. Attribute key. Default is null.
+     * @param null $values Optional. Attribute value/s. Default is null.
      */
-    public function removeRenderAttribute($element, $key = null, $values = null)
+    public function removeRenderAttribute(string $element, string $key = null, $values = null)
     {
         if ($key && ! isset($this->renderAttributes[ $element ][ $key ])) {
             return;
@@ -533,10 +588,10 @@ abstract class AbstractElement extends ControlsStack
         HooksHelper::doAction("pagebuilder/frontend/{$elementType}/before_render", $this);
 
         ob_start();
-        $this->_printContent();
+        $this->printContent();
         $content = ob_get_clean();
 
-        $shouldRender = (! empty($content) || $this->shouldPrintEmpty());
+        $shouldRender = (!empty($content) || $this->shouldPrintEmpty());
 
         /**
          * Should the element be rendered for frontend
@@ -592,7 +647,8 @@ abstract class AbstractElement extends ControlsStack
      */
     public function enqueue()
     {
-        $this->enqueueScripts();
+        // Add the styles to HTML, the script will be added directly in HTML
+        // $this->enqueueScripts();
         $this->enqueueStyles();
     }
 
@@ -709,6 +765,7 @@ abstract class AbstractElement extends ControlsStack
         }
 
         if ($frontendSettings) {
+            // This FE config use for system handlers, such as background video player at section ...
             $this->addRenderAttribute('_wrapper', 'data-settings', Zend_Json::encode($frontendSettings));
         }
 
@@ -750,10 +807,13 @@ abstract class AbstractElement extends ControlsStack
      * Output the element final HTML on the frontend.
      *
      */
-    protected function _printContent()
+    public function printContent()
     {
         foreach ($this->getChildren() as $child) {
-            $child->setBuildableContent($this->getBuildableContent());
+            $child
+                ->setBuildableContent($this->getBuildableContent())
+                ->setParent($this);
+
             $child->printElement();
         }
     }
@@ -858,25 +918,56 @@ abstract class AbstractElement extends ControlsStack
     }
 
     /**
-     * Element base constructor.
-     *
-     * Initializing the element base class using `$data` and `$args`.
-     *
-     * The `$data` parameter is required for a normal instance because of the
-     * way Goomento renders data when initializing elements.
-     *
-     *
-     * @param array      $data Optional. Element data. Default is an empty array.
-     * @param array|null $args Optional. Element default arguments. Default is null.
-     **/
-    public function __construct(array $data = [], array $args = null)
+     * @param AbstractElement $element
+     * @return $this
+     */
+    public function setParent(AbstractElement $element) : AbstractElement
     {
-        if ($data) {
-            $this->isTypeInstance = false;
-        } elseif ($args) {
-            $this->defaultArgs = $args;
-        }
+        $this->parent = $element;
+        return $this;
+    }
 
-        parent::__construct($data);
+    /**
+     * @return AbstractElement|null
+     */
+    public function getParent() : ?AbstractElement
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCacheKey() : string
+    {
+        $settings = $this->getSettingsForDisplay();
+        $key = $settings['_cache_key'] ?? null;
+        if (null === $key) {
+            $key = EncryptorHelper::uniqueContextId($settings, 12);
+        }
+        return $key;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCacheLifetime() : ?int
+    {
+        return $this->getSettingsForDisplay('_cache_lifetime') ?: static::CACHE_LIFETIME;
+    }
+
+    /**
+     * @param string ...$keys
+     * @return string
+     */
+    public static function buildPrefixKey(...$keys) : string
+    {
+        if (count($keys) === 1 && $keys[0] === null) {
+            $keys = [];
+        } else {
+            $keys = (array) $keys;
+        }
+        array_unshift($keys, static::NAME);
+        return implode('_', $keys) . '_';
     }
 }

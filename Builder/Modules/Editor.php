@@ -12,7 +12,7 @@ use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Builder\Managers\Icons;
 use Goomento\PageBuilder\Builder\Managers\Schemes;
-use Goomento\PageBuilder\Builder\Shapes;
+use Goomento\PageBuilder\Helper\Shapes;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Base\AbstractDocument;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
@@ -47,6 +47,11 @@ class Editor
      * @var BuildableContentInterface|null
      */
     private $currentRevision;
+    /**
+     * Stores the template variables
+     * @var array
+     */
+    private $templateVariables;
 
     /**
      * Init the editor
@@ -271,16 +276,6 @@ class Editor
                 'jquery',
                 'jquery/ui',
             ]
-        );
-
-        ThemeHelper::registerScript(
-            'image-carousel',
-            'Goomento_PageBuilder/js/widgets/image-carousel'
-        );
-
-        ThemeHelper::registerScript(
-            'product-slider',
-            'Goomento_PageBuilder/js/widgets/product-slider'
         );
     }
 
@@ -728,11 +723,54 @@ EDITOR_WAPPER;
     }
 
     /**
+     * @return void
+     */
+    private function initTemplateVariables() : void
+    {
+        if (null !== $this->templateVariables) {
+            return;
+        }
+
+        $this->templateVariables = [
+            'editor' => StateHelper::isEditorMode(),
+            'buildable' => StateHelper::isBuildable(),
+            'adminhtml' => StateHelper::isAdminhtml(),
+            'frontend' => StateHelper::isFrontend(),
+        ];
+    }
+
+    /**
+     * @param string $content
+     * @return string
+     */
+    public function filterTemplate(string $content) : string
+    {
+        $pattern = '/\s*<!\-\-\s(gmt):(\S+)\s\-\->(.*)?<!\-\-\s\/(gmt):\2\s\-\->/sU';
+
+        $result = preg_replace_callback($pattern, function ($matches) {
+            $this->initTemplateVariables();
+            list(, $tag, $type, $snippet) = $matches;
+            $test = $this->templateVariables[$type] ?? false;
+            if (true === $test) {
+                return $snippet;
+            } else {
+                return '';
+            }
+        }, $content);
+
+        if (null !== $result) {
+            $content = $result;
+        }
+        return $content;
+    }
+
+    /**
      * Editor constructor.
      */
     public function __construct()
     {
         HooksHelper::addAction('pagebuilder/adminhtml/register_scripts', [$this, 'beforeRegisterScripts'], 7);
         HooksHelper::addAction('pagebuilder/editor/index', [ $this, 'initByContent']); // catch trigger in controller
+        HooksHelper::addFilter("pagebuilder/widget/render_content", [$this, 'filterTemplate'], 9);
     }
 }

@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\DynamicTags;
 
-use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Tags;
+use Goomento\PageBuilder\Builder\Widgets\Magento\CmsPage;
 use Magento\Framework\App\ObjectManager;
 
 class CmsPages extends CmsBlocks
@@ -44,14 +44,20 @@ class CmsPages extends CmsBlocks
      */
     protected function registerControls()
     {
-        $this->addControl(
-            self::IDENTIFIER,
-            [
-                'label' => __('Page URL Key'),
-                'type' => Controls::TEXT,
-                'default' => '',
-            ]
-        );
+        CmsPage::registerCmsPageWidgetInterface($this, self::NAME . '_id');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function render(array $options = [])
+    {
+        $identifier = (string) $this->getSettings(self::NAME . '_id');
+        if ($identifier = trim($identifier)) {
+            return $this->getContentHtml($identifier);
+        }
+
+        return '';
     }
 
     /**

@@ -10,6 +10,7 @@ namespace Goomento\PageBuilder\Helper;
 
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
+use Magento\Framework\DataObject;
 use Magento\Framework\Encryption\EncryptorInterface;
 
 /**
@@ -53,20 +54,63 @@ class EncryptorHelper
      * @param int $length
      * @return false|string
      */
-    public static function uniqueString(int $length = 6)
+    public static function randomString(int $length = 6)
     {
         $prefix = (string) rand(0, 99) . rand(0, 999);
         return substr(sha1(uniqid($prefix)), 0, $length);
     }
 
     /**
+     * Generate unique Id in context
+     *
+     * @param $base
+     * @param int $length
+     * @return string
+     */
+    public static function uniqueContextId($base, int $length = 6) : string
+    {
+        $contextKey = implode('_', [
+            StateHelper::getAreaCode(),
+            StateHelper::isViewMode() ? 'view' : 'live',
+            StateHelper::isEditorMode() ? 'editor' : 'live',
+        ]);
+        if (is_scalar($base)) {
+            $base .= $contextKey;
+        } elseif (is_array($base) || $base instanceof DataObject) {
+            $base[] = $contextKey;
+        } elseif (is_object($base)) {
+            $base->contextKey = $contextKey;
+        }
+        return self::uniqueId($base, $length);
+    }
+
+    /**
+     * @param $base
+     * @param int $length
+     * @return string
+     */
+    public static function uniqueId($base, int $length = 6) : string
+    {
+        $key = '';
+        if (is_scalar($base)) {
+            $key = $base;
+        } elseif (is_array($base) || $base instanceof DataObject) {
+            $key = \Zend_Json::encode($base);
+        } elseif (is_object($base)) {
+            $key = spl_object_hash($base);
+        }
+
+        return substr(sha1($key), 0, $length);
+    }
+
+    /**
      * @param string $str
      * @param int $length
-     * @return false|string
+     * @return string
      */
     public static function uniqueStringId(string $str, int $length = 6)
     {
-        return substr(sha1($str), 0, $length);
+        return self::uniqueId($str, $length);
     }
 
     /**
@@ -77,10 +121,6 @@ class EncryptorHelper
      */
     public static function isAllowed(?string $token, $content, ?int $userId = 0)
     {
-        if (null === $token) {
-            $token = (string) RequestHelper::getParam(self::ACCESS_TOKEN);
-        }
-
         $token = self::decrypt($token);
 
         $contentId = $content;

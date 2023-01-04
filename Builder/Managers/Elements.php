@@ -13,6 +13,7 @@ use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Elements\Column;
 use Goomento\PageBuilder\Builder\Elements\Repeater;
 use Goomento\PageBuilder\Builder\Elements\Section;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\LoggerHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
@@ -47,7 +48,7 @@ class Elements
     public function parseSettingsForDisplay(array $elementData): array
     {
         if (!isset($elementData['elType'])) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException('Invalid Element Type for getting settings');
+            throw new BuilderException('Invalid Element Type for getting settings');
         }
 
         $instance = $this->createElementInstance($elementData);
@@ -63,14 +64,14 @@ class Elements
      * @param array $elementData
      * @param array $elementArgs
      * @param AbstractElement|null $elementType
-     * @return AbstractElement|mixed|null
+     * @return AbstractElement|null
      */
     public function createElementInstance(array $elementData, array $elementArgs = [], AbstractElement $elementType = null)
     {
         if (null === $elementType) {
-            $widgetManager = ObjectManagerHelper::getWidgetsManager();
             if ('widget' === $elementData['elType']) {
-                $elementType = $widgetManager->getWidgetTypes($elementData['widgetType']);
+                $elementType = ObjectManagerHelper::getWidgetsManager()
+                    ->getWidgetTypes($elementData['widgetType']);
             } else {
                 $elementType = $this->getElementTypes($elementData['elType']);
             }

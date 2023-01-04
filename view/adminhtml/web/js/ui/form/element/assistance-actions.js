@@ -23,7 +23,7 @@ define([
             endpoint: '',
             defaultContentId: {
                 value: '',
-                label: $.mage.__('Click To Choose'),
+                label: $.mage.__('Select page builder'),
             }
         },
         isLoading: ko.observable(true),

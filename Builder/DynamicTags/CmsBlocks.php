@@ -8,19 +8,19 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\DynamicTags;
 
-use Goomento\PageBuilder\Builder\Base\AbstractDataTag;
-use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Builder\Base\AbstractTag;
 use Goomento\PageBuilder\Builder\Managers\Tags;
+use Goomento\PageBuilder\Builder\Widgets\Magento\CmsBlock;
+use Magento\Cms\Block\Block;
 use Magento\Framework\App\ObjectManager;
+use Magento\Framework\View\Element\AbstractBlock;
 
-class CmsBlocks extends AbstractDataTag
+class CmsBlocks extends AbstractTag
 {
     const NAME = 'cms_block';
 
-    const IDENTIFIER = 'identifier';
-
     /**
-     * @var \Magento\Framework\View\Element\AbstractBlock
+     * @var AbstractBlock
      */
     protected $renderer;
 
@@ -53,22 +53,15 @@ class CmsBlocks extends AbstractDataTag
      */
     protected function registerControls()
     {
-        $this->addControl(
-            self::IDENTIFIER,
-            [
-                'label' => __('Block Identifier'),
-                'type' => Controls::TEXT,
-                'default' => '',
-            ]
-        );
+        CmsBlock::registerCmsBlockWidgetInterface($this, self::NAME . '_');
     }
 
     /**
      * @inheritDoc
      */
-    protected function getValue(array $options = [])
+    protected function render()
     {
-        $identifier = (string) $this->getSettings(self::IDENTIFIER);
+        $identifier = (string) $this->getSettings(self::NAME . '_id');
         if ($identifier = trim($identifier)) {
             return $this->getContentHtml($identifier);
         }
@@ -82,8 +75,8 @@ class CmsBlocks extends AbstractDataTag
     protected function getContentHtml(string $identifier)
     {
         if ($this->renderer === null) {
-            /** @var \Magento\Cms\Block\Block renderer */
-            $this->renderer = ObjectManager::getInstance()->create(\Magento\Cms\Block\Block::class);
+            /** @var Block renderer */
+            $this->renderer = ObjectManager::getInstance()->create(Block::class);
         }
 
         return $this->renderer

@@ -53,7 +53,7 @@ class BannerSlider extends AbstractWidget
      */
     public function getScriptDepends()
     {
-        return ['banner-slider'];
+        return ['goomento-widget-banner-slider'];
     }
 
     /**
@@ -70,27 +70,29 @@ class BannerSlider extends AbstractWidget
 
         $repeater = new Repeater;
 
-        Banner::registerBannerInterface($repeater);
+        $prefixKey = self::buildPrefixKey(Banner::NAME);
+
+        Banner::registerBannerInterface($repeater, $prefixKey);
 
         $this->addControl(
-            'banner_list',
+            self::NAME . '_list',
             [
                 'label' => '',
                 'type' => Controls::REPEATER,
                 'fields' => $repeater->getControls(),
                 'default' => [
                     [
-                        'banner_image' => DataHelper::getPlaceholderImageSrc(),
-                        'banner_title' => __('Lorem ipsum dolor sit amet.'),
-                        'banner_caption' => __('Lorem ipsum dolor sit amet.'),
+                        $prefixKey . 'image' => DataHelper::getPlaceholderImageSrc(),
+                        $prefixKey . 'title' => __('Lorem ipsum dolor sit amet.'),
+                        $prefixKey . 'caption' => '',
                     ],
                     [
-                        'banner_image' => DataHelper::getPlaceholderImageSrc(),
-                        'banner_title' => __('Lorem ipsum dolor sit amet.'),
-                        'banner_caption' => __('Lorem ipsum dolor sit amet.'),
-                    ],
+                        $prefixKey . 'image' => DataHelper::getPlaceholderImageSrc(),
+                        $prefixKey . 'title' => __('Lorem ipsum dolor sit amet.'),
+                        $prefixKey . 'caption' => '',
+                    ]
                 ],
-                'title_field' => '{{{ banner_title }}}',
+                'title_field' => '{{{ obj["' . $prefixKey . 'title"] }}}',
             ]
         );
 
@@ -103,11 +105,9 @@ class BannerSlider extends AbstractWidget
             ]
         );
 
-        ImageCarousel::registerCarouselImagesControl($this, self::NAME . '_');
+        ImageCarousel::registerCarouselImagesControl($this, '');
 
-        $this->removeControl(self::NAME . '_' . 'carousel');
-
-        $this->removeControl(self::NAME . '_' . 'link_to');
+        $this->removeControl('link_to');
 
         $this->endControlsSection();
 
@@ -118,7 +118,7 @@ class BannerSlider extends AbstractWidget
             ]
         );
 
-        ImageCarousel::registerCarouselControl($this);
+        ImageCarousel::registerCarouselControl($this, '');
 
         $this->endControlsSection();
 
@@ -134,7 +134,7 @@ class BannerSlider extends AbstractWidget
             ]
         );
 
-        ImageCarousel::registerNavigationStyle($this, self::NAME . '_', '.gmt-banner-slider-wrapper');
+        ImageCarousel::registerNavigationStyle($this, '', '.gmt-banner-slider-wrapper');
 
         $this->endControlsSection();
 
@@ -146,7 +146,7 @@ class BannerSlider extends AbstractWidget
             ]
         );
 
-        ImageCarousel::registerImageStyle($this, self::NAME . '_', '.gmt-banner-carousel');
+        ImageCarousel::registerImageStyle($this, '', '.gmt-banner-carousel');
 
         $this->endControlsSection();
 
@@ -158,7 +158,7 @@ class BannerSlider extends AbstractWidget
             ]
         );
 
-        Banner::registerTitleStyle($this, self::NAME . '_title_');
+        Banner::registerTitleStyle($this, self::buildPrefixKey(Banner::NAME, 'title'));
 
         $this->endControlsSection();
 
@@ -170,7 +170,7 @@ class BannerSlider extends AbstractWidget
             ]
         );
 
-        Banner::registerCaptionStyle($this, self::NAME . '_caption_');
+        Banner::registerCaptionStyle($this, self::buildPrefixKey(Banner::NAME, 'caption'));
 
         $this->endControlsSection();
     }

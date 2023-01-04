@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Elements;
 
 use Goomento\PageBuilder\Builder\Base\AbstractElement;
-use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 class Repeater extends AbstractElement
@@ -79,8 +78,7 @@ class Repeater extends AbstractElement
             $args = array_merge($args, $currentTab);
         }
 
-        $controlsManager = ObjectManagerHelper::getControlsManager();
-        return $controlsManager->addControlToStack($this, $id, $args, $options);
+        return ObjectManagerHelper::getControlsManager()->addControlToStack($this, $id, $args, $options);
     }
 
     /**

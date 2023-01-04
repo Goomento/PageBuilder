@@ -134,6 +134,7 @@ class Media extends AbstractBaseMultiple implements ImportInterface
             'dynamic' => [
                 'categories' => [TagsModule::IMAGE_CATEGORY],
                 'returnType' => 'object',
+                'active' => true
             ],
         ];
     }
