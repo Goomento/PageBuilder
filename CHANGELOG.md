@@ -1,5 +1,12 @@
 # Magento 2 Goomento Page Builder
 
+## 0.4.0 Optimize speed of loading
+- Optimize speed of loading
+- Optimize code of use
+- Set `Inline editing` as default to all editable fields
+- Set `Dynamic Tags` as default to all fields
+- Fix Vimeo player on section
+
 ## 0.3.10 Checked compatible
 - Checked compatible with Magento2
 - Fixed mirror bugs

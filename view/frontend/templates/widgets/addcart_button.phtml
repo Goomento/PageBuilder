@@ -7,10 +7,8 @@ declare(strict_types=1);
 
 use Goomento\Core\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Block\View\Element\Widget;
-use Goomento\PageBuilder\Helper\StateHelper;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Block\Product\ListProduct;
-use Goomento\PageBuilder\Builder\Managers\Icons;
 use Magento\Framework\App\Action\Action;
 use Magento\Catalog\Model\Product;
 
@@ -64,44 +62,19 @@ if (!empty($postParams)):
             <input type="hidden" name="<?= /* @noEscape */ Action::PARAM_NAME_URL_ENCODED ?>"
                    value="<?= /* @noEscape */ $postParams['data'][Action::PARAM_NAME_URL_ENCODED] ?>">
             <?= $block->getBlockHtml('formkey') ?>
-            <button <?= /** @noEscape */ $widget->getRenderAttributeString('button'); ?>>
-                <?php
-                $widget->addRenderAttribute([
-                    'content-wrapper' => [
-                        'class' => 'gmt-button-content-wrapper',
-                    ],
-                    'icon-align' => [
-                        'class' => [
-                            'gmt-button-icon',
-                            'gmt-align-icon-' . $settings['addcart-button_icon_align'],
-                        ],
-                    ],
-                    'text' => [
-                        'class' => 'gmt-button-text',
-                    ],
-                ]);
-                $widget->addInlineEditingAttributes(['text' => 'addcart-button_text'], 'none'); ?>
-                <?php if (!empty($settings['addcart-button_icon']) || ! empty($settings['addcart-button_selected_icon']['value'])): ?>
-                    <em <?= /** @noEscape */ $widget->getRenderAttributeString('icon-align'); ?>>
-                        <?php Icons::renderIcon($settings['addcart-button_selected_icon'], [ 'aria-hidden' => 'true' ]); ?>
-                    </em>
-                <?php endif; ?>
-                <span <?= /** @noEscape */ $widget->getRenderAttributeString('content-wrapper'); ?>>
-                    <span <?= /** @noEscape */ $widget->getRenderAttributeString('text'); ?>><?= /** @noEscape */ $settings['addcart-button_text']; ?></span>
-                </span>
-            </button>
+            <?= $block->getWidgetHtml('button') ?>
         </form>
-        <?php if (!StateHelper::isEditorMode()): ?>
+        <?php if (!$block->isEnteredEditorMode()): ?>
             <script type="text/x-magento-init">
-        {
-            "[data-role=tocart-form]": {
-                "catalogAddToCart": {
-                    "product_sku": "<?= $block->escapeJs($product->getSku()) ?>",
-                    "addToCartButtonTextDefault": "<?= /** @noEscape */ $settings['addcart-button_text']; ?>",
-                    "addToCartButtonSelector": ".gmt-addcart-button-button"
+                {
+                    "[data-role=tocart-form]": {
+                        "catalogAddToCart": {
+                            "product_sku": "<?= $block->escapeJs($product->getSku()) ?>",
+                            "addToCartButtonTextDefault": "<?= /** @noEscape */ $settings['addcart-button_button_text']; ?>",
+                            "addToCartButtonSelector": ".gmt-button"
+                        }
+                    }
                 }
-            }
-        }
         </script>
         <?php endif; ?>
     </div>

@@ -12,7 +12,7 @@ use Goomento\PageBuilder\Block\View\Element\Widget;
  * @var Widget $block
  */
 $widget = $block->getWidget();
-$tabs = $widget->getSettingsForDisplay('tabs');
+$tabs = $widget->getSettingsForDisplay('tabs_tabs');
 
 $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
 <div class="gmt-tabs" role="tablist">
@@ -27,7 +27,7 @@ $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
                 'role' => 'tab',
                 'aria-controls' => 'gmt-tab-content-' . $idInt . $tabCount,
             ]); ?>
-            <div <?= /** @noEscape */ $widget->getRenderAttributeString('tab_title' . $index); ?>><a href=""><?= /** @noEscape */ $item['tab_title']; ?></a></div>
+            <div <?= /** @noEscape */ $widget->getRenderAttributeString('tab_title' . $index); ?>><a href=""><?= /** @noEscape */ $item['tabs_tab_title']; ?></a></div>
         <?php endforeach; ?>
     </div>
     <div class="gmt-tabs-content-wrapper">
@@ -35,8 +35,8 @@ $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
         foreach ($tabs as $index => $item):
             $tabCount = $index + 1;
 
-            $tabContentSettingKey = 'tabs.' . $index . '.tab_content';
-            $tabTitleMobileSettingKey = 'mobile.tabs.' . $index . '.tab_content';
+            $tabContentSettingKey = 'tabs_tabs.' . $index . '.tabs_tab_content';
+            $tabTitleMobileSettingKey = 'mobile.tabs_tabs.' . $index . '.tabs_tab_content';
 
             $widget->addRenderAttribute($tabContentSettingKey, [
                 'id' => 'gmt-tab-content-' . $idInt . $tabCount,
@@ -50,11 +50,11 @@ $idInt = substr((string) $widget->getIdInt(), 0, 3); ?>
                 'class' => [ 'gmt-tab-title', 'gmt-tab-mobile-title' ],
                 'data-tab' => $tabCount,
                 'role' => 'tab',
-            ]);
-
-            $widget->addInlineEditingAttributes($tabContentSettingKey, 'advanced'); ?>
-            <div <?= /** @noEscape */ $widget->getRenderAttributeString($tabTitleMobileSettingKey); ?>><?= /** @noEscape */ $item['tab_title']; ?></div>
-            <div <?= /** @noEscape */ $widget->getRenderAttributeString($tabContentSettingKey); ?>><?= /** @noEscape */ $item['tab_content'] ?></div>
+            ]); ?>
+            <div <?= /** @noEscape */ $widget->getRenderAttributeString($tabTitleMobileSettingKey); ?>><?= /** @noEscape */ $item['tabs_tab_title']; ?></div>
+            <div <?= /** @noEscape */ $widget->getRenderAttributeString($tabContentSettingKey); ?>>
+                <?php $widget->printInlineEditingContent($tabContentSettingKey, 'advanced'); ?>
+            </div>
         <?php endforeach; ?>
     </div>
 </div>

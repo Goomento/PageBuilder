@@ -33,6 +33,7 @@ class Number extends AbstractControlData
             'title' => '',
             'dynamic' => [
                 'categories' => [TagsModule::NUMBER_CATEGORY],
+                'active' => true
             ],
         ];
     }

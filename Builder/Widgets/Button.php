@@ -8,8 +8,8 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Widgets;
 
-use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\BorderGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\BoxShadowGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\TextShadowGroup;
@@ -17,6 +17,7 @@ use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class Button extends AbstractWidget
 {
@@ -67,35 +68,17 @@ class Button extends AbstractWidget
      *
      * @param AbstractWidget $widget
      * @param string $prefix
-     * @param array $args
+     * @throws BuilderException
      */
-    public static function registerButtonInterface(AbstractElement $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
-        $widget->addControl(
-            $prefix . 'type',
-            $args + [
-                'label' => __('Type'),
-                'type' => Controls::SELECT,
-                'default' => '',
-                'options' => [
-                    '' => __('Default'),
-                    'info' => __('Info'),
-                    'success' => __('Success'),
-                    'warning' => __('Warning'),
-                    'danger' => __('Danger'),
-                ],
-                'prefix_class' => 'gmt-button-',
-            ]
-        );
-
+    public static function registerButtonInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
             $prefix . 'text',
-            $args + [
+            [
                 'label' => __('Text'),
                 'type' => Controls::TEXT,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => __('Click here'),
                 'placeholder' => __('Click here'),
             ]
@@ -103,12 +86,9 @@ class Button extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'link',
-            $args + [
+            [
                 'label' => __('Link'),
                 'type' => Controls::URL,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'placeholder' => __('https://your-link.com'),
                 'default' => [
                     'url' => '#',
@@ -118,7 +98,7 @@ class Button extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'align',
-            $args + [
+            [
                 'label' => __('Alignment'),
                 'type' => Controls::CHOOSE,
                 'options' => [
@@ -146,7 +126,7 @@ class Button extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'size',
-            $args + [
+            [
                 'label' => __('Size'),
                 'type' => Controls::SELECT,
                 'default' => 'sm',
@@ -163,7 +143,7 @@ class Button extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'selected_icon',
-            $args + [
+            [
                 'label' => __('Icon'),
                 'type' => Controls::ICONS,
                 'label_block' => true,
@@ -172,7 +152,7 @@ class Button extends AbstractWidget
 
         $widget->addControl(
             $prefix .  'icon_align',
-            $args + [
+            [
                 'label' => __('Icon Position'),
                 'type' => Controls::SELECT,
                 'default' => 'left',
@@ -181,19 +161,16 @@ class Button extends AbstractWidget
                     'right' => __('After'),
                 ],
                 'condition' => [
-                    $prefix . 'selected_icon[value]!' => '',
+                    $prefix . 'selected_icon.value!' => '',
                 ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'css_id',
-            $args + [
+            [
                 'label' => __('Button CSS ID'),
                 'type' => Controls::TEXT,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => '',
                 'title' => __('Add your custom id WITHOUT the Pound key. e.g: my-id'),
                 'label_block' => false,
@@ -210,16 +187,16 @@ class Button extends AbstractWidget
      * @param string $prefix
      * @param string $cssTarget
      * @return void
+     * @throws BuilderException
      */
     public static function registerButtonBodyStyle(
-        AbstractWidget $widget,
-        string         $prefix = self::NAME . '_',
-        string         $cssTarget = '.gmt-button',
-        array          $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-button'
     ) {
         $widget->addGroupControl(
             BorderGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'border',
                 'selector' => '{{WRAPPER}} ' . $cssTarget,
                 'separator' => 'before',
@@ -228,7 +205,7 @@ class Button extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'border_radius',
-            $args + [
+            [
                 'label' => __('Border Radius'),
                 'type' => Controls::DIMENSIONS,
                 'size_units' => [ 'px', '%' ],
@@ -240,7 +217,7 @@ class Button extends AbstractWidget
 
         $widget->addGroupControl(
             BoxShadowGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'box_shadow',
                 'selector' => '{{WRAPPER}} ' . $cssTarget,
             ]
@@ -248,7 +225,7 @@ class Button extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'text_padding',
-            $args + [
+            [
                 'label' => __('Padding'),
                 'type' => Controls::DIMENSIONS,
                 'size_units' => [ 'px', 'em', '%' ],
@@ -265,19 +242,18 @@ class Button extends AbstractWidget
      *
      * @param AbstractWidget $widget
      * @param string $prefix
-     * @param array $args
      * @param string $cssTarget
      * @return void
+     * @throws BuilderException
      */
     public static function registerButtonIconStyle(
-        AbstractWidget $widget,
-        string         $prefix = self::NAME . '_',
-        string         $cssTarget = '.gmt-button',
-        array          $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-button'
     ) {
         $widget->addControl(
             $prefix . 'icon_indent',
-            $args + [
+            [
                 'label' => __('Icon Spacing'),
                 'type' => Controls::SLIDER,
                 'range' => [
@@ -298,19 +274,18 @@ class Button extends AbstractWidget
      *
      * @param AbstractWidget $widget
      * @param string $prefix
-     * @param array $args
      * @param string $cssTarget
      * @return void
+     * @throws BuilderException
      */
     public static function registerButtonLabelStyle(
-        AbstractWidget $widget,
-        string         $prefix = self::NAME . '_',
-        string         $cssTarget = '.gmt-button',
-        array          $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-button'
     ) {
         $widget->addGroupControl(
             TypographyGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'typography',
                 'scheme' => Typography::TYPOGRAPHY_4,
                 'selector' => '{{WRAPPER}} ' . $cssTarget ,
@@ -319,7 +294,7 @@ class Button extends AbstractWidget
 
         $widget->addGroupControl(
             TextShadowGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'text_shadow',
                 'selector' => '{{WRAPPER}}  ' . $cssTarget,
             ]
@@ -329,17 +304,16 @@ class Button extends AbstractWidget
 
         $widget->startControlsTab(
             $prefix . 'tab_button_normal',
-            $args + [
+            [
                 'label' => __('Normal'),
             ]
         );
 
         $widget->addControl(
             $prefix . 'text_color',
-            $args + [
+            [
                 'label' => __('Text Color'),
                 'type' => Controls::COLOR,
-                'default' => '',
                 'selectors' => [
                     '{{WRAPPER}}  ' . $cssTarget => 'fill: {{VALUE}}; color: {{VALUE}};',
                 ],
@@ -348,7 +322,7 @@ class Button extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'background_color',
-            $args + [
+            [
                 'label' => __('Background Color'),
                 'type' => Controls::COLOR,
                 'scheme' => [
@@ -365,14 +339,14 @@ class Button extends AbstractWidget
 
         $widget->startControlsTab(
             $prefix . 'tab_button_hover',
-            $args + [
+            [
                 'label' => __('Hover'),
             ]
         );
 
         $widget->addControl(
             $prefix . 'hover_color',
-            $args + [
+            [
                 'label' => __('Text Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
@@ -383,7 +357,7 @@ class Button extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'background_hover_color',
-            $args + [
+            [
                 'label' => __('Background Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
@@ -394,7 +368,7 @@ class Button extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'hover_border_color',
-            $args + [
+            [
                 'label' => __('Border Color'),
                 'type' => Controls::COLOR,
                 'condition' => [
@@ -408,7 +382,7 @@ class Button extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'hover_animation',
-            $args + [
+            [
                 'label' => __('Hover Animation'),
                 'type' => Controls::HOVER_ANIMATION,
             ]
@@ -426,17 +400,16 @@ class Button extends AbstractWidget
      * @param AbstractWidget $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @throws \Exception
+     * @throws BuilderException
      */
     public static function registerButtonStyle(
-        AbstractWidget $widget,
-        string         $prefix = self::NAME . '_',
-        string         $cssTarget = '.gmt-button',
-        array          $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-button'
     ) {
-        self::registerButtonLabelStyle($widget, $prefix, $cssTarget, $args);
-        self::registerButtonBodyStyle($widget, $prefix, $cssTarget, $args);
-        self::registerButtonIconStyle($widget, $prefix, $cssTarget, $args);
+        self::registerButtonLabelStyle($widget, $prefix, $cssTarget);
+        self::registerButtonBodyStyle($widget, $prefix, $cssTarget);
+        self::registerButtonIconStyle($widget, $prefix, $cssTarget);
     }
 
     /**
@@ -451,7 +424,7 @@ class Button extends AbstractWidget
             ]
         );
 
-        self::registerButtonInterface($this, 'button_');
+        self::registerButtonInterface($this);
 
         $this->endControlsSection();
 

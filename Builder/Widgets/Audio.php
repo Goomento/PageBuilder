@@ -9,12 +9,20 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class Audio extends AbstractWidget
 {
+    /**
+     * @inheirtDoc
+     */
     const NAME = 'audio';
 
+    /**
+     * @inheirtDoc
+     */
     protected $template = 'Goomento_PageBuilder::widgets/audio.phtml';
 
     /**
@@ -50,16 +58,18 @@ class Audio extends AbstractWidget
     }
 
     /**
-     * @param AbstractWidget $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
-    public static function registerSoundCloudInterface(AbstractWidget $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerSoundCloudInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
             $prefix . 'link',
-            $args + [
+            [
                 'label' => __('Link'),
                 'type' => Controls::URL,
                 'default' => [
@@ -71,7 +81,7 @@ class Audio extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'sc_visual',
-            $args + [
+            [
                 'label' => __('Visual Player'),
                 'type' => Controls::SELECT,
                 'default' => 'no',
@@ -84,7 +94,7 @@ class Audio extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'sc_options',
-            $args + [
+            [
                 'label' => __('Additional Options'),
                 'type' => Controls::HEADING,
                 'separator' => 'before',
@@ -93,7 +103,7 @@ class Audio extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'sc_auto_play',
-            $args + [
+            [
                 'label' => __('Autoplay'),
                 'type' => Controls::SWITCHER,
             ]
@@ -101,7 +111,7 @@ class Audio extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'sc_buying',
-            $args + [
+            [
                 'label' => __('Buy Button'),
                 'type' => Controls::SWITCHER,
                 'label_off' => __('Hide'),
@@ -112,7 +122,7 @@ class Audio extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'sc_liking',
-            $args + [
+            [
                 'label' => __('Like Button'),
                 'type' => Controls::SWITCHER,
                 'label_off' => __('Hide'),
@@ -123,7 +133,7 @@ class Audio extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'sc_download',
-            $args + [
+            [
                 'label' => __('Download Button'),
                 'type' => Controls::SWITCHER,
                 'label_off' => __('Hide'),
@@ -134,7 +144,7 @@ class Audio extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'sc_show_artwork',
-            $args + [
+            [
                 'label' => __('Artwork'),
                 'type' => Controls::SWITCHER,
                 'label_off' => __('Hide'),
@@ -148,7 +158,7 @@ class Audio extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'sc_sharing',
-            $args + [
+            [
                 'label' => __('Share Button'),
                 'type' => Controls::SWITCHER,
                 'label_off' => __('Hide'),
@@ -159,7 +169,7 @@ class Audio extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'sc_show_comments',
-            $args + [
+            [
                 'label' => __('Comments'),
                 'type' => Controls::SWITCHER,
                 'label_off' => __('Hide'),
@@ -170,7 +180,7 @@ class Audio extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'sc_show_playcount',
-            $args + [
+            [
                 'label' => __('Play Counts'),
                 'type' => Controls::SWITCHER,
                 'label_off' => __('Hide'),
@@ -181,7 +191,7 @@ class Audio extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'sc_show_user',
-            $args + [
+            [
                 'label' => __('Username'),
                 'type' => Controls::SWITCHER,
                 'label_off' => __('Hide'),
@@ -192,7 +202,7 @@ class Audio extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'sc_color',
-            $args + [
+            [
                 'label' => __('Controls Color'),
                 'type' => Controls::COLOR,
             ]

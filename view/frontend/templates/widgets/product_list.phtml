@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 use Magento\Framework\App\Action\Action;
+use Goomento\PageBuilder\Builder\Widgets\ImageCarousel;
 
 /**
  * @var \Goomento\PageBuilder\Block\Widgets\Product\ProductList $block
@@ -144,21 +145,12 @@ if ($exist = ($block->getProductCollection() && $block->getProductCollection()->
                 $showArrows = in_array($navigation, [ 'arrows', 'both' ]);
                 $slidesCount = $block->getProductCollection()->count();
 
-                if (1 < $slidesCount): ?>
-                    <?php if ($showDots): ?>
-                        <div class="swiper-pagination"></div>
-                    <?php endif; ?>
-                    <?php if ($showArrows): ?>
-                        <div class="gmt-swiper-button gmt-swiper-button-prev">
-                            <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                            <span class="gmt-screen-only"><?php $block->escapeHtml(__('Previous')); ?></span>
-                        </div>
-                        <div class="gmt-swiper-button gmt-swiper-button-next">
-                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                            <span class="gmt-screen-only"><?php $block->escapeHtml(__('Next')); ?></span>
-                        </div>
-                    <?php endif; ?>
-                <?php endif; ?>
+                if (1 < $slidesCount):
+                    ImageCarousel::printCarouselControls(
+                        $showDots,
+                        $showArrows
+                    );
+                endif; ?>
             <?php endif; ?>
         </div>
         <?php if (!$block->isRedirectToCartEnabled()):?>

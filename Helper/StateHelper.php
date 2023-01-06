@@ -32,30 +32,57 @@ class StateHelper
     use TraitStaticCaller;
     use TraitStaticInstances;
 
+    private static $states = [];
+
     /**
      * @return bool
      */
     public static function isCli()
     {
-        if (defined('STDIN')) {
-            return true;
+        if (!isset(self::$states['cli'])) {
+            $cli = false;
+            if (defined('STDIN')) {
+                $cli = true;
+            }
+            if (php_sapi_name() === 'cli') {
+                $cli = true;
+            }
+            // phpcs:ignore Magento2.Security.Superglobal.SuperglobalUsageError
+            if (array_key_exists('SHELL', $_ENV)) {
+                $cli = true;
+            }
+            // phpcs:ignore Magento2.Security.Superglobal.SuperglobalUsageError
+            if (empty($_SERVER['REMOTE_ADDR']) and !isset($_SERVER['HTTP_USER_AGENT']) and count($_SERVER['argv']) > 0) {
+                $cli = true;
+            }
+            // phpcs:ignore Magento2.Security.Superglobal.SuperglobalUsageError
+            if (!array_key_exists('REQUEST_METHOD', $_SERVER)) {
+                $cli = true;
+            }
+
+            self::$states['cli'] = $cli;
         }
-        if (php_sapi_name() === 'cli') {
-            return true;
+        return self::$states['cli'];
+    }
+
+    /**
+     * @param callable $callback
+     * @return mixed
+     */
+    public static function emulateFrontend(callable $callback)
+    {
+        try {
+            $states = self::$states;
+            self::$states = [
+                'view' => false,
+                'editor' => false,
+                'buildable' => false,
+                'preview' => false,
+            ] + self::$states;
+            return self::emulateAreaCode(Area::AREA_FRONTEND, $callback);
+        } finally {
+            self::$states = $states;
         }
-        // phpcs:ignore Magento2.Security.Superglobal.SuperglobalUsageError
-        if (array_key_exists('SHELL', $_ENV)) {
-            return true;
-        }
-        // phpcs:ignore Magento2.Security.Superglobal.SuperglobalUsageError
-        if (empty($_SERVER['REMOTE_ADDR']) and !isset($_SERVER['HTTP_USER_AGENT']) and count($_SERVER['argv']) > 0) {
-            return true;
-        }
-        // phpcs:ignore Magento2.Security.Superglobal.SuperglobalUsageError
-        if (!array_key_exists('REQUEST_METHOD', $_SERVER)) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -63,9 +90,12 @@ class StateHelper
      */
     public static function isBuildable()
     {
-        return self::isEditorMode()
-            || self::isEditorPreviewMode()
-            || self::isViewMode();
+        if (!isset(self::$states['buildable'])) {
+            self::$states['buildable'] = self::isEditorMode()
+                || self::isEditorPreviewMode()
+                || self::isViewMode();
+        }
+        return self::$states['buildable'];
     }
 
     /**
@@ -73,13 +103,16 @@ class StateHelper
      */
     public static function isEditorPreviewMode()
     {
-        $isPreviewMode = HooksHelper::didAction('pagebuilder/preview/index');
-        if ($isPreviewMode === false) {
-            $actionName = RegistryHelper::registry('current_action_name');
-            $isPreviewMode = $actionName === 'pagebuilder_content_editorpreview';
-        }
+        if (!isset(self::$states['preview'])) {
+            $isPreviewMode = HooksHelper::didAction('pagebuilder/preview/index');
+            if ($isPreviewMode === false) {
+                $actionName = RegistryHelper::registry('current_action_name');
+                $isPreviewMode = $actionName === 'pagebuilder_content_editorpreview';
+            }
 
-        return $isPreviewMode;
+            self::$states['preview'] = $isPreviewMode;
+        }
+        return self::$states['preview'];
     }
 
     /**
@@ -87,13 +120,17 @@ class StateHelper
      */
     public static function isViewMode()
     {
-        $isPreviewMode = HooksHelper::didAction('pagebuilder/view/index');
-        if ($isPreviewMode === false) {
-            $actionName = RegistryHelper::registry('current_action_name');
-            $isPreviewMode = $actionName === 'pagebuilder_content_view';
+        if (!isset(self::$states['view'])) {
+            $viewMode = HooksHelper::didAction('pagebuilder/view/index');
+            if ($viewMode === false) {
+                $actionName = RegistryHelper::registry('current_action_name');
+                $viewMode = $actionName === 'pagebuilder_content_view';
+            }
+
+            self::$states['view'] = $viewMode;
         }
 
-        return $isPreviewMode;
+        return self::$states['view'];
     }
 
     /**
@@ -101,8 +138,11 @@ class StateHelper
      */
     public static function isEditorMode()
     {
-        return HooksHelper::didAction('pagebuilder/editor/index') ||
-            HooksHelper::didAction('pagebuilder/editor/render_widget');
+        if (!isset(self::$states['editor'])) {
+            self::$states['editor'] = HooksHelper::didAction('pagebuilder/editor/index') ||
+                HooksHelper::didAction('pagebuilder/editor/render_widget');
+        }
+        return self::$states['editor'];
     }
 
     /**

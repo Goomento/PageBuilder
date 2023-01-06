@@ -9,23 +9,23 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\BorderGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\BoxShadowGroup;
-use Goomento\PageBuilder\Builder\Controls\Groups\CssFilterGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
-use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Builder\Schemes\Color;
-use Goomento\PageBuilder\Builder\Schemes\Typography;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
 
 class ImageBox extends AbstractWidget
 {
-
+    /**
+     * @inheirtDoc
+     */
     const NAME = 'image-box';
 
     /**
-     * @var string
+     * @inheirtDoc
      */
     protected $template = 'Goomento_PageBuilder::widgets/image_box.phtml';
 
@@ -65,18 +65,17 @@ class ImageBox extends AbstractWidget
      * @param AbstractWidget $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
     public static function registerBoxStyle(
-        AbstractWidget $widget,
-        string         $prefix = self::NAME . '_',
-        string         $cssTarget = '.gmt-image-box-wrapper',
-        array          $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-image-box-wrapper'
     ) {
         $widget->addControl(
             $prefix . 'background_color',
-            $args + [
+            [
                 'label'     => __('Background'),
                 'type'      => Controls::COLOR,
                 'default'   => '',
@@ -88,7 +87,7 @@ class ImageBox extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'padding',
-            $args + [
+            [
                 'label'      => __('Padding'),
                 'type'       => Controls::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
@@ -100,7 +99,7 @@ class ImageBox extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'margin',
-            $args + [
+            [
                 'label'      => __('Margin'),
                 'type'       => Controls::DIMENSIONS,
                 'size_units' => ['px', 'em', '%'],
@@ -147,62 +146,51 @@ class ImageBox extends AbstractWidget
     }
 
     /**
-     * @inheritDoc
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
      */
-    protected function registerControls()
-    {
-        $this->startControlsSection(
-            'section_image',
-            [
-                'label' => __('Image Box'),
-            ]
-        );
-
-        $this->addControl(
-            'image',
+    public static function registerImageBoxInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $widget->addControl(
+            $prefix . 'image',
             [
                 'label' => __('Choose Image'),
                 'type' => Controls::MEDIA,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => [
                     'url' => DataHelper::getPlaceholderImageSrc(),
                 ],
             ]
         );
 
-        $this->addGroupControl(
+        $widget->addGroupControl(
             ImageSizeGroup::NAME,
             [
-                'name' => 'image',
+                'name' => $prefix . 'image',
                 'default' => 'full',
                 'separator' => 'none',
             ]
         );
 
-        $this->addControl(
-            'title_text',
+        $widget->addControl(
+            $prefix . 'title_text',
             [
                 'label' => __('Title & Description'),
                 'type' => Controls::TEXT,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => __('This is the heading'),
                 'placeholder' => __('Enter your title'),
                 'label_block' => true,
             ]
         );
 
-        $this->addControl(
-            'description_text',
+        $widget->addControl(
+            $prefix . 'description_text',
             [
                 'label' => __('Content'),
                 'type' => Controls::TEXTAREA,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
                 'placeholder' => __('Enter your description'),
                 'separator' => 'none',
@@ -211,21 +199,18 @@ class ImageBox extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'link',
+        $widget->addControl(
+            $prefix . 'link',
             [
                 'label' => __('Link'),
                 'type' => Controls::URL,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'placeholder' => __('https://your-link.com'),
                 'separator' => 'before',
             ]
         );
 
-        $this->addControl(
-            'position',
+        $widget->addControl(
+            $prefix . 'position',
             [
                 'label' => __('Image Position'),
                 'type' => Controls::CHOOSE,
@@ -249,8 +234,8 @@ class ImageBox extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'title_size',
+        $widget->addControl(
+            $prefix . 'title_size',
             [
                 'label' => __('Title HTML Tag'),
                 'type' => Controls::SELECT,
@@ -268,32 +253,22 @@ class ImageBox extends AbstractWidget
                 'default' => 'h3',
             ]
         );
+    }
 
-        $this->endControlsSection();
-
-
-        $this->startControlsSection(
-            'section_wrapper_style',
-            [
-                'label' => __('Wrapper'),
-                'tab'   => Controls::TAB_STYLE,
-            ]
-        );
-
-        self::registerBoxStyle($this);
-
-        $this->endControlsSection();
-
-        $this->startControlsSection(
-            'section_style_image',
-            [
-                'label' => __('Image'),
-                'tab'   => Controls::TAB_STYLE,
-            ]
-        );
-
-        $this->addResponsiveControl(
-            'image_space',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerImageStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-image-box-img'
+    ) {
+        $widget->addResponsiveControl(
+            $prefix . 'image_space',
             [
                 'label' => __('Spacing'),
                 'type' => Controls::SLIDER,
@@ -307,16 +282,16 @@ class ImageBox extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}}.gmt-position-right .gmt-image-box-img' => 'margin-left: {{SIZE}}{{UNIT}};',
-                    '{{WRAPPER}}.gmt-position-left .gmt-image-box-img' => 'margin-right: {{SIZE}}{{UNIT}};',
-                    '{{WRAPPER}}.gmt-position-top .gmt-image-box-img' => 'margin-bottom: {{SIZE}}{{UNIT}};',
-                    '(mobile){{WRAPPER}} .gmt-image-box-img' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}}.gmt-position-right ' . $cssTarget => 'margin-left: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}}.gmt-position-left ' . $cssTarget => 'margin-right: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}}.gmt-position-top ' . $cssTarget => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                    '(mobile){{WRAPPER}} ' . $cssTarget => 'margin-bottom: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
 
-        $this->addResponsiveControl(
-            'image_size',
+        $widget->addResponsiveControl(
+            $prefix . 'image_size',
             [
                 'label' => __('Width') . ' (%)',
                 'type' => Controls::SLIDER,
@@ -338,112 +313,52 @@ class ImageBox extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-image-box-wrapper .gmt-image-box-img' => 'width: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .gmt-image-box-wrapper ' . $cssTarget => 'width: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
 
-        $this->addControl(
-            'hover_animation',
+        Banner::registerImageStyle($widget, $prefix, $cssTarget);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function registerControls()
+    {
+        $this->startControlsSection(
+            'section_image',
             [
-                'label' => __('Hover Animation'),
-                'type' => Controls::HOVER_ANIMATION,
+                'label' => __('Image Box'),
             ]
         );
 
-        $this->startControlsTabs('image_effects');
+        self::registerImageBoxInterface($this);
 
-        $this->startControlsTab(
-            'normal',
+        $this->endControlsSection();
+
+
+        $this->startControlsSection(
+            'section_wrapper_style',
             [
-                'label' => __('Normal'),
+                'label' => __('General'),
+                'tab'   => Controls::TAB_STYLE,
             ]
         );
 
-        $this->addGroupControl(
-            CssFilterGroup::NAME,
+        self::registerBoxStyle($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_style_image',
             [
-                'name' => 'css_filters',
-                'selector' => '{{WRAPPER}} .gmt-image-box-img img',
+                'label' => __('Image'),
+                'tab'   => Controls::TAB_STYLE,
             ]
         );
 
-        $this->addControl(
-            'image_opacity',
-            [
-                'label' => __('Opacity'),
-                'type' => Controls::SLIDER,
-                'range' => [
-                    'px' => [
-                        'max' => 1,
-                        'min' => 0.10,
-                        'step' => 0.01,
-                    ],
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-image-box-img img' => 'opacity: {{SIZE}};',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'background_hover_transition',
-            [
-                'label' => __('Transition Duration'),
-                'type' => Controls::SLIDER,
-                'default' => [
-                    'size' => 0.3,
-                ],
-                'range' => [
-                    'px' => [
-                        'max' => 3,
-                        'step' => 0.1,
-                    ],
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-image-box-img img' => 'transition-duration: {{SIZE}}s',
-                ],
-            ]
-        );
-
-        $this->endControlsTab();
-
-        $this->startControlsTab(
-            'hover',
-            [
-                'label' => __('Hover'),
-            ]
-        );
-
-        $this->addGroupControl(
-            CssFilterGroup::NAME,
-            [
-                'name' => 'css_filters_hover',
-                'selector' => '{{WRAPPER}}:hover .gmt-image-box-img img',
-            ]
-        );
-
-        $this->addControl(
-            'image_opacity_hover',
-            [
-                'label' => __('Opacity'),
-                'type' => Controls::SLIDER,
-                'range' => [
-                    'px' => [
-                        'max' => 1,
-                        'min' => 0.10,
-                        'step' => 0.01,
-                    ],
-                ],
-                'selectors' => [
-                    '{{WRAPPER}}:hover .gmt-image-box-img img' => 'opacity: {{SIZE}};',
-                ],
-            ]
-        );
-
-        $this->endControlsTab();
-
-        $this->endControlsTabs();
+        self::registerImageStyle($this, self::buildPrefixKey('image'));
 
         $this->endControlsSection();
 
@@ -455,133 +370,12 @@ class ImageBox extends AbstractWidget
             ]
         );
 
-        $this->addResponsiveControl(
-            'text_align',
-            [
-                'label' => __('Alignment'),
-                'type' => Controls::CHOOSE,
-                'options' => [
-                    'left' => [
-                        'title' => __('Left'),
-                        'icon' => 'fas fa-align-left',
-                    ],
-                    'center' => [
-                        'title' => __('Center'),
-                        'icon' => 'fas fa-align-center',
-                    ],
-                    'right' => [
-                        'title' => __('Right'),
-                        'icon' => 'fas fa-align-right',
-                    ],
-                    'justify' => [
-                        'title' => __('Justified'),
-                        'icon' => 'fas fa-align-justify',
-                    ],
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-image-box-wrapper' => 'text-align: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'content_vertical_alignment',
-            [
-                'label' => __('Vertical Alignment'),
-                'type' => Controls::SELECT,
-                'options' => [
-                    'top' => __('Top'),
-                    'middle' => __('Middle'),
-                    'bottom' => __('Bottom'),
-                ],
-                'default' => 'top',
-                'prefix_class' => 'gmt-vertical-align-',
-            ]
-        );
-
-        $this->addControl(
-            'heading_title',
-            [
-                'label' => __('Title'),
-                'type' => Controls::HEADING,
-                'separator' => 'before',
-            ]
-        );
-
-        $this->addResponsiveControl(
-            'title_bottom_space',
-            [
-                'label' => __('Spacing'),
-                'type' => Controls::SLIDER,
-                'range' => [
-                    'px' => [
-                        'min' => 0,
-                        'max' => 100,
-                    ],
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-image-box-title' => 'margin-bottom: {{SIZE}}{{UNIT}};',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'title_color',
-            [
-                'label' => __('Color'),
-                'type' => Controls::COLOR,
-                'default' => '',
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-image-box-content .gmt-image-box-title' => 'color: {{VALUE}};',
-                ],
-                'scheme' => [
-                    'type' => Color::NAME,
-                    'value' => Color::COLOR_1,
-                ],
-            ]
-        );
-
-        $this->addGroupControl(
-            TypographyGroup::NAME,
-            [
-                'name' => 'title_typography',
-                'selector' => '{{WRAPPER}} .gmt-image-box-content .gmt-image-box-title',
-                'scheme' => Typography::TYPOGRAPHY_1,
-            ]
-        );
-
-        $this->addControl(
-            'heading_description',
-            [
-                'label' => __('Description'),
-                'type' => Controls::HEADING,
-                'separator' => 'before',
-            ]
-        );
-
-        $this->addControl(
-            'description_color',
-            [
-                'label' => __('Color'),
-                'type' => Controls::COLOR,
-                'default' => '',
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-image-box-content .gmt-image-box-description' => 'color: {{VALUE}};',
-                ],
-                'scheme' => [
-                    'type' => Color::NAME,
-                    'value' => Color::COLOR_3,
-                ],
-            ]
-        );
-
-        $this->addGroupControl(
-            TypographyGroup::NAME,
-            [
-                'name' => 'description_typography',
-                'selector' => '{{WRAPPER}} .gmt-image-box-content .gmt-image-box-description',
-                'scheme' => Typography::TYPOGRAPHY_3,
-            ]
+        IconBox::registerIconBoxContentStyle(
+            $this,
+            self::buildPrefixKey(),
+            '.gmt-image-box-wrapper',
+            '.gmt-image-box-content .gmt-image-box-title',
+            '.gmt-image-box-content .gmt-image-box-description'
         );
 
         $this->endControlsSection();

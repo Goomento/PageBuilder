@@ -10,6 +10,7 @@ namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 
 class AddToCartButton extends AbstractWidget
 {
@@ -78,9 +79,15 @@ class AddToCartButton extends AbstractWidget
         $this->addControl(
             'addcart-button_product',
             [
-                'label' => __('Products'),
-                'type' => Controls::TEXT,
-                'description' => __('Enter your product SKU.')
+                'label' => __('Product SKU(s)'),
+                'type' => Controls::SELECT2,
+                'description' => __('Enter your product SKU.'),
+                'options' => [],
+                'select2options' => [
+                    'ajax' => [
+                        'url' => UrlBuilderHelper::getUrl('pagebuilder/catalog/search')
+                    ]
+                ]
             ]
         );
 
@@ -93,9 +100,27 @@ class AddToCartButton extends AbstractWidget
             ]
         );
 
-        Button::registerButtonInterface($this, self::NAME . '_');
+        $prefixKey = self::buildPrefixKey(Button::NAME);
 
-        $this->removeControl(self::NAME . '_link');
+        Button::registerButtonInterface($this, $prefixKey);
+
+        $this->removeControl($prefixKey . 'link');
+
+        $this->addControl(
+            $prefixKey . 'tag',
+            [
+                'type' => Controls::HIDDEN,
+                'default' => 'button',
+            ]
+        );
+
+        $this->addControl(
+            $prefixKey . 'type',
+            [
+                'type' => Controls::HIDDEN,
+                'default' => 'submit',
+            ]
+        );
 
         $this->endControlsSection();
 

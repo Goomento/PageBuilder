@@ -20,6 +20,8 @@ use Goomento\PageBuilder\Model\Cache\Type\PageBuilderFrontend;
  * HooksHelper::doAction( 'footer' ) ... . Otherwise might cause some issues with classes loader.
  * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
  *
+ * @method static resolve(string $key, callable $source = false, $tags = BetterCaching::FRONTEND_CACHE_TAG, ?int $timeout = BetterCaching::DEFAULT_TIMEOUT);
+ * @see BetterCaching::resolve()
  * @method static save($data, $identifier, $tags = self::FRONTEND_CACHE_TAG, $lifeTime = null);
  * @see BetterCaching::save()
  * @method static remove(string $identifier);

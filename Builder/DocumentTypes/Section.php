@@ -10,6 +10,7 @@ namespace Goomento\PageBuilder\Builder\DocumentTypes;
 
 use Goomento\PageBuilder\Builder\Base\AbstractDocumentType;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 // phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class Section extends AbstractDocumentType
@@ -28,15 +29,18 @@ class Section extends AbstractDocumentType
     protected function registerControls()
     {
         parent::registerControls();
-        self::registerLayoutControl($this);
+        self::registerLayoutControl($this, 'pagebuilder_content_empty');
     }
 
     /**
      * @param AbstractDocumentType $section
-     * @throws \Exception
+     * @param string $defaultLayout
+     * @throws BuilderException
      */
-    public static function registerLayoutControl(AbstractDocumentType $section)
-    {
+    public static function registerLayoutControl(
+        AbstractDocumentType $section,
+        string $defaultLayout = 'pagebuilder_content_fullwidth'
+    ) {
         $section->startInjection([
             'of' => 'document_settings'
         ]);
@@ -44,7 +48,7 @@ class Section extends AbstractDocumentType
         $section->addControl('layout', [
             'label' => __('Preview Layout'),
             'type' => Controls::SELECT,
-            'default' => $section->getModel()->getSetting('layout') ?: 'pagebuilder_content_1column',
+            'default' => $section->getModel()->getSetting('layout') ?: $defaultLayout,
             'options' => [
                 'pagebuilder_content_1column' => __('1-Column'),
                 'pagebuilder_content_fullwidth' => __('Full width'),

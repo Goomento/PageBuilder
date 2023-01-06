@@ -99,8 +99,7 @@ class RenderWidget extends AbstractActions
             return $result;
         };
 
-        $key = \Zend_Json::encode($actionData);
-        $rendered = $this->betterCaching->resolve(EncryptorHelper::uniqueStringId($key), $collect);
+        $rendered = $this->betterCaching->resolve(EncryptorHelper::uniqueId($actionData), $collect);
 
         return [
             'render' => $rendered

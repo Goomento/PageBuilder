@@ -45,16 +45,17 @@ $widget->addRenderAttribute('progress_title', [
     'class' => 'gmt-title',
 ]);
 
-$widget->addInlineEditingAttributes(['inner_text' => 'progress_inner_text']);
-$widget->addInlineEditingAttributes('progress_title');
-
-if (!empty($settings['progress_title'])) { ?>
-    <span <?= /** @noEscape */ $widget->getRenderAttributeString('progress_title'); ?>><?=  /** @noEscape */ $settings['progress_title']; ?></span>
-<?php } ?>
+if (!empty($settings['progress_title'])): ?>
+    <span <?= /** @noEscape */ $widget->getRenderAttributeString('progress_title'); ?>>
+        <?php $widget->printInlineEditingContent('progress_title', 'none', 'span'); ?>
+    </span>
+<?php endif; ?>
 
 <div <?= /** @noEscape */ $widget->getRenderAttributeString('wrapper'); ?>>
     <div <?= /** @noEscape */ $widget->getRenderAttributeString('progress-bar'); ?>>
-        <span <?= /** @noEscape */ $widget->getRenderAttributeString('inner_text'); ?>><?=  /** @noEscape */ $settings['progress_inner_text']; ?></span>
+        <span <?= /** @noEscape */ $widget->getRenderAttributeString('inner_text'); ?>>
+            <?php $widget->printInlineEditingContent('progress_inner_text', 'none', 'span'); ?>
+        </span>
         <?php if ('hide' !== $settings['progress_display_percentage']) { ?>
             <span class="gmt-progress-percentage"><?=  /** @noEscape */ $progressPercentage; ?>%</span>
         <?php } ?>

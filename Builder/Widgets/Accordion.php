@@ -8,19 +8,26 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Widgets;
 
-use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Elements\Repeater;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
 
 class Accordion extends AbstractWidget
 {
+    /**
+     * @inheirtDoc
+     */
     const NAME = 'accordion';
 
+    /**
+     * @inheirtDoc
+     */
     protected $template = 'Goomento_PageBuilder::widgets/accordion.phtml';
 
     /**
@@ -56,32 +63,31 @@ class Accordion extends AbstractWidget
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
-    public static function registerAccordionContentInterface(AbstractElement $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerAccordionItemInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
             $prefix . 'tab_title',
-            $args + [
+            [
                 'label' => __('Title & Description'),
                 'type' => Controls::TEXT,
-                'default' => __('Accordion Title'),
-                'dynamic' => [
-                    'active' => true,
-                ],
+                'default' => __('Lorem ipsum dolor sit amet'),
                 'label_block' => true,
             ]
         );
 
         $widget->addControl(
             $prefix . 'tab_content',
-            $args + [
+            [
                 'label' => __('Content'),
                 'type' => Controls::WYSIWYG,
-                'default' => __('Accordion Content'),
+                'default' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
                 'show_label' => false,
             ]
         );
@@ -89,31 +95,33 @@ class Accordion extends AbstractWidget
 
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
-    public static function registerAccordionInterface(AbstractElement $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerAccordionInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $repeater = new Repeater;
 
-        self::registerAccordionContentInterface($repeater);
+        self::registerAccordionItemInterface($repeater);
 
         $widget->addControl(
             $prefix . 'tabs',
-            $args + [
-                'label' => __('Accordion Items'),
+            [
+                'label' => __('Items'),
                 'type' => Controls::REPEATER,
                 'fields' => $repeater->getControls(),
                 'default' => [
                     [
-                        'tab_title' => __('Accordion #1'),
-                        'tab_content' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
+                        $prefix . 'tab_title' => __('Lorem ipsum dolor sit amet #1'),
+                        $prefix . 'tab_content' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
                     ],
                     [
-                        'tab_title' => __('Accordion #2'),
-                        'tab_content' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
+                        $prefix . 'tab_title' => __('Lorem ipsum dolor sit amet #2'),
+                        $prefix . 'tab_content' => __('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.'),
                     ],
                 ],
                 'title_field' => '{{{ ' . $prefix . 'tab_title }}}',
@@ -122,7 +130,7 @@ class Accordion extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'selected_icon',
-            $args + [
+            [
                 'label' => __('Icon'),
                 'type' => Controls::ICONS,
                 'separator' => 'before',
@@ -135,7 +143,7 @@ class Accordion extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'selected_active_icon',
-            $args + [
+            [
                 'label' => __('Active Icon'),
                 'type' => Controls::ICONS,
                 'default' => [
@@ -143,14 +151,14 @@ class Accordion extends AbstractWidget
                     'library' => 'fa-solid',
                 ],
                 'condition' => [
-                    $prefix . 'selected_icon[value]!' => '',
+                    $prefix . 'selected_icon.value!' => '',
                 ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'title_html_tag',
-            $args + [
+            [
                 'label' => __('Title HTML Tag'),
                 'type' => Controls::SELECT,
                 'options' => [
@@ -169,21 +177,20 @@ class Accordion extends AbstractWidget
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
     public static function registerAccordionItemStyle(
-        AbstractElement $widget,
+        ControlsStack $widget,
         string $prefix = self::NAME . '_',
-        string          $cssTarget = '.gmt-accordion .gmt-accordion-item',
-        array $args = []
+        string $cssTarget = '.gmt-accordion .gmt-accordion-item'
     ) {
         $widget->addControl(
             $prefix . 'border_width',
-            $args + [
+            [
                 'label' => __('Border Width'),
                 'type' => Controls::SLIDER,
                 'range' => [
@@ -202,7 +209,7 @@ class Accordion extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'border_color',
-            $args + [
+            [
                 'label' => __('Border Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
@@ -215,21 +222,20 @@ class Accordion extends AbstractWidget
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
     public static function registerAccordionTitleStyle(
-        AbstractElement $widget,
+        ControlsStack $widget,
         string $prefix = self::NAME . '_',
-        string          $cssTarget = '.gmt-accordion .gmt-tab-title',
-        array $args = []
+        string $cssTarget = '.gmt-accordion .gmt-tab-title'
     ) {
         $widget->addControl(
             $prefix . 'title_background',
-            $args + [
+            [
                 'label' => __('Background'),
                 'type' => Controls::COLOR,
                 'selectors' => [
@@ -240,7 +246,7 @@ class Accordion extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'title_color',
-            $args + [
+            [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
@@ -255,7 +261,7 @@ class Accordion extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'tab_active_color',
-            $args + [
+            [
                 'label' => __('Active Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
@@ -270,7 +276,7 @@ class Accordion extends AbstractWidget
 
         $widget->addGroupControl(
             TypographyGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'title_typography',
                 'selector' => '{{WRAPPER}} ' . $cssTarget,
                 'scheme' => Typography::TYPOGRAPHY_1,
@@ -279,7 +285,7 @@ class Accordion extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'title_padding',
-            $args + [
+            [
                 'label' => __('Padding'),
                 'type' => Controls::DIMENSIONS,
                 'size_units' => [ 'px', 'em', '%' ],
@@ -289,23 +295,24 @@ class Accordion extends AbstractWidget
             ]
         );
     }
+
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
+     * @param string $cssActiveTarget
      * @return void
+     * @throws BuilderException
      */
     public static function registerAccordionIconStyle(
-        AbstractElement $widget,
-        string          $prefix = self::NAME . '_',
-        string          $cssTarget = '.gmt-accordion .gmt-accordion-icon',
-        string          $cssActiveTarget = '.gmt-accordion .gmt-tab-title.gmt-active .gmt-accordion-icon',
-        array           $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-accordion .gmt-accordion-icon',
+        string $cssActiveTarget = '.gmt-accordion .gmt-tab-title.gmt-active .gmt-accordion-icon'
     ) {
         $widget->addControl(
             $prefix . 'icon_align',
-            $args + [
+            [
                 'label' => __('Alignment'),
                 'type' => Controls::CHOOSE,
                 'options' => [
@@ -326,7 +333,7 @@ class Accordion extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'icon_color',
-            $args + [
+            [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
@@ -338,7 +345,7 @@ class Accordion extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'icon_active_color',
-            $args + [
+            [
                 'label' => __('Active Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
@@ -350,7 +357,7 @@ class Accordion extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'icon_space',
-            $args + [
+            [
                 'label' => __('Spacing'),
                 'type' => Controls::SLIDER,
                 'range' => [
@@ -360,29 +367,28 @@ class Accordion extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} ' . $cssTarget . '.gmt-accordion-icon-left' => 'margin-right: {{SIZE}}{{UNIT}};',
-                    '{{WRAPPER}} ' . $cssTarget . '.gmt-accordion-icon-right' => 'margin-left: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget . '-left' => 'margin-right: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget . '-right' => 'margin-left: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
     public static function registerAccordionContentStyle(
-        AbstractElement $widget,
+        ControlsStack $widget,
         string $prefix = self::NAME . '_',
-        string          $cssTarget = '.gmt-accordion .gmt-tab-content',
-        array $args = []
+        string $cssTarget = '.gmt-accordion .gmt-tab-content'
     ) {
         $widget->addControl(
             $prefix . 'content_background_color',
-            $args + [
+            [
                 'label' => __('Background'),
                 'type' => Controls::COLOR,
                 'selectors' => [
@@ -393,7 +399,7 @@ class Accordion extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'content_color',
-            $args + [
+            [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
@@ -408,7 +414,7 @@ class Accordion extends AbstractWidget
 
         $widget->addGroupControl(
             TypographyGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'content_typography',
                 'selector' => '{{WRAPPER}} ' . $cssTarget,
                 'scheme' => Typography::TYPOGRAPHY_3,
@@ -417,7 +423,7 @@ class Accordion extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'content_padding',
-            $args + [
+            [
                 'label' => __('Padding'),
                 'type' => Controls::DIMENSIONS,
                 'size_units' => [ 'px', 'em', '%' ],
@@ -474,7 +480,7 @@ class Accordion extends AbstractWidget
                 'label' => __('Icon'),
                 'tab' => Controls::TAB_STYLE,
                 'condition' => [
-                    'accordion_selected_icon[value]!' => '',
+                    self::NAME . '_selected_icon.value!' => '',
                 ],
             ]
         );

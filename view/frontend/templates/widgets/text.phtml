@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
 use Goomento\PageBuilder\Builder\Widgets\Text;
-use Goomento\PageBuilder\Helper\EscaperHelper;
 
 /**
  * @var Widget $block
@@ -30,8 +29,6 @@ if (!empty($settings['text_size'])) {
     $widget->addRenderAttribute('title', 'class', 'gmt-size-' . $settings['text_size']);
 }
 
-$widget->addInlineEditingAttributes(['title' => 'text_title']);
-
 if (!empty($settings['text_link']['url'])) {
     $widget->addRenderAttribute('url', 'href', $settings['text_link']['url']);
 
@@ -42,8 +39,14 @@ if (!empty($settings['text_link']['url'])) {
     if (!empty($settings['text_link']['nofollow'])) {
         $widget->addRenderAttribute('url', 'rel', 'nofollow');
     }
-
-    $title = sprintf('<a %1$s>%2$s</a>', $widget->getRenderAttributeString('url'), $title);
 }
 ?>
-<<?=  /** @noEscape */ $settings['text_tag'] ?> <?= /** @noEscape */ $widget->getRenderAttributeString('title') ?>><?= /** @noEscape */ $title ?></<?=  /** @noEscape */ $settings['text_tag'] ?>>
+<<?=  /** @noEscape */ $settings['text_tag'] ?> <?= /** @noEscape */ $widget->getRenderAttributeString('title') ?>>
+    <?php if (!empty($settings['text_link']['url'])): ?>
+        <a <?= /** @noEscape */ $widget->getRenderAttributeString('url') ?>>
+    <?php endif; ?>
+        <?php $widget->printInlineEditingContent('text_title'); ?>
+    <?php if (!empty($settings['text_link']['url'])): ?>
+        </a>
+    <?php endif; ?>
+</<?=  /** @noEscape */ $settings['text_tag'] ?>>

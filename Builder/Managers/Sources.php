@@ -13,10 +13,12 @@ use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractSource;
 use Goomento\PageBuilder\Builder\Sources\Local;
 use Goomento\PageBuilder\Builder\Modules\Ajax;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Traits\TraitComponentsLoader;
+use Zend_Json;
 
 // phpcs:disable Magento2.Functions.DiscouragedFunction.Discouraged
 class Sources
@@ -93,7 +95,7 @@ class Sources
     public function getLibraryData(array $args, BuildableContentInterface $buildableContent)
     {
         if (!AuthorizationHelper::isCurrentUserCan($buildableContent->getRoleName('view'))) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 'Sorry, you need permissions to view this content'
             );
         }
@@ -125,7 +127,7 @@ class Sources
     public function saveTemplate(array $args, BuildableContentInterface $buildableContent)
     {
         if (!AuthorizationHelper::isCurrentUserCan($buildableContent->getRoleName('save'))) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 'Sorry, you need permissions to save this content'
             );
         }
@@ -133,17 +135,17 @@ class Sources
         $validateArgs = $this->ensureArgs([ 'content_id', 'source', 'content', 'type' ], $args);
 
         if (!$validateArgs) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException('Invalid template');
+            throw new BuilderException('Invalid template');
         }
 
         $source = $this->getSource($args['source']);
 
         if (!$source) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException('Template source not found');
+            throw new BuilderException('Template source not found');
         }
 
         try {
-            $args['content'] = \Zend_Json::decode($args['content']);
+            $args['content'] = Zend_Json::decode($args['content']);
         } catch (\Exception $e) {
             $args['content'] = [];
         }
@@ -173,7 +175,7 @@ class Sources
     public function updateTemplate(array $templateData, BuildableContentInterface $buildableContent)
     {
         if (!AuthorizationHelper::isCurrentUserCan($buildableContent->getRoleName('delete'))) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 'Sorry, you need permissions to update this template'
             );
         }
@@ -183,7 +185,7 @@ class Sources
         $source = $this->getSource($templateData['source']);
 
         if (!$source) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 'Template source not found.'
             );
         }
@@ -227,7 +229,7 @@ class Sources
     public function getTemplateData(array $args, BuildableContentInterface $buildableContent)
     {
         if (!AuthorizationHelper::isCurrentUserCan($buildableContent->getType() . '_view')) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 'Sorry, you need permissions to view this content'
             );
         }
@@ -237,7 +239,7 @@ class Sources
         $source = $this->getSource($args['source']);
 
         if (!$source) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 'Template source not found.'
             );
         }
@@ -265,7 +267,7 @@ class Sources
     public function deleteTemplate(array $args, BuildableContentInterface $buildableContent)
     {
         if (!AuthorizationHelper::isCurrentUserCan($buildableContent->getRoleName('delete'))) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 'Sorry, you need permissions to delete template'
             );
         }
@@ -279,7 +281,7 @@ class Sources
         $source = $this->getSource($args['source']);
 
         if (!$source) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 'Template source not found.'
             );
         }
@@ -309,7 +311,7 @@ class Sources
         $source = $this->getSource($args['source']);
 
         if (!$source) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 'Template source not found'
             );
         }
@@ -353,7 +355,7 @@ class Sources
     public function importTemplate(array $data)
     {
         if (!AuthorizationHelper::isCurrentUserCan('import')) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 'Sorry, you need permissions to import template'
             );
         }
@@ -427,7 +429,7 @@ class Sources
         $notSpecifiedArgs = array_diff($requiredArgs, array_keys(array_filter($specifiedArgs)));
 
         if ($notSpecifiedArgs) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 sprintf('The required argument(s) "%s" not specified.', implode(', ', $notSpecifiedArgs))
             );
         }

@@ -53,9 +53,10 @@ class TemplateHelper
     {
         $params = array_merge($params, [
             'template' => $widget->getTemplate(),
-            'builder_widget' => $widget
+            'builder_widget' => $widget,
+            'content' => $widget->getBuildableContent(),
         ]);
-        $rendeder = $widget->getRenderer();
-        return self::getHtml(!empty($rendeder) ? $rendeder : Widget::class, $params);
+        $renderer = $widget->getRenderer();
+        return self::getHtml(!empty($renderer) ? $renderer : Widget::class, $params);
     }
 }

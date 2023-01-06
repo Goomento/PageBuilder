@@ -10,8 +10,10 @@ namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class Icon extends AbstractWidget
 {
@@ -66,15 +68,17 @@ class Icon extends AbstractWidget
     /**
      * Share icon interface
      *
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
+     * @throws BuilderException
      */
-    public static function registerIconInterface(AbstractElement $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerIconInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
             $prefix . 'selected_icon',
-            $args + [
+            [
                 'label' => __('Icon'),
                 'type' => Controls::ICONS,
                 'default' => [
@@ -86,7 +90,7 @@ class Icon extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'view',
-            $args + [
+            [
                 'label' => __('View'),
                 'type' => Controls::SELECT,
                 'options' => [
@@ -101,7 +105,7 @@ class Icon extends AbstractWidget
 
         $widget->addControl(
             $prefix .  'shape',
-            $args + [
+            [
                 'label' => __('Shape'),
                 'type' => Controls::SELECT,
                 'options' => [
@@ -118,41 +122,37 @@ class Icon extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'link',
-            $args + [
+            [
                 'label' => __('Link'),
                 'type' => Controls::URL,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'placeholder' => __('https://your-link.com'),
             ]
         );
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @param string $cssTarget
+     * @throws BuilderException
      */
     public static function registerIconStyle(
-        AbstractElement $widget,
-        string          $prefix = self::NAME . '_',
-        array           $args = [],
-        string          $cssTarget = '.gmt-icon'
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-icon'
     ) {
         $widget->startControlsTabs($prefix . 'colors');
 
         $widget->startControlsTab(
             $prefix . 'colors_normal',
-            $args + [
+            [
                 'label' => __('Normal'),
             ]
         );
 
         $widget->addControl(
             $prefix . 'primary_color',
-            $args + [
+            [
                 'label' => __('Primary Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
@@ -169,7 +169,7 @@ class Icon extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'secondary_color',
-            $args + [
+            [
                 'label' => __('Secondary Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
@@ -187,14 +187,14 @@ class Icon extends AbstractWidget
 
         $widget->startControlsTab(
             $prefix . 'colors_hover',
-            $args + [
+            [
                 'label' => __('Hover'),
             ]
         );
 
         $widget->addControl(
             $prefix . 'hover_primary_color',
-            $args + [
+            [
                 'label' => __('Primary Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
@@ -207,7 +207,7 @@ class Icon extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'hover_secondary_color',
-            $args + [
+            [
                 'label' => __('Secondary Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
@@ -224,7 +224,7 @@ class Icon extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'hover_animation',
-            $args + [
+            [
                 'label' => __('Hover Animation'),
                 'type' => Controls::HOVER_ANIMATION,
             ]
@@ -236,7 +236,7 @@ class Icon extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'size',
-            $args + [
+            [
                 'label' => __('Size'),
                 'type' => Controls::SLIDER,
                 'range' => [
@@ -253,7 +253,7 @@ class Icon extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'padding',
-            $args + [
+            [
                 'label' => __('Padding'),
                 'type' => Controls::SLIDER,
                 'selectors' => [
@@ -273,7 +273,7 @@ class Icon extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'rotate',
-            $args + [
+            [
                 'label' => __('Rotate'),
                 'type' => Controls::SLIDER,
                 'size_units' => [ 'deg' ],
@@ -295,7 +295,7 @@ class Icon extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'border_width',
-            $args + [
+            [
                 'label' => __('Border Width'),
                 'type' => Controls::DIMENSIONS,
                 'selectors' => [
@@ -309,7 +309,7 @@ class Icon extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'border_radius',
-            $args + [
+            [
                 'label' => __('Border Radius'),
                 'type' => Controls::DIMENSIONS,
                 'size_units' => [ 'px', '%' ],
@@ -324,7 +324,7 @@ class Icon extends AbstractWidget
 
         $widget->addResponsiveControl(
             $prefix . 'align',
-            $args + [
+            [
                 'label' => __('Alignment'),
                 'type' => Controls::CHOOSE,
                 'options' => [

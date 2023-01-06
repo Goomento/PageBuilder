@@ -9,7 +9,12 @@ namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Exception\BuilderException;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Helper\UrlBuilderHelper;
+use Magento\Framework\Exception\LocalizedException;
 
 class ProductList extends AbstractWidget
 {
@@ -69,35 +74,48 @@ class ProductList extends AbstractWidget
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException|LocalizedException
      */
-    public static function registerProductFilter(AbstractElement $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerProductFilter(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        /** @var \Goomento\PageBuilder\Model\Config\Source\CatalogCategory $categorySource */
+        $categorySource = ObjectManagerHelper::get(\Goomento\PageBuilder\Model\Config\Source\CatalogCategory::class);
+        $categoryIds = array_column($categorySource->toOptionArray(), 'value');
+        $categoryLabels = array_column($categorySource->toOptionArray(), 'label');
+
         $widget->addControl(
             $prefix . 'category',
-            $args + [
+            [
                 'label' => __('Categories'),
-                'type' => Controls::TEXT,
-                'description' => __('Category IDs, separate by comma.')
+                'type' => Controls::SELECT2,
+                'multiple' => true,
+                'options' => array_combine($categoryIds, $categoryLabels)
             ]
         );
 
         $widget->addControl(
             $prefix . 'product',
-            $args + [
-                'label' => __('Products'),
-                'type' => Controls::TEXT,
-                'placeholder' => __('SKU-1, SKU-2'),
-                'description' => __('Product SKUs, separate by comma.')
+            [
+                'label' => __('Product SKU(s)'),
+                'type' => Controls::SELECT2,
+                'multiple' => true,
+                'placeholder' => __('Type SKU ...'),
+                'select2options' => [
+                    'ajax' => [
+                        'url' => UrlBuilderHelper::getUrl('pagebuilder/catalog/search')
+                    ]
+                ]
             ]
         );
 
         $widget->addResponsiveControl(
             $prefix . 'products_per_row',
-            $args + [
+            [
                 'label' => __('Products Per Row'),
                 'type' => Controls::SELECT,
                 'default' => '25',
@@ -116,7 +134,7 @@ class ProductList extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'show_pager',
-            $args + [
+            [
                 'label' => __('Display Page Control'),
                 'type' => Controls::SWITCHER,
                 'default' => 'yes',
@@ -125,7 +143,7 @@ class ProductList extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'products_per_page',
-            $args + [
+            [
                 'label' => __('Products Per Page'),
                 'type' => Controls::NUMBER,
                 'default' => 12,

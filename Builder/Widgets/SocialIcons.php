@@ -9,16 +9,23 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\BorderGroup;
 use Goomento\PageBuilder\Builder\Elements\Repeater;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
 
 class SocialIcons extends AbstractWidget
 {
-
+    /**
+     * @inheritDoc
+     */
     const NAME = 'social_icons';
 
+    /**
+     * @inheritDoc
+     */
     protected $template = 'Goomento_PageBuilder::widgets/social_icons.phtml';
 
     /**
@@ -54,21 +61,17 @@ class SocialIcons extends AbstractWidget
     }
 
     /**
-     * @inheritDoc
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
      */
-    protected function registerControls()
-    {
-        $this->startControlsSection(
-            'section_social_icon',
-            [
-                'label' => __('Social Icons'),
-            ]
-        );
-
-        $repeater = new Repeater;
-
-        $repeater->addControl(
-            'social_icon',
+    public static function registerSocialIconIconInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $widget->addControl(
+            $prefix . 'social_icon',
             [
                 'label' => __('Icon'),
                 'type' => Controls::ICONS,
@@ -143,8 +146,8 @@ class SocialIcons extends AbstractWidget
             ]
         );
 
-        $repeater->addControl(
-            'link',
+        $widget->addControl(
+            $prefix . 'link',
             [
                 'label' => __('Link'),
                 'type' => Controls::URL,
@@ -152,15 +155,12 @@ class SocialIcons extends AbstractWidget
                 'default' => [
                     'is_external' => 'true',
                 ],
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'placeholder' => __('https://your-link.com'),
             ]
         );
 
-        $repeater->addControl(
-            'item_icon_color',
+        $widget->addControl(
+            $prefix . 'item_icon_color',
             [
                 'label' => __('Color'),
                 'type' => Controls::SELECT,
@@ -172,13 +172,13 @@ class SocialIcons extends AbstractWidget
             ]
         );
 
-        $repeater->addControl(
-            'item_icon_primary_color',
+        $widget->addControl(
+            $prefix . 'item_icon_primary_color',
             [
                 'label' => __('Primary Color'),
                 'type' => Controls::COLOR,
                 'condition' => [
-                    'item_icon_color' => 'custom',
+                    $prefix . 'item_icon_color' => 'custom',
                 ],
                 'selectors' => [
                     '{{WRAPPER}} {{CURRENT_ITEM}}.gmt-social-icon' => 'background-color: {{VALUE}};',
@@ -186,13 +186,13 @@ class SocialIcons extends AbstractWidget
             ]
         );
 
-        $repeater->addControl(
-            'item_icon_secondary_color',
+        $widget->addControl(
+            $prefix . 'item_icon_secondary_color',
             [
                 'label' => __('Secondary Color'),
                 'type' => Controls::COLOR,
                 'condition' => [
-                    'item_icon_color' => 'custom',
+                    $prefix . 'item_icon_color' => 'custom',
                 ],
                 'selectors' => [
                     '{{WRAPPER}} {{CURRENT_ITEM}}.gmt-social-icon i' => 'color: {{VALUE}};',
@@ -200,9 +200,24 @@ class SocialIcons extends AbstractWidget
                 ],
             ]
         );
+    }
 
-        $this->addControl(
-            'social_icon_list',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerSocialIconsInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $repeater = new Repeater;
+
+        self::registerSocialIconIconInterface($repeater, '');
+
+        $widget->addControl(
+            $prefix . 'list',
             [
                 'label' => __('Social Icons'),
                 'type' => Controls::REPEATER,
@@ -227,12 +242,12 @@ class SocialIcons extends AbstractWidget
                         ],
                     ],
                 ],
-                'title_field' => '<# var migrated = "undefined" !== typeof __fa4_migrated, social = ( "undefined" === typeof social ) ? false : social; #>',
+                'title_field' => '<# var social = ( "undefined" === typeof social ) ? false : social; #>',
             ]
         );
 
-        $this->addControl(
-            'shape',
+        $widget->addControl(
+            $prefix . 'shape',
             [
                 'label' => __('Shape'),
                 'type' => Controls::SELECT,
@@ -246,8 +261,8 @@ class SocialIcons extends AbstractWidget
             ]
         );
 
-        $this->addResponsiveControl(
-            'align',
+        $widget->addResponsiveControl(
+            $prefix . 'align',
             [
                 'label' => __('Alignment'),
                 'type' => Controls::CHOOSE,
@@ -271,19 +286,24 @@ class SocialIcons extends AbstractWidget
                 ],
             ]
         );
+    }
 
-        $this->endControlsSection();
-
-        $this->startControlsSection(
-            'section_social_style',
-            [
-                'label' => __('Icon'),
-                'tab' => Controls::TAB_STYLE,
-            ]
-        );
-
-        $this->addControl(
-            'icon_color',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @param string $cssIconTarget
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerSocialIconsIconStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-social-icon',
+        string $cssIconTarget = '.gmt-icon'
+    ) {
+        $widget->addControl(
+            $prefix . 'icon_color',
             [
                 'label' => __('Color'),
                 'type' => Controls::SELECT,
@@ -295,37 +315,37 @@ class SocialIcons extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'icon_primary_color',
+        $widget->addControl(
+            $prefix . 'icon_primary_color',
             [
                 'label' => __('Primary Color'),
                 'type' => Controls::COLOR,
                 'condition' => [
-                    'icon_color' => 'custom',
+                    $prefix . 'icon_color' => 'custom',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-social-icon' => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'background-color: {{VALUE}};',
                 ],
             ]
         );
 
-        $this->addControl(
-            'icon_secondary_color',
+        $widget->addControl(
+            $prefix . 'icon_secondary_color',
             [
                 'label' => __('Secondary Color'),
                 'type' => Controls::COLOR,
                 'condition' => [
-                    'icon_color' => 'custom',
+                    $prefix . 'icon_color' => 'custom',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-social-icon i' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .gmt-social-icon svg' => 'fill: {{VALUE}};',
+                    '{{WRAPPER}} ' . $cssTarget . ' i' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} ' . $cssTarget . ' svg' => 'fill: {{VALUE}};',
                 ],
             ]
         );
 
-        $this->addResponsiveControl(
-            'icon_size',
+        $widget->addResponsiveControl(
+            $prefix . 'icon_size',
             [
                 'label' => __('Size'),
                 'type' => Controls::SLIDER,
@@ -336,18 +356,18 @@ class SocialIcons extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-social-icon' => 'font-size: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'font-size: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
 
-        $this->addResponsiveControl(
-            'icon_padding',
+        $widget->addResponsiveControl(
+            $prefix . 'icon_padding',
             [
                 'label' => __('Padding'),
                 'type' => Controls::SLIDER,
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-social-icon' => 'padding: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'padding: {{SIZE}}{{UNIT}};',
                 ],
                 'default' => [
                     'unit' => 'em',
@@ -369,8 +389,8 @@ class SocialIcons extends AbstractWidget
 
         $iconSpacing = DataHelper::isRtl() ? 'margin-left: {{SIZE}}{{UNIT}};' : 'margin-right: {{SIZE}}{{UNIT}};';
 
-        $this->addResponsiveControl(
-            'icon_spacing',
+        $widget->addResponsiveControl(
+            $prefix . 'icon_spacing',
             [
                 'label' => __('Spacing'),
                 'type' => Controls::SLIDER,
@@ -381,31 +401,125 @@ class SocialIcons extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-social-icon:not(:last-child)' => $iconSpacing,
+                    '{{WRAPPER}} ' . $cssTarget . ':not(:last-child)' => $iconSpacing,
                 ],
             ]
         );
 
-        $this->addGroupControl(
+        $widget->addGroupControl(
             BorderGroup::NAME,
             [
-                'name' => 'image_border',
-                'selector' => '{{WRAPPER}} .gmt-social-icon',
+                'name' => $prefix . 'image_border',
+                'selector' => '{{WRAPPER}} ' . $cssTarget,
                 'separator' => 'before',
             ]
         );
 
-        $this->addControl(
-            'border_radius',
+        $widget->addControl(
+            $prefix . 'border_radius',
             [
                 'label' => __('Border Radius'),
                 'type' => Controls::DIMENSIONS,
                 'size_units' => [ 'px', '%' ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssIconTarget => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
+    }
+
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerSocialIconsIconHoverStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-social-icon'
+    ) {
+        $widget->addControl(
+            $prefix . 'hover_primary_color',
+            [
+                'label' => __('Primary Color'),
+                'type' => Controls::COLOR,
+                'default' => '',
+                'condition' => [
+                    $prefix . 'icon_color' => 'custom',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget . ':hover' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $widget->addControl(
+            $prefix . 'hover_secondary_color',
+            [
+                'label' => __('Secondary Color'),
+                'type' => Controls::COLOR,
+                'default' => '',
+                'condition' => [
+                    $prefix . 'icon_color' => 'custom',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget . ':hover i' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} ' . $cssTarget . ':hover svg' => 'fill: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $widget->addControl(
+            $prefix . 'hover_border_color',
+            [
+                'label' => __('Border Color'),
+                'type' => Controls::COLOR,
+                'default' => '',
+                'condition' => [
+                    $prefix . 'image_border_border!' => '',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget . ':hover' => 'border-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $widget->addControl(
+            $prefix . 'hover_animation',
+            [
+                'label' => __('Hover Animation'),
+                'type' => Controls::HOVER_ANIMATION,
+            ]
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function registerControls()
+    {
+        $this->startControlsSection(
+            'section_social_icon',
+            [
+                'label' => __('Social Icons'),
+            ]
+        );
+
+        self::registerSocialIconsInterface($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_social_style',
+            [
+                'label' => __('Icon'),
+                'tab' => Controls::TAB_STYLE,
+            ]
+        );
+
+        self::registerSocialIconsIconStyle($this);
 
         $this->endControlsSection();
 
@@ -417,59 +531,7 @@ class SocialIcons extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'hover_primary_color',
-            [
-                'label' => __('Primary Color'),
-                'type' => Controls::COLOR,
-                'default' => '',
-                'condition' => [
-                    'icon_color' => 'custom',
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-social-icon:hover' => 'background-color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'hover_secondary_color',
-            [
-                'label' => __('Secondary Color'),
-                'type' => Controls::COLOR,
-                'default' => '',
-                'condition' => [
-                    'icon_color' => 'custom',
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-social-icon:hover i' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .gmt-social-icon:hover svg' => 'fill: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'hover_border_color',
-            [
-                'label' => __('Border Color'),
-                'type' => Controls::COLOR,
-                'default' => '',
-                'condition' => [
-                    'image_border_border!' => '',
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-social-icon:hover' => 'border-color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'hover_animation',
-            [
-                'label' => __('Hover Animation'),
-                'type' => Controls::HOVER_ANIMATION,
-            ]
-        );
+        self::registerSocialIconsIconHoverStyle($this);
 
         $this->endControlsSection();
     }

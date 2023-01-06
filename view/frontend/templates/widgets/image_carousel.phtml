@@ -7,8 +7,7 @@
 declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
-use Goomento\PageBuilder\Helper\EscaperHelper;
-use Goomento\PageBuilder\Helper\StateHelper;
+use Goomento\PageBuilder\Builder\Widgets\ImageCarousel;
 
 /**
  * @var Widget $block
@@ -25,31 +24,30 @@ $slides = [];
 foreach ($settings['image-carousel_carousel'] as $index => $attachment) {
     $imageUrl = $attachment['url'];
 
-    $imageHtml = '<img class="swiper-slide-image" src="' . EscaperHelper::escapeHtml($imageUrl) . '" alt="" />';
+    $imageHtml = '<img class="swiper-slide-image" src="' . $block->escapeUrl($imageUrl) . '" alt="" />';
 
     $linkTag = '';
 
     $link = [];
 
-    if ('custom' === $settings['image-carousel_link_to']) {
-        if (!empty($settings['image-carousel_link']['url'])) {
-            $link = $settings['image-carousel_link'];
+    if ('custom' === $settings['link_to']) {
+        if (!empty($settings['link']['url'])) {
+            $link = $settings['link'];
         }
-    } elseif ('none' !== $settings['image-carousel_link_to']) {
+    } elseif ('none' !== $settings['link_to']) {
         $link['url'] = $attachment['url'];
     }
 
     if (!empty($link)) {
-
         $linkKey = 'link_' . $index;
         $widget->addRenderAttribute($linkKey, [
             'href' => $link['url'],
-            'data-gmt-open-lightbox' => $settings['image-carousel_open_lightbox'],
+            'data-gmt-open-lightbox' => $settings['open_lightbox'],
             'data-gmt-lightbox-slideshow' => $widget->getId(),
             'data-gmt-lightbox-index' => $index,
         ]);
 
-        if (StateHelper::isEditorMode()) {
+        if ($block->isEnteredBuilderMode()) {
             $widget->addRenderAttribute($linkKey, [
                 'class' => 'gmt-clickable',
             ]);
@@ -96,7 +94,7 @@ if (!empty($slides)):
     $showDots = (in_array($settings['navigation'], [ 'dots', 'both' ]));
     $showArrows = (in_array($settings['navigation'], [ 'arrows', 'both' ]));
 
-    if ('yes' === $settings['image-carousel_image_stretch']) {
+    if ('yes' === $settings['image_stretch']) {
         $widget->addRenderAttribute('carousel', 'class', 'swiper-image-stretch');
     }
 
@@ -105,21 +103,12 @@ if (!empty($slides)):
         <div <?= /** @noEscape */ $widget->getRenderAttributeString('carousel'); ?>>
             <?= /** @noEscape */ implode('', $slides); ?>
         </div>
-        <?php if (1 < $slidesCount): ?>
-            <?php if ($showDots): ?>
-                <div class="swiper-pagination"></div>
-            <?php endif; ?>
-            <?php if ($showArrows): ?>
-                <div class="gmt-swiper-button gmt-swiper-button-prev">
-                    <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                    <span class="gmt-screen-only"><?php $block->escapeHtml(__('Previous')); ?></span>
-                </div>
-                <div class="gmt-swiper-button gmt-swiper-button-next">
-                    <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                    <span class="gmt-screen-only"><?php $block->escapeHtml(__('Next')); ?></span>
-                </div>
-            <?php endif; ?>
-        <?php endif; ?>
+        <?php if (1 < $slidesCount):
+            ImageCarousel::printCarouselControls(
+                $showDots,
+                $showArrows
+            );
+        endif; ?>
     </div>
     <?php
 endif;

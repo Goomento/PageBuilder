@@ -32,6 +32,7 @@ class Textarea extends AbstractControlData
             'placeholder' => '',
             'dynamic' => [
                 'categories' => [TagsModule::TEXT_CATEGORY],
+                'active' => true,
             ],
         ];
     }

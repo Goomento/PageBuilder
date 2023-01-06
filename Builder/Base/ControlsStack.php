@@ -12,6 +12,7 @@ namespace Goomento\PageBuilder\Builder\Base;
 use Exception;
 use Goomento\PageBuilder\Builder\Conditions;
 use Goomento\PageBuilder\Builder\Controls\AbstractControlData;
+use Goomento\PageBuilder\Builder\Controls\Repeater;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Schemes;
 use Goomento\PageBuilder\Builder\Managers\Tags;
@@ -58,8 +59,14 @@ abstract class ControlsStack extends AbstractBase
      */
     private $id;
 
+    /**
+     * @var array
+     */
     private $activeSettings;
 
+    /**
+     * @var array
+     */
     private $parsedActiveSettings;
 
     /**
@@ -139,6 +146,13 @@ abstract class ControlsStack extends AbstractBase
      * @var bool
      */
     private $settingsSanitized = false;
+
+    /**
+     * Stores the dynamic keypath
+     *
+     * @var array
+     */
+    private $dynamicKeys = [];
 
     /**
      * @return string
@@ -293,7 +307,7 @@ abstract class ControlsStack extends AbstractBase
 
             if (null !== $targetSectionArgs) {
                 if (!empty($args['section']) || ! empty($args['tab'])) {
-                    throw new \Goomento\PageBuilder\Exception\BuilderException(
+                    throw new BuilderException(
                         sprintf('Cannot redeclare control with `tab` or `section` args inside section "%s".', $id)
                     );
                 }
@@ -305,7 +319,7 @@ abstract class ControlsStack extends AbstractBase
                 }
             } elseif (empty($args['section']) && (! $options['overwrite'] || !ObjectManagerHelper::getControlsManager()
                         ->getControlFromStack($this->getUniqueName(), $id))) {
-                throw new \Goomento\PageBuilder\Exception\BuilderException(
+                throw new BuilderException(
                     'Cannot add a control outside of a section'
                 );
             }
@@ -340,7 +354,8 @@ abstract class ControlsStack extends AbstractBase
      */
     public function removeControl($controlId)
     {
-        return ObjectManagerHelper::getControlsManager()->removeControlFromStack($this->getUniqueName(), $controlId);
+        return ObjectManagerHelper::getControlsManager()
+            ->removeControlFromStack($this->getUniqueName(), $controlId);
     }
 
     /**
@@ -442,7 +457,7 @@ abstract class ControlsStack extends AbstractBase
         if ('control' === $position['type'] && in_array($position['at'], [ 'start', 'end' ], true) ||
             'section' === $position['type'] && in_array($position['at'], [ 'before', 'after' ], true)
         ) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 'Invalid position arguments. Use `before` / `after` for control or `start` / `end` for section.'
             );
         }
@@ -591,13 +606,13 @@ abstract class ControlsStack extends AbstractBase
      * @param array $args Group control arguments. Default is an empty array.
      * @param array $options Optional. Group control options. Default is an
      *                           empty array.
-     * @throws Exception
+     * @throws BuilderException
      */
     public function addGroupControl(?string $groupName, array $args = [], array $options = [])
     {
         $group = ObjectManagerHelper::getControlsManager()->getControlGroups($groupName);
         if (!$group) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 sprintf('Group "%s" not found.', $groupName)
             );
         }
@@ -694,7 +709,7 @@ abstract class ControlsStack extends AbstractBase
      * @param array $args Responsive control arguments.
      * @param array $options Optional. Responsive control options. Default is
      *                        an empty array.
-     * @throws Exception
+     * @throws BuilderException
      */
     public function addResponsiveControl($id, array $args, $options = [])
     {
@@ -890,7 +905,10 @@ abstract class ControlsStack extends AbstractBase
         return self::getItems($this->data, $item);
     }
 
-
+    /**
+     * @param $setting
+     * @return array|mixed|null
+     */
     public function getParsedDynamicSettings($setting = null)
     {
         if (null === $this->parsedDynamicSettings) {
@@ -1009,19 +1027,19 @@ abstract class ControlsStack extends AbstractBase
                 continue;
             }
 
-            if ('repeater' === $controlObj->getType()) {
-                foreach ($settings[ $controlName ] as & $field) {
+            if (Repeater::NAME === $controlObj->getName()) {
+                foreach ($settings[ $controlName ] as &$field) {
                     $field = $this->parseDynamicSettings($field, $control['fields'], $field);
                 }
 
                 continue;
             }
 
-            if (empty($control['dynamic']) || ! isset($allSettings[ Tags::DYNAMIC_SETTING_KEY ][ $controlName ])) {
+            if (!isset($allSettings[ Tags::DYNAMIC_SETTING_KEY ][ $controlName ])) {
                 continue;
             }
 
-            $dynamicSettings = array_merge($controlObj->getSettings('dynamic'), $control['dynamic']);
+            $dynamicSettings = array_merge($controlObj->getSettings('dynamic'), $control['dynamic'] ?? []);
 
             if (!empty($dynamicSettings['active']) && ! empty($allSettings[ Tags::DYNAMIC_SETTING_KEY ][ $controlName ])) {
                 $parsedValue = $controlObj->parseTags($allSettings[ Tags::DYNAMIC_SETTING_KEY ][ $controlName ], $dynamicSettings);
@@ -1128,25 +1146,13 @@ abstract class ControlsStack extends AbstractBase
         }
 
         foreach ($control['condition'] as $conditionKey => $conditionValue) {
-            preg_match('/([a-z_\-0-9]+)(?:\[([a-z_]+)])?(!?)$/i', $conditionKey, $conditionKeyParts);
-
-            $pureConditionKey = $conditionKeyParts[1];
-            $conditionSubKey = $conditionKeyParts[2];
-            $isNegativeCondition = ! ! $conditionKeyParts[3];
-
-            if (!isset($values[ $pureConditionKey ]) || null === $values[ $pureConditionKey ]) {
-                return false;
+            $isNegativeCondition = substr($conditionKey, -1, 1) === '!';
+            if ($isNegativeCondition) {
+                $conditionKey = substr($conditionKey, 0, strlen($conditionKey) - 1);
             }
 
-            $instanceValue = $values[ $pureConditionKey ];
+            $instanceValue = DataHelper::arrayGetValue($values, $conditionKey, '.');
 
-            if ($conditionSubKey && is_array($instanceValue)) {
-                if (!isset($instanceValue[ $conditionSubKey ])) {
-                    return false;
-                }
-
-                $instanceValue = $instanceValue[ $conditionSubKey ];
-            }
 
             /**
              * If the $conditionValue is a non empty array - check if the $conditionValue contains the $instanceValue,
@@ -1180,6 +1186,7 @@ abstract class ControlsStack extends AbstractBase
      *
      * @param string $sectionId Section ID.
      * @param array $args Section arguments Optional.
+     * @throws BuilderException
      *
      */
     public function startControlsSection($sectionId, array $args = [])
@@ -1340,12 +1347,12 @@ abstract class ControlsStack extends AbstractBase
      *
      * @param string $tabsId Tabs ID.
      * @param array $args Tabs arguments.
-     * @throws Exception
+     * @throws BuilderException
      */
     public function startControlsTabs($tabsId, array $args = [])
     {
         if (null !== $this->currentTab) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 sprintf('You can\'t start tabs before the end of the previous tabs "%s".', $this->currentTab['tabs_wrapper'])
             );
         }
@@ -1396,12 +1403,12 @@ abstract class ControlsStack extends AbstractBase
      *
      * @param string $tabId Tab ID.
      * @param array $args Tab arguments.
-     * @throws Exception
+     * @throws BuilderException
      */
     public function startControlsTab($tabId, $args)
     {
         if (!empty($this->currentTab['inner_tab'])) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 sprintf('Goomento: You can\'t start a tab before the end of the previous tab "%s".', $this->currentTab['inner_tab'])
             );
         }
@@ -1538,7 +1545,7 @@ abstract class ControlsStack extends AbstractBase
     public function startInjection(array $position)
     {
         if ($this->injectionPoint) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(
+            throw new BuilderException(
                 'A controls injection is already opened. Please close current injection before starting a new one (use `endInjection`).'
             );
         }
@@ -1581,7 +1588,8 @@ abstract class ControlsStack extends AbstractBase
      *
      * Used to add new controls to any element type. For example, external
      * developers use this method to register controls in a widget.
-     *
+     * @return void
+     * @throws BuilderException
      */
     protected function registerControls()
     {
@@ -1745,7 +1753,7 @@ abstract class ControlsStack extends AbstractBase
         }
 
         foreach ($controls as $control) {
-            if ('repeater' === $control['type']) {
+            if (Repeater::NAME === $control['type']) {
                 if (empty($settings[ $control['name'] ])) {
                     continue;
                 }

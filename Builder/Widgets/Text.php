@@ -9,11 +9,13 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\TextShadowGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
+use Goomento\PageBuilder\Exception\BuilderException;
 
 class Text extends AbstractWidget
 {
@@ -71,19 +73,19 @@ class Text extends AbstractWidget
     /**
      * Share Text interface
      *
-     * @param AbstractWidget $widget
+     * @param ControlsStack $widget
      * @param string $prefix
+     * @throws BuilderException
      */
-    public static function registerTextInterface(AbstractWidget $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerTextInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
             $prefix . 'title',
-            $args + [
+            [
                 'label' => __('Title'),
                 'type' => Controls::TEXTAREA,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'placeholder' => __('Enter your text'),
                 'default' => __('Add Your Text Here'),
             ]
@@ -91,12 +93,10 @@ class Text extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'link',
-            $args + [
+            [
                 'label' => __('Link'),
                 'type' => Controls::URL,
-                'dynamic' => [
-                    'active' => true,
-                ],
+
                 'default' => [
                     'url' => '',
                 ],
@@ -106,7 +106,7 @@ class Text extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'size',
-            $args + [
+            [
                 'label' => __('Size'),
                 'type' => Controls::SELECT,
                 'default' => 'default',
@@ -123,7 +123,7 @@ class Text extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'tag',
-            $args + [
+            [
                 'label' => __('HTML Tag'),
                 'type' => Controls::SELECT,
                 'options' => [
@@ -147,20 +147,19 @@ class Text extends AbstractWidget
     /**
      * Share Text style
      *
-     * @param AbstractWidget $widget
+     * @param ControlsStack $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
+     * @throws BuilderException
      */
     public static function registerSimpleTextStyle(
-        AbstractWidget $widget,
-        string         $prefix = self::NAME . '_',
-        string         $cssTarget = '.gmt-text-title',
-        array          $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-text-title'
     ) {
         $widget->addControl(
             $prefix . 'color',
-            $args + [
+            [
                 'label' => __('Text Color'),
                 'type' => Controls::COLOR,
                 'scheme' => [
@@ -175,7 +174,7 @@ class Text extends AbstractWidget
 
         $widget->addGroupControl(
             TypographyGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'typography',
                 'scheme' => Typography::TYPOGRAPHY_3,
                 'selector' => '{{WRAPPER}} ' . $cssTarget,
@@ -186,20 +185,19 @@ class Text extends AbstractWidget
     /**
      * Share Text style
      *
-     * @param AbstractWidget $widget
+     * @param ControlsStack $widget
      * @param string $prefix
      * @param string $cssTarget
-     * @param array $args
+     * @throws BuilderException
      */
     public static function registerTextStyle(
-        AbstractWidget $widget,
-        string         $prefix = self::NAME . '_',
-        string         $cssTarget = '.gmt-text-title',
-        array          $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-text-title'
     ) {
         $widget->addResponsiveControl(
             $prefix . 'align',
-            $args + [
+            [
                 'label' => __('Alignment'),
                 'type' => Controls::CHOOSE,
                 'options' => [
@@ -227,11 +225,11 @@ class Text extends AbstractWidget
             ]
         );
 
-        self::registerSimpleTextStyle($widget, $prefix, $cssTarget, $args);
+        self::registerSimpleTextStyle($widget, $prefix, $cssTarget);
 
         $widget->addGroupControl(
             TextShadowGroup::NAME,
-            $args + [
+            [
                 'name' => $prefix . 'shadow',
                 'selector' => '{{WRAPPER}} ' . $cssTarget,
             ]
@@ -239,7 +237,7 @@ class Text extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'blend_mode',
-            $args + [
+            [
                 'label' => __('Blend Mode'),
                 'type' => Controls::SELECT,
                 'options' => [

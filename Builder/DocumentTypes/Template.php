@@ -8,8 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\DocumentTypes;
 
-// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
-class Template extends Section
+use Goomento\PageBuilder\Builder\Base\AbstractDocumentType;
+
+class Template extends AbstractDocumentType
 {
     /**
      * @inheritDoc
@@ -25,5 +26,14 @@ class Template extends Section
     public static function getTitle()
     {
         return __('Template');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function registerControls()
+    {
+        parent::registerControls();
+        Section::registerLayoutControl($this, 'pagebuilder_content_fullwidth');
     }
 }

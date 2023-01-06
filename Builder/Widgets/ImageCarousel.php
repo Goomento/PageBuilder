@@ -8,11 +8,13 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Widgets;
 
-use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\BorderGroup;
 use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Exception\BuilderException;
+use Goomento\PageBuilder\Helper\EscaperHelper;
 
 class ImageCarousel extends AbstractWidget
 {
@@ -55,7 +57,7 @@ class ImageCarousel extends AbstractWidget
      */
     public function getScriptDepends()
     {
-        return ['image-carousel'];
+        return ['goomento-widget-image-carousel'];
     }
 
     /**
@@ -67,24 +69,22 @@ class ImageCarousel extends AbstractWidget
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
-    public static function registerCarouselImagesControl(AbstractElement $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
-
+    public static function registerCarouselImagesInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
             $prefix . 'carousel',
-            $args + [
+            [
                 'label' => __('Add Images'),
                 'type' => Controls::GALLERY,
                 'default' => [],
                 'show_label' => false,
-                'dynamic' => [
-                    'active' => true,
-                ],
             ]
         );
 
@@ -95,13 +95,24 @@ class ImageCarousel extends AbstractWidget
                 'separator' => 'none',
             ]
         );
+    }
 
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerCarouselImagesControl(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $slidesToShow = range(1, 10);
         $slidesToShow = array_combine($slidesToShow, $slidesToShow);
 
         $widget->addResponsiveControl(
-            'slides_to_show',
-            $args + [
+            $prefix . 'slides_to_show',
+            [
                 'label' => __('Slides to Show'),
                 'type' => Controls::SELECT,
                 'options' => [
@@ -121,7 +132,7 @@ class ImageCarousel extends AbstractWidget
                         '' => __('Default'),
                     ] + $slidesToShow,
                 'condition' => [
-                    'slides_to_show!' => '1',
+                    $prefix . 'slides_to_show!' => '1',
                 ],
                 'frontend_available' => true,
             ]
@@ -129,7 +140,7 @@ class ImageCarousel extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'image_stretch',
-            $args + [
+            [
                 'label' => __('Image Stretch'),
                 'type' => Controls::SELECT,
                 'default' => 'no',
@@ -141,8 +152,8 @@ class ImageCarousel extends AbstractWidget
         );
 
         $widget->addControl(
-            'navigation',
-            $args + [
+            $prefix . 'navigation',
+            [
                 'label' => __('Navigation'),
                 'type' => Controls::SELECT,
                 'default' => 'both',
@@ -158,7 +169,7 @@ class ImageCarousel extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'link_to',
-            $args + [
+            [
                 'label' => __('Link'),
                 'type' => Controls::SELECT,
                 'default' => 'none',
@@ -172,7 +183,7 @@ class ImageCarousel extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'link',
-            $args + [
+            [
                 'label' => __('Link'),
                 'type' => Controls::URL,
                 'placeholder' => __('https://your-link.com'),
@@ -185,7 +196,7 @@ class ImageCarousel extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'open_lightbox',
-            $args + [
+            [
                 'label' => __('Lightbox'),
                 'type' => Controls::SELECT,
                 'default' => 'default',
@@ -202,16 +213,18 @@ class ImageCarousel extends AbstractWidget
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @return void
+     * @throws BuilderException
      */
-    public static function registerCarouselControl(AbstractElement $widget, string $prefix = self::NAME . '_', array $args = [])
-    {
+    public static function registerCarouselControl(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
         $widget->addControl(
-            'pause_on_hover',
-            $args + [
+            $prefix . 'pause_on_hover',
+            [
                 'label' => __('Pause on Hover'),
                 'type' => Controls::SELECT,
                 'default' => 'yes',
@@ -224,8 +237,8 @@ class ImageCarousel extends AbstractWidget
         );
 
         $widget->addControl(
-            'autoplay',
-            $args + [
+            $prefix . 'autoplay',
+            [
                 'label' => __('Autoplay'),
                 'type' => Controls::SELECT,
                 'default' => 'yes',
@@ -238,8 +251,8 @@ class ImageCarousel extends AbstractWidget
         );
 
         $widget->addControl(
-            'autoplay_speed',
-            $args + [
+            $prefix . 'autoplay_speed',
+            [
                 'label' => __('Autoplay Speed'),
                 'type' => Controls::NUMBER,
                 'default' => 5000,
@@ -248,8 +261,8 @@ class ImageCarousel extends AbstractWidget
         );
 
         $widget->addControl(
-            'infinite',
-            $args + [
+            $prefix . 'infinite',
+            [
                 'label' => __('Infinite Loop'),
                 'type' => Controls::SELECT,
                 'default' => 'yes',
@@ -262,8 +275,8 @@ class ImageCarousel extends AbstractWidget
         );
 
         $widget->addControl(
-            'effect',
-            $args + [
+            $prefix . 'effect',
+            [
                 'label' => __('Effect'),
                 'type' => Controls::SELECT,
                 'default' => 'slide',
@@ -272,15 +285,15 @@ class ImageCarousel extends AbstractWidget
                     'fade' => __('Fade'),
                 ],
                 'condition' => [
-                    'slides_to_show' => '1',
+                    $prefix . 'slides_to_show' => '1',
                 ],
                 'frontend_available' => true,
             ]
         );
 
         $widget->addControl(
-            'speed',
-            $args + [
+            $prefix . 'speed',
+            [
                 'label' => __('Animation Speed'),
                 'type' => Controls::NUMBER,
                 'default' => 500,
@@ -289,8 +302,8 @@ class ImageCarousel extends AbstractWidget
         );
 
         $widget->addControl(
-            'direction',
-            $args + [
+            $prefix . 'direction',
+            [
                 'label' => __('Direction'),
                 'type' => Controls::SELECT,
                 'default' => 'ltr',
@@ -304,33 +317,32 @@ class ImageCarousel extends AbstractWidget
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @param string $cssTarget
      * @return void
+     * @throws BuilderException
      */
     public static function registerNavigationStyle(
-        AbstractElement $widget,
-        string          $prefix = self::NAME . '_',
-        string          $cssTarget = '.gmt-image-carousel',
-        array           $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-image-carousel-wrapper'
     ) {
         $widget->addControl(
             $prefix . 'heading_style_arrows',
-            $args + [
+            [
                 'label' => __('Arrows'),
                 'type' => Controls::HEADING,
                 'separator' => 'before',
                 'condition' => [
-                    'navigation' => [ 'arrows', 'both' ],
+                    $prefix . 'navigation' => [ 'arrows', 'both' ],
                 ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'arrows_position',
-            $args + [
+            [
                 'label' => __('Position'),
                 'type' => Controls::SELECT,
                 'default' => 'inside',
@@ -340,14 +352,14 @@ class ImageCarousel extends AbstractWidget
                 ],
                 'prefix_class' => 'gmt-arrows-position-',
                 'condition' => [
-                    'navigation' => [ 'arrows', 'both' ],
+                    $prefix . 'navigation' => [ 'arrows', 'both' ],
                 ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'arrows_size',
-            $args + [
+            [
                 'label' => __('Size'),
                 'type' => Controls::SLIDER,
                 'range' => [
@@ -360,40 +372,40 @@ class ImageCarousel extends AbstractWidget
                     '{{WRAPPER}} ' . $cssTarget . ' .gmt-swiper-button.gmt-swiper-button-prev i, {{WRAPPER}} ' . $cssTarget . ' .gmt-swiper-button.gmt-swiper-button-next i' => 'font-size: {{SIZE}}{{UNIT}};',
                 ],
                 'condition' => [
-                    'navigation' => [ 'arrows', 'both' ],
+                    $prefix . 'navigation' => [ 'arrows', 'both' ],
                 ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'arrows_color',
-            $args + [
+            [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} ' . $cssTarget . ' .gmt-swiper-button.gmt-swiper-button-prev, {{WRAPPER}} ' . $cssTarget . ' .gmt-swiper-button.gmt-swiper-button-next' => 'color: {{VALUE}};',
                 ],
                 'condition' => [
-                    'navigation' => [ 'arrows', 'both' ],
+                    $prefix . 'navigation' => [ 'arrows', 'both' ],
                 ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'heading_style_dots',
-            $args + [
+            [
                 'label' => __('Dots'),
                 'type' => Controls::HEADING,
                 'separator' => 'before',
                 'condition' => [
-                    'navigation' => [ 'dots', 'both' ],
+                    $prefix . 'navigation' => [ 'dots', 'both' ],
                 ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'dots_position',
-            $args + [
+            [
                 'label' => __('Position'),
                 'type' => Controls::SELECT,
                 'default' => 'outside',
@@ -403,14 +415,14 @@ class ImageCarousel extends AbstractWidget
                 ],
                 'prefix_class' => 'gmt-pagination-position-',
                 'condition' => [
-                    'navigation' => [ 'dots', 'both' ],
+                    $prefix . 'navigation' => [ 'dots', 'both' ],
                 ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'dots_size',
-            $args + [
+            [
                 'label' => __('Size'),
                 'type' => Controls::SLIDER,
                 'range' => [
@@ -423,42 +435,41 @@ class ImageCarousel extends AbstractWidget
                     '{{WRAPPER}} ' . $cssTarget . ' .swiper-pagination-bullet' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
                 ],
                 'condition' => [
-                    'navigation' => [ 'dots', 'both' ],
+                    $prefix . 'navigation' => [ 'dots', 'both' ],
                 ],
             ]
         );
 
         $widget->addControl(
             $prefix . 'dots_color',
-            $args + [
+            [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} ' . $cssTarget . ' .swiper-pagination-bullet' => 'background: {{VALUE}};',
                 ],
                 'condition' => [
-                   'navigation' => [ 'dots', 'both' ],
+                    $prefix . 'navigation' => [ 'dots', 'both' ],
                 ],
             ]
         );
     }
 
     /**
-     * @param AbstractElement $widget
+     * @param ControlsStack $widget
      * @param string $prefix
-     * @param array $args
      * @param string $cssTarget
      * @return void
+     * @throws BuilderException
      */
     public static function registerImageStyle(
-        AbstractElement $widget,
-        string          $prefix = self::NAME . '_',
-        string          $cssTarget = '.gmt-image-carousel',
-        array           $args = []
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-image-carousel'
     ) {
         $widget->addResponsiveControl(
             $prefix . 'gallery_vertical_align',
-            $args + [
+            [
                 'label' => __('Vertical Align'),
                 'type' => Controls::CHOOSE,
                 'label_block' => false,
@@ -477,7 +488,7 @@ class ImageCarousel extends AbstractWidget
                     ],
                 ],
                 'condition' => [
-                    'slides_to_show!' => '1',
+                    $prefix . 'slides_to_show!' => '1',
                 ],
                 'selectors' => [
                     '{{WRAPPER}} ' . $cssTarget => 'display: flex; align-items: {{VALUE}};',
@@ -487,7 +498,7 @@ class ImageCarousel extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'image_spacing',
-            $args + [
+            [
                 'label' => __('Spacing'),
                 'type' => Controls::SELECT,
                 'options' => [
@@ -496,14 +507,14 @@ class ImageCarousel extends AbstractWidget
                 ],
                 'default' => '',
                 'condition' => [
-                    'slides_to_show!' => '1',
+                    $prefix . 'slides_to_show!' => '1',
                 ],
             ]
         );
 
         $widget->addControl(
             'image_spacing_custom', // avoid using prefix since this use for JS on FE
-            $args + [
+            [
                 'label' => __('Image Spacing'),
                 'type' => Controls::SLIDER,
                 'range' => [
@@ -517,7 +528,7 @@ class ImageCarousel extends AbstractWidget
                 'show_label' => false,
                 'condition' => [
                     $prefix . 'image_spacing' => 'custom',
-                    'slides_to_show!' => '1',
+                    $prefix . 'slides_to_show!' => '1',
                 ],
                 'frontend_available' => true
             ]
@@ -534,7 +545,7 @@ class ImageCarousel extends AbstractWidget
 
         $widget->addControl(
             $prefix . 'image_border_radius',
-            $args + [
+            [
                 'label' => __('Border Radius'),
                 'type' => Controls::DIMENSIONS,
                 'size_units' => [ 'px', '%' ],
@@ -543,6 +554,35 @@ class ImageCarousel extends AbstractWidget
                 ],
             ]
         );
+    }
+
+    /**
+     * @param bool $pagination
+     * @param bool $navigation
+     * @return void
+     */
+    public static function printCarouselControls(bool $pagination, bool $navigation)
+    {
+        ?>
+            <?php if ($pagination): ?>
+                <div class="swiper-pagination"></div>
+            <?php endif; ?>
+
+            <?php if ($navigation): ?>
+            <div class="gmt-swiper-button gmt-swiper-button-prev">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                <span class="gmt-screen-only">
+                    <?= /** @noEscape */ EscaperHelper::escapeHtml(__('Previous')); ?>
+                </span>
+            </div>
+            <div class="gmt-swiper-button gmt-swiper-button-next">
+                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                <span class="gmt-screen-only">
+                    <?= /** @noEscape */ EscaperHelper::escapeHtml(__('Next')); ?>
+                </span>
+            </div>
+            <?php endif; ?>
+        <?php
     }
 
     /**
@@ -557,7 +597,8 @@ class ImageCarousel extends AbstractWidget
             ]
         );
 
-        self::registerCarouselImagesControl($this);
+        self::registerCarouselImagesInterface($this);
+        self::registerCarouselImagesControl($this, '');
 
         $this->endControlsSection();
 
@@ -568,7 +609,7 @@ class ImageCarousel extends AbstractWidget
             ]
         );
 
-        self::registerCarouselControl($this);
+        self::registerCarouselControl($this, '');
 
         $this->endControlsSection();
 
@@ -578,12 +619,12 @@ class ImageCarousel extends AbstractWidget
                 'label' => __('Navigation'),
                 'tab' => Controls::TAB_STYLE,
                 'condition' => [
-                    self::NAME . '_' . 'navigation' => [ 'arrows', 'dots', 'both' ],
+                    'navigation' => [ 'arrows', 'dots', 'both' ],
                 ],
             ]
         );
 
-        self::registerNavigationStyle($this);
+        self::registerNavigationStyle($this, '');
 
         $this->endControlsSection();
 
@@ -595,7 +636,7 @@ class ImageCarousel extends AbstractWidget
             ]
         );
 
-        self::registerImageStyle($this);
+        self::registerImageStyle($this, '');
 
         $this->endControlsSection();
     }

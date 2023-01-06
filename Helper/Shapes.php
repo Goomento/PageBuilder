@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Goomento\PageBuilder\Builder;
+namespace Goomento\PageBuilder\Helper;
 
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\AssetsHelper;

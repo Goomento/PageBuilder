@@ -9,16 +9,21 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
+use Goomento\PageBuilder\Builder\Base\ControlsStack;
+use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Elements\Repeater;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
 use Goomento\PageBuilder\Builder\Schemes\Typography;
+use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
 
 class IconList extends AbstractWidget
 {
-
-    const NAME = 'icon-list';
+    /**
+     * @inheriDoc
+     */
+    const NAME = 'icon_list';
 
     /**
      * @inheriDoc
@@ -59,19 +64,62 @@ class IconList extends AbstractWidget
     }
 
     /**
-     * @inheritDoc
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
      */
-    protected function registerControls()
-    {
-        $this->startControlsSection(
-            'section_icon',
+    public static function registerIconItemInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $widget->addControl(
+            $prefix . 'text',
             [
-                'label' => __('Icon List'),
+                'label' => __('Text'),
+                'type' => Controls::TEXT,
+                'label_block' => true,
+                'placeholder' => __('List Item'),
+                'default' => __('List Item')
             ]
         );
 
-        $this->addControl(
-            'view',
+        $widget->addControl(
+            $prefix . 'selected_icon',
+            [
+                'label' => __('Icon'),
+                'type' => Controls::ICONS,
+                'label_block' => true,
+                'default' => [
+                    'value' => 'fas fa-check',
+                    'library' => 'fa-solid',
+                ],
+            ]
+        );
+
+        $widget->addControl(
+            $prefix . 'link',
+            [
+                'label' => __('Link'),
+                'type' => Controls::URL,
+                'label_block' => true,
+                'placeholder' => __('https://your-link.com'),
+            ]
+        );
+    }
+
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerIconListInterface(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_'
+    ) {
+        $widget->addControl(
+            $prefix . 'view',
             [
                 'label' => __('Layout'),
                 'type' => Controls::CHOOSE,
@@ -96,48 +144,10 @@ class IconList extends AbstractWidget
 
         $repeater = new Repeater;
 
-        $repeater->addControl(
-            'text',
-            [
-                'label' => __('Text'),
-                'type' => Controls::TEXT,
-                'label_block' => true,
-                'placeholder' => __('List Item'),
-                'default' => __('List Item'),
-                'dynamic' => [
-                    'active' => true,
-                ],
-            ]
-        );
+        self::registerIconItemInterface($repeater, '');
 
-        $repeater->addControl(
-            'selected_icon',
-            [
-                'label' => __('Icon'),
-                'type' => Controls::ICONS,
-                'label_block' => true,
-                'default' => [
-                    'value' => 'fas fa-check',
-                    'library' => 'fa-solid',
-                ],
-            ]
-        );
-
-        $repeater->addControl(
-            'link',
-            [
-                'label' => __('Link'),
-                'type' => Controls::URL,
-                'dynamic' => [
-                    'active' => true,
-                ],
-                'label_block' => true,
-                'placeholder' => __('https://your-link.com'),
-            ]
-        );
-
-        $this->addControl(
-            'icon_list',
+        $widget->addControl(
+            $prefix . 'icon_list',
             [
                 'label' => '',
                 'type' => Controls::REPEATER,
@@ -165,22 +175,28 @@ class IconList extends AbstractWidget
                         ],
                     ],
                 ],
-                'title_field' => '{{{ goomento.helpers.renderIcon( this, selected_icon, {}, "i", "panel" ) || \'<i class="{{ icon }}" aria-hidden="true"></i>\' }}} {{{ text }}}',
+                'title_field' => '{{{ goomento.helpers.renderIcon( this, selected_icon, {}, "i", "panel" ) ||
+\'<i class="{{ icon }}" aria-hidden="true"></i>\' }}} {{{ text }}}',
             ]
         );
+    }
 
-        $this->endControlsSection();
-
-        $this->startControlsSection(
-            'section_icon_list',
-            [
-                'label' => __('List'),
-                'tab' => Controls::TAB_STYLE,
-            ]
-        );
-
-        $this->addResponsiveControl(
-            'space_between',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @param string $cssListContainerTarget
+     * @param string $cssItemTarget
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerIconListStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssListContainerTarget = '.gmt-icon-list-items',
+        string $cssItemTarget = '.gmt-icon-list-item'
+    ) {
+        $widget->addResponsiveControl(
+            $prefix . 'space_between',
             [
                 'label' => __('Space Between'),
                 'type' => Controls::SLIDER,
@@ -190,18 +206,18 @@ class IconList extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-list-items:not(.gmt-inline-items) .gmt-icon-list-item:not(:last-child)' => 'padding-bottom: calc({{SIZE}}{{UNIT}}/2)',
-                    '{{WRAPPER}} .gmt-icon-list-items:not(.gmt-inline-items) .gmt-icon-list-item:not(:first-child)' => 'margin-top: calc({{SIZE}}{{UNIT}}/2)',
-                    '{{WRAPPER}} .gmt-icon-list-items.gmt-inline-items .gmt-icon-list-item' => 'margin-right: calc({{SIZE}}{{UNIT}}/2); margin-left: calc({{SIZE}}{{UNIT}}/2)',
-                    '{{WRAPPER}} .gmt-icon-list-items.gmt-inline-items' => 'margin-right: calc(-{{SIZE}}{{UNIT}}/2); margin-left: calc(-{{SIZE}}{{UNIT}}/2)',
-                    'body.rtl {{WRAPPER}} .gmt-icon-list-items.gmt-inline-items .gmt-icon-list-item:after' => 'left: calc(-{{SIZE}}{{UNIT}}/2)',
-                    'body:not(.rtl) {{WRAPPER}} .gmt-icon-list-items.gmt-inline-items .gmt-icon-list-item:after' => 'right: calc(-{{SIZE}}{{UNIT}}/2)',
+                    '{{WRAPPER}} ' . $cssListContainerTarget . ':not(.gmt-inline-items) ' . $cssItemTarget . ':not(:last-child)' => 'padding-bottom: calc({{SIZE}}{{UNIT}}/2)',
+                    '{{WRAPPER}} ' . $cssListContainerTarget . ':not(.gmt-inline-items) ' . $cssItemTarget . ':not(:first-child)' => 'margin-top: calc({{SIZE}}{{UNIT}}/2)',
+                    '{{WRAPPER}} ' . $cssListContainerTarget . '.gmt-inline-items ' . $cssItemTarget => 'margin-right: calc({{SIZE}}{{UNIT}}/2); margin-left: calc({{SIZE}}{{UNIT}}/2)',
+                    '{{WRAPPER}} ' . $cssListContainerTarget . '.gmt-inline-items' => 'margin-right: calc(-{{SIZE}}{{UNIT}}/2); margin-left: calc(-{{SIZE}}{{UNIT}}/2)',
+                    'body.rtl {{WRAPPER}} ' . $cssListContainerTarget . '.gmt-inline-items ' . $cssItemTarget . ':after' => 'left: calc(-{{SIZE}}{{UNIT}}/2)',
+                    'body:not(.rtl) {{WRAPPER}} ' . $cssListContainerTarget . '.gmt-inline-items ' . $cssItemTarget . ':after' => 'right: calc(-{{SIZE}}{{UNIT}}/2)',
                 ],
             ]
         );
 
-        $this->addResponsiveControl(
-            'icon_align',
+        $widget->addResponsiveControl(
+            $prefix . 'icon_align',
             [
                 'label' => __('Alignment'),
                 'type' => Controls::CHOOSE,
@@ -223,22 +239,22 @@ class IconList extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'divider',
+        $widget->addControl(
+            $prefix . 'divider',
             [
                 'label' => __('Divider'),
                 'type' => Controls::SWITCHER,
                 'label_off' => __('Off'),
                 'label_on' => __('On'),
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-list-item:not(:last-child):after' => 'content: ""',
+                    '{{WRAPPER}} ' . $cssItemTarget . ':not(:last-child):after' => 'content: ""',
                 ],
                 'separator' => 'before',
             ]
         );
 
-        $this->addControl(
-            'divider_style',
+        $widget->addControl(
+            $prefix . 'divider_style',
             [
                 'label' => __('Style'),
                 'type' => Controls::SELECT,
@@ -250,17 +266,17 @@ class IconList extends AbstractWidget
                 ],
                 'default' => 'solid',
                 'condition' => [
-                    'divider' => 'yes',
+                    $prefix . 'divider' => 'yes',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-list-items:not(.gmt-inline-items) .gmt-icon-list-item:not(:last-child):after' => 'border-top-style: {{VALUE}}',
-                    '{{WRAPPER}} .gmt-icon-list-items.gmt-inline-items .gmt-icon-list-item:not(:last-child):after' => 'border-left-style: {{VALUE}}',
+                    '{{WRAPPER}} ' . $cssListContainerTarget . ':not(.gmt-inline-items) ' . $cssItemTarget . ':not(:last-child):after' => 'border-top-style: {{VALUE}}',
+                    '{{WRAPPER}} ' . $cssListContainerTarget . '.gmt-inline-items ' . $cssItemTarget . ':not(:last-child):after' => 'border-left-style: {{VALUE}}',
                 ],
             ]
         );
 
-        $this->addControl(
-            'divider_weight',
+        $widget->addControl(
+            $prefix . 'divider_weight',
             [
                 'label' => __('Weight'),
                 'type' => Controls::SLIDER,
@@ -274,17 +290,17 @@ class IconList extends AbstractWidget
                     ],
                 ],
                 'condition' => [
-                    'divider' => 'yes',
+                    $prefix . 'divider' => 'yes',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-list-items:not(.gmt-inline-items) .gmt-icon-list-item:not(:last-child):after' => 'border-top-width: {{SIZE}}{{UNIT}}',
-                    '{{WRAPPER}} .gmt-inline-items .gmt-icon-list-item:not(:last-child):after' => 'border-left-width: {{SIZE}}{{UNIT}}',
+                    '{{WRAPPER}} ' . $cssListContainerTarget . ':not(.gmt-inline-items) ' . $cssItemTarget . ':not(:last-child):after' => 'border-top-width: {{SIZE}}{{UNIT}}',
+                    '{{WRAPPER}} .gmt-inline-items ' . $cssItemTarget . ':not(:last-child):after' => 'border-left-width: {{SIZE}}{{UNIT}}',
                 ],
             ]
         );
 
-        $this->addControl(
-            'divider_width',
+        $widget->addControl(
+            $prefix . 'divider_width',
             [
                 'label' => __('Width'),
                 'type' => Controls::SLIDER,
@@ -292,17 +308,17 @@ class IconList extends AbstractWidget
                     'unit' => '%',
                 ],
                 'condition' => [
-                    'divider' => 'yes',
-                    'view!' => 'inline',
+                    $prefix . 'divider' => 'yes',
+                    $prefix . 'view!' => 'inline',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-list-item:not(:last-child):after' => 'width: {{SIZE}}{{UNIT}}',
+                    '{{WRAPPER}} ' . $cssItemTarget . ':not(:last-child):after' => 'width: {{SIZE}}{{UNIT}}',
                 ],
             ]
         );
 
-        $this->addControl(
-            'divider_height',
+        $widget->addControl(
+            $prefix . 'divider_height',
             [
                 'label' => __('Height'),
                 'type' => Controls::SLIDER,
@@ -321,17 +337,17 @@ class IconList extends AbstractWidget
                     ],
                 ],
                 'condition' => [
-                    'divider' => 'yes',
-                    'view' => 'inline',
+                    $prefix . 'divider' => 'yes',
+                    $prefix . 'view' => 'inline',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-list-item:not(:last-child):after' => 'height: {{SIZE}}{{UNIT}}',
+                    '{{WRAPPER}} ' . $cssItemTarget . ':not(:last-child):after' => 'height: {{SIZE}}{{UNIT}}',
                 ],
             ]
         );
 
-        $this->addControl(
-            'divider_color',
+        $widget->addControl(
+            $prefix . 'divider_color',
             [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
@@ -341,33 +357,36 @@ class IconList extends AbstractWidget
                     'value' => Color::COLOR_3,
                 ],
                 'condition' => [
-                    'divider' => 'yes',
+                    $prefix . 'divider' => 'yes',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-list-item:not(:last-child):after' => 'border-color: {{VALUE}}',
+                    '{{WRAPPER}} ' . $cssItemTarget . ':not(:last-child):after' => 'border-color: {{VALUE}}',
                 ],
             ]
         );
+    }
 
-        $this->endControlsSection();
-
-        $this->startControlsSection(
-            'section_icon_style',
-            [
-                'label' => __('Icon'),
-                'tab' => Controls::TAB_STYLE,
-            ]
-        );
-
-        $this->addControl(
-            'icon_color',
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerIconIconStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-icon-list-icon'
+    ) {
+        $widget->addControl(
+            $prefix . 'icon_color',
             [
                 'label' => __('Color'),
                 'type' => Controls::COLOR,
                 'default' => '',
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-list-icon i' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .gmt-icon-list-icon svg' => 'fill: {{VALUE}};',
+                    '{{WRAPPER}} ' . $cssTarget . ' i' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} ' . $cssTarget . ' svg' => 'fill: {{VALUE}};',
                 ],
                 'scheme' => [
                     'type' => Color::NAME,
@@ -376,21 +395,21 @@ class IconList extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'icon_color_hover',
+        $widget->addControl(
+            $prefix . 'icon_color_hover',
             [
                 'label' => __('Hover'),
                 'type' => Controls::COLOR,
                 'default' => '',
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-list-item:hover .gmt-icon-list-icon i' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .gmt-icon-list-item:hover .gmt-icon-list-icon svg' => 'fill: {{VALUE}};',
+                    '{{WRAPPER}} .gmt-icon-list-item:hover ' . $cssTarget . ' i' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .gmt-icon-list-item:hover ' . $cssTarget . ' svg' => 'fill: {{VALUE}};',
                 ],
             ]
         );
 
-        $this->addResponsiveControl(
-            'icon_size',
+        $widget->addResponsiveControl(
+            $prefix . 'icon_size',
             [
                 'label' => __('Size'),
                 'type' => Controls::SLIDER,
@@ -403,14 +422,14 @@ class IconList extends AbstractWidget
                     ],
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-list-icon i' => 'font-size: {{SIZE}}{{UNIT}};',
-                    '{{WRAPPER}} .gmt-icon-list-icon svg' => 'width: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget . ' i' => 'font-size: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} ' . $cssTarget . ' svg' => 'width: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
 
-        $this->addResponsiveControl(
-            'icon_self_align',
+        $widget->addResponsiveControl(
+            $prefix . 'icon_self_align',
             [
                 'label' => __('Alignment'),
                 'type' => Controls::CHOOSE,
@@ -430,10 +449,117 @@ class IconList extends AbstractWidget
                 ],
                 'default' => '',
                 'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-list-icon' => 'text-align: {{VALUE}};',
+                    '{{WRAPPER}} ' . $cssTarget => 'text-align: {{VALUE}};',
                 ],
             ]
         );
+    }
+
+    /**
+     * @param ControlsStack $widget
+     * @param string $prefix
+     * @param string $cssTarget
+     * @param string $cssItemTarget
+     * @return void
+     * @throws BuilderException
+     */
+    public static function registerIconTextStyle(
+        ControlsStack $widget,
+        string $prefix = self::NAME . '_',
+        string $cssTarget = '.gmt-icon-list-text',
+        string $cssItemTarget = '.gmt-icon-list-item'
+    ) {
+        $widget->addControl(
+            $prefix . 'text_color',
+            [
+                'label' => __('Text Color'),
+                'type' => Controls::COLOR,
+                'default' => '',
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget => 'color: {{VALUE}};',
+                ],
+                'scheme' => [
+                    'type' => Color::NAME,
+                    'value' => Color::COLOR_2,
+                ],
+            ]
+        );
+
+        $widget->addControl(
+            $prefix . 'text_color_hover',
+            [
+                'label' => __('Hover'),
+                'type' => Controls::COLOR,
+                'default' => '',
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssItemTarget . ':hover ' . $cssTarget => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $widget->addControl(
+            $prefix . 'text_indent',
+            [
+                'label' => __('Text Indent'),
+                'type' => Controls::SLIDER,
+                'range' => [
+                    'px' => [
+                        'max' => 50,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} ' . $cssTarget => DataHelper::isRtl() ? 'padding-right: {{SIZE}}{{UNIT}};' : 'padding-left: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $widget->addGroupControl(
+            TypographyGroup::NAME,
+            [
+                'name' => $prefix .  'icon_typography',
+                'selector' => '{{WRAPPER}} ' . $cssItemTarget,
+                'scheme' => Typography::TYPOGRAPHY_3,
+            ]
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function registerControls()
+    {
+        $this->startControlsSection(
+            'section_icon',
+            [
+                'label' => __('Icon List'),
+            ]
+        );
+
+        self::registerIconListInterface($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_icon_list',
+            [
+                'label' => __('List'),
+                'tab' => Controls::TAB_STYLE,
+            ]
+        );
+
+        self::registerIconListStyle($this);
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_icon_style',
+            [
+                'label' => __('Icon'),
+                'tab' => Controls::TAB_STYLE,
+            ]
+        );
+
+        self::registerIconIconStyle($this);
 
         $this->endControlsSection();
 
@@ -445,58 +571,7 @@ class IconList extends AbstractWidget
             ]
         );
 
-        $this->addControl(
-            'text_color',
-            [
-                'label' => __('Text Color'),
-                'type' => Controls::COLOR,
-                'default' => '',
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-list-text' => 'color: {{VALUE}};',
-                ],
-                'scheme' => [
-                    'type' => Color::NAME,
-                    'value' => Color::COLOR_2,
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'text_color_hover',
-            [
-                'label' => __('Hover'),
-                'type' => Controls::COLOR,
-                'default' => '',
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-list-item:hover .gmt-icon-list-text' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->addControl(
-            'text_indent',
-            [
-                'label' => __('Text Indent'),
-                'type' => Controls::SLIDER,
-                'range' => [
-                    'px' => [
-                        'max' => 50,
-                    ],
-                ],
-                'selectors' => [
-                    '{{WRAPPER}} .gmt-icon-list-text' => DataHelper::isRtl() ? 'padding-right: {{SIZE}}{{UNIT}};' : 'padding-left: {{SIZE}}{{UNIT}};',
-                ],
-            ]
-        );
-
-        $this->addGroupControl(
-            \Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup::NAME,
-            [
-                'name' => 'icon_typography',
-                'selector' => '{{WRAPPER}} .gmt-icon-list-item',
-                'scheme' => Typography::TYPOGRAPHY_3,
-            ]
-        );
+        self::registerIconTextStyle($this);
 
         $this->endControlsSection();
     }

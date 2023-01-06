@@ -58,6 +58,7 @@ class Text extends AbstractControlData
                 'categories' => [
                     TagsModule::TEXT_CATEGORY,
                 ],
+                'active' => true,
             ],
         ];
     }
