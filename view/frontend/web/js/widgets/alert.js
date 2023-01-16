@@ -19,7 +19,7 @@ define([
             },
         },
         $dismissButton: $,
-        _init: function () {
+        _initWidget: function () {
             this.$dismissButton.on( 'click', () => {
                 this.$element.fadeOut();
             } );

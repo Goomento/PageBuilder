@@ -89,11 +89,6 @@ $widget->addRenderAttribute('video-wrapper', 'class', 'gmt-open-' . ($settings['
                 'data-gmt-lightbox' => Zend_Json::encode($lightboxOptions),
             ]);
 
-            if ($block->isEnteredBuilderMode()) {
-                $widget->addRenderAttribute('image-overlay', [
-                    'class' => 'gmt-clickable',
-                ]);
-            }
         } else {
             $widget->addRenderAttribute('image-overlay', 'style', 'background-image: url(' . $settings['video_image_overlay']['url'] ?? '' . ');');
         } ?>

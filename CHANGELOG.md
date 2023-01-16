@@ -1,5 +1,9 @@
 # Magento 2 Goomento Page Builder
 
+## 0.4.1 Fixed mirror bugs
+- Fixed mirror bugs
+- Added `progress.js` widget
+
 ## 0.4.0 Optimize speed of loading
 - Optimize speed of loading
 - Optimize code of use

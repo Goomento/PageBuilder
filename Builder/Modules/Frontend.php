@@ -109,7 +109,7 @@ class Frontend extends AbstractApp
             [
                 'jquery',
                 'dialogs-manager',
-                'waypoints',
+                'jquery-waypoints',
                 'goomento-frontend-modules',
             ]
         );

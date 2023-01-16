@@ -75,6 +75,23 @@ class Button extends AbstractWidget
         string $prefix = self::NAME . '_'
     ) {
         $widget->addControl(
+            $prefix . 'type',
+            [
+                'label' => __('Type'),
+                'type' => Controls::SELECT,
+                'default' => '',
+                'options' => [
+                    '' => __('Default'),
+                    'info' => __('Info'),
+                    'success' => __('Success'),
+                    'warning' => __('Warning'),
+                    'danger' => __('Danger'),
+                ],
+                'prefix_class' => 'gmt-button-',
+            ]
+        );
+
+        $widget->addControl(
             $prefix . 'text',
             [
                 'label' => __('Text'),

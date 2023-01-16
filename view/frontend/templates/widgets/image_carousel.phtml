@@ -47,12 +47,6 @@ foreach ($settings['image-carousel_carousel'] as $index => $attachment) {
             'data-gmt-lightbox-index' => $index,
         ]);
 
-        if ($block->isEnteredBuilderMode()) {
-            $widget->addRenderAttribute($linkKey, [
-                'class' => 'gmt-clickable',
-            ]);
-        }
-
         if (! empty($link['is_external'])) {
             $widget->addRenderAttribute($linkKey, 'target', '_blank');
         }

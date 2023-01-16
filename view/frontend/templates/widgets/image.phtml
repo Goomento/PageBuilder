@@ -45,13 +45,7 @@ if ($link) {
         'href' => $link['url'],
         'data-gmt-open-lightbox' => $settings['image_open_lightbox'],
     ]);
-
-    if ($block->isEnteredBuilderMode()) {
-        $widget->addRenderAttribute('link', [
-            'class' => 'gmt-clickable',
-        ]);
-    }
-
+    
     if (!empty($link['is_external'])) {
         $widget->addRenderAttribute('link', 'target', '_blank');
     }

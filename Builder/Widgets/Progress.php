@@ -13,13 +13,18 @@ use Goomento\PageBuilder\Builder\Base\ControlsStack;
 use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Schemes\Color;
-use Goomento\PageBuilder\Builder\Schemes\Typography;
 use Goomento\PageBuilder\Exception\BuilderException;
 
 class Progress extends AbstractWidget
 {
+    /**
+     * @inheirtDoc
+     */
     const NAME = 'progress';
 
+    /**
+     * @inheirtDoc
+     */
     protected $template = 'Goomento_PageBuilder::widgets/process.phtml';
 
     /**
@@ -28,6 +33,14 @@ class Progress extends AbstractWidget
     public function getStyleDepends()
     {
         return ['goomento-widgets'];
+    }
+
+    /**
+     * @inheirtDoc
+     */
+    public function getScriptDepends()
+    {
+        return ['goomento-widget-progress'];
     }
 
     /**

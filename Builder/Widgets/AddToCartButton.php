@@ -107,7 +107,7 @@ class AddToCartButton extends AbstractWidget
         $this->removeControl($prefixKey . 'link');
 
         $this->addControl(
-            $prefixKey . 'tag',
+            $prefixKey . 'html_tag',
             [
                 'type' => Controls::HIDDEN,
                 'default' => 'button',
@@ -115,7 +115,7 @@ class AddToCartButton extends AbstractWidget
         );
 
         $this->addControl(
-            $prefixKey . 'type',
+            $prefixKey . 'html_type',
             [
                 'type' => Controls::HIDDEN,
                 'default' => 'submit',

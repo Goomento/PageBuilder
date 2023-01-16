@@ -6,6 +6,7 @@
 define([
     'underscore',
     'jquery',
+    'jquery-waypoints',
     'jquery/ui',
     'goomento-frontend'
 ], function (_, $) {
@@ -24,21 +25,27 @@ define([
          */
         _create: function() {
             this.$element = $(this.element);
-            this.isEdit = this.$element.hasClass( 'gmt-element-edit-mode' );
+            this.isEdit = this.$element.hasClass( 'gmt-element-edit-mode' ) || this.$element.parent().hasClass( 'gmt-element-edit-mode' );
             if (!_.isEmpty(this.options.selectors)) {
                 _.each(this.options.selectors, (selector, key) => {
                     this[`$${key}`] = this.$element.find(selector);
                 });
             }
-            this._init();
+
+            goomentoFrontend.waypoint(this.$element, this._onFocus.bind(this));
+
+            this._initWidget();
         },
         /**
          * On initializing widget
          * @private
          */
-        _init: function () {
-            // Add widget code here
-        },
+        _initWidget: $.noop,
+        /**
+         * On widget focusing
+         * @private
+         */
+        _onFocus: $.noop
     });
 
     return $.goomento.base;

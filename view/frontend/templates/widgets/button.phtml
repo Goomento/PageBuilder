@@ -43,14 +43,14 @@ if (!empty($settings['button_size'])) {
     $widget->addRenderAttribute('button', 'class', 'gmt-size-' . $settings['button_size']);
 }
 
-if (!empty($settings['button_type'])) {
+if (!empty($settings['button_html_type'])) {
     $widget->addRenderAttribute('button', 'type', $settings['button_type']);
 }
 
 if ($settings['button_hover_animation']) {
     $widget->addRenderAttribute('button', 'class', 'gmt-animation-' . $settings['button_hover_animation']);
 }
-$buttonTag = !empty($settings['button_tag']) ? $settings['button_tag'] : 'a';
+$buttonTag = !empty($settings['button_html_tag']) ? $settings['button_html_tag'] : 'a';
 ?>
     <div <?= /** @noEscape */ $widget->getRenderAttributeString('wrapper'); ?>>
         <<?= /** @noEscape */ $buttonTag ?> <?= /** @noEscape */ $widget->getRenderAttributeString('button'); ?>>

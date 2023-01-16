@@ -732,10 +732,10 @@ EDITOR_WAPPER;
         }
 
         $this->templateVariables = [
-            'editor' => StateHelper::isEditorMode(),
-            'buildable' => StateHelper::isBuildable(),
-            'adminhtml' => StateHelper::isAdminhtml(),
-            'frontend' => StateHelper::isFrontend(),
+            'is_editor' => StateHelper::isEditorMode(),
+            'is_buildable' => StateHelper::isBuildable(),
+            'is_adminhtml' => StateHelper::isAdminhtml(),
+            'is_frontend' => StateHelper::isFrontend(),
         ];
     }
 
@@ -745,7 +745,7 @@ EDITOR_WAPPER;
      */
     public function filterTemplate(string $content) : string
     {
-        $pattern = '/\s*<!\-\-\s(gmt):(\S+)\s\-\->(.*)?<!\-\-\s\/(gmt):\2\s\-\->/sU';
+        $pattern = '/\s*<!\-\-\s(gmt_state):(\S+)\s\-\->(.*)?<!\-\-\s\/(gmt_state):\2\s\-\->/sU';
 
         $result = preg_replace_callback($pattern, function ($matches) {
             $this->initTemplateVariables();

@@ -10,7 +10,6 @@ namespace Goomento\PageBuilder\Traits;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
-use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Model\ContentDataProcessor;
 use Magento\Framework\DataObject;
 use Magento\Framework\Escaper;
@@ -40,26 +39,6 @@ trait TraitWidgetBlock
     }
 
     /**
-     * Check whether builder mode or not
-     *
-     * @return bool
-     */
-    public function isEnteredBuilderMode() : bool
-    {
-        return (bool) StateHelper::isBuildable();
-    }
-
-    /**
-     * Check whether editor mode or not
-     *
-     * @return bool
-     */
-    public function isEnteredEditorMode() : bool
-    {
-        return (bool) StateHelper::isEditorMode();
-    }
-
-    /**
      * @return mixed
      */
     public function setWidget(AbstractWidget $widget) : Template
@@ -85,7 +64,7 @@ trait TraitWidgetBlock
      * @param array $settings
      * @return array
      */
-    private function parseSettingsByPrefix(string $prefix, array $settings) : array
+    public static function parseSettingsByPrefix(string $prefix, array $settings) : array
     {
         $result = [];
         foreach ($settings as $key => $value) {
@@ -104,7 +83,7 @@ trait TraitWidgetBlock
             }
 
             if (!is_scalar($value)) {
-                $parsedValue = $this->parseSettingsByPrefix($prefix, (array) $value);
+                $parsedValue = self::parseSettingsByPrefix($prefix, (array) $value);
             } else {
                 $testedValue = substr((string) $value, 0, strlen($prefix)) === $prefix;
                 $parsedValue = $testedValue ? substr($value, strlen($prefix)) : $value;

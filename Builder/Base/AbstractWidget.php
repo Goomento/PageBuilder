@@ -653,15 +653,15 @@ abstract class AbstractWidget extends AbstractElement
         }
 
         ?>
-        <!-- gmt:editor -->
+        <!-- gmt_state:is_editor -->
             <<?= /** @noEscape */ $wrapperTag ?> <?= /** @noEscape */ $this->getRenderAttributeString($wrapperElementKey) ?>>
-        <!-- /gmt:editor -->
+        <!-- /gmt_state:is_editor -->
 
             <?= /** @noEscape */ $contentHtml ?>
 
-        <!-- gmt:editor -->
+        <!-- gmt_state:is_editor -->
             </<?= /** @noEscape */ $wrapperTag ?>>
-        <!-- /gmt:editor -->
+        <!-- /gmt_state:is_editor -->
         <?php
     }
 

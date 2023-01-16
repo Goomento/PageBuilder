@@ -453,7 +453,7 @@ class Accordion extends AbstractWidget
         $this->startControlsSection(
             'section_title_style',
             [
-                'label' => __('Accordion'),
+                'label' => __('General'),
                 'tab' => Controls::TAB_STYLE,
             ]
         );

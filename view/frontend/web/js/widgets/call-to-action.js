@@ -29,7 +29,7 @@ define([
          * Init
          * @private
          */
-        _init: function () {
+        _initWidget: function () {
             if (!this._validateInSeconds()) {
                 return;
             }

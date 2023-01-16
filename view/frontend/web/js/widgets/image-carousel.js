@@ -116,7 +116,7 @@ define([
 
             return swiperOptions;
         },
-        _init: function () {
+        _initWidget: function () {
             new Swiper(this.$carousel, this.getSwiperSettings());
         }
     });

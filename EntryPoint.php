@@ -57,9 +57,7 @@ class EntryPoint extends BuilderRegister
         ThemeHelper::registerScript(
             'jquery-numerator',
             'Goomento_PageBuilder/lib/jquery-numerator/jquery-numerator.min',
-            [
-                'jquery'
-            ]
+            ['jquery']
         );
 
         ThemeHelper::registerScript(
@@ -85,7 +83,7 @@ class EntryPoint extends BuilderRegister
         );
 
         ThemeHelper::registerScript(
-            'waypoints',
+            'jquery-waypoints',
             'Goomento_PageBuilder/lib/waypoints/waypoints.min'
         );
 
@@ -122,6 +120,11 @@ class EntryPoint extends BuilderRegister
         ThemeHelper::registerScript(
             'goomento-widget-alert',
             'Goomento_PageBuilder/js/widgets/alert'
+        );
+
+        ThemeHelper::registerScript(
+            'goomento-widget-progress',
+            'Goomento_PageBuilder/js/widgets/progress'
         );
     }
 

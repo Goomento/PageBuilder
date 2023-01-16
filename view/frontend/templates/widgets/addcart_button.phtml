@@ -64,8 +64,7 @@ if (!empty($postParams)):
             <?= $block->getBlockHtml('formkey') ?>
             <?= $block->getWidgetHtml('button') ?>
         </form>
-        <?php if (!$block->isEnteredEditorMode()): ?>
-            <script type="text/x-magento-init">
+        <script type="text/x-magento-init">
                 {
                     "[data-role=tocart-form]": {
                         "catalogAddToCart": {
@@ -76,7 +75,6 @@ if (!empty($postParams)):
                     }
                 }
         </script>
-        <?php endif; ?>
     </div>
     <?php
 endif;
