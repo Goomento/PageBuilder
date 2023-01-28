@@ -37,6 +37,14 @@ class TextEditor extends AbstractWidget
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getScriptDepends()
+    {
+        return ['goomento-widget-text-editor'];
+    }
+
+    /**
      * @inheirtDoc
      */
     public function getStyleDepends()

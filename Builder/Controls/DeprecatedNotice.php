@@ -28,12 +28,12 @@ class DeprecatedNotice extends AbstractControlUi
         <span class="gmt-control-title">{{{ data.label }}}</span>
         <#
         }
-        let notice = goomento.helpers.i18n( 'The <strong>%1$s</strong> widget has been deprecated since %2$s %3$s.', [ data.widget, data.plugin, data.since ] );
+        let notice = jQuery.mage.__( 'The <strong>%1$s</strong> widget has been deprecated since %2$s %3$s.', [ data.widget, data.plugin, data.since ] );
         if ( data.replacement ) {
-            notice += '<br>' + goomento.helpers.i18n( 'It has been replaced by <strong>%1$s</strong>', [ data.replacement ] );
+            notice += '<br>' + jQuery.mage.__( 'It has been replaced by <strong>%1$s</strong>', [ data.replacement ] );
         }
         if ( data.last ) {
-            notice += '<br>' + goomento.helpers.i18n( 'Note that %1$s will be completely removed once %2$s %3$s is released', [ data.widget, data.plugin, data.last ] );
+            notice += '<br>' + jQuery.mage.__( 'Note that %1$s will be completely removed once %2$s %3$s is released', [ data.widget, data.plugin, data.last ] );
         }
         #>
         <div class="gmt-control-deprecated-notice gmt-panel-alert gmt-panel-alert-warning">{{{ notice }}}</div>

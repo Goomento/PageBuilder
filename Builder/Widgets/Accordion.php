@@ -55,6 +55,14 @@ class Accordion extends AbstractWidget
     }
 
     /**
+     * @inheirtDoc
+     */
+    public function getScriptDepends()
+    {
+        return ['goomento-widget-accordion'];
+    }
+
+    /**
      * @inheritDoc
      */
     public function getKeywords()
@@ -106,7 +114,7 @@ class Accordion extends AbstractWidget
     ) {
         $repeater = new Repeater;
 
-        self::registerAccordionItemInterface($repeater);
+        self::registerAccordionItemInterface($repeater, $prefix);
 
         $widget->addControl(
             $prefix . 'tabs',

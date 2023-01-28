@@ -206,26 +206,14 @@ class Editor
 
         ThemeHelper::registerScript(
             'nouislider',
-            'Goomento_PageBuilder/lib/nouislider/nouislider.min',
+            'Goomento_PageBuilder/js/view/nouislider-wrapper',
             ['jquery']
-        );
-
-        ThemeHelper::inlineScript(
-            'nouislider',
-            "require(['nouislider'], nouislider => {window.noUiSlider = window.noUiSlider || nouislider});",
-            'before'
         );
 
         ThemeHelper::registerScript(
             'perfect-scrollbar',
-            'Goomento_PageBuilder/lib/perfect-scrollbar/js/perfect-scrollbar.min',
+            'Goomento_PageBuilder/js/view/perfect-scrollbar-wrapper',
             ['jquery']
-        );
-
-        ThemeHelper::inlineScript(
-            'perfect-scrollbar',
-            "require(['perfect-scrollbar'], PerfectScrollbar => {window.PerfectScrollbar = window.PerfectScrollbar || PerfectScrollbar});",
-            'before'
         );
 
         ThemeHelper::registerScript(
@@ -236,15 +224,8 @@ class Editor
 
         ThemeHelper::registerScript(
             'nprogress',
-            'Goomento_PageBuilder/lib/nprogress/nprogress.min'
+            'Goomento_PageBuilder/js/view/nprogress-wrapper'
         );
-
-        ThemeHelper::inlineScript(
-            'nprogress',
-            "require(['nprogress'], NProgress => {window.NProgress = window.NProgress || NProgress});",
-            'before'
-        );
-
 
         ThemeHelper::registerScript(
             'jquery-select2',
@@ -254,13 +235,7 @@ class Editor
 
         ThemeHelper::registerScript(
             'ace',
-            'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace'
-        );
-
-        ThemeHelper::registerScript(
-            'ace-language-tools',
-            'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ext-language_tools',
-            ['ace']
+            'Goomento_PageBuilder/js/view/ace-wrapper'
         );
 
         ThemeHelper::registerScript(
@@ -486,7 +461,6 @@ class Editor
                 'jquery-select2',
                 'flatpickr',
                 'ace',
-                'ace-language-tools',
                 'jquery-hover-intent',
                 'imagesloaded',
             ],
@@ -667,6 +641,7 @@ class Editor
      */
     private function getEditorConfig()
     {
+        // TODO: moved this to template
         $addMedia = (string) __('Add Media');
         return <<<EDITOR_WAPPER
 <div id="goomentoEditor-wrap" class="gmt-editor-wrap tmce-active">
@@ -737,6 +712,8 @@ EDITOR_WAPPER;
             'is_adminhtml' => StateHelper::isAdminhtml(),
             'is_frontend' => StateHelper::isFrontend(),
         ];
+
+        $this->templateVariables['is_live'] = !$this->templateVariables['is_buildable'];
     }
 
     /**

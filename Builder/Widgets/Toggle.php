@@ -40,6 +40,13 @@ class Toggle extends AbstractWidget
         return ['goomento-widgets'];
     }
 
+    /**
+     * @inheirtDoc
+     */
+    public function getScriptDepends()
+    {
+        return ['goomento-widget-toggle'];
+    }
 
     /**
      * @inheritDoc

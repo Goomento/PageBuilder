@@ -58,7 +58,7 @@ class Counter extends AbstractWidget
      */
     public function getScriptDepends()
     {
-        return [ 'jquery-numerator' ];
+        return [ 'goomento-widget-counter' ];
     }
 
     /**

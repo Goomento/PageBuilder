@@ -18,7 +18,7 @@ customize and redesign with your new creativity. All this process has an absence
 
 [Why Us](https://github.com/Goomento/PageBuilder/wiki/Why-Goomento)
 
-[Free Built-in Widgets](https://github.com/Goomento/PageBuilder/wiki/Free-Built-in-Widgets)
+[Widgets](https://github.com/Goomento/PageBuilder/wiki/Free-Built-in-Widgets)
 
 [How To Use](https://github.com/Goomento/DocBuilder/blob/master/Guide/HOW_TO_USE.md)
 
@@ -58,7 +58,7 @@ Enable these caches in `Production mode` for best performance at `System > Tools
 ```xml
 <block class="PageBuilderRenderer" name="unique-block-name">
     <arguments>
-        <argument name="identifier" xsi:type="string">home-page-identifier</argument>
+        <argument name="identifier" xsi:type="string">your-content-identifier</argument>
     </arguments>
 </block>
 ```
@@ -68,7 +68,7 @@ Enable these caches in `Production mode` for best performance at `System > Tools
 ```php
 <?= $block->getLayout()
     ->getBlock('PageBuilderRenderer')
-    ->setIdentifier('home-page-identifier')
+    ->setIdentifier('your-content-identifier')
     ->toHtml(); ?>
 ```
 
@@ -103,13 +103,13 @@ app/design/frontend/<Vendor>/
 
 - `<widget.js>` is `.js` file - which copied from [js directory](https://github.com/Goomento/PageBuilder/tree/master/view/frontend/web/js/widgets).
 
-- For configurable of widget, check out this [Goomento/PageBuilder/Builder/Widgets](https://github.com/Goomento/PageBuilder/tree/master/Builder/Widgets)
+- For configurable of widget, check out this [widget directory](https://github.com/Goomento/PageBuilder/tree/master/Builder/Widgets)
 
 ## Version Compatible
 
-Magento Community Edition (CE): 2.3.x, 2.4.0 - 2.4.5
+Magento Community Edition (CE): 2.3.x, 2.4.0 - 2.4.5*
 
-Magento Enterprise Edition (EE): 2.3.x, 2.4.0 - 2.4.5
+Magento Enterprise Edition (EE): 2.3.x, 2.4.0 - 2.4.5*
 
 ## Open An Issue And Contribution
 

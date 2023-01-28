@@ -25,7 +25,7 @@ class LiveEditorButton extends AbstractGenericButton implements ButtonProviderIn
         $data = [];
         if ($this->getContentId()) {
             $data = [
-                'label' => __('Page Builder'),
+                'label' => __('Editor'),
                 'class' => 'live_editor',
                 'on_click' => sprintf("location.href = '%s';", $this->getLiveEditorUrl()),
                 'sort_order' => 20,

@@ -54,6 +54,14 @@ class Tabs extends AbstractWidget
     }
 
     /**
+     * @inheirtDoc
+     */
+    public function getScriptDepends()
+    {
+        return ['goomento-widget-tabs'];
+    }
+
+    /**
      * @inheritDoc
      */
     public function getKeywords()

@@ -126,6 +126,36 @@ class EntryPoint extends BuilderRegister
             'goomento-widget-progress',
             'Goomento_PageBuilder/js/widgets/progress'
         );
+
+        ThemeHelper::registerScript(
+            'goomento-widget-counter',
+            'Goomento_PageBuilder/js/widgets/counter'
+        );
+
+        ThemeHelper::registerScript(
+            'goomento-widget-text-editor',
+            'Goomento_PageBuilder/js/widgets/text-editor'
+        );
+
+        ThemeHelper::registerScript(
+            'goomento-widget-tabs',
+            'Goomento_PageBuilder/js/widgets/tabs'
+        );
+
+        ThemeHelper::registerScript(
+            'goomento-widget-toggle',
+            'Goomento_PageBuilder/js/widgets/toggle'
+        );
+
+        ThemeHelper::registerScript(
+            'goomento-widget-accordion',
+            'Goomento_PageBuilder/js/widgets/accordion'
+        );
+
+        ThemeHelper::registerScript(
+            'goomento-widget-video',
+            'Goomento_PageBuilder/js/widgets/video'
+        );
     }
 
     /**

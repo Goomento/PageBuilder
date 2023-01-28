@@ -19,13 +19,13 @@ define([
         /**
          * On live edit mode
          */
-        isEdit: false,
+        isEditor: false,
         /**
          * @private
          */
         _create: function() {
             this.$element = $(this.element);
-            this.isEdit = this.$element.hasClass( 'gmt-element-edit-mode' ) || this.$element.parent().hasClass( 'gmt-element-edit-mode' );
+            this.isEditor = this.$element.hasClass( 'gmt-element-edit-mode' ) || this.$element.parent().hasClass( 'gmt-element-edit-mode' );
             if (!_.isEmpty(this.options.selectors)) {
                 _.each(this.options.selectors, (selector, key) => {
                     this[`$${key}`] = this.$element.find(selector);

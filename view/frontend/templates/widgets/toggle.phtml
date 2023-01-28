@@ -14,46 +14,52 @@ use Goomento\PageBuilder\Builder\Managers\Icons;
 $widget = $block->getWidget();
 $settings = $block->getSettingsForDisplay();
 
-$idInt = substr((string) $block->getIdInt(), 0, 3);
+$idInt = substr((string)$block->getIdInt(), 0, 3);
 
 $hasIcon = !empty($settings['toggle_selected_icon']['value']); ?>
 <div class="gmt-toggle" role="tablist">
     <?php
     foreach ($settings['toggle_tabs'] as $index => $item):
-        $tabCount = $index + 1;
+    $tabCount = $index + 1;
 
-        $tabTitleSettingKey = 'tabs.' . $index . '.tab_title';
-        $tabContentSettingKey = 'tabs.' . $index . '.tab_content';
+    $tabTitleSettingKey = 'toggle_tabs.' . $index . '.toggle_tab_title';
+    $tabContentSettingKey = 'toggle_tabs.' . $index . '.toggle_tab_content';
 
-        $widget->addRenderAttribute($tabTitleSettingKey, [
-            'id' => 'gmt-tab-title-' . $idInt . $tabCount,
-            'class' => [ 'gmt-tab-title' ],
-            'data-tab' => $tabCount,
-            'role' => 'tab',
-            'aria-controls' => 'gmt-tab-content-' . $idInt . $tabCount,
-        ]);
+    $widget->addRenderAttribute($tabTitleSettingKey, [
+        'id' => 'gmt-tab-title-' . $idInt . $tabCount,
+        'class' => ['gmt-tab-title'],
+        'data-tab' => $tabCount,
+        'role' => 'tab',
+        'aria-controls' => 'gmt-tab-content-' . $idInt . $tabCount,
+    ]);
 
-        $widget->addRenderAttribute($tabContentSettingKey, [
-            'id' => 'gmt-tab-content-' . $idInt . $tabCount,
-            'class' => [ 'gmt-tab-content', 'gmt-clearfix' ],
-            'data-tab' => $tabCount,
-            'role' => 'tabpanel',
-            'aria-labelledby' => 'gmt-tab-title-' . $idInt . $tabCount,
-        ]);
-
-        $widget->addInlineEditingAttributes($tabContentSettingKey, 'advanced'); ?>
+    $widget->addRenderAttribute($tabContentSettingKey, [
+        'id' => 'gmt-tab-content-' . $idInt . $tabCount,
+        'class' => ['gmt-tab-content', 'gmt-clearfix'],
+        'data-tab' => $tabCount,
+        'role' => 'tabpanel',
+        'aria-labelledby' => 'gmt-tab-title-' . $idInt . $tabCount,
+    ]); ?>
     <div class="gmt-toggle-item">
         <<?= $block->escapeHtml($settings['toggle_title_html_tag']); ?>
-        <?= /** @noEscape */ $widget->getRenderAttributeString($tabTitleSettingKey); ?>>
+        <?= /** @noEscape */
+        $widget->getRenderAttributeString($tabTitleSettingKey); ?>>
         <?php if ($hasIcon): ?>
-            <span class="gmt-toggle-icon gmt-toggle-icon-<?= $block->escapeHtml($settings['toggle_icon_align']); ?>" aria-hidden="true">
-                <span class="gmt-toggle-icon-closed"><?php Icons::renderIcon($settings['toggle_selected_icon']); ?></span>
-                <span class="gmt-toggle-icon-opened"><?php Icons::renderIcon($settings['toggle_selected_active_icon'], [ 'class' => 'gmt-toggle-icon-opened' ]); ?></span>
+            <span class="gmt-toggle-icon gmt-toggle-icon-<?= $block->escapeHtml($settings['toggle_icon_align']); ?>"
+                  aria-hidden="true">
+                <span
+                    class="gmt-toggle-icon-closed"><?php Icons::renderIcon($settings['toggle_selected_icon']); ?></span>
+                <span
+                    class="gmt-toggle-icon-opened"><?php Icons::renderIcon($settings['toggle_selected_active_icon'], ['class' => 'gmt-toggle-icon-opened']); ?></span>
             </span>
         <?php endif; ?>
-        <a href=""><?= /** @noEscape */ $item['toggle_tab_title']; ?></a>
-        </<?= $block->escapeHtml($settings['toggle_title_html_tag']); ?>>
-        <div <?= /** @noEscape */ $widget->getRenderAttributeString($tabContentSettingKey); ?>><?= /** @noEscape */ $item['toggle_tab_content']; ?></div>
+        <a href=""><?= /** @noEscape */
+            $item['toggle_tab_title']; ?></a>
+    </<?= $block->escapeHtml($settings['toggle_title_html_tag']); ?>>
+    <div <?= /** @noEscape */
+    $widget->getRenderAttributeString($tabContentSettingKey); ?>>
+        <?php $widget->printInlineEditingContent($tabContentSettingKey, 'advanced'); ?>
     </div>
+</div>
 <?php endforeach; ?>
 </div>

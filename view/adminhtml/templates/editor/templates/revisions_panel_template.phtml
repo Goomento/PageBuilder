@@ -62,8 +62,8 @@ use Magento\Framework\View\Element\Template;
         <div class="gmt-revision-item__details">
             <div class="gmt-revision-date">{{{ goomento.helpers.formatDatetime(date) }}} &
                 <span class="gmt-revision-author-detail">
-                    <span class="gmt-revision-type">{{{ goomento.helpers.i18n( type ) }}}</span>
-                    <span class="gmt-revision-author">{{{ goomento.helpers.i18n( 'by' ) }}} {{{ author }}}</span>
+                    <span class="gmt-revision-type">{{{ jQuery.mage.__( type ) }}}</span>
+                    <span class="gmt-revision-author">{{{ jQuery.mage.__( 'by' ) }}} {{{ author }}}</span>
                 </span>
             </div>
             <div class="gmt-revision-meta">

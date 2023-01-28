@@ -119,7 +119,7 @@ trait TraitWidgetBlock
             $settings = $this->getSettingsForDisplay();
         }
 
-        $configKey = $this->getWidget()::buildPrefixKey($configKey);
+        $configKey = $this->getWidget()->buildPrefixKey($configKey);
         if (null === $linkSettingKey) {
             $linkSettingKey = $configKey;
         }

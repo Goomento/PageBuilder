@@ -19,7 +19,7 @@ define([
         },
         _initWidget: function () {
             if ($('#fb-root').length) {
-                if (goomentoFrontend.isEditMode() && typeof window.FB !== 'undefined') {
+                if (this.isEditor && typeof window.FB !== 'undefined') {
                     window.FB.XFBML.parse()
                 }
                 return;

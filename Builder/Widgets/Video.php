@@ -63,6 +63,14 @@ class Video extends AbstractWidget
     }
 
     /**
+     * @inheirtDoc
+     */
+    public function getScriptDepends()
+    {
+        return ['goomento-widget-video'];
+    }
+
+    /**
      * @inheritDoc
      */
     public function getKeywords()

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
 use Goomento\PageBuilder\Builder\Widgets\ImageCarousel;
+use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
 
 /**
  * @var Widget $block
@@ -22,9 +23,10 @@ if (empty($settings['image-carousel_carousel'])) {
 $slides = [];
 
 foreach ($settings['image-carousel_carousel'] as $index => $attachment) {
-    $imageUrl = $attachment['url'];
 
-    $imageHtml = '<img class="swiper-slide-image" src="' . $block->escapeUrl($imageUrl) . '" alt="" />';
+    $imageHtml = ImageSizeGroup::getAttachmentImageHtml(array_merge($settings, [
+        'image-carousel_thumbnail' => $attachment
+    ]), 'image-carousel_thumbnail');
 
     $linkTag = '';
 
