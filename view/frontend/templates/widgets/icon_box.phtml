@@ -17,15 +17,15 @@ $widget = $block->getWidget();
 $settings = $widget->getSettingsForDisplay();
 
 $iconTag = 'span';
-if (!empty($settings['icon-box_link']['url'])) {
-    $widget->addRenderAttribute('icon-box_link', 'href', $settings['link']['url']);
+if (!empty($settings['icon-box_icon_link']['url'])) {
+    $widget->addRenderAttribute('link', 'href', $settings['icon-box_icon_link']['url']);
     $iconTag = 'a';
 
-    if ($settings['icon-box_link']['is_external']) {
+    if ($settings['icon-box_icon_link']['is_external']) {
         $widget->addRenderAttribute('link', 'target', '_blank');
     }
 
-    if ($settings['icon-box_link']['nofollow']) {
+    if ($settings['icon-box_icon_link']['nofollow']) {
         $widget->addRenderAttribute('link', 'rel', 'nofollow');
     }
 }

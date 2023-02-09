@@ -10,6 +10,8 @@ declare(strict_types=1);
  * @var Template $block
  */
 
+use Goomento\PageBuilder\Helper\Data;
+use Goomento\PageBuilder\Helper\DataHelper;
 use Magento\Backend\Block\Template;
 
 ?>
@@ -36,4 +38,17 @@ use Magento\Backend\Block\Template;
         <div id="gmt-navigator"></div>
     </div>
     <?= $block->getChildHtml() ?>
+
+    <?php if (!empty(DataHelper::getConnectorToken())) : ?>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Goomento_PageBuilder/js/browser-check": {
+                    "token": "<?= $block->escapeUrl(DataHelper::getConnectorToken()) ?>",
+                    "endpoint": "<?= $block->escapeUrl(Data::CONNECTOR_BROWSER_CHECK_ENDPOINT) ?>"
+                }
+            }
+        }
+    </script>
+    <?php endif; ?>
 </div>

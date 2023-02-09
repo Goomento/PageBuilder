@@ -189,12 +189,27 @@ abstract class AbstractWidget extends AbstractElement
 
     /**
      * Render preview in widget sidebar
+     * Example data: [
+     *      'image' => 'https://example.com/image.png',
+     *      'link'  => 'https://example.com',
+     *      'title' => 'Click Here',
+     * ]
      *
      * @return array
      */
     public function getPreviewHelper() : array
     {
         return [];
+    }
+
+    /**
+     * Allow edit drag/drop in editor
+     *
+     * @return bool
+     */
+    public function isBuildable() : bool
+    {
+        return true;
     }
 
     /**
@@ -279,6 +294,7 @@ abstract class AbstractWidget extends AbstractElement
             'show_in_panel' => $this->showInPanel(),
             'render_preview' => $this->renderPreview(),
             'preview_helper' => $this->getPreviewHelper(),
+            'is_buildable' => $this->isBuildable(),
         ];
 
         $stack = ObjectManagerHelper::getControlsManager()->getElementStack($this);

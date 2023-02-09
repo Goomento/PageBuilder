@@ -35,7 +35,8 @@ use Magento\Framework\View\Element\Template;
 </script>
 
 <script type="text/template" id="tmpl-gmt-element-library-element">
-    <div class="gmt-element tooltip-target" data-tooltip="Drag me">
+    <div class="gmt-element
+    <#  if ( isBuildable ) {  #> tooltip-target" data-tooltip="<?= $block->escapeHtml(__('Drag me')) ?><# } #>" >
 
         <div class="icon">
             <i class="{{ icon }}" aria-hidden="true"></i>
@@ -47,8 +48,20 @@ use Magento\Framework\View\Element\Template;
 
         <#  if ( !_.isEmpty(previewHelper) ) {  #>
             <div class="gmt-element-preview-helper">
+                <#  if ( previewHelper.link ) {  #>
+                    <a href="{{ previewHelper.link }}" target="_blank">
+                <# } #>
+
                 <#  if ( previewHelper.image ) {  #>
-                    <img src="{{ previewHelper.image }}">
+                    <img class="gmt-element-preview-helper-image" src="{{ previewHelper.image }}">
+                <# } #>
+
+                <#  if ( previewHelper.title ) {  #>
+                    <div class="gmt-element-preview-helper-title">{{{ previewHelper.title }}}</div>
+                <# } #>
+
+                <#  if ( previewHelper.link ) {  #>
+                    </a>
                 <# } #>
             </div>
         <# } #>

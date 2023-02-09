@@ -15,13 +15,30 @@ class Data extends AbstractHelper
 {
     use TraitStaticInstances;
 
+    /**
+     * Config prefix for the whole system
+     */
     const PREFIX_XML_PATH = 'pagebuilder';
 
+    /**
+     * Active path
+     */
     const ACTIVE_XML_PATH = self::PREFIX_XML_PATH . '/general/active';
 
+    /**
+     * Magento config path for minify CSS files
+     */
     const DEV_CSS_MINIFY_FILES_XML_PATH = 'dev/css/minify_files';
 
+    /**
+     * Magento config path for minify JS files
+     */
     const DEV_JS_MINIFY_FILES_XML_PATH = 'dev/js/minify_files';
+
+    /**
+     * Use for purchased products by Goomento
+     */
+    const CONNECTOR_BROWSER_CHECK_ENDPOINT = 'https://goomento.com/rest/V1/token/browser-check';
 
     /**
      * @param $path
@@ -37,9 +54,17 @@ class Data extends AbstractHelper
     /**
      * @return bool
      */
-    public function isActive()
+    public function isActive() : bool
     {
         return (bool) $this->getConfig(self::ACTIVE_XML_PATH);
+    }
+
+    /**
+     * @return string
+     */
+    public function getConnectorToken() : string
+    {
+        return (string) $this->getBuilderConfig('connector/token');
     }
 
     /**

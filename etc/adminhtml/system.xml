@@ -22,6 +22,15 @@
                     <label />
                     <frontend_model>Goomento\PageBuilder\Model\Config\Frontend\Version</frontend_model>
                 </field>
+                <group id="commercial" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Connect To Goomento (Beta)</label>
+                    <field id="token" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="0">
+                        <label>Token</label>
+                        <comment><![CDATA[Use token key for activating purchased products from Goomento.
+                        <br/>By fulfilling this field, you agree to <a href="https://goomento.com/privacy-policy-cookie-restriction-mode" target="_blank">our policy</a>]]></comment>
+                        <config_path>pagebuilder/connector/token</config_path>
+                    </field>
+                </group>
             </group>
             <group id="import" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
                 <label>Import</label>

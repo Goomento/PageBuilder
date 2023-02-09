@@ -5,10 +5,10 @@
  * @link https://github.com/Goomento/PageBuilder
  */
 -->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-empty" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="pagebuilder_general"/>
     <body>
-        <referenceContainer name="content">
+        <container name="editor-content" as="editor-content">
             <block name="pagebuilder.editor" template="Goomento_PageBuilder::editor/live_editor.phtml">
                 <block name="pagebuilder.media_bucket" template="Goomento_PageBuilder::editor/templates/media_bucket.phtml" />
                 <block name="pagebuilder.editor.templates.editor_panel" template="Goomento_PageBuilder::editor/templates/editor_panel.phtml" />
@@ -20,11 +20,13 @@
                 <block name="pagebuilder.editor.templates.history_panel" template="Goomento_PageBuilder::editor/templates/history_panel_template.phtml" />
                 <block name="pagebuilder.editor.templates.library_layout" template="Goomento_PageBuilder::editor/templates/library_layout.phtml" />
             </block>
-        </referenceContainer>
+        </container>
 
         <attribute name="class" value="gmt-editor-active"/>
         <attribute name="class" value="gmt-editor-page"/>
 
+        <referenceContainer name="content" remove="true"/>
+        <referenceContainer name="js" remove="true"/>
         <referenceContainer name="requirejs-config" remove="true"/>
         <referenceContainer name="head.calendar" remove="true"/>
 

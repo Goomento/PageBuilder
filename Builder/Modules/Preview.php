@@ -77,8 +77,7 @@ class Preview
      */
     public function enqueueStyles()
     {
-        ObjectManagerHelper::getWidgetsManager()
-            ->enqueueWidgetsStyles();
+        ObjectManagerHelper::getWidgetsManager()->enqueueWidgetsStyles();
 
         $debugSuffix = Configuration::debug() ? '' : '.min';
 
@@ -89,14 +88,8 @@ class Preview
             'Goomento_PageBuilder/build/editor-preview' . $directionSuffix . $debugSuffix . '.css',
             [
                 'jquery-select2',
-                'inline-editor'
-            ],
-            Configuration::version()
-        );
-
-        ThemeHelper::registerStyle(
-            'inline-editor',
-            'Goomento_PageBuilder/lib/sofish/pen.css'
+                'pen'
+            ]
         );
 
         ThemeHelper::enqueueStyle('editor-preview');
@@ -115,12 +108,9 @@ class Preview
      */
     public function enqueueScripts()
     {
-        ObjectManagerHelper::getWidgetsManager()
-            ->enqueueWidgetsScripts();
-
         // For inline editor
-        ThemeHelper::enqueueScript('sofish-pen');
-
+        ThemeHelper::enqueueScript('pen');
+        ThemeHelper::enqueueScript('jquery-tipsy');
         /**
          * Preview enqueue scripts.
          *

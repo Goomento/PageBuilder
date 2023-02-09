@@ -542,9 +542,6 @@ class Section extends AbstractElement
                 'label' => __('Label'),
                 'type' => Controls::TEXT,
                 'frontend_available' => true,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => __('Close'),
                 'placeholder' => __('Close'),
                 'condition' => [
@@ -589,9 +586,6 @@ class Section extends AbstractElement
                 'label' => __('Text'),
                 'type' => Controls::TEXT,
                 'frontend_available' => true,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'default' => __('Confirm'),
                 'placeholder' => __('Confirm'),
                 'condition' => [
@@ -607,9 +601,6 @@ class Section extends AbstractElement
                 'label' => __('Link'),
                 'type' => Controls::URL,
                 'frontend_available' => true,
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'placeholder' => __('https://your-link.com'),
                 'condition' => [
                     'popup_buttons' => ['confirm', 'both'],
@@ -1271,9 +1262,6 @@ class Section extends AbstractElement
                 'label' => __('CSS ID'),
                 'type' => Controls::TEXT,
                 'default' => '',
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'title' => __('Add your custom id WITHOUT the Pound key. e.g: my-id'),
                 'description' => __('Please make sure the ID is unique and not used elsewhere on the page this element is displayed. This field allows <code>A-z 0-9</code> & underscore chars without spaces.'),
                 'label_block' => false,
@@ -1288,9 +1276,6 @@ class Section extends AbstractElement
                 'label' => __('CSS Classes'),
                 'type' => Controls::TEXT,
                 'default' => '',
-                'dynamic' => [
-                    'active' => true,
-                ],
                 'prefix_class' => '',
                 'title' => __('Add your custom class WITHOUT the dot. e.g: my-class'),
                 'label_block' => false,

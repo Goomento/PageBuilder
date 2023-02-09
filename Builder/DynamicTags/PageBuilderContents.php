@@ -8,22 +8,21 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\DynamicTags;
 
+use Goomento\PageBuilder\Block\Content;
 use Goomento\PageBuilder\Builder\Base\AbstractTag;
 use Goomento\PageBuilder\Builder\Managers\Tags;
-use Goomento\PageBuilder\Builder\Widgets\Magento\CmsBlock;
+use Goomento\PageBuilder\Builder\Widgets\PageBuilderContent;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
-use Magento\Cms\Block\Block;
-use Magento\Framework\View\Element\AbstractBlock;
 
-class CmsBlocks extends AbstractTag
+class PageBuilderContents extends AbstractTag
 {
     /**
      * @inheritDoc
      */
-    const NAME = 'cms_block';
+    const NAME = 'pagebuilder_content';
 
     /**
-     * @var AbstractBlock
+     * @var Content
      */
     protected $renderer;
 
@@ -48,7 +47,7 @@ class CmsBlocks extends AbstractTag
      */
     public function getTitle()
     {
-        return (string) __('CMS Block Content');
+        return (string) __('Page Builder Content');
     }
 
     /**
@@ -56,7 +55,7 @@ class CmsBlocks extends AbstractTag
      */
     protected function registerControls()
     {
-        CmsBlock::registerCmsBlockWidgetInterface($this, self::NAME . '_');
+        PageBuilderContent::registerPageBuilderContentInterface($this, static::NAME . '_');
     }
 
     /**
@@ -78,11 +77,11 @@ class CmsBlocks extends AbstractTag
     protected function getContentHtml(string $identifier)
     {
         if ($this->renderer === null) {
-            $this->renderer = ObjectManagerHelper::create(Block::class);
+            $this->renderer = ObjectManagerHelper::get(Content::class);
         }
 
         return $this->renderer
-            ->setBlockId($identifier)
+            ->setIdentifier($identifier)
             ->toHtml();
     }
 }

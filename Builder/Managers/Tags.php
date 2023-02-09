@@ -14,12 +14,12 @@ use Goomento\PageBuilder\Builder\DynamicTags\Urls;
 use Goomento\PageBuilder\Builder\DynamicTags\Images;
 use Goomento\PageBuilder\Builder\DynamicTags\CmsBlocks;
 use Goomento\PageBuilder\Builder\DynamicTags\CmsPages;
+use Goomento\PageBuilder\Builder\DynamicTags\PageBuilderContents;
 use Goomento\PageBuilder\Builder\Modules\Ajax;
 use Goomento\PageBuilder\Builder\Base\AbstractBaseTag;
 use Goomento\PageBuilder\Builder\Base\AbstractTag;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
-use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Traits\TraitComponentsLoader;
 use Zend_Json;
 
@@ -432,6 +432,7 @@ class Tags
             Images::NAME => Images::class,
             CmsBlocks::NAME => CmsBlocks::class,
             CmsPages::NAME => CmsPages::class,
+            PageBuilderContents::NAME => PageBuilderContents::class,
         ];
     }
 
@@ -466,6 +467,8 @@ class Tags
         foreach ($groups as $name => $group) {
             $this->registerGroup($name, $group);
         }
+
+        return $this->tagsGroups;
     }
 
     /**

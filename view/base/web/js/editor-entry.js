@@ -8,19 +8,20 @@ define([
     'jquery',
     'goomento-editor-engine',
     'moment',
+    'goomento-editor-introjs-config',
     'domReady!',
 ], function (
     _,
     $,
     App,
-    moment
+    moment,
+    introJsConfig
 ) {
     'use strict';
 
-    window.$ = window.$ || $;
-
     setTimeout(() => {
         window.goomento = window.goomento || new App;
+        window.moment = window.moment || moment;
         goomento.helpers = goomento.helpers || {};
         _.extend(goomento.helpers, {
             formatDatetime: datetime => {
@@ -31,6 +32,7 @@ define([
                 }
             }
         });
+        goomento.introJsConfig = introJsConfig;
         $( () => goomento.start() );
     }, 200);
 });

@@ -42,6 +42,11 @@ use Magento\Store\Model\ScopeInterface;
  * @see Data::isJsMinifyFilesEnabled()
  * @method static string getCustomMediaUrl()
  * @see Data::getCustomMediaUrl()
+ * @method static bool isModuleOutputEnabled(string $module)
+ * @see Data::isModuleOutputEnabled()Url()
+ * @see Data::getCustomMediaUrl()
+ * @method static string getConnectorToken()
+ * @see Data::getConnectorToken()
  */
 // phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class DataHelper

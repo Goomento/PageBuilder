@@ -463,6 +463,7 @@ class Editor
                 'ace',
                 'jquery-hover-intent',
                 'imagesloaded',
+                'introjs',
             ],
             [
                 'requirejs' => $requirejs
@@ -494,7 +495,7 @@ class Editor
 
         $config = [
             'version' => Configuration::version(),
-            'debug' => DataHelper::isDebugMode(),
+            'debug' => Configuration::debug(),
             'data' => $document->getElementsRawData(),
             'document' => $document->getConfig(),
             'current_revision_id' => $currentRevisionId,
@@ -516,7 +517,6 @@ class Editor
             'default_schemes' => ObjectManagerHelper::getSchemasManager()->getSchemesDefaults(),
             'settings' => ObjectManagerHelper::getSettingsManager()->getSettingsManagersConfig(),
             'system_schemes' => ObjectManagerHelper::getSchemasManager()->getSystemSchemes(),
-            'goomento_editor' => $this->getEditorConfig(),
             'tinymce_pre_init' => $this->getTinyMCEPreInit(),
             'additional_shapes' => Shapes::getAdditionalShapesForConfig(),
             'user' => [
@@ -606,6 +606,7 @@ class Editor
                 'google-font-inter',
                 'flatpickr',
                 'fontawesome',
+                'introjs',
             ]
         );
 
@@ -632,31 +633,6 @@ class Editor
             'plugins' => 'advlist autolink lists link charmap media noneditable table contextmenu paste code help table textcolor colorpicker',
             'fontsize_formats' => '8px 9px 10px 11px 12px 14px 18px 24px 30px 36px 48px 60px 72px 96px',
         ];
-    }
-
-    /**
-     * Get default editor config.
-     *
-     *
-     */
-    private function getEditorConfig()
-    {
-        // TODO: moved this to template
-        $addMedia = (string) __('Add Media');
-        return <<<EDITOR_WAPPER
-<div id="goomentoEditor-wrap" class="gmt-editor-wrap tmce-active">
-    <div id="goomentoEditor-editor-tools" class="gmt-editor-tools hide-if-no-js">
-        <div id="goomentoEditor-media-buttons" class="gmt-media-buttons">
-            <button type="button" id="insert-media-button" class="gmt-button gmt-button-default insert-media add_media" data-editor="goomentoEditor">
-            <i class="fas fa-picture-o" aria-hidden="true"></i> {$addMedia}</button>
-        </div>
-    </div>
-    <div id="goomentoEditor-editor-container" class="gmt-editor-container">
-        <div id="qt_goomentoEditor_toolbar" class="quicktags-toolbar"></div>
-        <textarea class="gmt-editor gmt-editor-area" autocomplete="off" cols="40" name="goomentoEditor" id="goomentoEditor">%%EDITORCONTENT%%</textarea>
-    </div>
-</div>
-EDITOR_WAPPER;
     }
 
     /**

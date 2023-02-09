@@ -10,8 +10,9 @@ declare(strict_types=1);
  */
 
 use Goomento\PageBuilder\Block\Adminhtml\Manage\GlobalCss;
+$htmlId = uniqid('gmt_custom_css_');
 ?>
-<div>
+<div id="<?= /** @noEscape */ $htmlId ?>">
     <label for="custom_css"></label>
     <textarea style="display: none" name="custom_css" id="custom_css"><?= $block->escapeHtml($block->getCustomCss()) ?></textarea>
     <div id="global_css_editor"><?= $block->escapeHtml(__('Loading ...')) ?></div>
@@ -19,12 +20,12 @@ use Goomento\PageBuilder\Block\Adminhtml\Manage\GlobalCss;
 <script>
     require([
         'jquery',
-        'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ext-language_tools.js',
+        'Goomento_PageBuilder/js/view/ace-wrapper',
         '!domReady'
     ], function ($) {
-        let $customCss = $('#custom_css'),
-            $editor = $('#global_css_editor'),
+        let $context = $('#<?= /** @noEscape */ $htmlId ?>'),
+            $customCss = $('#custom_css', $context),
+            $editor = $('#global_css_editor', $context),
             editor,
             windowVariableExisted = function (name, callback) {
                 if (window[name]) {

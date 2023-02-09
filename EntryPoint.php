@@ -77,9 +77,8 @@ class EntryPoint extends BuilderRegister
         );
 
         ThemeHelper::registerScript(
-            'sofish-pen',
-            'Goomento_PageBuilder/lib/sofish/pen',
-            ['jquery']
+            'pen',
+            'Goomento_PageBuilder/lib/sofish/pen'
         );
 
         ThemeHelper::registerScript(
@@ -89,7 +88,22 @@ class EntryPoint extends BuilderRegister
 
         ThemeHelper::registerScript(
             'jquery-tipsy',
-            'Goomento_PageBuilder/lib/tipsy/tipsy.min'
+            'Goomento_PageBuilder/js/view/tipsy-wrapper'
+        );
+
+        ThemeHelper::registerScript(
+            'goomento-backend',
+            'Goomento_PageBuilder/js/goomento-backend'
+        );
+
+        ThemeHelper::registerScript(
+            'introjs',
+            'Goomento_PageBuilder/js/view/intro-wrapper'
+        );
+
+        ThemeHelper::registerScript(
+            'goomento-editor-introjs-config',
+            'Goomento_PageBuilder/js/action/editor-introjs-config'
         );
 
         ThemeHelper::registerScript(
@@ -184,6 +198,16 @@ class EntryPoint extends BuilderRegister
         );
 
         ThemeHelper::registerStyle(
+            'pen',
+            'Goomento_PageBuilder/lib/sofish/pen.css'
+        );
+
+        ThemeHelper::registerStyle(
+            'introjs',
+            'Goomento_PageBuilder/lib/intro/intro.min.css'
+        );
+
+        ThemeHelper::registerStyle(
             'jquery-select2',
             'Goomento_PageBuilder/lib/e-select2/css/e-select2.min.css'
         );
@@ -242,7 +266,13 @@ class EntryPoint extends BuilderRegister
             Builder\Widgets\Magento\OrdersAndReturns::class,
             Builder\Widgets\PricingTable::class,
             Builder\Widgets\Navigation::class,
+            Builder\Widgets\PageBuilderContent::class,
         ];
+
+        if (!DataHelper::isModuleOutputEnabled('Goomento_PageBuilderForm')) {
+            $widgets[] = Builder\Widgets\Form\FormBuilder::class;
+            $widgets[] = Builder\Widgets\Form\MultistepForm::class;
+        }
 
         foreach ($widgets as $widget) {
             $widgetsManager->registerWidgetType($widget);

@@ -1,7 +1,17 @@
 # Magento 2 Goomento Page Builder
 
-## 0.4.1 Fixed mirror bugs
-- Fixed mirror bugs
+## 0.4.2 Added Page Builder Content Widget
+- Added Page Builder Content Widget (at Editor panel then search for `Page Builder`)
+- Added Page Builder Content Tag
+- Fixed minor bugs
+- Added tooltip to drop zone
+- Added `How to use` feature tour
+- Added `Form Builder` widgets
+- First release for verifying purchased product by Goomento
+- Speed up the Editor
+
+## 0.4.1 Fixed minor bugs
+- Fixed minor bugs
 - Added widget JS files
 
 ## 0.4.0 Optimize speed of loading
@@ -13,10 +23,10 @@
 
 ## 0.3.10 Checked compatible
 - Checked compatible with Magento2
-- Fixed mirror bugs
+- Fixed minor bugs
 
-## 0.3.9: Fixed mirror bugs
-- Fixed mirror bugs
+## 0.3.9: Fixed minor bugs
+- Fixed minor bugs
 - Added widget preview
 - Updates revisions control
 

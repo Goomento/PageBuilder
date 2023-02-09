@@ -15,7 +15,7 @@ use Goomento\PageBuilder\Helper\ConfigHelper;
 abstract class AbstractFile extends AbstractEntity
 {
     // Saved in media folder
-    const UPLOADS_DIR = 'media/';
+    const UPLOADS_DIR = 'media/goomento/';
 
     const DEFAULT_FILES_DIR = 'css/';
 

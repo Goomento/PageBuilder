@@ -21,9 +21,14 @@ use Goomento\PageBuilder\Helper\DataHelper;
 
 class Testimonial extends AbstractWidget
 {
-
+    /**
+     * @inheritDoc
+     */
     const NAME = 'testimonial';
 
+    /**
+     * @inheritDoc
+     */
     protected $template = 'Goomento_PageBuilder::widgets/testimonial.phtml';
 
     /**

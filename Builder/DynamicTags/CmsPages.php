@@ -8,13 +8,18 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\DynamicTags;
 
+use Goomento\PageBuilder\Block\Cms\Page;
 use Goomento\PageBuilder\Builder\Managers\Tags;
 use Goomento\PageBuilder\Builder\Widgets\Magento\CmsPage;
-use Magento\Framework\App\ObjectManager;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 class CmsPages extends CmsBlocks
 {
+    /**
+     * @inheritDoc
+     */
     const NAME = 'cms_page';
+
     /**
      * @inheritDoc
      */
@@ -66,8 +71,7 @@ class CmsPages extends CmsBlocks
     protected function getContentHtml(string $identifier)
     {
         if ($this->renderer === null) {
-            /** @var \Goomento\PageBuilder\Block\Cms\Page renderer */
-            $this->renderer = ObjectManager::getInstance()->create(\Goomento\PageBuilder\Block\Cms\Page::class);
+            $this->renderer = ObjectManagerHelper::create(Page::class);
         }
 
         return $this->renderer

@@ -11,6 +11,9 @@
             <general>
                 <active>1</active>
             </general>
+            <connector>
+                <token />
+            </connector>
             <integrations>
                 <fb_app_id />
                 <google_maps_key />

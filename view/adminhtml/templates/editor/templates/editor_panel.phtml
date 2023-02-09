@@ -11,11 +11,27 @@ declare(strict_types=1);
 
 use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Helper\Fonts;
-use Goomento\PageBuilder\Helper\EscaperHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Magento\Backend\Block\Template;
 
 ?>
+
+<script type="text/template" id="tmpl-gmt-wysiwyg-editor-config">
+    <div id="goomentoEditor-wrap" class="gmt-editor-wrap tmce-active">
+        <div id="goomentoEditor-editor-tools" class="gmt-editor-tools hide-if-no-js">
+            <div id="goomentoEditor-media-buttons" class="gmt-media-buttons">
+                <button type="button" id="insert-media-button" class="gmt-button gmt-button-default insert-media add_media" data-editor="goomentoEditor">
+                    <i class="fas fa-picture-o" aria-hidden="true"></i>
+                    <?= $block->escapeHtml(__('Add Media')) ?>
+                </button>
+            </div>
+        </div>
+        <div id="goomentoEditor-editor-container" class="gmt-editor-container">
+            <div id="qt_goomentoEditor_toolbar" class="quicktags-toolbar"></div>
+            <textarea class="gmt-editor gmt-editor-area" autocomplete="off" cols="40" name="goomentoEditor" id="goomentoEditor">%%EDITORCONTENT%%</textarea>
+        </div>
+    </div>
+</script>
 
 <script type="text/template" id="tmpl-gmt-empty-preview">
     <div class="gmt-first-add">
@@ -215,9 +231,9 @@ use Magento\Backend\Block\Template;
              data-tooltip="<?= $block->escapeHtml(__('Global Settings')); ?>">
             <i class="fas fa-cogs" aria-hidden="true"></i>
         </div>
-        <div id="gmt-panel-control-help" onclick="$e.run('shortcuts/open')" class="gmt-panel-control-tool gmt-leave-open tooltip-target"
-             data-tooltip="<?= $block->escapeHtml(__('Keyboard shortcuts')); ?> ({{{ctrlLabel}}} + ?)">
-            <i class="fas fa-question" aria-hidden="true"></i>
+        <div id="gmt-panel-control-help" onclick="$e.run('tour/start')" class="gmt-panel-control-tool gmt-leave-open tooltip-target"
+             data-tooltip="<?= $block->escapeHtml(__('How To Use?')); ?>">
+            <i class="fas fa-info-circle"></i>
         </div>
         <div id="gmt-panel-control-back-to-dashboard" class="gmt-panel-control-tool gmt-leave-open tooltip-target"
              data-tooltip="<?= $block->escapeHtml(__('Back To Magento')); ?>">

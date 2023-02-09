@@ -234,6 +234,12 @@ class Elements
             'magento' => [
                 'title' => __('Magento'),
             ],
+            'form' => [
+                'title' => __('Form'),
+            ],
+            'external' => [
+                'title' => __('External'),
+            ],
         ];
 
         HooksHelper::doAction('pagebuilder/elements/categories_registered', $this);
