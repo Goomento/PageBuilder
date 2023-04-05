@@ -13,7 +13,6 @@ use Goomento\PageBuilder\Helper\EscaperHelper;
 use Goomento\PageBuilder\Plugin\Ui\Component\Form\Element\Wysiwyg\BuilderAssistance;
 use Magento\Framework\Data\Form\Element\Editor as FormEditor;
 use Magento\Framework\UrlInterface;
-use Zend_Json;
 
 class Editor
 {
@@ -75,7 +74,7 @@ class Editor
                 ]
             ]
         ];
-        $js = '<script type="text/x-magento-init">' . Zend_Json::encode($jsParams) . '</script>';
+        $js = '<script type="text/x-magento-init">' . \Laminas\Json\Json::encode($jsParams) . '</script>';
         return '<div data-bind="scope: \'' . $componentName . '\'"><!-- ko template: getTemplate() --><!-- /ko --></div>' . $js;
     }
 }

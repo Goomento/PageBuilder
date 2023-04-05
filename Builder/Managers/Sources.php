@@ -18,7 +18,6 @@ use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Traits\TraitComponentsLoader;
-use Zend_Json;
 
 // phpcs:disable Magento2.Functions.DiscouragedFunction.Discouraged
 class Sources
@@ -145,7 +144,7 @@ class Sources
         }
 
         try {
-            $args['content'] = Zend_Json::decode($args['content']);
+            $args['content'] = \Laminas\Json\Json::decode($args['content']);
         } catch (\Exception $e) {
             $args['content'] = [];
         }

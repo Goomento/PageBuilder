@@ -36,7 +36,7 @@ class Config extends AbstractDb
     {
         if (is_array($value)) {
             try {
-                $value = \Zend_Json::encode($value);
+                $value = \Laminas\Json\Json::encode($value);
             } catch (\Exception $e) {
 
             }
@@ -89,7 +89,7 @@ class Config extends AbstractDb
             foreach ($result as &$row) {
                 if (is_string($row['value'])) {
                     try {
-                        $row['value'] = \Zend_Json::decode($row['value']);
+                        $row['value'] = \Laminas\Json\Json::decode($row['value']);
                     } catch (\Exception $e) {
 
                     }

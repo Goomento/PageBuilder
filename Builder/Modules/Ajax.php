@@ -122,7 +122,7 @@ class Ajax extends AbstractModule
         HooksHelper::doAction('pagebuilder/ajax/register_actions', $this);
 
         try {
-            $this->ajaxRequestingActions = \Zend_Json::decode($requestParams['actions'] ?? '');
+            $this->ajaxRequestingActions = \Laminas\Json\Json::decode($requestParams['actions'] ?? '');
 
             $this->ajaxRequestingActions = EscaperHelper::filter($this->ajaxRequestingActions);
         } catch (\Exception $e) {

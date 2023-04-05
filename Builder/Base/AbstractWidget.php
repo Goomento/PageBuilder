@@ -441,7 +441,7 @@ abstract class AbstractWidget extends AbstractElement
                 $initScripts[$script] = $frontendSettings ?: [];
             }
             // Use `_container` for render via AJAX
-            $this->addRenderAttribute('_container', 'data-mage-init', \Zend_Json::encode($initScripts));
+            $this->addRenderAttribute('_container', 'data-mage-init', \Laminas\Json\Json::encode($initScripts));
         }
 
         ?>

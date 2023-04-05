@@ -30,6 +30,6 @@ $dataMageInit = [
 ?>
 <script>
     require(['call-to-action'], function (callToAction) {
-        new callToAction(<?= \Zend_Json::encode($dataMageInit) ?>);
+        new callToAction(<?= \Laminas\Json\Json::encode($dataMageInit) ?>);
     });
 </script>

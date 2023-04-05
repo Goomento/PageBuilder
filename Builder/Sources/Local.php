@@ -21,7 +21,6 @@ use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\BuildableContentHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
-use Zend_Json;
 
 class Local extends AbstractSource
 {
@@ -403,7 +402,7 @@ class Local extends AbstractSource
     private function importSingleTemplate($fileName)
     {
         // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
-        $data = Zend_Json::decode(file_get_contents($fileName));
+        $data = \Laminas\Json\Json::decode(file_get_contents($fileName));
 
         if (empty($data)) {
             throw new BuilderException('Invalid file');
@@ -497,7 +496,7 @@ class Local extends AbstractSource
 
         return [
             'name' => $this->getJsonName($exportData),
-            'content' => Zend_Json::encode($exportData),
+            'content' => \Laminas\Json\Json::encode($exportData),
         ];
     }
 

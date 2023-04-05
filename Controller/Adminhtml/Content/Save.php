@@ -81,7 +81,7 @@ class Save extends AbstractContent implements HttpPostActionInterface
                     // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
                     $contentData = base64_decode($data['content_data']);
                     if ($contentData && DataHelper::isJson($contentData)) {
-                        $contentData = \Zend_Json::decode($contentData);
+                        $contentData = \Laminas\Json\Json::decode($contentData);
                         if ($contentData !== $content->getElements()) {
                             $content->setElements($contentData);
                         }

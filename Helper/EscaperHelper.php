@@ -47,9 +47,9 @@ class EscaperHelper
     public static function filter(array $data, bool $escaped = false)
     {
         if ($escaped) {
-            return (new \Zend_Filter_Input([], [], $data))->getEscaped();
+            return (new \Magento\Framework\Filter\FilterInput([], [], $data))->getEscaped();
         } else {
-            return (new \Zend_Filter_Input([], [], $data))->getUnescaped();
+            return (new \Magento\Framework\Filter\FilterInput([], [], $data))->getUnescaped();
         }
     }
 

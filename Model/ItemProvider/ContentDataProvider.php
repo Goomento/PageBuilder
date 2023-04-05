@@ -84,7 +84,7 @@ class ContentDataProvider extends ModifierPoolDataProvider
                 $this->loadedData[$content->getId()] = $content->getData();
                 $this->loadedData[$content->getId()]['content_data'] =
                     $content->getElements() ? base64_encode(
-                        \Zend_Json::encode($content->getElements())
+                        \Laminas\Json\Json::encode($content->getElements())
                     ) : '';
 
                 // Remove this for save the POST expense

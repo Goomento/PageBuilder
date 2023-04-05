@@ -256,7 +256,7 @@ class DataHelper
                 foreach ($attributeValues as &$value) {
                     if (!is_scalar($value)) {
                         if (is_array($value)) {
-                            $value = \Zend_Json::encode($value);
+                            $value = \Laminas\Json\Json::encode($value);
                         } elseif (is_object($value) && method_exists($value, '__toString')) {
                             $value = $value->__toString();
                         } else {

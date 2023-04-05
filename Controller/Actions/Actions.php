@@ -20,7 +20,6 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\ObjectManagerInterface;
-use Zend_Json;
 
 class Actions extends AbstractAction implements HttpPostActionInterface
 {
@@ -93,7 +92,7 @@ class Actions extends AbstractAction implements HttpPostActionInterface
 
         try {
             $elementData = $postData['actions'];
-            $elementData = (array) Zend_Json::decode($elementData);
+            $elementData = (array) \Laminas\Json\Json::decode($elementData);
         } catch (Exception $e) {
             $elementData = [];
         }

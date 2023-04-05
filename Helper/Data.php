@@ -130,7 +130,7 @@ class Data extends AbstractHelper
             'builder_assistance/custom_pages'
         );
         try {
-            $pages = \Zend_Json::decode($pages);
+            $pages = \Laminas\Json\Json::decode($pages);
         } catch (\Exception $e) {
             $pages = [];
         }

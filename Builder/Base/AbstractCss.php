@@ -21,7 +21,6 @@ use Goomento\PageBuilder\Helper\ConfigHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
-use Zend_Json_Exception;
 
 abstract class AbstractCss extends AbstractFile
 {
@@ -686,7 +685,7 @@ abstract class AbstractCss extends AbstractFile
      *
      * @param array $control The control.
      * @param string $value The value.
-     * @throws Zend_Json_Exception
+     * @throws \Laminas\Json\Exception\ExceptionInterface
      */
     protected function addDynamicControlStyleRules(array $control, string $value)
     {

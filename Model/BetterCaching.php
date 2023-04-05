@@ -15,7 +15,6 @@ use Magento\Framework\DataObject;
 use Magento\Framework\App\Cache\TypeListInterface;
 use Goomento\PageBuilder\Model\Cache\Type\PageBuilderFrontend;
 use Goomento\PageBuilder\Model\Cache\Type\PageBuilderBackend;
-use Zend_Json;
 
 class BetterCaching
 {
@@ -169,7 +168,7 @@ class BetterCaching
         if (!empty($tags)) {
             if (!is_scalar($data)) {
                 try {
-                    $data = Zend_Json::encode($data);
+                    $data = \Laminas\Json\Json::encode($data);
                 } catch (\Exception $e) {
 
                 }
@@ -187,7 +186,7 @@ class BetterCaching
         $result = $this->cache->load($identifier);
         if ($result && (strpos($result, '{') !== 0 || strpos($result, '[') !== 0)) {
             try {
-                $result = Zend_Json::decode($result);
+                $result = \Laminas\Json\Json::decode($result);
             } catch (Exception $e) {
 
             }

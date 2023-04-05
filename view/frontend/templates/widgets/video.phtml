@@ -86,7 +86,7 @@ $widget->addRenderAttribute('video-wrapper', 'class', 'gmt-open-' . ($settings['
 
             $widget->addRenderAttribute('image-overlay', [
                 'data-gmt-open-lightbox' => 'yes',
-                'data-gmt-lightbox' => Zend_Json::encode($lightboxOptions),
+                'data-gmt-lightbox' => \Laminas\Json\Json::encode($lightboxOptions),
             ]);
 
         } else {

@@ -28,4 +28,5 @@ view/base/web/build/*.css
 view/base/web/build/*.js
 !view/base/web/build/*.min.js
 Developer.php
-
+/vendor/
+/composer.lock

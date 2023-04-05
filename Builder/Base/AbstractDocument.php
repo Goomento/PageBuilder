@@ -175,7 +175,7 @@ abstract class AbstractDocument extends ControlsStack
         ];
 
         if (!StateHelper::isEditorPreviewMode()) {
-            $attributes['data-gmt-settings'] = \Zend_Json::encode($this->getFrontendSettings());
+            $attributes['data-gmt-settings'] = \Laminas\Json\Json::encode($this->getFrontendSettings());
         }
 
         return $attributes;
