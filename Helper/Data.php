@@ -130,7 +130,7 @@ class Data extends AbstractHelper
             'builder_assistance/custom_pages'
         );
         try {
-            $pages = \Laminas\Json\Json::decode($pages);
+            $pages = \Laminas\Json\Json::decode($pages, \Laminas\Json\Json::TYPE_ARRAY);
         } catch (\Exception $e) {
             $pages = [];
         }

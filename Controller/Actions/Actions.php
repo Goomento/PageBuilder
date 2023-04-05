@@ -92,7 +92,7 @@ class Actions extends AbstractAction implements HttpPostActionInterface
 
         try {
             $elementData = $postData['actions'];
-            $elementData = (array) \Laminas\Json\Json::decode($elementData);
+            $elementData = (array) \Laminas\Json\Json::decode($elementData, \Laminas\Json\Json::TYPE_ARRAY);
         } catch (Exception $e) {
             $elementData = [];
         }

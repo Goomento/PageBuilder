@@ -402,7 +402,7 @@ class Local extends AbstractSource
     private function importSingleTemplate($fileName)
     {
         // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
-        $data = \Laminas\Json\Json::decode(file_get_contents($fileName));
+        $data = \Laminas\Json\Json::decode(file_get_contents($fileName), \Laminas\Json\Json::TYPE_ARRAY);
 
         if (empty($data)) {
             throw new BuilderException('Invalid file');

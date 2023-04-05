@@ -186,7 +186,7 @@ class BetterCaching
         $result = $this->cache->load($identifier);
         if ($result && (strpos($result, '{') !== 0 || strpos($result, '[') !== 0)) {
             try {
-                $result = \Laminas\Json\Json::decode($result);
+                $result = \Laminas\Json\Json::decode($result, \Laminas\Json\Json::TYPE_ARRAY);
             } catch (Exception $e) {
 
             }

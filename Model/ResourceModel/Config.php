@@ -89,7 +89,7 @@ class Config extends AbstractDb
             foreach ($result as &$row) {
                 if (is_string($row['value'])) {
                     try {
-                        $row['value'] = \Laminas\Json\Json::decode($row['value']);
+                        $row['value'] = \Laminas\Json\Json::decode($row['value'], \Laminas\Json\Json::TYPE_ARRAY);
                     } catch (\Exception $e) {
 
                     }

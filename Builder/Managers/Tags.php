@@ -162,7 +162,7 @@ class Tags
         return [
             'id' => $tagIdMatch[1],
             'name' => $tagNameMatch[1],
-            'settings' => \Laminas\Json\Json::decode(urldecode($tagSettingsMatch[1])),
+            'settings' => \Laminas\Json\Json::decode(urldecode($tagSettingsMatch[1]), \Laminas\Json\Json::TYPE_ARRAY),
         ];
     }
 
@@ -373,7 +373,7 @@ class Tags
             // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
             $tagName = base64_decode($tagKeyParts[0]);
 
-            $tagSettings = \Laminas\Json\Json::decode(urldecode(base64_decode($tagKeyParts[1])));
+            $tagSettings = \Laminas\Json\Json::decode(urldecode(base64_decode($tagKeyParts[1])), \Laminas\Json\Json::TYPE_ARRAY);
 
             $tag = $this->createTag(null, $tagName, $tagSettings);
 

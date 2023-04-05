@@ -144,7 +144,7 @@ class Sources
         }
 
         try {
-            $args['content'] = \Laminas\Json\Json::decode($args['content']);
+            $args['content'] = \Laminas\Json\Json::decode($args['content'], \Laminas\Json\Json::TYPE_ARRAY);
         } catch (\Exception $e) {
             $args['content'] = [];
         }
