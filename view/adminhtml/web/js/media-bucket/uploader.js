@@ -7,8 +7,9 @@ define([
     'underscore',
     'Magento_Ui/js/form/element/image-uploader'
 ], function ($, _, Element) {
+    'use strict';
 
-    window.mediaBucket = {
+    const mediaBucket = {
         _data: [],
         _model: null,
         _bucket: '#image-bucket',
@@ -58,9 +59,9 @@ define([
                 url = rawUrl;
             if (matched && matched[1]) {
                 let widget = Base64.mageDecode(matched[1]);
-                widget = widget.match(/url=\"([^"]+)\"/i);
-                if (widget[1]) {
-                    url = widget[1];
+                widget = widget.match(/url=(\"|\')([^\"\']+)(\"|\')/i);
+                if (widget && widget[2]) {
+                    url = widget[2];
                 }
             }
 
@@ -146,6 +147,8 @@ define([
             return this;
         },
     };
+
+    window.mediaBucket = mediaBucket;
 
     return Element.extend({
         defaults: {

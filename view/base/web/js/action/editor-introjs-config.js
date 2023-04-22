@@ -6,7 +6,7 @@
 define([
     'jquery',
     'introjs'
-], function ($) {
+], function ($, introJs) {
     'use strict';
 
     const steps = () => {
@@ -68,10 +68,29 @@ define([
         ]
     }
 
+    const start = () => {
+        introJs().setOptions({
+            steps: steps(),
+            disableInteraction: false,
+        }).onbeforechange(async function(targetElement) {
+            return new Promise((resolve) => {
+                if ($(targetElement).parents('body.pagebuilder-content-editorpreview').length) {
+                    $(targetElement).parents('html, body').animate({
+                        scrollTop: $(targetElement).offset().top
+                    },  200);
+                    setTimeout(resolve, 400);
+                } else {
+                    resolve();
+                }
+            });
+        }).start();
+    }
+
     /**
      * Return introjs configs
      */
     return {
-        steps
+        steps,
+        start
     }
 });

@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Model\ItemProvider;
 
 use Goomento\PageBuilder\Api\Data\ContentInterface;
+use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Model\ResourceModel\Content\Collection;
 use Goomento\PageBuilder\Model\ResourceModel\Content\CollectionFactory;
 use Magento\Framework\App\Request\DataPersistorInterface;
@@ -84,7 +85,7 @@ class ContentDataProvider extends ModifierPoolDataProvider
                 $this->loadedData[$content->getId()] = $content->getData();
                 $this->loadedData[$content->getId()]['content_data'] =
                     $content->getElements() ? base64_encode(
-                        \Zend_Json::encode($content->getElements())
+                        DataHelper::encode($content->getElements())
                     ) : '';
 
                 // Remove this for save the POST expense

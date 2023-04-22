@@ -15,7 +15,6 @@ use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 use Magento\Framework\Phrase;
-use Zend_Json;
 
 abstract class AbstractElement extends ControlsStack
 {
@@ -766,7 +765,7 @@ abstract class AbstractElement extends ControlsStack
 
         if ($frontendSettings) {
             // This FE config use for system handlers, such as background video player at section ...
-            $this->addRenderAttribute('_wrapper', 'data-settings', Zend_Json::encode($frontendSettings));
+            $this->addRenderAttribute('_wrapper', 'data-settings', DataHelper::encode($frontendSettings));
         }
 
         /**

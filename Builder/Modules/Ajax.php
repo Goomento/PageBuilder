@@ -8,9 +8,12 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Modules;
 
+use Exception;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractModule;
 use Goomento\PageBuilder\Configuration;
+use Goomento\PageBuilder\Exception\BuilderException;
+use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\LoggerHelper;
@@ -89,12 +92,12 @@ class Ajax extends AbstractModule
      *
      * @param string $tag Ajax request name/tag.
      * @param callable $callback The callback function.
-     * @throws \Exception
+     * @throws Exception
      */
     public function registerAjaxAction($tag, $callback)
     {
         if (! HooksHelper::didAction('pagebuilder/ajax/register_actions')) {
-            throw new \Goomento\PageBuilder\Exception\BuilderException(sprintf('Use `%s` hook to register ajax action', 'pagebuilder/ajax/register_actions'));
+            throw new BuilderException(sprintf('Use `%s` hook to register ajax action', 'pagebuilder/ajax/register_actions'));
         }
 
         $this->registeredAjaxActions[ $tag ] = compact('tag', 'callback');
@@ -122,10 +125,10 @@ class Ajax extends AbstractModule
         HooksHelper::doAction('pagebuilder/ajax/register_actions', $this);
 
         try {
-            $this->ajaxRequestingActions = \Zend_Json::decode($requestParams['actions'] ?? '');
+            $this->ajaxRequestingActions = DataHelper::decode($requestParams['actions'] ?? '');
 
             $this->ajaxRequestingActions = EscaperHelper::filter($this->ajaxRequestingActions);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->addToCurrentResponseData(false, __('Invalid format.'), 400);
             $this->ajaxRequestingActions = [];
         }
@@ -157,7 +160,7 @@ class Ajax extends AbstractModule
                 } else {
                     $this->addToCurrentResponseData(true, $results);
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 LoggerHelper::error($e);
                 if (Configuration::debug()) {
                     $this->addToCurrentResponseData(false, $e->getMessage(), $e->getCode());

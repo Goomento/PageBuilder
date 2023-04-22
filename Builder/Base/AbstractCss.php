@@ -9,19 +9,18 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Base;
 
 use Exception;
-use Goomento\PageBuilder\Builder\Modules\Frontend;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Icons;
+use Goomento\PageBuilder\Builder\Managers\Tags;
+use Goomento\PageBuilder\Builder\Modules\Frontend;
 use Goomento\PageBuilder\Builder\Modules\Stylesheet;
 use Goomento\PageBuilder\Configuration;
-use Goomento\PageBuilder\Builder\Managers\Tags;
 use Goomento\PageBuilder\Exception\BuilderException;
-use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ConfigHelper;
+use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
-use Zend_Json_Exception;
 
 abstract class AbstractCss extends AbstractFile
 {
@@ -140,7 +139,6 @@ abstract class AbstractCss extends AbstractFile
 
         $this->updateMeta($meta);
     }
-
 
     public function write()
     {
@@ -686,7 +684,7 @@ abstract class AbstractCss extends AbstractFile
      *
      * @param array $control The control.
      * @param string $value The value.
-     * @throws Zend_Json_Exception
+     * @throws Exception
      */
     protected function addDynamicControlStyleRules(array $control, string $value)
     {

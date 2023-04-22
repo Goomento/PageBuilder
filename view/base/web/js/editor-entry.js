@@ -7,32 +7,45 @@ define([
     'underscore',
     'jquery',
     'goomento-editor-engine',
-    'moment',
     'goomento-editor-introjs-config',
+    'Goomento_PageBuilder/js/view/moment-wrapper',
     'domReady!',
 ], function (
     _,
     $,
     App,
-    moment,
-    introJsConfig
+    intro
 ) {
     'use strict';
 
-    setTimeout(() => {
-        window.goomento = window.goomento || new App;
-        window.moment = window.moment || moment;
-        goomento.helpers = goomento.helpers || {};
-        _.extend(goomento.helpers, {
+    if (typeof goomento === 'undefined') {
+
+        window.goomento = new App;
+
+        /**
+         * Custom extended helpers
+         * @type {*}
+         */
+        const helpers = {
+            /**
+             * Format datetime
+             * @param datetime
+             * @returns {string}
+             */
             formatDatetime: datetime => {
                 if (moment(datetime).startOf('day').isSame(moment(new Date()).startOf('day'))) {
                     return moment(datetime).fromNow();
                 } else {
                     return moment(datetime).calendar();
                 }
-            }
-        });
-        goomento.introJsConfig = introJsConfig;
+            },
+            intro
+        }
+
+        _.extend(goomento.helpers, helpers);
+
         $( () => goomento.start() );
-    }, 200);
+    }
+
+    return window.goomento;
 });

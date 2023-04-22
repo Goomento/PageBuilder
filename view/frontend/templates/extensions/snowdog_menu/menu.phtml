@@ -5,8 +5,12 @@
  * @see Snowdog_Menu::menu.phtml
  * This file is copied from Snowdog_Menu::menu.phtml to add custom code
  */
+
+use Goomento\PageBuilder\Helper\DataHelper;
+use Snowdog\Menu\Block\Menu;
+
 ?>
-<?php /** @var \Snowdog\Menu\Block\Menu $block */ ?>
+<?php /** @var Menu $block */ ?>
 <?php
 $type = $block->getMenuType();
 $menuJsWidget = [
@@ -30,7 +34,7 @@ if ($block->getMenu()): ?>
     <?php $menuClass = $block->getMenu()->getCssClass() ?>
     <nav class="<?= $block->escapeHtmlAttr($menuClass) ?>" data-action="navigation">
         <ul class="<?= $block->escapeHtmlAttr($menuClass) ?>__list gmt-menu-<?= $block->escapeHtmlAttr($type) ?>"
-            data-mage-init='<?= \Zend_Json::encode($menuJsWidget) ?>'>
+            data-mage-init='<?= DataHelper::encode($menuJsWidget) ?>'>
             <?php foreach ($block->getNodes() as $node): ?>
                 <?php
                 $childrenLevel = $node->getLevel() + 1;

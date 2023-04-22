@@ -1,5 +1,9 @@
 # Magento 2 Goomento Page Builder
 
+## 0.4.3 Fix compatibility with Magento 2.4.6
+- Fix issue #26
+- Fixed minor bugs
+
 ## 0.4.2 Added Page Builder Content Widget
 - Added Page Builder Content Widget (at Editor panel then search for `Page Builder`)
 - Added Page Builder Content Tag

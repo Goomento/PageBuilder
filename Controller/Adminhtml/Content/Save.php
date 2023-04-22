@@ -12,7 +12,6 @@ use Exception;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Helper\DataHelper;
-use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 use Magento\Backend\Model\View\Result\Redirect;
 use Magento\Framework\App\Action\HttpPostActionInterface;
@@ -81,7 +80,7 @@ class Save extends AbstractContent implements HttpPostActionInterface
                     // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
                     $contentData = base64_decode($data['content_data']);
                     if ($contentData && DataHelper::isJson($contentData)) {
-                        $contentData = \Zend_Json::decode($contentData);
+                        $contentData = DataHelper::decode($contentData);
                         if ($contentData !== $content->getElements()) {
                             $content->setElements($contentData);
                         }

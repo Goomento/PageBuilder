@@ -13,6 +13,7 @@ use Goomento\Core\Model\Registry;
 use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Controller\AbstractAction;
 use Goomento\PageBuilder\Helper\Data;
+use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
 use Goomento\PageBuilder\Logger\Logger;
 use Goomento\PageBuilder\Traits\TraitHttpPage;
@@ -20,7 +21,6 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\ObjectManagerInterface;
-use Zend_Json;
 
 class Actions extends AbstractAction implements HttpPostActionInterface
 {
@@ -93,7 +93,7 @@ class Actions extends AbstractAction implements HttpPostActionInterface
 
         try {
             $elementData = $postData['actions'];
-            $elementData = (array) Zend_Json::decode($elementData);
+            $elementData = (array) DataHelper::decode($elementData);
         } catch (Exception $e) {
             $elementData = [];
         }

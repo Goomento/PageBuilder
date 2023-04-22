@@ -30,6 +30,6 @@ $dataMageInit = [
 ?>
 <script>
     require(['call-to-action'], function (callToAction) {
-        new callToAction(<?= \Zend_Json::encode($dataMageInit) ?>);
+        new callToAction(<?= \Goomento\PageBuilder\Helper\DataHelper::encode($dataMageInit) ?>);
     });
 </script>

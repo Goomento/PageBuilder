@@ -9,13 +9,13 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Model;
 
 use Exception;
+use Goomento\PageBuilder\Helper\DataHelper;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Cache\LockGuardedCacheLoader;
 use Magento\Framework\DataObject;
 use Magento\Framework\App\Cache\TypeListInterface;
 use Goomento\PageBuilder\Model\Cache\Type\PageBuilderFrontend;
 use Goomento\PageBuilder\Model\Cache\Type\PageBuilderBackend;
-use Zend_Json;
 
 class BetterCaching
 {
@@ -169,7 +169,7 @@ class BetterCaching
         if (!empty($tags)) {
             if (!is_scalar($data)) {
                 try {
-                    $data = Zend_Json::encode($data);
+                    $data = DataHelper::encode($data);
                 } catch (\Exception $e) {
 
                 }
@@ -187,7 +187,7 @@ class BetterCaching
         $result = $this->cache->load($identifier);
         if ($result && (strpos($result, '{') !== 0 || strpos($result, '[') !== 0)) {
             try {
-                $result = Zend_Json::decode($result);
+                $result = DataHelper::decode($result);
             } catch (Exception $e) {
 
             }

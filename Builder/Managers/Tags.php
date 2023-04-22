@@ -18,10 +18,10 @@ use Goomento\PageBuilder\Builder\DynamicTags\PageBuilderContents;
 use Goomento\PageBuilder\Builder\Modules\Ajax;
 use Goomento\PageBuilder\Builder\Base\AbstractBaseTag;
 use Goomento\PageBuilder\Builder\Base\AbstractTag;
+use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Traits\TraitComponentsLoader;
-use Zend_Json;
 
 class Tags
 {
@@ -163,7 +163,7 @@ class Tags
         return [
             'id' => $tagIdMatch[1],
             'name' => $tagNameMatch[1],
-            'settings' => Zend_Json::decode(urldecode($tagSettingsMatch[1])),
+            'settings' => DataHelper::decode(urldecode($tagSettingsMatch[1])),
         ];
     }
 
@@ -179,7 +179,7 @@ class Tags
      */
     public function tagToText(AbstractBaseTag $tag)
     {
-        return sprintf('[%1$s id="%2$s" name="%3$s" settings="%4$s"]', self::TAG_LABEL, $tag->getId(), $tag->getName(), urlencode(Zend_Json::encode($tag->getSettings())));
+        return sprintf('[%1$s id="%2$s" name="%3$s" settings="%4$s"]', self::TAG_LABEL, $tag->getId(), $tag->getName(), urlencode(DataHelper::encode($tag->getSettings())));
     }
 
     /**
@@ -374,7 +374,7 @@ class Tags
             // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
             $tagName = base64_decode($tagKeyParts[0]);
 
-            $tagSettings = \Zend_Json::decode(urldecode(base64_decode($tagKeyParts[1])));
+            $tagSettings = DataHelper::decode(urldecode(base64_decode($tagKeyParts[1])));
 
             $tag = $this->createTag(null, $tagName, $tagSettings);
 

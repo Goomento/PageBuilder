@@ -256,7 +256,7 @@ class DataHelper
                 foreach ($attributeValues as &$value) {
                     if (!is_scalar($value)) {
                         if (is_array($value)) {
-                            $value = \Zend_Json::encode($value);
+                            $value = \Goomento\PageBuilder\Helper\DataHelper::encode($value);
                         } elseif (is_object($value) && method_exists($value, '__toString')) {
                             $value = $value->__toString();
                         } else {
@@ -396,6 +396,53 @@ class DataHelper
         return $data;
     }
 
+    /**
+     * Decodes the given $encodedValue string from JSON
+     *
+     * @param mixed $encodedValue
+     * @param mixed $objectDecodeType
+     * @return false|mixed
+     * @throws \Exception
+     */
+    public static function decode($encodedValue, $objectDecodeType = 1)
+    {
+        $instance = $result = false;
+        if (class_exists('Zend_Json')) {
+            $instance = 'Zend_Json';
+        } elseif (class_exists('Laminas\Json\Json')) {
+            $instance = 'Laminas\Json\Json';
+        }
+
+        if ($instance) {
+            $result = $instance::decode($encodedValue, $objectDecodeType);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Encodes the given $valueToEncode object to JSON
+     *
+     * @param mixed $valueToEncode
+     * @param bool $cycleCheck
+     * @param array $options
+     * @return false|string
+     */
+    public static function encode($valueToEncode, bool $cycleCheck = false, array $options = [])
+    {
+        $instance = $result = false;
+        if (class_exists('Zend_Json')) {
+            $instance = 'Zend_Json';
+        } elseif (class_exists('Laminas\Json\Json')) {
+            $instance = 'Laminas\Json\Json';
+        }
+
+        if ($instance) {
+            $result = $instance::encode($valueToEncode, $cycleCheck, $options);
+        }
+
+        return $result;
+    }
     /**
      * @inheritDoc
      */

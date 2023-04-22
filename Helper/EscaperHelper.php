@@ -46,11 +46,24 @@ class EscaperHelper
      */
     public static function filter(array $data, bool $escaped = false)
     {
-        if ($escaped) {
-            return (new \Zend_Filter_Input([], [], $data))->getEscaped();
-        } else {
-            return (new \Zend_Filter_Input([], [], $data))->getUnescaped();
+        $instance = '';
+        if (class_exists('Zend_Filter_Input')) {
+            $instance = 'Zend_Filter_Input';
+        } elseif (class_exists('Magento\Framework\Filter\FilterInput')) {
+            $instance = 'Magento\Framework\Filter\FilterInput';
         }
+
+        $result = false;
+
+        if ($instance) {
+            if ($escaped) {
+                $result = (new $instance([], [], $data))->getEscaped();
+            } else {
+                $result = (new $instance([], [], $data))->getUnescaped();
+            }
+        }
+
+        return $result;
     }
 
     /**

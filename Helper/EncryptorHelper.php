@@ -95,7 +95,7 @@ class EncryptorHelper
         if (is_scalar($base)) {
             $key = $base;
         } elseif (is_array($base) || $base instanceof DataObject) {
-            $key = \Zend_Json::encode($base);
+            $key = DataHelper::encode($base);
         } elseif (is_object($base)) {
             $key = spl_object_hash($base);
         }

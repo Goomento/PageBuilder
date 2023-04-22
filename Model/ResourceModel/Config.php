@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Model\ResourceModel;
 
+use Exception;
+use Goomento\PageBuilder\Helper\DataHelper;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
@@ -36,8 +38,8 @@ class Config extends AbstractDb
     {
         if (is_array($value)) {
             try {
-                $value = \Zend_Json::encode($value);
-            } catch (\Exception $e) {
+                $value = DataHelper::encode($value);
+            } catch (Exception $e) {
 
             }
         }
@@ -89,8 +91,8 @@ class Config extends AbstractDb
             foreach ($result as &$row) {
                 if (is_string($row['value'])) {
                     try {
-                        $row['value'] = \Zend_Json::decode($row['value']);
-                    } catch (\Exception $e) {
+                        $row['value'] = DataHelper::decode($row['value']);
+                    } catch (Exception $e) {
 
                     }
                 }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
 use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
+use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\Embed;
 use Goomento\PageBuilder\Builder\Widgets\Video;
 
@@ -86,7 +87,7 @@ $widget->addRenderAttribute('video-wrapper', 'class', 'gmt-open-' . ($settings['
 
             $widget->addRenderAttribute('image-overlay', [
                 'data-gmt-open-lightbox' => 'yes',
-                'data-gmt-lightbox' => Zend_Json::encode($lightboxOptions),
+                'data-gmt-lightbox' => DataHelper::encode($lightboxOptions),
             ]);
 
         } else {

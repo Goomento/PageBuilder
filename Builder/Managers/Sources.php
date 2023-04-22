@@ -14,11 +14,11 @@ use Goomento\PageBuilder\Builder\Base\AbstractSource;
 use Goomento\PageBuilder\Builder\Sources\Local;
 use Goomento\PageBuilder\Builder\Modules\Ajax;
 use Goomento\PageBuilder\Exception\BuilderException;
+use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\AuthorizationHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Traits\TraitComponentsLoader;
-use Zend_Json;
 
 // phpcs:disable Magento2.Functions.DiscouragedFunction.Discouraged
 class Sources
@@ -145,7 +145,7 @@ class Sources
         }
 
         try {
-            $args['content'] = Zend_Json::decode($args['content']);
+            $args['content'] = DataHelper::decode($args['content']);
         } catch (\Exception $e) {
             $args['content'] = [];
         }

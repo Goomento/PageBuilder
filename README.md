@@ -1,11 +1,10 @@
 ![Goomento - Free Magento Page Builder Extension](https://i.imgur.com/jVUNmot.gif)
 
-# Goomento - The Free Magento Page Builder Extension, allows you to create unique Magento websites, landing pages using advanced animations, custom CSS, responsive designs, and more, without a line of code.
+# Goomento Magento page builder extension that allows you to create Magento content in just drag-and-drop to canvas and view your website as you build it.
 
-Goomento is a _Free Magento Page Builder Extension_ that allows you to efficiently set up your website by simply 
-dragging and dropping manipulation. Notably, it can reuse your previous content from current or other websites to 
-customize and redesign with your new creativity. All this process has an absence of coding involvement and configures instantly.
+You can build and customize every part of the Magento website visually at the builder editor by adding text, images, videos, animations, CSS and more, all with just a few clicks without writing a single line of code.
 
+Magento store owners can view changes in Magento with 100% accuracy, drag and drop to configure, share content between websites and redesign with new creativity
 ### Table of contents
 
 [Installation](#install-goomento)
@@ -16,19 +15,17 @@ customize and redesign with your new creativity. All this process has an absence
 
 [Setup](#setup)
 
-[Why Us](https://github.com/Goomento/PageBuilder/wiki/Why-Goomento)
+[Why Us](https://goomento.com/blog/post/goomento-page-builder-vs-magento-page-builder)
 
-[Widgets](https://github.com/Goomento/PageBuilder/wiki/Free-Built-in-Widgets)
-
-[How To Use](https://github.com/Goomento/DocBuilder/blob/master/Guide/HOW_TO_USE.md)
+[Widgets](https://goomento.com/blog/post/goomento-widget-list)
 
 [Custom Templates](#custom-templates)
 
 [Change Log](https://github.com/Goomento/PageBuilder/blob/master/CHANGELOG.md)
 
-[Document And User Guide](https://github.com/Goomento/DocBuilder)
+[Document And User Guide](https://goomento.com/blog/category/user-guide)
 
-[Troubleshoot](https://github.com/Goomento/PageBuilder/wiki/Troubleshoot)
+[Troubleshoot](https://goomento.com/blog/post/troubleshooting)
 
 [Open An Issue And Contribution](#open-an-issue-and-contribution)
 
@@ -51,9 +48,10 @@ Enable these caches in `Production mode` for best performance at `System > Tools
 
 ## Setup
 
-1. Create Landing Pages, Blocks, Templates in the admin area `Goomento > Pages & Landing Pages`.
+- To create Magento Landing Pages at `Magento Backend > Goomento > Pages & Landing Pages`
 
-2. Add Blocks, Pages to layout, using the same `identifier` as in the admin area to the layout `.xml` file.
+- To add Blocks, Pages to layout, using the `your-content-identifier` 
+identifier at `Magento Backend > Goomento > Sections` to the layout `.xml` file.
 
 ```xml
 <block class="PageBuilderRenderer" name="unique-block-name">
@@ -63,7 +61,7 @@ Enable these caches in `Production mode` for best performance at `System > Tools
 </block>
 ```
 
-3. Add Blocks, Pages to template, use this snippet in the template `.phtml` file
+or template `.phtml` file
 
 ```php
 <?= $block->getLayout()
@@ -71,6 +69,8 @@ Enable these caches in `Production mode` for best performance at `System > Tools
     ->setIdentifier('your-content-identifier')
     ->toHtml(); ?>
 ```
+- To export the template, click to `Export` button at each page builder content
+- To import the template, go to `Magento Backend > Goomento > Importor`
 
 ## Demo site
 
@@ -107,9 +107,9 @@ app/design/frontend/<Vendor>/
 
 ## Version Compatible
 
-Magento Community Edition (CE): 2.3.x, 2.4.0 - 2.4.5*
+Magento Community Edition (CE): 2.3.x, 2.4.0 - 2.4.5*, 2.4.6
 
-Magento Enterprise Edition (EE): 2.3.x, 2.4.0 - 2.4.5*
+Magento Enterprise Edition (EE): 2.3.x, 2.4.0 - 2.4.5*, 2.4.6
 
 ## Open An Issue And Contribution
 

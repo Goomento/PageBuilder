@@ -8,19 +8,19 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Controller\Adminhtml\Content;
 
-use Goomento\PageBuilder\Api\ContentRegistryInterface;
-use Goomento\PageBuilder\Api\BuildableContentManagementInterface;
-use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\Core\Model\Registry;
-use Goomento\PageBuilder\Helper\AdminUser;
-use Goomento\PageBuilder\Model\ContentFactory;
+use Goomento\PageBuilder\Api\BuildableContentManagementInterface;
+use Goomento\PageBuilder\Api\ContentRegistryInterface;
+use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Controller\Adminhtml\AbstractAction;
-use Magento\Framework\View\Result\PageFactory;
-use Magento\Framework\App\ObjectManager;
-use Magento\Backend\App\Action\Context;
-use Magento\Framework\App\Request\DataPersistorInterface;
-use Goomento\PageBuilder\Traits\TraitHttpContentAction;
+use Goomento\PageBuilder\Helper\AdminUser;
 use Goomento\PageBuilder\Logger\Logger;
+use Goomento\PageBuilder\Model\ContentFactory;
+use Goomento\PageBuilder\Traits\TraitHttpContentAction;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\Request\DataPersistorInterface;
+use Magento\Framework\View\Result\PageFactory;
 
 abstract class AbstractContent extends AbstractAction
 {

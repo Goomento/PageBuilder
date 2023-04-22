@@ -407,7 +407,7 @@ abstract class AbstractWidget extends AbstractElement
             ob_start();
 
             $widgetReturn = $this->render();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if (DataHelper::isDebugMode() && StateHelper::isBuildable()) {
                 $this->addRenderAttribute('_container', 'class', 'gmt-widget-debug');
                 // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
@@ -441,7 +441,7 @@ abstract class AbstractWidget extends AbstractElement
                 $initScripts[$script] = $frontendSettings ?: [];
             }
             // Use `_container` for render via AJAX
-            $this->addRenderAttribute('_container', 'data-mage-init', \Zend_Json::encode($initScripts));
+            $this->addRenderAttribute('_container', 'data-mage-init', DataHelper::encode($initScripts));
         }
 
         ?>

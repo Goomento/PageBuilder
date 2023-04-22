@@ -260,6 +260,7 @@ class Editor
     public function registerScripts()
     {
         $suffix = Configuration::debug() ? '' : '.min';
+        $magentoVersion = Configuration::magentoVersion();
 
         ThemeHelper::registerScript(
             'goomento-editor-modules',
@@ -267,11 +268,15 @@ class Editor
             ['goomento-common-modules']
         );
 
+        // Remove jQuery UI
         ThemeHelper::removeScripts('jquery/ui');
+        $jqueryUi = version_compare($magentoVersion, '2.4.6', '>=') ?
+            'Goomento_PageBuilder/lib/jquery/jquery-ui.1.13.2.min' :
+            'Goomento_PageBuilder/lib/jquery/jquery-ui.min';
 
         ThemeHelper::registerScript(
             'jquery/ui',
-            'Goomento_PageBuilder/lib/jquery/jquery-ui.min',
+            $jqueryUi,
             ['jquery'],
             [
                 'requirejs' => [
@@ -359,7 +364,6 @@ class Editor
                 'tiny_mce_4/tinymce.min' => [
                     'exports' => 'tinyMCE'
                 ],
-                'jquery/jquery-migrate' => ['jquery'],
                 'jquery/jstree/jquery.hotkeys' => ['jquery'],
                 'jquery/hover-intent' => ['jquery'],
                 'mage/adminhtml/backup' => ['prototype'],
@@ -389,7 +393,6 @@ class Editor
                 'js/theme',
                 'mage/backend/bootstrap',
                 'mage/adminhtml/globals',
-                'jquery/jquery-migrate',
             ],
             'paths' => [
                 'jquery/validate' => 'jquery/jquery.validate',
@@ -421,18 +424,15 @@ class Editor
             ]
         ];
 
-        $magentoVersion = Configuration::magentoVersion();
-        if ($magentoVersion) {
-            if (version_compare($magentoVersion, '2.3.6', '>=')) {
-                $requirejs['paths']['jquery/file-uploader'] = 'jquery/fileUploader/jquery.fileuploader';
-            }
-            if (version_compare($magentoVersion, '2.4.4', '>=')) {
-                $requirejs['shim']['tiny_mce_5/tinymce.min'] = [
-                    'exports' => 'tinyMCE'
-                ];
-                $requirejs['map']['*']['tinymce'] = 'tiny_mce_5/tinymce.min';
-                $requirejs['map']['*']['wysiwygAdapter'] = 'mage/adminhtml/wysiwyg/tiny_mce/tinymce5Adapter';
-            }
+        if (version_compare($magentoVersion, '2.3.6', '>=')) {
+            $requirejs['paths']['jquery/file-uploader'] = 'jquery/fileUploader/jquery.fileuploader';
+        }
+        if (version_compare($magentoVersion, '2.4.4', '>=')) {
+            $requirejs['shim']['tiny_mce_5/tinymce.min'] = [
+                'exports' => 'tinyMCE'
+            ];
+            $requirejs['map']['*']['tinymce'] = 'tiny_mce_5/tinymce.min';
+            $requirejs['map']['*']['wysiwygAdapter'] = 'mage/adminhtml/wysiwyg/tiny_mce/tinymce5Adapter';
         }
 
         $requirejs = HooksHelper::applyFilters('pagebuilder/editor/requirejs_config', $requirejs)->getResult();
@@ -517,7 +517,6 @@ class Editor
             'default_schemes' => ObjectManagerHelper::getSchemasManager()->getSchemesDefaults(),
             'settings' => ObjectManagerHelper::getSettingsManager()->getSettingsManagersConfig(),
             'system_schemes' => ObjectManagerHelper::getSchemasManager()->getSystemSchemes(),
-            'tinymce_pre_init' => $this->getTinyMCEPreInit(),
             'additional_shapes' => Shapes::getAdditionalShapesForConfig(),
             'user' => [
                 'roles' => [
@@ -619,20 +618,6 @@ class Editor
          *
          */
         HooksHelper::doAction('pagebuilder/editor/after_enqueue_styles');
-    }
-
-    /**
-     * For TinyMCE setting up
-     *
-     * @return string[]
-     */
-    private function getTinyMCEPreInit()
-    {
-        return [
-            'toolbar' => 'undo redo | formatselect | styleselect | fontsizeselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link table charmap | forecolor backcolor',
-            'plugins' => 'advlist autolink lists link charmap media noneditable table contextmenu paste code help table textcolor colorpicker',
-            'fontsize_formats' => '8px 9px 10px 11px 12px 14px 18px 24px 30px 36px 48px 60px 72px 96px',
-        ];
     }
 
     /**
