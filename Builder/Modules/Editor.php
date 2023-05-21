@@ -101,11 +101,9 @@ class Editor
             $settings['actions']['render_widget'] = UrlBuilderHelper::getFrontendUrl(
                 'pagebuilder/actions/actions',
                 [
-                    '_query' => [
-                        EncryptorHelper::ACCESS_TOKEN => EncryptorHelper::createAccessToken(
-                            $this->getContent()
-                        ),
-                    ],
+                    EncryptorHelper::ACCESS_TOKEN => EncryptorHelper::createAccessToken(
+                        $this->getContent()
+                    ),
                     'store_id' => $storeId
                 ]
             );
@@ -329,8 +327,6 @@ class Editor
                     'knockout' => 'knockoutjs/knockout',
                     'mageUtils' => 'mage/utils/main',
                     'rjsResolver' => 'mage/requirejs/resolver',
-                    'tinymce4' => 'tiny_mce_4/tinymce.min',
-                    'wysiwygAdapter' => 'mage/adminhtml/wysiwyg/tiny_mce/tinymce4Adapter',
                     'loader' => 'mage/loader_old',
                     'loaderAjax' => 'mage/loader_old',
                     'mediabrowser' => 'jquery/jstree/jquery.jstree',
@@ -346,8 +342,9 @@ class Editor
                     'uiRegistry' => 'Magento_Ui/js/lib/registry/registry',
                     'consoleLogger' => 'Magento_Ui/js/lib/logger/console-logger',
                     'uiLayout' => 'Magento_Ui/js/core/renderer/layout',
-                    'tinymceDeprecated' => 'Magento_Tinymce3/tiny_mce/tiny_mce_src',
                     'escaper' =>  'Magento_Security/js/escaper',
+                    'floatingHeader' => 'mage/backend/floating-header',
+                    'validation' => 'mage/backend/validation',
                 ]
             ],
             'shim' => [
@@ -361,9 +358,6 @@ class Editor
                 'jquery/editableMultiselect/js/jquery.editable' => [
                     'jquery'
                 ],
-                'tiny_mce_4/tinymce.min' => [
-                    'exports' => 'tinyMCE'
-                ],
                 'jquery/jstree/jquery.hotkeys' => ['jquery'],
                 'jquery/hover-intent' => ['jquery'],
                 'mage/adminhtml/backup' => ['prototype'],
@@ -375,9 +369,6 @@ class Editor
                     'exports' => 'mediaCheck'
                 ],
                 'magnifier/magnifier' => ['jquery'],
-                'Magento_Tinymce3/tiny_mce/tiny_mce_src' => [
-                    'exports' => 'tinymce'
-                ],
             ],
             'bundles' => [
                 'js/theme' => [
@@ -424,21 +415,7 @@ class Editor
             ]
         ];
 
-        if (version_compare($magentoVersion, '2.3.6', '>=')) {
-            $requirejs['paths']['jquery/file-uploader'] = 'jquery/fileUploader/jquery.fileuploader';
-        }
-        if (version_compare($magentoVersion, '2.4.4', '>=')) {
-            $requirejs['shim']['tiny_mce_5/tinymce.min'] = [
-                'exports' => 'tinyMCE'
-            ];
-            $requirejs['map']['*']['tinymce'] = 'tiny_mce_5/tinymce.min';
-            $requirejs['map']['*']['wysiwygAdapter'] = 'mage/adminhtml/wysiwyg/tiny_mce/tinymce5Adapter';
-        }
-
         $requirejs = HooksHelper::applyFilters('pagebuilder/editor/requirejs_config', $requirejs)->getResult();
-
-        ThemeHelper::removeScripts('underscore');
-        ThemeHelper::registerScript('underscore', 'Goomento_PageBuilder/lib/underscore/underscore.min');
 
         ThemeHelper::registerScript(
             'goomento-editor-engine',
@@ -450,7 +427,8 @@ class Editor
                 'backbone',
                 'backbone.radio',
                 'backbone.marionette',
-                'mage/adminhtml/wysiwyg/tiny_mce/setup',
+                'mage/adminhtml/browser',
+                'prototype',
                 'nouislider',
                 'goomento-common',
                 'goomento-editor-modules',

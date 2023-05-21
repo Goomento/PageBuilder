@@ -46,20 +46,23 @@ class EscaperHelper
      */
     public static function filter(array $data, bool $escaped = false)
     {
-        $instance = '';
+        $instance = null;
         if (class_exists('Zend_Filter_Input')) {
             $instance = 'Zend_Filter_Input';
+            $instance = new $instance([], [], $data);
         } elseif (class_exists('Magento\Framework\Filter\FilterInput')) {
             $instance = 'Magento\Framework\Filter\FilterInput';
+            $instance = new $instance([], [], $data);
+            $instance->setDefaultEscapeFilter('Laminas\Filter\HtmlEntities');
         }
 
         $result = false;
 
         if ($instance) {
             if ($escaped) {
-                $result = (new $instance([], [], $data))->getEscaped();
+                $result = $instance->getEscaped();
             } else {
-                $result = (new $instance([], [], $data))->getUnescaped();
+                $result = $instance->getUnescaped();
             }
         }
 

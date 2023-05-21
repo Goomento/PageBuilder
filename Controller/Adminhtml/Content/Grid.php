@@ -25,11 +25,6 @@ class Grid extends Action implements HttpGetActionInterface
     const DATA_KEY = 'pagebuilder_content';
 
     /**
-     * @var PageFactory
-     */
-    protected $pageFactory;
-
-    /**
      * @param Context $context
      * @param PageFactory $resultPageFactory
      */

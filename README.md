@@ -17,17 +17,19 @@ Magento store owners can view changes in Magento with 100% accuracy, drag and dr
 
 [Why Us](https://goomento.com/blog/post/goomento-page-builder-vs-magento-page-builder)
 
-[Widgets](https://goomento.com/blog/post/goomento-widget-list)
-
 [Custom Templates](#custom-templates)
 
 [Change Log](https://github.com/Goomento/PageBuilder/blob/master/CHANGELOG.md)
 
-[Document And User Guide](https://goomento.com/blog/category/user-guide)
+[List Of Widgets](#list-of-widgets)
 
-[Troubleshoot](https://goomento.com/blog/post/troubleshooting)
+[User Guide](https://github.com/Goomento/PageBuilder/wiki/User-Guide:-Add-Landing-Page)
 
-[Open An Issue And Contribution](#open-an-issue-and-contribution)
+[Developer Guide](https://github.com/Goomento/PageBuilder/wiki/Developer:-Create-Widget)
+
+[Troubleshooting](https://github.com/Goomento/PageBuilder/wiki/Troubleshooting)
+
+[Open An Issue And Contribution](https://github.com/Goomento/PageBuilder/issues/new)
 
 ## Install Goomento
 
@@ -111,8 +113,58 @@ Magento Community Edition (CE): 2.3.x, 2.4.0 - 2.4.5*, 2.4.6
 
 Magento Enterprise Edition (EE): 2.3.x, 2.4.0 - 2.4.5*, 2.4.6
 
-## Open An Issue And Contribution
+## List Of Widgets
 
-Feel free to Open an Issue, Fork and Create Pull Request (PR) on GitHub
+### Basic pack:
+- Text
+- HTML
+- Magento Block
+- Section/ Column
+- Image
+- Icon
+- Banner
+- Spacer
+- Video
+- Text Editor
+- Google Maps
 
-For opening an issue, click [here](https://github.com/Goomento/PageBuilder/issues/new).
+### General pack:
+
+- Accordion
+- Tabs
+- Toggles
+- Alert
+- Audio
+- Countdown
+- Divider
+- Icon Box
+- Icon List
+- Image Box
+- Progress Bar
+- Social Icons
+- Star Rating
+- Banner Slider (Carousel)
+- Image Slider (Carousel)
+- Testimonial
+- Call To Action (CTA)
+- Popup (Set section as a popup/modal)
+- Facebook Like + Comment
+- Facebook Pages + Post + Video
+- Navigation (Menu)
+
+### Product pack:
+
+- Add To Cart Button
+- Product List
+- Product Slider (Carousel)
+- Pricing Table
+
+### Magento pack:
+- Recently Viewed Products
+- Recently Compared Products
+- New Products
+- Orders And Returns
+
+### Form builder pack:
+- [Form Builder](https://goomento.com/magento-form-builder)
+- [Multistep Form Builder](https://goomento.com/magento-form-builder)

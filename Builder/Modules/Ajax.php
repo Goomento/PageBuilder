@@ -138,7 +138,6 @@ class Ajax extends AbstractModule
             $this->currentActionId = $actionId;
 
             if (!isset($this->registeredAjaxActions[ $actionData['action'] ?? '' ])) {
-                $this->addToCurrentResponseData(false, __('Action not found.'), 400);
 
                 continue;
             }

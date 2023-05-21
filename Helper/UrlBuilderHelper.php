@@ -103,10 +103,8 @@ class UrlBuilderHelper
         return self::getFrontendUrl('pagebuilder/content/editorpreview', [
             'content_id' => $content->getId(),
             'store_id' => self::getStoreId($content),
-            '_query' => [
-                EncryptorHelper::ACCESS_TOKEN => EncryptorHelper::createAccessToken($content, $userId),
-                'layout' => $content->getSetting('layout')
-            ]
+            'layout' => $content->getSetting('layout'),
+            EncryptorHelper::ACCESS_TOKEN => EncryptorHelper::createAccessToken($content, $userId)
         ]);
     }
 
@@ -120,9 +118,7 @@ class UrlBuilderHelper
         return self::getFrontendUrl('pagebuilder/content/view', [
             'content_id' => $content->getOriginContent()->getId(),
             'store_id' => self::getStoreId($content),
-            '_query' => [
-                EncryptorHelper::ACCESS_TOKEN => EncryptorHelper::createAccessToken($content, $userId)
-            ]
+            EncryptorHelper::ACCESS_TOKEN => EncryptorHelper::createAccessToken($content, $userId)
         ]);
     }
 

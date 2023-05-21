@@ -1,5 +1,10 @@
 # Magento 2 Goomento Page Builder
 
+## 0.4.4 Magento 2.4.6 & PHP8.2
+- Fixed compatibility with Magento 2.4.6 & PHP8.2
+- Fixed minor bugs
+- Added Menu builder extension to module
+
 ## 0.4.3 Fix compatibility with Magento 2.4.6
 - Fix issue #26
 - Fixed minor bugs

@@ -34,7 +34,7 @@ class Config extends AbstractDb
      * @return Config
      * @throws LocalizedException
      */
-    public function saveConfig($path, $value, int $storeId = 0)
+    public function saveConfig($path, $value, int $storeId = \Goomento\PageBuilder\Model\Config::DEFAULT_STORE_ID)
     {
         if (is_array($value)) {
             try {

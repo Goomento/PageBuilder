@@ -43,12 +43,6 @@ class Schemes
         ColorPicker::NAME
     ];
 
-    protected $components = [
-        Color::NAME => Color::class,
-        Typography::NAME => Typography::class,
-        ColorPicker::NAME => ColorPicker::class,
-    ];
-
     /**
      * @param $id
      * @return bool
@@ -220,5 +214,11 @@ class Schemes
     public function __construct()
     {
         HooksHelper::addAction('pagebuilder/ajax/register_actions', [ $this,'registerAjaxActions' ]);
+
+        $this->components = [
+            Color::NAME => Color::class,
+            Typography::NAME => Typography::class,
+            ColorPicker::NAME => ColorPicker::class,
+        ];
     }
 }

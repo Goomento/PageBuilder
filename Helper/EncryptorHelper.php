@@ -23,7 +23,7 @@ use Magento\Framework\Encryption\EncryptorInterface;
 // phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class EncryptorHelper
 {
-    const ACCESS_TOKEN = 'token';
+    const ACCESS_TOKEN = 'gmt_token';
 
     /**
      * Default token will be expired in 3 hours

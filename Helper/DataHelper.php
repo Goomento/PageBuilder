@@ -135,16 +135,20 @@ class DataHelper
      * @param $datetime
      * @param false $full
      * @return string
+     * @deprecated
      * @throws \Exception
      */
-    public static function timeElapsedString($datetime, bool $full = false)
+    public static function timeElapsedString($datetime, bool $full = false): string
     {
         $now = new \DateTime;
         $ago = new \DateTime($datetime);
         $diff = $now->diff($ago);
 
-        $diff->w = floor($diff->d / 7);
-        $diff->d -= $diff->w * 7;
+        $diffTime = [
+            'w' => floor($diff->d / 7)
+        ];
+
+        $diffTime['d'] = $diffTime['w'] * 7;
 
         $string = [
             'y' => 'year',
@@ -157,8 +161,8 @@ class DataHelper
         ];
 
         foreach ($string as $k => &$v) {
-            if ($diff->$k) {
-                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+            if (isset($diffTime[$k])) {
+                $v = $diffTime[$k] . ' ' . $v . ($diffTime[$k] > 1 ? 's' : '');
             } else {
                 unset($string[$k]);
             }

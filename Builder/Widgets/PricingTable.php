@@ -9,8 +9,6 @@ namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
 use Goomento\PageBuilder\Builder\Base\ControlsStack;
-use Goomento\PageBuilder\Builder\Controls\Groups\BorderGroup;
-use Goomento\PageBuilder\Builder\Controls\Groups\BoxShadowGroup;
 use Goomento\PageBuilder\Builder\Elements\Repeater;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Exception\BuilderException;
@@ -255,7 +253,7 @@ class PricingTable extends AbstractWidget
         ControlsStack $widget,
         string $prefix = self::NAME . '_'
     ) {
-        $repeater = new Repeater;
+        $repeater = new Repeater();
 
         self::registerPricingTableFeature($repeater, $prefix);
 

@@ -111,7 +111,7 @@
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
                         <item name="type" xsi:type="string">refresh</item>
-                        <item name="label" xsi:type="string" translate="true">Refresh</item>
+                        <item name="label" xsi:type="string" translate="true">Refresh Style/Cache</item>
                         <item name="url" xsi:type="url" path="pagebuilder/content/massRefresh/type/template"/>
                     </item>
                 </argument>

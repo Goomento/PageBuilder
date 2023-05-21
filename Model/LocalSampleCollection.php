@@ -16,11 +16,6 @@ class LocalSampleCollection
     use TraitComponentsLoader;
 
     /**
-     * @var array
-     */
-    private $components;
-
-    /**
      * @param array $samples
      */
     public function __construct(

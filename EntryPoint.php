@@ -11,10 +11,42 @@ namespace Goomento\PageBuilder;
 use Goomento\PageBuilder\Builder\Managers\Widgets;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
+use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 
 class EntryPoint extends BuilderRegister
 {
+    /**
+     * Construct the builder
+     */
+    public function __construct()
+    {
+        // Run the internal packages
+        $this->_construct();
+    }
+
+    /**
+     * @return void
+     */
+    private function _construct()
+    {
+        ObjectManagerHelper::get(Builder\Modules\Preview::class);
+        ObjectManagerHelper::get(Builder\Modules\Frontend::class);
+        ObjectManagerHelper::get(Builder\Modules\Editor::class);
+        ObjectManagerHelper::get(Builder\Modules\Common::class);
+        ObjectManagerHelper::get(Builder\Managers\Sources::class);
+        ObjectManagerHelper::get(Builder\Managers\Controls::class);
+        ObjectManagerHelper::get(Builder\Managers\Schemes::class);
+        ObjectManagerHelper::get(Builder\Managers\Elements::class);
+        ObjectManagerHelper::get(Builder\Managers\Widgets::class);
+        ObjectManagerHelper::get(Builder\Managers\Icons::class);
+        ObjectManagerHelper::get(Builder\Managers\Tags::class);
+        ObjectManagerHelper::get(Builder\Managers\Revisions::class);
+        ObjectManagerHelper::get(Builder\Managers\Documents::class);
+        ObjectManagerHelper::get(Builder\Managers\Settings::class);
+        ObjectManagerHelper::get(Builder\Managers\Resolvers::class);
+    }
+
     /**
      * @inheritDoc
      */

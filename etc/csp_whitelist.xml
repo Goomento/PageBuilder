@@ -15,6 +15,7 @@
         <policy id="style-src">
             <values>
                 <value id="fonts.googleapis.com" type="host">https://fonts.googleapis.com</value>
+                <value id="cdnjs.cloudflare.com" type="host">https://cdnjs.cloudflare.com/</value>
             </values>
         </policy>
         <policy id="script-src">

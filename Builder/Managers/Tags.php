@@ -70,11 +70,6 @@ class Tags
     private $parsingMode = self::MODE_RENDER;
 
     /**
-     * @var AbstractTag|string[]
-     */
-    private $components;
-
-    /**
      * Dynamic tags manager constructor.
      *
      * Initializing Goomento dynamic tags manager.

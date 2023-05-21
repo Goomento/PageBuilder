@@ -129,8 +129,11 @@ class PageBuilder implements SubSystemInterface
      */
     private function initComponents(array $buildSubject = [])
     {
-        foreach ($this->components as $class) {
-            $component = $this->objectManager->get($class);
+        foreach ($this->components as $component) {
+            if (is_string($component) && class_exists($component)) {
+                $component = $this->objectManager->get($component);
+            }
+
             if ($component instanceof BuildableInterface) {
                 $component->init($buildSubject);
             }

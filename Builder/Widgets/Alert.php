@@ -8,12 +8,9 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Widgets;
 
-use Goomento\PageBuilder\Builder\Base\AbstractElement;
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
 use Goomento\PageBuilder\Builder\Base\ControlsStack;
-use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Builder\Schemes\Typography;
 use Goomento\PageBuilder\Exception\BuilderException;
 
 class Alert extends AbstractWidget

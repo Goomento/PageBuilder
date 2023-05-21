@@ -27,6 +27,11 @@ trait TraitHttpPage
         ],
     ];
 
+    /**
+     * @var PageFactory|null
+     */
+    protected $pageFactory;
+
     use TraitHttpContentAction;
 
     /**
@@ -79,7 +84,7 @@ trait TraitHttpPage
      */
     private function createPageResult()
     {
-        if (!isset($this->pageFactory)) {
+        if (null === $this->pageFactory) {
             $this->pageFactory = ObjectManagerHelper::get(PageFactory::class);
         }
 

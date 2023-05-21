@@ -9,16 +9,10 @@
     <update handle="pagebuilder_general"/>
     <body>
         <container name="editor-content" as="editor-content">
-            <block name="pagebuilder.editor" template="Goomento_PageBuilder::editor/live_editor.phtml">
-                <block name="pagebuilder.media_bucket" template="Goomento_PageBuilder::editor/templates/media_bucket.phtml" />
-                <block name="pagebuilder.editor.templates.editor_panel" template="Goomento_PageBuilder::editor/templates/editor_panel.phtml" />
-                <block name="pagebuilder.editor.templates.elements_panel" template="Goomento_PageBuilder::editor/templates/elements_panel.phtml" />
-                <block name="pagebuilder.editor.templates.templates_panel" template="Goomento_PageBuilder::editor/templates/templates_panel_template.phtml" />
-                <block name="pagebuilder.editor.templates.navigator" template="Goomento_PageBuilder::editor/templates/navigator.phtml" />
-                <block name="pagebuilder.editor.templates.hotkeys" template="Goomento_PageBuilder::editor/templates/hotkeys.phtml" />
-                <block name="pagebuilder.editor.templates.revision_panel" template="Goomento_PageBuilder::editor/templates/revisions_panel_template.phtml" />
-                <block name="pagebuilder.editor.templates.history_panel" template="Goomento_PageBuilder::editor/templates/history_panel_template.phtml" />
-                <block name="pagebuilder.editor.templates.library_layout" template="Goomento_PageBuilder::editor/templates/library_layout.phtml" />
+            <block name="pagebuilder.editor" template="Goomento_PageBuilder::editor/editor.phtml">
+                <block name="pagebuilder.media_uploader"
+                       class="Goomento\PageBuilder\Block\Adminhtml\Editor\MediaUploader"
+                       template="Goomento_PageBuilder::editor/media_uploader.phtml" />
             </block>
         </container>
 

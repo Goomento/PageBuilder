@@ -15,11 +15,6 @@ class Settings
 {
     use TraitComponentsLoader;
 
-    private $components = [
-        GeneralSettings::NAME => GeneralSettings::class,
-        PageSettings::NAME => PageSettings::class,
-    ];
-
     /**
      * Add settings manager.
      *
@@ -126,5 +121,10 @@ class Settings
     public function __construct()
     {
         $this->registerDefaultSettingsManagers();
+
+        $this->components = [
+            GeneralSettings::NAME => GeneralSettings::class,
+            PageSettings::NAME => PageSettings::class,
+        ];
     }
 }

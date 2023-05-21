@@ -6,24 +6,19 @@
 
 declare(strict_types=1);
 /**
- * @var Template $block
+ * @var MediaUploader $block
  */
 
 use Goomento\PageBuilder\Helper\DataHelper;
-use Magento\Backend\Block\Template;
+use Goomento\PageBuilder\Block\Adminhtml\Editor\MediaUploader;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
+use Goomento\PageBuilder\Helper\RequestHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Magento\Framework\UrlInterface;
 
 $editor = ObjectManagerHelper::getEditor();
 $document = $editor->getDocument();
-$storeIds = $editor->getBuildableContent()->getOriginContent()->getStoreIds();
-$storeId = $mediaUrl = '';
-if ($storeIds) {
-    $storeId = implode(',', $storeIds);
-} else {
-    $storeId = '0';
-}
+$storeId = (int) RequestHelper::getParam('store', 0);
 if (DataHelper::getCustomMediaUrl()) {
     $mediaUrl = DataHelper::getCustomMediaUrl();
 } else {
@@ -33,8 +28,8 @@ if (DataHelper::getCustomMediaUrl()) {
     ]);
 }
 ?>
-<div class="image-bucket" data-bind="scope: 'uploader'" style="height: 0;width: 0">
-    <input type="hidden" id="image-bucket">
+<div class="image-bucket" style="height: 0;width: 0">
+    <input type="hidden" id="image_bucket">
 </div>
 <script>
     window.goomentoMediaUrl = "<?=  /** @noEscape */ $mediaUrl ?>";
@@ -44,15 +39,12 @@ if (DataHelper::getCustomMediaUrl()) {
     ".image-bucket": {
         "Magento_Ui/js/core/app": {
                 "components": {
-                        "image-bucket": {
-                            "component": "Goomento_PageBuilder/js/media-bucket/uploader",
-                            "mediaGallery":{
-                            "openDialogUrl":"<?= $block->escapeUrl($block->getUrl('cms/wysiwyg_images/index', ['_secure' => true])) ?>",
-                            "initialOpenSubpath":"wysiwyg",
-                            "storeId":"<?=  /** @noEscape */ $storeId ?>"
-                    }
+                        "image-uploader": {
+                            "component": "Goomento_PageBuilder/js/media/uploader",
+                            "openDialogUrl": "<?= $block->escapeUrl($block->getMediaUploadUrl('image_bucket', (int) $storeId)) ?>",
+                            "htmlId": "image_bucket"
+                        }
                 }
-            }
         }
     }
 }

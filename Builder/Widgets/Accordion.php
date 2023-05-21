@@ -101,7 +101,6 @@ class Accordion extends AbstractWidget
         );
     }
 
-
     /**
      * @param ControlsStack $widget
      * @param string $prefix
@@ -112,7 +111,7 @@ class Accordion extends AbstractWidget
         ControlsStack $widget,
         string $prefix = self::NAME . '_'
     ) {
-        $repeater = new Repeater;
+        $repeater = new Repeater();
 
         self::registerAccordionItemInterface($repeater, $prefix);
 

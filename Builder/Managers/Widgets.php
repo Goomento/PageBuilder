@@ -20,16 +20,6 @@ class Widgets
     use TraitComponentsLoader;
 
     /**
-     * Widget types.
-     *
-     * Holds the list of all the widget types.
-     *
-     *
-     * @var AbstractWidget[]|null
-     */
-    private $components = null;
-
-    /**
      * Init widgets.
      */
     private function initWidgets()
@@ -55,6 +45,12 @@ class Widgets
     {
         if (null === $this->components) {
             $this->initWidgets();
+        }
+
+        if (!is_a($widget, AbstractWidget::class, true)) {
+            throw new \Exception(
+                sprintf('%s must extend from %s', get_class($widget),AbstractWidget::class)
+            );
         }
 
         if ($widget::ENABLED) {
@@ -214,17 +210,6 @@ class Widgets
     }
 
     /**
-     * Widgets manager constructor.
-     *
-     * Initializing Goomento widgets manager.
-     *
-     */
-    public function __construct()
-    {
-        HooksHelper::addAction('pagebuilder/ajax/register_actions', [ $this,'registerAjaxActions' ]);
-    }
-
-    /**
      * Register ajax actions.
      *
      * Add new actions to handle data after an ajax requests returned.
@@ -236,5 +221,16 @@ class Widgets
     public function registerAjaxActions(Ajax $ajaxManager)
     {
         $ajaxManager->registerAjaxAction('get_widgets_config', [ $this, 'ajaxGetWidgetTypesControlsConfig' ]);
+    }
+
+    /**
+     * Widgets manager constructor.
+     *
+     * Initializing Goomento widgets manager.
+     *
+     */
+    public function __construct()
+    {
+        HooksHelper::addAction('pagebuilder/ajax/register_actions', [ $this,'registerAjaxActions' ]);
     }
 }

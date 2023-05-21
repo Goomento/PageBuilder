@@ -219,20 +219,6 @@
         <arguments>
             <argument name="components" xsi:type="array">
                 <item name="pagebuilder" xsi:type="string">Goomento\PageBuilder\EntryPoint</item>
-                <item name="preview-module" xsi:type="string">Goomento\PageBuilder\Builder\Modules\Preview</item>
-                <item name="frontend-module" xsi:type="string">Goomento\PageBuilder\Builder\Modules\Frontend</item>
-                <item name="template-library-module" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Sources</item>
-                <item name="live-editor-module" xsi:type="string">Goomento\PageBuilder\Builder\Modules\Editor</item>
-                <item name="controls-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Controls</item>
-                <item name="schemes-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Schemes</item>
-                <item name="elements-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Elements</item>
-                <item name="widgets-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Widgets</item>
-                <item name="icons-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Icons</item>
-                <item name="tags-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Tags</item>
-                <item name="revisions-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Revisions</item>
-                <item name="documents-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Documents</item>
-                <item name="settings-manager" xsi:type="string">Goomento\PageBuilder\Builder\Managers\Settings</item>
-                <item name="common" xsi:type="string">Goomento\PageBuilder\Builder\Modules\Common</item>
             </argument>
         </arguments>
     </type>
@@ -250,14 +236,4 @@
             </argument>
         </arguments>
     </type>
-    <type name="Goomento\PageBuilder\Controller\Content\View">
-        <plugin name="pagebuilder.validateAccess" type="Goomento\PageBuilder\Plugin\PageBuilder\Controller\ValidateAccess" />
-    </type>
-    <type name="Goomento\PageBuilder\Controller\Content\EditorPreview">
-        <plugin name="pagebuilder.validateAccess" type="Goomento\PageBuilder\Plugin\PageBuilder\Controller\ValidateAccess" />
-    </type>
-    <type name="Goomento\PageBuilder\Controller\Actions\Actions">
-        <plugin name="pagebuilder.validateAccess" type="Goomento\PageBuilder\Plugin\PageBuilder\Controller\ValidateAccess" />
-    </type>
 </config>
-

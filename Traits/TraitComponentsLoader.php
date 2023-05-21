@@ -12,6 +12,8 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 trait TraitComponentsLoader
 {
+    protected $components;
+
     /**
      * @return array
      */
@@ -76,10 +78,6 @@ trait TraitComponentsLoader
      */
     private function getRegisterComponents()
     {
-        if (!isset($this->components)) {
-            $this->components = [];
-        }
-
         return $this->components;
     }
 
@@ -89,8 +87,6 @@ trait TraitComponentsLoader
      */
     protected function removeComponent(?string $name)
     {
-        $this->getRegisterComponents();
-
         if (null === $name) {
             $this->components = [];
             return true;
