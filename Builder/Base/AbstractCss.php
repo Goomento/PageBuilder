@@ -14,7 +14,7 @@ use Goomento\PageBuilder\Builder\Managers\Icons;
 use Goomento\PageBuilder\Builder\Managers\Tags;
 use Goomento\PageBuilder\Builder\Modules\Frontend;
 use Goomento\PageBuilder\Builder\Modules\Stylesheet;
-use Goomento\PageBuilder\Configuration;
+use Goomento\PageBuilder\Developer;
 use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\ConfigHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
@@ -640,7 +640,7 @@ abstract class AbstractCss extends AbstractFile
         /** @var Stylesheet stylesheet_obj */
         $this->stylesheetObj = ObjectManagerHelper::get(Stylesheet::class);
 
-        $breakpoints = Configuration::DEFAULT_BREAKPOINTS;
+        $breakpoints = Developer::DEFAULT_BREAKPOINTS;
 
         $this->stylesheetObj
             ->addDevice('mobile', 0)

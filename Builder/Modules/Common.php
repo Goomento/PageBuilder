@@ -8,13 +8,12 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Modules;
 
-use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Base\AbstractApp;
 use Goomento\PageBuilder\Builder\Modules\Ajax as Ajax;
+use Goomento\PageBuilder\Developer;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
-use Goomento\PageBuilder\Helper\TemplateHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 
@@ -58,7 +57,7 @@ class Common extends AbstractApp
      */
     public function registerScriptsEditorBefore()
     {
-        $minSuffix = Configuration::debug() ? '' : '.min';
+        $minSuffix = Developer::debug() ? '' : '.min';
 
         ThemeHelper::registerScript(
             'goomento-common-modules',
@@ -92,13 +91,13 @@ class Common extends AbstractApp
      */
     public function registerStyles()
     {
-        $minSuffix = Configuration::debug() ? '' : '.min';
+        $minSuffix = Developer::debug() ? '' : '.min';
 
         ThemeHelper::registerStyle(
             'goomento-common',
             'Goomento_PageBuilder/build/common' . $minSuffix . '.css',
             [],
-            Configuration::version()
+            Developer::version()
         );
     }
 
@@ -112,7 +111,7 @@ class Common extends AbstractApp
     protected function getInitSettings()
     {
         return [
-            'version' => Configuration::version(),
+            'version' => Developer::version(),
             'isRTL' => DataHelper::isRtl(),
             'activeModules' => array_keys($this->getComponents()),
             'urls' => [

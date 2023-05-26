@@ -54,7 +54,7 @@ class EditorPreview extends View
 
         return [
             'editable_title' => 'Preview: %1',
-            'handler' => $layout ? $layout : (
+            'handler' => $layout ?: (
                 $this->getContentLayout() ?: 'pagebuilder_content_1column'
             ),
         ];

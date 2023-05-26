@@ -14,7 +14,7 @@ use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractSource;
 use Goomento\PageBuilder\Builder\Managers\PageSettings;
 use Goomento\PageBuilder\Builder\Settings\Page;
-use Goomento\PageBuilder\Configuration;
+use Goomento\PageBuilder\Developer;
 use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
@@ -488,7 +488,7 @@ class Local extends AbstractSource
         }
 
         $exportData = [
-            'version' => Configuration::version(),
+            'version' => Developer::version(),
             'title' => $content->getTitle(),
             'type' => self::getTemplateType($templateId),
         ];

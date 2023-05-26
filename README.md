@@ -9,13 +9,13 @@ Magento store owners can view changes in Magento with 100% accuracy, drag and dr
 
 [Installation](#install-goomento)
 
+[Why Goomento - Magento Page Builder](https://goomento.com/blog/post/goomento-page-builder-vs-magento-page-builder)
+
 [Version Compatible](#version-compatible)
 
 [Demo](https://goomento.com/goomento-the-free-magento-page-builder-extension)
 
 [Setup](#setup)
-
-[Why Us](https://goomento.com/blog/post/goomento-page-builder-vs-magento-page-builder)
 
 [Custom Templates](#custom-templates)
 
@@ -23,13 +23,13 @@ Magento store owners can view changes in Magento with 100% accuracy, drag and dr
 
 [List Of Widgets](#list-of-widgets)
 
-[User Guide](https://github.com/Goomento/PageBuilder/wiki/User-Guide:-Add-Landing-Page)
-
-[Developer Guide](https://github.com/Goomento/PageBuilder/wiki/Developer:-Create-Widget)
+[User Guide & DevDoc](https://github.com/Goomento/PageBuilder/wiki/)
 
 [Troubleshooting](https://github.com/Goomento/PageBuilder/wiki/Troubleshooting)
 
-[Open An Issue And Contribution](https://github.com/Goomento/PageBuilder/issues/new)
+[REST API and GraphQL](https://github.com/Goomento/PageBuilderApi)
+
+[Open An Issue](https://github.com/Goomento/PageBuilder/issues/new)
 
 ## Install Goomento
 

@@ -11,7 +11,7 @@ namespace Goomento\PageBuilder\Builder\Base;
 use Exception;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Managers\Controls;
-use Goomento\PageBuilder\Configuration;
+use Goomento\PageBuilder\Developer;
 use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
@@ -576,7 +576,7 @@ abstract class AbstractDocument extends ControlsStack
     public function setModelVersion()
     {
         // Save per revision.
-        $this->updateMeta('version', Configuration::version());
+        $this->updateMeta('version', Developer::version());
 
         /**
          * Document version save.

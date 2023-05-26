@@ -24,6 +24,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\User\Model\User;
 use Magento\User\Model\UserFactory;
 
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class Content extends AbstractModel implements ContentInterface, IdentityInterface
 {
     use TraitBuildableModel;

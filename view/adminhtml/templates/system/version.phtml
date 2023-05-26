@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @var $block Version
  */
 
-use Goomento\PageBuilder\Configuration;
+use Goomento\PageBuilder\Developer;
 use Goomento\PageBuilder\Model\Config\Frontend\Version;
 
 ?>
@@ -17,10 +17,15 @@ use Goomento\PageBuilder\Model\Config\Frontend\Version;
 <div class="gmt-system_config" id="goomento_pagebuilder">
     <div class="gmt-system_config-wrapper">
         <p>Thanks for using <strong>Goomento</strong> - The Magento Page Builder Extension</p>
-        <p>Module Version: <span class="gmt-version"><?= $block->escapeHtml(Configuration::version()) ?></span></p>
+        <p>Module Version: <span class="gmt-version"><?= $block->escapeHtml(Developer::version()) ?></span></p>
         <a target="_blank"
            href="https://github.com/Goomento/PageBuilder">
             <?= $block->escapeHtml(__('What\'s new?')) ?>
+        </a>
+        <br />
+        <a target="_blank"
+           href="https://github.com/Goomento/PageBuilder/wiki">
+            <?= $block->escapeHtml(__('Documents')) ?>
         </a>
         <div class="gmt-system_config-release-notes">
             <div class="gmt-system_config-release-note" style="display: none">

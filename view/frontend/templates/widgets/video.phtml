@@ -30,9 +30,7 @@ if (empty($videoUrl)) {
 }
 
 if ('other' === $settings['video_type']) {
-    ob_start();
-    $widget->renderExternalVideo();
-    $videoHtml = ob_get_clean();
+    $videoHtml = $widget->renderExternalVideo();
 } else {
     $embedParams = $widget->getEmbedParams();
     $embedOptions = $widget->getEmbedOptions();

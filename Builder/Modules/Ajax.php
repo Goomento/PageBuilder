@@ -11,7 +11,7 @@ namespace Goomento\PageBuilder\Builder\Modules;
 use Exception;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractModule;
-use Goomento\PageBuilder\Configuration;
+use Goomento\PageBuilder\Developer;
 use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
@@ -161,7 +161,7 @@ class Ajax extends AbstractModule
                 }
             } catch (Exception $e) {
                 LoggerHelper::error($e);
-                if (Configuration::debug()) {
+                if (Developer::debug()) {
                     $this->addToCurrentResponseData(false, $e->getMessage(), $e->getCode());
                 } else {
                     $this->addToCurrentResponseData(false, __('Something went wrong. Please try again later.'), 502);

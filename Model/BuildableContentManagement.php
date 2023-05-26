@@ -30,6 +30,7 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\PageCache\Model\Cache\Type;
 
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class BuildableContentManagement implements BuildableContentManagementInterface
 {
     /**

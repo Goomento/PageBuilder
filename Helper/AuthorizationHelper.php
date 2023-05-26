@@ -31,7 +31,7 @@ class AuthorizationHelper
      */
     protected static function getStaticInstance()
     {
-        return self::getInstance(Authorization::class);
+        return Authorization::class;
     }
 
     /**

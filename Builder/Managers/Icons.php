@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Builder\Managers;
 
-use Goomento\PageBuilder\Configuration;
+use Goomento\PageBuilder\Developer;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
@@ -132,7 +132,7 @@ class Icons
     {
         static $isTestMode = null;
         if (null === $isTestMode) {
-            $isTestMode = !!Configuration::debug();
+            $isTestMode = !!Developer::debug();
         }
         $url = 'Goomento_PageBuilder/lib/font-awesome/' . $extType . '/' . $filename;
         if (!$isTestMode && $addSuffix) {

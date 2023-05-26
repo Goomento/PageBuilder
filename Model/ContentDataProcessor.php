@@ -112,9 +112,8 @@ class ContentDataProcessor
     public function getSettingsForDisplay(array $data) : array
     {
         if (!isset($data['elType'])) {
-            throw new Exception(
-                'Missing element type for getting settings.'
-            );
+            // phpcs:disable Magento2.Exceptions.DirectThrow.FoundDirectThrow
+            throw new Exception('Missing element type for getting settings.');
         }
 
         $key = EncryptorHelper::uniqueStringId(DataHelper::encode($data));

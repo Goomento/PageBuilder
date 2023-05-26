@@ -104,10 +104,10 @@ class EscaperHelper
     }
 
     /**
-     * @return Escaper
+     * @inheritDoc
      */
     protected static function getStaticInstance()
     {
-        return self::getInstance(Escaper::class);
+        return Escaper::class;
     }
 }

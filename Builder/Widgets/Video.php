@@ -840,7 +840,6 @@ class Video extends AbstractWidget
         $videoParams = [];
 
         foreach ([ 'video_autoplay', 'video_loop', 'video_controls' ] as $optionName) {
-            $optionName = substr($optionName, 6);
             if ($settings[ $optionName ]) {
                 $videoParams[ $optionName ] = '';
             }
@@ -892,15 +891,15 @@ class Video extends AbstractWidget
     /**
      * @return void
      */
-    public function renderExternalVideo()
+    public function renderExternalVideo() : string
     {
         $videoUrl = $this->getExternalVideoUrl();
         if (empty($videoUrl)) {
-            return;
+            return '';
         }
 
-        $videoParams = $this->getExternalParams(); ?>
-        <video class="gmt-video" src="<?= $videoUrl; ?>" <?= /** @noEscape */ DataHelper::renderHtmlAttributes($videoParams); ?>></video>
-        <?php
+        $videoParams = $this->getExternalParams();
+
+        return '<video class="gmt-video" src="' . $videoUrl . '" ' . DataHelper::renderHtmlAttributes($videoParams) .'></video>';
     }
 }

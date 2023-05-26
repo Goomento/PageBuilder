@@ -15,13 +15,13 @@ use Goomento\PageBuilder\Helper\RegistryHelper;
 use Goomento\PageBuilder\Model\SampleImporterProcessor;
 use Magento\Backend\Block\Template;
 
+// phpcs:disable Magento2.Functions.DiscouragedFunction.Discouraged
+
 /** @var SampleImportInterface[] $allSamples */
 $allSamples = (array) RegistryHelper::registry('all_import_samples');
 
 /** @var SampleImporterProcessor $importProcessor */
-$importProcessor = ObjectManagerHelper::get(
-    SampleImporterProcessor::class
-);
+$importProcessor = ObjectManagerHelper::get(SampleImporterProcessor::class);
 ?>
 <div class="admin__data-grid-wrap">
     <table class="data-grid">

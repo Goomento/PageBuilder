@@ -77,7 +77,7 @@ class Navigation extends AbstractWidget
         $this->addControl(
             'navigation_menu_warning',
             [
-                'raw' => __('This widget requires to install <a target="_blank" href="https://github.com/SnowdogApps/magento2-menu">Snowdog Menu</a>.'),
+                'raw' => __('Create new menu at Admin Panel > Content > Elements > Menus'),
                 'type' => Controls::RAW_HTML,
                 'content_classes' => 'gmt-descriptor',
             ]

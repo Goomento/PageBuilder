@@ -42,7 +42,7 @@ class RequestHelper
      */
     protected static function getStaticInstance()
     {
-        return self::getInstance(RequestInterface::class);
+        return RequestInterface::class;
     }
 
     /**

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Modules;
 
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
-use Goomento\PageBuilder\Configuration;
+use Goomento\PageBuilder\Developer;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
@@ -79,7 +79,7 @@ class Preview
     {
         ObjectManagerHelper::getWidgetsManager()->enqueueWidgetsStyles();
 
-        $debugSuffix = Configuration::debug() ? '' : '.min';
+        $debugSuffix = Developer::debug() ? '' : '.min';
 
         $directionSuffix = DataHelper::isRtl() ? '-rtl' : '';
 

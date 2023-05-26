@@ -34,10 +34,10 @@ class AssetsHelper
     use TraitStaticCaller;
 
     /**
-     * @return Assets
+     * @inheritDoc
      */
     protected static function getStaticInstance()
     {
-        return self::getInstance(Assets::class);
+        return Assets::class;
     }
 }

@@ -10,6 +10,7 @@ namespace Goomento\PageBuilder\Helper;
 
 use Goomento\Core\Traits\TraitStaticCaller;
 use Goomento\Core\Traits\TraitStaticInstances;
+use Goomento\PageBuilder\Logger\Logger;
 
 /**
  *
@@ -37,6 +38,6 @@ class LoggerHelper
      */
     protected static function getStaticInstance()
     {
-        return \Goomento\PageBuilder\Logger\Logger::class;
+        return Logger::class;
     }
 }

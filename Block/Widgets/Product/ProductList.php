@@ -10,7 +10,6 @@ namespace Goomento\PageBuilder\Block\Widgets\Product;
 
 use Goomento\PageBuilder\Traits\TraitWidgetBlock;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
-use Magento\Catalog\Model\Product\Visibility;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\CatalogWidget\Block\Product\ProductsList;
 use Magento\Framework\Data\Collection\AbstractDb;

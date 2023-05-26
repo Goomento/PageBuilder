@@ -34,6 +34,6 @@ class RegistryHelper
      */
     private static function getStaticInstance()
     {
-        return self::getInstance(Registry::class);
+        return Registry::class;
     }
 }

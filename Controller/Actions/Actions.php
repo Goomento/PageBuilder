@@ -10,8 +10,8 @@ namespace Goomento\PageBuilder\Controller\Actions;
 
 use Exception;
 use Goomento\Core\Model\Registry;
-use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Controller\AbstractAction;
+use Goomento\PageBuilder\Developer;
 use Goomento\PageBuilder\Helper\Data;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
@@ -112,7 +112,7 @@ class Actions extends AbstractAction implements HttpPostActionInterface
             } catch (LocalizedException $e) {
                 $results[$actionId]['message'] = $e->getMessage();
             } catch (Exception $e) {
-                if (Configuration::debug()) {
+                if (Developer::debug()) {
                     $results[$actionId]['message'] = $e->getMessage();
                 } else {
                     $results[$actionId]['message'] = (string) __('Something went wrong when render your action.');

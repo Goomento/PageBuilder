@@ -9,8 +9,8 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Modules;
 
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
+use Goomento\PageBuilder\Developer;
 use Goomento\PageBuilder\Helper\Fonts;
-use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Base\AbstractApp;
 use Goomento\PageBuilder\Builder\Css\ContentCss;
 use Goomento\PageBuilder\Builder\Css\GlobalCss;
@@ -85,7 +85,7 @@ class Frontend extends AbstractApp
      */
     public function registerScripts()
     {
-        $minSuffix = Configuration::debug() ? '' : '.min';
+        $minSuffix = Developer::debug() ? '' : '.min';
         /**
          * Before frontend register scripts.
          *
@@ -142,7 +142,7 @@ class Frontend extends AbstractApp
     public function registerStyles()
     {
 
-        $minSuffix = Configuration::debug() ? '' : '.min';
+        $minSuffix = Developer::debug() ? '' : '.min';
 
         /**
          * Before frontend register styles.
@@ -160,7 +160,7 @@ class Frontend extends AbstractApp
             'goomento-frontend',
             $frontendFileUrl,
             [],
-            Configuration::version()
+            Developer::version()
         );
 
         /**
@@ -509,8 +509,8 @@ class Frontend extends AbstractApp
                 'edit' => $isPreviewMode,
             ],
             'is_rtl' => DataHelper::isRtl(),
-            'breakpoints' => Configuration::DEFAULT_BREAKPOINTS,
-            'version' => Configuration::version(),
+            'breakpoints' => Developer::DEFAULT_BREAKPOINTS,
+            'version' => Developer::version(),
             'urls' => [
                 'assets' => UrlBuilderHelper::urlStaticBuilder('Goomento_PageBuilder') . '/',
             ],

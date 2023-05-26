@@ -16,6 +16,7 @@ use Magento\Framework\Escaper;
 use Magento\Framework\Phrase;
 use Magento\Framework\View\Element\Template;
 
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 trait TraitWidgetBlock
 {
     /**

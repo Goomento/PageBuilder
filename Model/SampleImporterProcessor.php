@@ -17,6 +17,8 @@ use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
 
+// phpcs:disable Magento2.Functions.DiscouragedFunction.DiscouragedWithAlternative
+// phpcs:disable Magento2.Functions.DiscouragedFunction.Discouraged
 class SampleImporterProcessor implements SampleImporterInterface
 {
     /**

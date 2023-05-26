@@ -1,5 +1,9 @@
 # Magento 2 Goomento Page Builder
 
+## 0.4.5 Fixed minor bugs
+- Fixed minor bugs
+- Added Documents to menu
+
 ## 0.4.4 Magento 2.4.6 & PHP8.2
 - Fixed compatibility with Magento 2.4.6 & PHP8.2
 - Fixed minor bugs

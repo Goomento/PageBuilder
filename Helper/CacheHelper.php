@@ -47,10 +47,10 @@ class CacheHelper
     const HOUR_LIFE_TIME = 3600; // 01 hour
 
     /**
-     * @return BetterCaching
+     * @inheritDoc
      */
     protected static function getStaticInstance()
     {
-        return self::getInstance(BetterCaching::class);
+        return BetterCaching::class;
     }
 }

@@ -12,8 +12,8 @@ use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\RevisionInterface;
 use Goomento\PageBuilder\Builder\Managers\Icons;
 use Goomento\PageBuilder\Builder\Managers\Schemes;
+use Goomento\PageBuilder\Developer;
 use Goomento\PageBuilder\Helper\Shapes;
-use Goomento\PageBuilder\Configuration;
 use Goomento\PageBuilder\Builder\Base\AbstractDocument;
 use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Helper\HooksHelper;
@@ -174,7 +174,7 @@ class Editor
     public function beforeRegisterScripts()
     {
 
-        $suffix = Configuration::debug() ? '' : '.min';
+        $suffix = Developer::debug() ? '' : '.min';
 
         ThemeHelper::registerScript(
             'backbone',
@@ -257,67 +257,12 @@ class Editor
      */
     public function registerScripts()
     {
-        $suffix = Configuration::debug() ? '' : '.min';
-        $magentoVersion = Configuration::magentoVersion();
+        $suffix = Developer::debug() ? '' : '.min';
 
         ThemeHelper::registerScript(
             'goomento-editor-modules',
             'Goomento_PageBuilder/build/editor-modules' . $suffix,
             ['goomento-common-modules']
-        );
-
-        // Remove jQuery UI
-        ThemeHelper::removeScripts('jquery/ui');
-        $jqueryUi = version_compare($magentoVersion, '2.4.6', '>=') ?
-            'Goomento_PageBuilder/lib/jquery/jquery-ui.1.13.2.min' :
-            'Goomento_PageBuilder/lib/jquery/jquery-ui.min';
-
-        ThemeHelper::registerScript(
-            'jquery/ui',
-            $jqueryUi,
-            ['jquery'],
-            [
-                'requirejs' => [
-                    'map' => [
-                        '*' => [
-                            'jquery-ui-modules/widget' => 'jquery/ui',
-                            'jquery-ui-modules/core' => 'jquery/ui',
-                            'jquery-ui-modules/accordion' => 'jquery/ui',
-                            'jquery-ui-modules/autocomplete' => 'jquery/ui',
-                            'jquery-ui-modules/button' => 'jquery/ui',
-                            'jquery-ui-modules/datepicker' => 'jquery/ui',
-                            'jquery-ui-modules/dialog' => 'jquery/ui',
-                            'jquery-ui-modules/draggable' => 'jquery/ui',
-                            'jquery-ui-modules/droppable' => 'jquery/ui',
-                            'jquery-ui-modules/effect-blind' => 'jquery/ui',
-                            'jquery-ui-modules/effect-bounce' => 'jquery/ui',
-                            'jquery-ui-modules/effect-clip' => 'jquery/ui',
-                            'jquery-ui-modules/effect-drop' => 'jquery/ui',
-                            'jquery-ui-modules/effect-explode' => 'jquery/ui',
-                            'jquery-ui-modules/effect-fade' => 'jquery/ui',
-                            'jquery-ui-modules/effect-fold' => 'jquery/ui',
-                            'jquery-ui-modules/effect-highlight' => 'jquery/ui',
-                            'jquery-ui-modules/effect-scale' => 'jquery/ui',
-                            'jquery-ui-modules/effect-pulsate' => 'jquery/ui',
-                            'jquery-ui-modules/effect-shake' => 'jquery/ui',
-                            'jquery-ui-modules/effect-slide' => 'jquery/ui',
-                            'jquery-ui-modules/effect-transfer' => 'jquery/ui',
-                            'jquery-ui-modules/effect' => 'jquery/ui',
-                            'jquery-ui-modules/menu' => 'jquery/ui',
-                            'jquery-ui-modules/mouse' => 'jquery/ui',
-                            'jquery-ui-modules/position' => 'jquery/ui',
-                            'jquery-ui-modules/progressbar' => 'jquery/ui',
-                            'jquery-ui-modules/resizable' => 'jquery/ui',
-                            'jquery-ui-modules/selectable' => 'jquery/ui',
-                            'jquery-ui-modules/slider' => 'jquery/ui',
-                            'jquery-ui-modules/sortable' => 'jquery/ui',
-                            'jquery-ui-modules/spinner' => 'jquery/ui',
-                            'jquery-ui-modules/tabs' => 'jquery/ui',
-                            'jquery-ui-modules/tooltip' => 'jquery/ui',
-                        ]
-                    ]
-                ]
-            ]
         );
 
         $requirejs = [
@@ -472,8 +417,8 @@ class Editor
         $currentRevisionId = $this->getCurrentRevision() ? $this->getCurrentRevision()->getId() : null;
 
         $config = [
-            'version' => Configuration::version(),
-            'debug' => Configuration::debug(),
+            'version' => Developer::version(),
+            'debug' => Developer::debug(),
             'data' => $document->getElementsRawData(),
             'document' => $document->getConfig(),
             'current_revision_id' => $currentRevisionId,
@@ -565,7 +510,7 @@ class Editor
          */
         HooksHelper::doAction('pagebuilder/editor/before_enqueue_styles');
 
-        $suffix = Configuration::debug() ? '' : '.min';
+        $suffix = Developer::debug() ? '' : '.min';
 
         $directionSuffix = DataHelper::isRtl() ? '-rtl' : '';
 
@@ -661,7 +606,7 @@ class Editor
      */
     public function filterTemplate(string $content) : string
     {
-        $pattern = '/\s*<!\-\-\s(gmt_state):(\S+)\s\-\->(.*)?<!\-\-\s\/(gmt_state):\2\s\-\->/sU';
+        $pattern = '/\s*<!--\s(gmt_state):(\S+)\s-->(.*)?<!--\s\/(gmt_state):\2\s-->/sU';
 
         $result = preg_replace_callback($pattern, function ($matches) {
             $this->initTemplateVariables();

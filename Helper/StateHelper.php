@@ -10,6 +10,7 @@ namespace Goomento\PageBuilder\Helper;
 
 use Goomento\Core\Traits\TraitStaticCaller;
 use Goomento\Core\Traits\TraitStaticInstances;
+use Goomento\PageBuilder\Developer;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 
@@ -24,22 +25,23 @@ use Magento\Framework\App\State;
  * @see State::getAreaCode()
  * @method static string getMode()
  * @see State::getMode()
+ * @method static string emulateAreaCode($areaCode, $callback, $params = [])
+ * @see State::emulateAreaCode()
  */
 // phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 // phpcs:disable Magento2.Security.Superglobal.SuperglobalUsageWarning
+// phpcs:disable Magento2.Security.Superglobal.SuperglobalUsageError
 class StateHelper
 {
     use TraitStaticCaller;
     use TraitStaticInstances;
 
-    private static $states = [];
-
     /**
      * @return bool
      */
-    public static function isCli()
+    public static function isCli() : bool
     {
-        if (!isset(self::$states['cli'])) {
+        if (Developer::getVar('is_cli') === null) {
             $cli = false;
             if (defined('STDIN')) {
                 $cli = true;
@@ -47,22 +49,19 @@ class StateHelper
             if (php_sapi_name() === 'cli') {
                 $cli = true;
             }
-            // phpcs:ignore Magento2.Security.Superglobal.SuperglobalUsageError
             if (array_key_exists('SHELL', $_ENV)) {
                 $cli = true;
             }
-            // phpcs:ignore Magento2.Security.Superglobal.SuperglobalUsageError
             if (empty($_SERVER['REMOTE_ADDR']) and !isset($_SERVER['HTTP_USER_AGENT']) and count($_SERVER['argv']) > 0) {
                 $cli = true;
             }
-            // phpcs:ignore Magento2.Security.Superglobal.SuperglobalUsageError
             if (!array_key_exists('REQUEST_METHOD', $_SERVER)) {
                 $cli = true;
             }
-
-            self::$states['cli'] = $cli;
+            Developer::setVar('is_cli', $cli);
         }
-        return self::$states['cli'];
+
+        return Developer::getVar('is_cli') ?: false;
     }
 
     /**
@@ -71,84 +70,93 @@ class StateHelper
      */
     public static function emulateFrontend(callable $callback)
     {
+        $isBuildable = Developer::getVar('is_buildable');
+        $isView = Developer::getVar('is_view');
+        $isEditor = Developer::getVar('is_editor');
+        $isPreview = Developer::getVar('is_preview');
+
         try {
-            $states = self::$states;
-            self::$states = [
-                'view' => false,
-                'editor' => false,
-                'buildable' => false,
-                'preview' => false,
-            ] + self::$states;
+            Developer::setVar('is_buildable', false);
+            Developer::setVar('is_view', false);
+            Developer::setVar('is_editor', false);
+            Developer::setVar('is_preview', false);
             return self::emulateAreaCode(Area::AREA_FRONTEND, $callback);
         } finally {
-            self::$states = $states;
+            Developer::setVar('is_buildable', $isBuildable);
+            Developer::setVar('is_view', $isView);
+            Developer::setVar('is_editor', $isEditor);
+            Developer::setVar('is_preview', $isPreview);
         }
     }
 
     /**
+     * TRUE when doing build content
      * @return bool
      */
-    public static function isBuildable()
+    public static function isBuildable() : bool
     {
-        if (!isset(self::$states['buildable'])) {
-            self::$states['buildable'] = self::isEditorMode()
+        if (Developer::getVar('is_buildable') === null) {
+            Developer::setVar('is_buildable', self::isEditorMode()
                 || self::isEditorPreviewMode()
-                || self::isViewMode();
+                || self::isViewMode());
         }
-        return self::$states['buildable'];
+        return Developer::getVar('is_buildable') ?: false;
     }
 
     /**
+     * TRUE when access the editor preview page (canvas page) (FE)
      * @return bool
      */
-    public static function isEditorPreviewMode()
+    public static function isEditorPreviewMode() : bool
     {
-        if (!isset(self::$states['preview'])) {
+        if (Developer::getVar('is_preview') === null) {
             $isPreviewMode = HooksHelper::didAction('pagebuilder/preview/index');
             if ($isPreviewMode === false) {
                 $actionName = RegistryHelper::registry('current_action_name');
                 $isPreviewMode = $actionName === 'pagebuilder_content_editorpreview';
             }
 
-            self::$states['preview'] = $isPreviewMode;
+            Developer::setVar('is_preview', $isPreviewMode);
         }
-        return self::$states['preview'];
+        return Developer::getVar('is_preview') ?: false;
     }
 
     /**
+     * TRUE when viewing the in-build content (FE)
      * @return bool
      */
-    public static function isViewMode()
+    public static function isViewMode() : bool
     {
-        if (!isset(self::$states['view'])) {
+        if (Developer::getVar('is_view') === null) {
             $viewMode = HooksHelper::didAction('pagebuilder/view/index');
             if ($viewMode === false) {
                 $actionName = RegistryHelper::registry('current_action_name');
                 $viewMode = $actionName === 'pagebuilder_content_view';
             }
 
-            self::$states['view'] = $viewMode;
+            Developer::setVar('is_view', $viewMode);
         }
 
-        return self::$states['view'];
+        return Developer::getVar('is_view') ?: false;
     }
 
     /**
+     * TRUE when rendering widget (FE) & editor page (BE)
      * @return bool
      */
-    public static function isEditorMode()
+    public static function isEditorMode() : bool
     {
-        if (!isset(self::$states['editor'])) {
-            self::$states['editor'] = HooksHelper::didAction('pagebuilder/editor/index') ||
-                HooksHelper::didAction('pagebuilder/editor/render_widget');
+        if (Developer::getVar('is_editor') === null) {
+            Developer::setVar('is_editor', HooksHelper::didAction('pagebuilder/editor/index') ||
+                HooksHelper::didAction('pagebuilder/editor/render_widget'));
         }
-        return self::$states['editor'];
+        return Developer::getVar('is_editor') ?: false;
     }
 
     /**
      * @return bool
      */
-    public static function isFrontend()
+    public static function isFrontend() : bool
     {
         return self::getAreaCode() === Area::AREA_FRONTEND;
     }
@@ -158,7 +166,7 @@ class StateHelper
      *
      * @return bool
      */
-    public static function isProductionMode()
+    public static function isProductionMode() : bool
     {
         return self::getMode() === State::MODE_PRODUCTION;
     }
