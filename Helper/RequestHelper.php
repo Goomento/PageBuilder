@@ -20,7 +20,11 @@ use Magento\Framework\App\RequestInterface;
  * See https://developer.adobe.com/commerce/php/development/components/object-manager/#usage-rules
  *
  * @method static getParams();
+ * @see RequestInterface::getParams();
  * @method static getParam($param, $default = null);
+ * @see RequestInterface::getParam();
+ * @method static isSecure();
+ * @see RequestInterface::isSecure();
  */
 // phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 // phpcs:disable Magento2.Security.Superglobal.SuperglobalUsageWarning

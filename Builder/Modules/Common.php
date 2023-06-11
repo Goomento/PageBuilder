@@ -57,11 +57,9 @@ class Common extends AbstractApp
      */
     public function registerScriptsEditorBefore()
     {
-        $minSuffix = Developer::debug() ? '' : '.min';
-
         ThemeHelper::registerScript(
             'goomento-common-modules',
-            'Goomento_PageBuilder/build/common-modules' . $minSuffix,
+            'Goomento_PageBuilder/build/common-modules',
             [
                 'jquery',
                 'jquery/ui',
@@ -73,7 +71,7 @@ class Common extends AbstractApp
 
         ThemeHelper::registerScript(
             'goomento-common',
-            'Goomento_PageBuilder/build/common' . $minSuffix,
+            'Goomento_PageBuilder/build/common',
             [
                 'goomento-common-modules',
                 'dialogs-manager',
@@ -91,13 +89,9 @@ class Common extends AbstractApp
      */
     public function registerStyles()
     {
-        $minSuffix = Developer::debug() ? '' : '.min';
-
         ThemeHelper::registerStyle(
             'goomento-common',
-            'Goomento_PageBuilder/build/common' . $minSuffix . '.css',
-            [],
-            Developer::version()
+            'Goomento_PageBuilder/build/common.css'
         );
     }
 
@@ -115,7 +109,7 @@ class Common extends AbstractApp
             'isRTL' => DataHelper::isRtl(),
             'activeModules' => array_keys($this->getComponents()),
             'urls' => [
-                'assets' => UrlBuilderHelper::urlStaticBuilder('Goomento_PageBuilder') . '/',
+                'assets' => UrlBuilderHelper::getAssetUrlWithParams('Goomento_PageBuilder') . '/',
             ],
         ];
     }

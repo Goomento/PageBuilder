@@ -421,14 +421,14 @@ class Tags
      */
     public function registerTags()
     {
-        $this->components = [
+        $this->setComponent([
             DataConfig::NAME => DataConfig::class,
             Urls::NAME => Urls::class,
             Images::NAME => Images::class,
             CmsBlocks::NAME => CmsBlocks::class,
             CmsPages::NAME => CmsPages::class,
             PageBuilderContents::NAME => PageBuilderContents::class,
-        ];
+        ]);
     }
 
     /**

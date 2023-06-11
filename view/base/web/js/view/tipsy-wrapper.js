@@ -42,7 +42,7 @@ define([
                     tipsy && tipsy.show();
                     $tip && $target.attr('data-tooltip-class') && $tip.addClass($target.attr('data-tooltip-class'));
                     checkHide && clearInterval(checkHide);
-                }).bind('mouseleave dragstart click blur', function () {
+                }).bind('mouseleave dragstart click blur remove', function () {
                     // Keep the tooltip when hover on itself
                     setTimeout(() => {
                         let tipsy = $(this).data("tipsy"),
@@ -56,7 +56,7 @@ define([
                                 checkHide && clearInterval(checkHide);
                             }
 
-                            if (!$target.is(':visible')) {
+                            if (!$target.length || !$target.is(':visible')) {
                                 // Zombie, let remove them all
                                 $.fn.tipsy.revalidate();
                                 checkHide && clearInterval(checkHide);

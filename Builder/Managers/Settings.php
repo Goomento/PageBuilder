@@ -122,9 +122,12 @@ class Settings
     {
         $this->registerDefaultSettingsManagers();
 
-        $this->components = [
+        $this->setComponent([
             GeneralSettings::NAME => GeneralSettings::class,
             PageSettings::NAME => PageSettings::class,
-        ];
+        ]);
+
+        // Construct it to enable the hook
+        $this->getComponents();
     }
 }

@@ -19,8 +19,6 @@ trait TraitComponentsLoader
      */
     protected function getComponents(): array
     {
-        $this->getRegisterComponents();
-
         $components = (array) $this->components;
         foreach ($components as $name => $model) {
             if (is_string($model) && class_exists($model)) {
@@ -37,8 +35,6 @@ trait TraitComponentsLoader
      */
     protected function getComponent(?string $name)
     {
-        $this->getRegisterComponents();
-
         if ($name !== null) {
             $model = $this->components[$name] ?? null;
             if (is_string($model) && class_exists($model)) {
@@ -60,8 +56,6 @@ trait TraitComponentsLoader
      */
     protected function setComponent($name, $model = null)
     {
-        $this->getRegisterComponents();
-
         if (is_array($name)) {
             foreach ($name as $item => $value) {
                 $this->setComponent($item, $value);
@@ -71,14 +65,6 @@ trait TraitComponentsLoader
         }
 
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    private function getRegisterComponents()
-    {
-        return $this->components;
     }
 
     /**

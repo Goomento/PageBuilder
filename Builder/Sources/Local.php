@@ -157,7 +157,6 @@ class Local extends AbstractSource
     {
         $defaults = [
             'title' => __('(no title)'),
-            'page_settings' => [], // @TODO remove this, should use `settings`
             'status' => BuildableContentInterface::STATUS_PENDING,
         ];
 

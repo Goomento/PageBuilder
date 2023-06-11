@@ -27,6 +27,7 @@ use Goomento\PageBuilder\Helper\ThemeHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Magento\Framework\RequireJs\Config;
 
+// phpcs:disable Magento2.Security.LanguageConstruct.DirectOutput
 class Editor
 {
     /**
@@ -57,35 +58,46 @@ class Editor
      * Init the editor
      * This function trigger in editor only, otherwise, will make confused system
      */
-    public function initByContent(BuildableContentInterface $buildableContent)
+    public function constructByContent(BuildableContentInterface $buildableContent)
     {
         $this->content = $buildableContent;
 
         // Init document
         $this->getDocument();
 
+        HooksHelper::addAction('header', [$this, 'editorHeader'], 0);
+
         HooksHelper::addAction('pagebuilder/adminhtml/header', [ $this,'editorHeaderTrigger' ]);
-
         HooksHelper::addAction('pagebuilder/adminhtml/footer', [ $this,'editorFooterTrigger' ]);
-
         HooksHelper::addAction('pagebuilder/adminhtml/register_scripts', [ $this,'registerScripts' ], 11);
         HooksHelper::addAction('pagebuilder/adminhtml/enqueue_scripts', [ $this,'enqueueStyles' ]);
-
-        // Print out the script in footer
         HooksHelper::addAction('pagebuilder/editor/footer', [ $this,'enqueueScripts' ]);
-
         HooksHelper::addFilter('pagebuilder/settings/module/ajax', [ $this,'getAjaxUrls' ]);
-
-        HooksHelper::addAction('header', function () {
-            if (DataHelper::isJsMinifyFilesEnabled() && StateHelper::isProductionMode()) {
-                /** @var Config $requireJsConfig */
-                $requireJsConfig = ObjectManagerHelper::get(\Magento\Framework\RequireJs\Config::class);
-                // phpcs:ignore Magento2.Security.LanguageConstruct.DirectOutput
-                echo '<script>' . $requireJsConfig->getMinResolverCode() . '</script>';
-            }
-        }, 9); // Should print out at first
-
         HooksHelper::doAction('pagebuilder/editor/init');
+    }
+
+    /**
+     * Prepare initial resources
+     *
+     * @return void
+     */
+    public function editorHeader() : void
+    {
+        $params = array_merge(['_secure' => RequestHelper::isSecure()]);
+        $cssPrefix = DataHelper::isCssMinifyFilesEnabled() ? '.min' : '';
+        // Requirejs
+        echo '<script src="' . UrlBuilderHelper::getAssetUrlWithParams('Goomento_PageBuilder/lib/requirejs/require.min.js', $params) . '"></script>';
+        // Global style
+        echo '<link rel="stylesheet" href="' . UrlBuilderHelper::getAssetUrlWithParams('Goomento_Core::css/style-m' . $cssPrefix . '.css', $params) . '" />';
+        // Icon
+        echo '<link rel="shortcut icon" type="image/x-icon" href="' . UrlBuilderHelper::getAssetUrlWithParams('Goomento_Core/images/goomento.ico', $params) . '" />';
+
+        if (DataHelper::isJsMinifyFilesEnabled() && StateHelper::isProductionMode()) {
+            /** @var Config $requireJsConfig */
+            $requireJsConfig = ObjectManagerHelper::get(\Magento\Framework\RequireJs\Config::class);
+
+            echo '<script>' . $requireJsConfig->getMinResolverCode() . '</script>';
+        }
     }
 
     /**
@@ -159,8 +171,7 @@ class Editor
     public function getDocument()
     {
         if ($this->document === null) {
-            $this->document = ObjectManagerHelper::getDocumentsManager()
-                ->getByContent($this->getBuildableContent());
+            $this->document = ObjectManagerHelper::getDocumentsManager()->getByContent($this->getBuildableContent());
         }
 
         return $this->document;
@@ -173,23 +184,20 @@ class Editor
      */
     public function beforeRegisterScripts()
     {
-
-        $suffix = Developer::debug() ? '' : '.min';
-
         ThemeHelper::registerScript(
             'backbone',
-            'Goomento_PageBuilder/lib/backbone/backbone' . $suffix
+            'Goomento_PageBuilder/lib/backbone/backbone'
         );
 
         ThemeHelper::registerScript(
             'backbone.radio',
-            'Goomento_PageBuilder/lib/backbone/backbone.radio' . $suffix,
+            'Goomento_PageBuilder/lib/backbone/backbone.radio',
             ['backbone']
         );
 
         ThemeHelper::registerScript(
             'backbone.marionette',
-            'Goomento_PageBuilder/lib/backbone/backbone.marionette' . $suffix,
+            'Goomento_PageBuilder/lib/backbone/backbone.marionette',
             [
                 'backbone',
                 'backbone.radio'
@@ -200,7 +208,6 @@ class Editor
             'flatpickr',
             'Goomento_PageBuilder/lib/flatpickr/flatpickr.min'
         );
-
 
         ThemeHelper::registerScript(
             'nouislider',
@@ -250,6 +257,16 @@ class Editor
                 'jquery/ui',
             ]
         );
+
+        ThemeHelper::registerScript(
+            'introjs',
+            'Goomento_PageBuilder/js/view/intro-wrapper'
+        );
+
+        ThemeHelper::registerScript(
+            'editor-introduction',
+            'Goomento_PageBuilder/js/editor-introduction'
+        );
     }
 
     /**
@@ -257,114 +274,33 @@ class Editor
      */
     public function registerScripts()
     {
-        $suffix = Developer::debug() ? '' : '.min';
-
         ThemeHelper::registerScript(
             'goomento-editor-modules',
-            'Goomento_PageBuilder/build/editor-modules' . $suffix,
+            'Goomento_PageBuilder/build/editor-modules',
             ['goomento-common-modules']
         );
 
-        $requirejs = [
-            'map' => [
-                '*' => [
-                    'ko' => 'knockoutjs/knockout',
-                    'knockout' => 'knockoutjs/knockout',
-                    'mageUtils' => 'mage/utils/main',
-                    'rjsResolver' => 'mage/requirejs/resolver',
-                    'loader' => 'mage/loader_old',
-                    'loaderAjax' => 'mage/loader_old',
-                    'mediabrowser' => 'jquery/jstree/jquery.jstree',
-                    'jstree' => 'jquery/jstree/jquery.jstree',
-                    'mediaUploader' => 'Magento_Backend/js/media-uploader',
-                    'mage/translate' => 'Magento_Backend/js/translate',
-                    'folderTree' => 'Magento_Cms/js/folder-tree',
-                    'uiElement' => 'Magento_Ui/js/lib/core/element/element',
-                    'uiCollection' => 'Magento_Ui/js/lib/core/collection',
-                    'uiComponent' => 'Magento_Ui/js/lib/core/collection',
-                    'uiClass' => 'Magento_Ui/js/lib/core/class',
-                    'uiEvents' => 'Magento_Ui/js/lib/core/events',
-                    'uiRegistry' => 'Magento_Ui/js/lib/registry/registry',
-                    'consoleLogger' => 'Magento_Ui/js/lib/logger/console-logger',
-                    'uiLayout' => 'Magento_Ui/js/core/renderer/layout',
-                    'escaper' =>  'Magento_Security/js/escaper',
-                    'floatingHeader' => 'mage/backend/floating-header',
-                    'validation' => 'mage/backend/validation',
-                ]
-            ],
-            'shim' => [
-                'extjs/ext-tree' => [
-                    'prototype'
-                ],
-                'extjs/ext-tree-checkbox' => [
-                    'extjs/ext-tree',
-                    'extjs/defaults'
-                ],
-                'jquery/editableMultiselect/js/jquery.editable' => [
-                    'jquery'
-                ],
-                'jquery/jstree/jquery.hotkeys' => ['jquery'],
-                'jquery/hover-intent' => ['jquery'],
-                'mage/adminhtml/backup' => ['prototype'],
-                'mage/new-gallery' => ['jquery'],
-                'mage/webapi' => ['jquery'],
-                'jquery/ui' => ['jquery'],
-                'MutationObserver' => ['es6-collections'],
-                'matchMedia' => [
-                    'exports' => 'mediaCheck'
-                ],
-                'magnifier/magnifier' => ['jquery'],
-            ],
-            'bundles' => [
-                'js/theme' => [
-                    'globalNavigation',
-                    'globalSearch',
-                    'modalPopup',
-                    'useDefault',
-                    'loadingPopup',
-                    'collapsable',
-                ]
-            ],
-            'deps' => [
-                'js/theme',
-                'mage/backend/bootstrap',
-                'mage/adminhtml/globals',
-            ],
-            'paths' => [
-                'jquery/validate' => 'jquery/jquery.validate',
-                'jquery/hover-intent' => 'jquery/jquery.hoverIntent',
-                'jquery/file-uploader' => 'jquery/fileUploader/jquery.fileupload-fp',
-                'prototype' => 'legacy-build.min',
-                'jquery/jquery-storageapi' => 'Magento_Cookie/js/jquery.storageapi.extended',
-                'text' => 'mage/requirejs/text',
-                'domReady' => 'requirejs/domReady',
-                'spectrum' => 'jquery/spectrum/spectrum',
-                'tinycolor' => 'jquery/spectrum/tinycolor',
-                'jquery-ui-modules' => 'jquery/ui-modules',
-                'ui/template' => 'Magento_Ui/templates'
-            ],
-            'config' => [
-                'mixins' => [
-                    'jquery/jstree/jquery.jstree' => [
-                        'mage/backend/jstree-mixin' => true
-                    ],
-                    'jquery' => [
-                        'jquery/patches/jquery' => true
-                    ],
-                ],
-                'text' => [
-                    'headers' => [
-                        'X-Requested-With' => 'XMLHttpRequest'
-                    ]
-                ]
-            ]
-        ];
+        ThemeHelper::removeScripts('underscore');
+        ThemeHelper::registerScript('underscore', 'Goomento_PageBuilder/lib/underscore/underscore.1.8.3.min');
 
-        $requirejs = HooksHelper::applyFilters('pagebuilder/editor/requirejs_config', $requirejs)->getResult();
+        ThemeHelper::removeScripts('jquery');
+        ThemeHelper::registerScript('jquery', 'Goomento_PageBuilder/lib/jquery/jquery-3.6.0.min');
+
+        ThemeHelper::registerScript('tinymce', '//cdnjs.cloudflare.com/ajax/libs/tinymce/5.10.7/tinymce.min');
+
+        ThemeHelper::removeScripts('jquery/ui');
+        ThemeHelper::registerScript(
+            'jquery/ui',
+            'Goomento_PageBuilder/lib/jquery/jquery-ui.1.13.2.min',
+            [
+                'jquery',
+                'tinymce'
+            ]
+        );
 
         ThemeHelper::registerScript(
             'goomento-editor-engine',
-            'Goomento_PageBuilder/build/editor' . $suffix,
+            'Goomento_PageBuilder/build/editor',
             [
                 'underscore',
                 'jquery',
@@ -372,8 +308,6 @@ class Editor
                 'backbone',
                 'backbone.radio',
                 'backbone.marionette',
-                'mage/adminhtml/browser',
-                'prototype',
                 'nouislider',
                 'goomento-common',
                 'goomento-editor-modules',
@@ -386,10 +320,7 @@ class Editor
                 'ace',
                 'jquery-hover-intent',
                 'imagesloaded',
-                'introjs',
-            ],
-            [
-                'requirejs' => $requirejs
+                'editor-introduction',
             ]
         );
 
@@ -510,10 +441,6 @@ class Editor
          */
         HooksHelper::doAction('pagebuilder/editor/before_enqueue_styles');
 
-        $suffix = Developer::debug() ? '' : '.min';
-
-        $directionSuffix = DataHelper::isRtl() ? '-rtl' : '';
-
         ThemeHelper::registerStyle(
             'google-font-inter',
             'https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap'
@@ -521,7 +448,7 @@ class Editor
 
         ThemeHelper::registerStyle(
             'goomento-editor',
-            'Goomento_PageBuilder/build/editor' . $directionSuffix . $suffix . '.css',
+            'Goomento_PageBuilder/build/editor.css',
             [
                 'goomento-common',
                 'jquery-select2',
@@ -630,8 +557,12 @@ class Editor
      */
     public function __construct()
     {
+        /**
+         * Ready to catch the custom trigger by controller
+         */
+        HooksHelper::addAction('pagebuilder/editor/index', [ $this, 'constructByContent']);
+
         HooksHelper::addAction('pagebuilder/adminhtml/register_scripts', [$this, 'beforeRegisterScripts'], 7);
-        HooksHelper::addAction('pagebuilder/editor/index', [ $this, 'initByContent']); // catch trigger in controller
         HooksHelper::addFilter("pagebuilder/widget/render_content", [$this, 'filterTemplate'], 9);
     }
 }

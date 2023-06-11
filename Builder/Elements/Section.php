@@ -458,25 +458,39 @@ class Section extends AbstractElement
 
         $this->endControlsSection();
 
+        $this->startControlsSection(
+            'section_type_section',
+            [
+                'label' => __('Section Type'),
+                'tab' => Controls::TAB_LAYOUT,
+            ]
+        );
+
+        $this->addControl(
+            'section_type',
+            [
+                'label' => __('Type'),
+                'type' => Controls::SELECT,
+                'prefix_class' => 'gmt-section-type-',
+                'default' => '',
+                'options' => [
+                    '' => __('Default'),
+                    'popup' => __('Popup'),
+                ],
+            ]
+        );
+
+        $this->endControlsSection();
+
         // Popup Section
         $this->startControlsSection(
             'section_popup_section',
             [
                 'label' => __('Popup'),
                 'tab' => Controls::TAB_LAYOUT,
-            ]
-        );
-
-        $this->addControl(
-            'popup_enabled',
-            [
-                'label' => __('Enabled'),
-                'type' => Controls::SWITCHER,
-                'default' => '',
-                'prefix_class' => 'gmt-section-popup-',
-                'description' => __('Enable this section will hide section on storefront. Use "Call to Action" widget to show this popup.'),
-                'frontend_available' => true,
-                'return_value' => 'ok',
+                'condition' => [
+                    'section_type' => 'popup'
+                ]
             ]
         );
 
@@ -486,9 +500,6 @@ class Section extends AbstractElement
                 'type' => Controls::RAW_HTML,
                 'raw' => __('Note: CSS ID must be placed in tab Advanced > Identify > CSS ID. .'),
                 'content_classes' => 'gmt-panel-alert gmt-panel-alert-warning',
-                'condition' => [
-                    'popup_enabled' => 'ok'
-                ]
             ]
         );
 
@@ -498,10 +509,7 @@ class Section extends AbstractElement
                 'label' => __('Title'),
                 'type' => Controls::TEXT,
                 'frontend_available' => true,
-                'default' => __('Popup Title'),
-                'condition' => [
-                    'popup_enabled' => 'ok'
-                ]
+                'placeholder' => __('Popup Title'),
             ]
         );
 
@@ -516,9 +524,6 @@ class Section extends AbstractElement
                     'close' => __('Close Button'),
                     'confirm' => __('Confirm Button'),
                     'both' => __('Both'),
-                ],
-                'condition' => [
-                    'popup_enabled' => 'ok'
                 ]
             ]
         );
@@ -530,8 +535,7 @@ class Section extends AbstractElement
                 'label' => __('Close Button'),
                 'type' => Controls::HEADING,
                 'condition' => [
-                    'popup_buttons' => ['close', 'both'],
-                    'popup_enabled' => 'ok',
+                    'popup_buttons' => ['close', 'both']
                 ]
             ]
         );
@@ -542,11 +546,8 @@ class Section extends AbstractElement
                 'label' => __('Label'),
                 'type' => Controls::TEXT,
                 'frontend_available' => true,
-                'default' => __('Close'),
-                'placeholder' => __('Close'),
                 'condition' => [
-                    'popup_buttons' => ['close', 'both'],
-                    'popup_enabled' => 'ok',
+                    'popup_buttons' => ['close', 'both']
                 ]
             ]
         );
@@ -561,8 +562,7 @@ class Section extends AbstractElement
                 'title' => __('Add your custom class WITHOUT the dot. e.g: my-class'),
                 'frontend_available' => true,
                 'condition' => [
-                    'popup_buttons' => ['close', 'both'],
-                    'popup_enabled' => 'ok',
+                    'popup_buttons' => ['close', 'both']
                 ]
             ]
         );
@@ -574,8 +574,7 @@ class Section extends AbstractElement
                 'label' => __('Confirm Button'),
                 'type' => Controls::HEADING,
                 'condition' => [
-                    'popup_buttons' => ['confirm', 'both'],
-                    'popup_enabled' => 'ok',
+                    'popup_buttons' => ['confirm', 'both']
                 ]
             ]
         );
@@ -586,11 +585,8 @@ class Section extends AbstractElement
                 'label' => __('Text'),
                 'type' => Controls::TEXT,
                 'frontend_available' => true,
-                'default' => __('Confirm'),
-                'placeholder' => __('Confirm'),
                 'condition' => [
-                    'popup_buttons' => ['confirm', 'both'],
-                    'popup_enabled' => 'ok',
+                    'popup_buttons' => ['confirm', 'both']
                 ]
             ]
         );
@@ -603,8 +599,7 @@ class Section extends AbstractElement
                 'frontend_available' => true,
                 'placeholder' => __('https://your-link.com'),
                 'condition' => [
-                    'popup_buttons' => ['confirm', 'both'],
-                    'popup_enabled' => 'ok',
+                    'popup_buttons' => ['confirm', 'both']
                 ]
             ]
         );
@@ -619,8 +614,7 @@ class Section extends AbstractElement
                 'prefix_class' => '',
                 'title' => __('Add your custom class WITHOUT the dot. e.g: my-class'),
                 'condition' => [
-                    'popup_buttons' => ['confirm', 'both'],
-                    'popup_enabled' => 'ok',
+                    'popup_buttons' => ['confirm', 'both']
                 ]
             ]
         );

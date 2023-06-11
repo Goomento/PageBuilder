@@ -15,7 +15,10 @@ use Goomento\PageBuilder\Helper\Fonts;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Magento\Backend\Block\Template;
 
-$document = ObjectManagerHelper::getEditor()->getDocument();
+$schemeFieldsKeys = TypographyGroup::getSchemeFieldsKeys();
+$typographyGroup = ObjectManagerHelper::getControlsManager()->getControlGroups(TypographyGroup::NAME);
+$typographyFields = $typographyGroup->getFields();
+$schemeFields = array_intersect_key($typographyFields, array_flip($schemeFieldsKeys));
 
 ?>
 <div id="root">
@@ -254,11 +257,15 @@ $document = ObjectManagerHelper::getEditor()->getDocument();
         </div>
     </div>
     <div class="gmt-panel-control-tools gmt-panel-control-tools-end">
+        <div id="gmt-panel-control-dark-mode" class="gmt-panel-control-tool gmt-leave-open tooltip-target"
+             data-tooltip="<?= $block->escapeHtml(__('Dark Mode')); ?>">
+            <i class="far fa-moon" aria-hidden="true"></i>
+        </div>
         <div id="gmt-panel-control-general-settings" class="gmt-panel-control-tool gmt-leave-open tooltip-target"
              data-tooltip="<?= $block->escapeHtml(__('Global Settings')); ?>">
             <i class="fas fa-cogs" aria-hidden="true"></i>
         </div>
-        <div id="gmt-panel-control-help" onclick="$e.run('tour/start')" class="gmt-panel-control-tool gmt-leave-open tooltip-target"
+        <div id="gmt-panel-control-help" class="gmt-panel-control-tool gmt-leave-open tooltip-target"
              data-tooltip="<?= $block->escapeHtml(__('How To Use?')); ?>">
             <i class="fas fa-info-circle"></i>
         </div>
@@ -319,17 +326,7 @@ $document = ObjectManagerHelper::getEditor()->getDocument();
         <div class="gmt-panel-heading-title">{{{ title }}}</div>
     </div>
     <div class="gmt-panel-scheme-typography-items gmt-panel-box-content">
-        <?php
-        $schemeFieldsKeys = TypographyGroup::getSchemeFieldsKeys();
-
-        $typographyGroup = ObjectManagerHelper::getControlsManager()
-            ->getControlGroups(TypographyGroup::NAME);
-
-        $typographyFields = $typographyGroup->getFields();
-
-        $schemeFields = array_intersect_key($typographyFields, array_flip($schemeFieldsKeys));
-
-        foreach ($schemeFields as $optionName => $option):
+        <?php foreach ($schemeFields as $optionName => $option):
             ?>
             <div class="gmt-panel-scheme-typography-item">
                 <div class="gmt-panel-scheme-item-title gmt-control-title"><?=  /** @noEscape */ $option['label']; ?></div>
@@ -757,8 +754,8 @@ $document = ObjectManagerHelper::getEditor()->getDocument();
         <div class="gmt-revision-item__details">
             <div class="gmt-revision-date">{{{ goomento.helpers.formatDatetime(date) }}} &
                 <span class="gmt-revision-author-detail">
-                    <span class="gmt-revision-type">{{{ jQuery.mage.__( type ) }}}</span>
-                    <span class="gmt-revision-author">{{{ jQuery.mage.__( 'by' ) }}} {{{ author }}}</span>
+                    <span class="gmt-revision-type">{{{ type  }}}</span>
+                    <span class="gmt-revision-author">by {{{ author }}}</span>
                 </span>
             </div>
             <div class="gmt-revision-meta">
@@ -941,7 +938,7 @@ $document = ObjectManagerHelper::getEditor()->getDocument();
 
 <script type="text/template" id="tmpl-gmt-template-library-template-local">
     <div class="gmt-template-library-template-name gmt-template-library-local-column-1">{{{ title }}}</div>
-    <div class="gmt-template-library-template-meta gmt-template-library-template-type gmt-template-library-local-column-2">{{{ jQuery.mage.__( type ) }}}</div>
+    <div class="gmt-template-library-template-meta gmt-template-library-template-type gmt-template-library-local-column-2">{{{ type }}}</div>
     <div class="gmt-template-library-template-meta gmt-template-library-template-author gmt-template-library-local-column-3">{{{ author }}}</div>
     <div class="gmt-template-library-template-meta gmt-template-library-template-date gmt-template-library-local-column-4">{{{ goomento.helpers.formatDatetime(date) }}}</div>
     <div class="gmt-template-library-template-controls gmt-template-library-local-column-5">
@@ -997,7 +994,6 @@ $document = ObjectManagerHelper::getEditor()->getDocument();
     <div class="gmt-template-library-blank-title">{{{ title }}}</div>
     <div class="gmt-template-library-blank-message">{{{ description }}}</div>
     <form id="gmt-template-library-save-template-form">
-        <input type="hidden" name="content_id" value="<?= $block->escapeHtmlAttr($document->getModel()->getId()); ?>">
         <input id="gmt-template-library-save-template-name" name="title" placeholder="<?= $block->escapeHtml(__('Enter Template Name')); ?>" required>
         <button id="gmt-template-library-save-template-submit" class="gmt-button gmt-button-success">
             <span class="gmt-state-icon">

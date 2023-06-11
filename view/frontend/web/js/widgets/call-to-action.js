@@ -4,6 +4,7 @@
  */
 define([
     'jquery',
+    'mage/translate',
     'goomento-widget-base',
     'jquery/jquery.cookie',
     'Magento_Ui/js/modal/modal',
@@ -135,8 +136,7 @@ define([
                 buttons = [];
 
             settings = Object.assign({
-                popup_enabled: '',
-                popup_title: '',
+                popup_title: $.mage.__('Popup Title'),
                 popup_close_button_text: '',
                 popup_close_button_css_classes: '',
                 popup_confirm_button_text: '',
@@ -147,43 +147,42 @@ define([
                 },
             }, settings);
 
-            if (settings.popup_enabled === 'ok') {
-                options.responsive = true;
-                options.type = 'popup';
-                if (settings.popup_title) {
-                    options.title = settings.popup_title;
-                }
+            options.responsive = true;
+            options.type = 'popup';
+            if (settings.popup_title) {
+                options.title = settings.popup_title;
+            }
 
-                if (settings.popup_close_button_text) {
-                    buttons.push({
-                        text: settings.popup_close_button_text,
-                        class: settings.popup_close_button_css_classes,
-                        click: function () {
+            if (settings.popup_close_button_text) {
+                buttons.push({
+                    text: settings.popup_close_button_text,
+                    class: settings.popup_close_button_css_classes,
+                    click: function () {
+                        this.closeModal();
+                    }
+                });
+            }
+
+            if (settings.popup_confirm_button_text) {
+                buttons.push({
+                    text: settings.popup_confirm_button_text,
+                    class: settings.popup_confirm_button_css_classes,
+                    click: function () {
+                        let link = settings.popup_confirm_button_link || {};
+                        if (link && link.url) {
+                            if (link.is_external) {
+                                window.open(link.url,'_blank');
+                            } else {
+                                window.location.href = link.url;
+                            }
+                        } else {
                             this.closeModal();
                         }
-                    });
-                }
-
-                if (settings.popup_confirm_button_text) {
-                    buttons.push({
-                        text: settings.popup_confirm_button_text,
-                        class: settings.popup_confirm_button_css_classes,
-                        click: function () {
-                            let link = settings.popup_confirm_button_link || {};
-                            if (link && link.url) {
-                                if (link.is_external) {
-                                    window.open(link.url,'_blank');
-                                } else {
-                                    window.location.href = link.url;
-                                }
-                            } else {
-                                this.closeModal();
-                            }
-                        }
-                    });
-                }
-                options.buttons = buttons;
+                    }
+                });
             }
+            options.buttons = buttons;
+
             return options;
         },
         /**
@@ -195,7 +194,7 @@ define([
             if (typeof this.options.$popup === "undefined") {
                 let $target = this._getTarget(),
                     settings = $target.data('settings') || {};
-                if (!$target.length || !settings || settings.popup_enabled !== 'ok') {
+                if (!$target.length || !settings || !$target.hasClass('gmt-section-type-popup')) {
                     this.options.$popup = $();
                 } else {
                     this.options.$popup = $target.modal(this._getPopupOptions());

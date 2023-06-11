@@ -73,19 +73,19 @@ class StateHelper
         $isBuildable = Developer::getVar('is_buildable');
         $isView = Developer::getVar('is_view');
         $isEditor = Developer::getVar('is_editor');
-        $isPreview = Developer::getVar('is_preview');
+        $isPreview = Developer::getVar('is_canvas');
 
         try {
             Developer::setVar('is_buildable', false);
             Developer::setVar('is_view', false);
             Developer::setVar('is_editor', false);
-            Developer::setVar('is_preview', false);
+            Developer::setVar('is_canvas', false);
             return self::emulateAreaCode(Area::AREA_FRONTEND, $callback);
         } finally {
             Developer::setVar('is_buildable', $isBuildable);
             Developer::setVar('is_view', $isView);
             Developer::setVar('is_editor', $isEditor);
-            Developer::setVar('is_preview', $isPreview);
+            Developer::setVar('is_canvas', $isPreview);
         }
     }
 
@@ -97,7 +97,7 @@ class StateHelper
     {
         if (Developer::getVar('is_buildable') === null) {
             Developer::setVar('is_buildable', self::isEditorMode()
-                || self::isEditorPreviewMode()
+                || self::isCanvasMode()
                 || self::isViewMode());
         }
         return Developer::getVar('is_buildable') ?: false;
@@ -107,18 +107,18 @@ class StateHelper
      * TRUE when access the editor preview page (canvas page) (FE)
      * @return bool
      */
-    public static function isEditorPreviewMode() : bool
+    public static function isCanvasMode() : bool
     {
-        if (Developer::getVar('is_preview') === null) {
+        if (Developer::getVar('is_canvas') === null) {
             $isPreviewMode = HooksHelper::didAction('pagebuilder/preview/index');
             if ($isPreviewMode === false) {
                 $actionName = RegistryHelper::registry('current_action_name');
-                $isPreviewMode = $actionName === 'pagebuilder_content_editorpreview';
+                $isPreviewMode = $actionName === 'pagebuilder_content_canvas';
             }
 
-            Developer::setVar('is_preview', $isPreviewMode);
+            Developer::setVar('is_canvas', $isPreviewMode);
         }
-        return Developer::getVar('is_preview') ?: false;
+        return Developer::getVar('is_canvas') ?: false;
     }
 
     /**

@@ -20,7 +20,7 @@
     <type name="Goomento\PageBuilder\Controller\Content\View">
         <plugin name="pagebuilder.validateAccess" type="Goomento\PageBuilder\Plugin\PageBuilder\Controller\ValidateAccess" />
     </type>
-    <type name="Goomento\PageBuilder\Controller\Content\EditorPreview">
+    <type name="Goomento\PageBuilder\Controller\Content\Canvas">
         <plugin name="pagebuilder.validateAccess" type="Goomento\PageBuilder\Plugin\PageBuilder\Controller\ValidateAccess" />
     </type>
     <type name="Goomento\PageBuilder\Controller\Actions\Actions">

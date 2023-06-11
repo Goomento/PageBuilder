@@ -66,7 +66,7 @@ class PageBuilder implements SubSystemInterface
 
             // Wait for all components loaded
             HooksHelper::addAction('init', function () {
-                $this->regisDefaultHook();
+                $this->registerDefaultHook();
             });
         }
     }
@@ -82,7 +82,7 @@ class PageBuilder implements SubSystemInterface
     /**
      * Register default hook
      */
-    private function regisDefaultHook()
+    private function registerDefaultHook()
     {
         $areaCode = StateHelper::getAreaCode();
 
@@ -102,7 +102,8 @@ class PageBuilder implements SubSystemInterface
             HooksHelper::doAction('pagebuilder/enqueue_scripts');
             HooksHelper::doAction("pagebuilder/{$areaCode}/enqueue_scripts");
 
-            ThemeHelper::onDoHeader();
+            ThemeHelper::getStylesManager()->doItems();
+            ThemeHelper::getScriptsManager()->doHeadItems();
         });
 
         // FOOTER
@@ -113,7 +114,8 @@ class PageBuilder implements SubSystemInterface
         HooksHelper::addAction('pagebuilder/footer', function () use ($areaCode) {
             HooksHelper::doAction("pagebuilder/{$areaCode}/footer");
 
-            ThemeHelper::onDoFooter();
+            ThemeHelper::getStylesManager()->doItems();
+            ThemeHelper::getScriptsManager()->doFooterItems();
         });
 
         // DEFAULT

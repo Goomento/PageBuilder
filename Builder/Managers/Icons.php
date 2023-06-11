@@ -82,7 +82,7 @@ class Icons
                 'displayPrefix' => 'far',
                 'labelIcon' => 'fab fa-font-awesome-alt',
                 'ver' => '5.9.0',
-                'fetchJson' => self::getFaAssetUrl('regular', 'json', false),
+                'fetchJson' => self::getFaAssetUrl('regular'),
                 'native' => true,
             ],
             'fa-solid' => [
@@ -92,7 +92,7 @@ class Icons
                 'displayPrefix' => 'fas',
                 'labelIcon' => 'fab fa-font-awesome',
                 'ver' => '5.9.0',
-                'fetchJson' => self::getFaAssetUrl('solid', 'json', false),
+                'fetchJson' => self::getFaAssetUrl('solid'),
                 'native' => true,
             ],
             'fa-brands' => [
@@ -103,7 +103,7 @@ class Icons
                 'displayPrefix' => 'fab',
                 'labelIcon' => 'fab fa-font-awesome-flag',
                 'ver' => '5.9.0',
-                'fetchJson' => self::getFaAssetUrl('brands', 'json', false),
+                'fetchJson' => self::getFaAssetUrl('brands'),
                 'native' => true,
             ],
         ])->getResult();
@@ -124,22 +124,11 @@ class Icons
 
     /**
      * @param $filename
-     * @param string $extType
-     * @param bool $addSuffix
      * @return string
      */
-    private static function getFaAssetUrl($filename, $extType = 'css', $addSuffix = true)
+    private static function getFaAssetUrl($filename)
     {
-        static $isTestMode = null;
-        if (null === $isTestMode) {
-            $isTestMode = !!Developer::debug();
-        }
-        $url = 'Goomento_PageBuilder/lib/font-awesome/' . $extType . '/' . $filename;
-        if (!$isTestMode && $addSuffix) {
-            $url .= '.min';
-        }
-        $url .= '.' . $extType;
-        return UrlBuilderHelper::urlStaticBuilder($url);
+        return UrlBuilderHelper::getAssetUrlWithParams(sprintf('Goomento_PageBuilder/lib/font-awesome/json/%s.json', $filename));
     }
 
     /**
@@ -158,7 +147,6 @@ class Icons
 
         return array_values(array_merge($tabs, self::getIconManagerTabs()));
     }
-
 
     /**
      * @param $icon

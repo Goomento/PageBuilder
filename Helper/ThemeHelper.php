@@ -10,6 +10,7 @@ namespace Goomento\PageBuilder\Helper;
 
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Api\Data\ContentInterface;
+use Goomento\PageBuilder\Developer;
 
 /**
  *
@@ -25,6 +26,18 @@ class ThemeHelper extends \Goomento\Core\Helper\ThemeHelper
      * @var ContentInterface[]
      */
     private static $contents = [];
+
+    /**
+     * Resources that contains these string will be debuggable
+     * @var string
+     */
+    const DEBUGGABLE_RESOURCES = '/Goomento_PageBuilder\/build/';
+
+    /**
+     * Resources that contains these string will applicable for RTL or LTR
+     * @var string[]
+     */
+    const DIRECTION_RESOURCES = '/^Goomento_PageBuilder\/build\/(editor|editor-preview|frontend)(\.css)*$/';
 
     /**
      * Add body class to theme
@@ -66,28 +79,6 @@ class ThemeHelper extends \Goomento\Core\Helper\ThemeHelper
     }
 
     /**
-     * Trigger all hooks for header
-     *
-     * @return void
-     */
-    public static function onDoHeader()
-    {
-        self::getStylesManager()->doItems();
-        self::getScriptsManager()->doHeadItems();
-    }
-
-    /**
-     * Trigger all hooks for header
-     *
-     * @return void
-     */
-    public static function onDoFooter()
-    {
-        self::getStylesManager()->doItems();
-        self::getScriptsManager()->doFooterItems();
-    }
-
-    /**
      * Hook for render URL
      *
      * @return void
@@ -95,7 +86,7 @@ class ThemeHelper extends \Goomento\Core\Helper\ThemeHelper
     public static function onStyleLoaderSource($src = '')
     {
         if (!preg_match('#((https?|ftp)://(\S*?\.\S*?))([\s)\[\]{},;"\':<]|\.\s|$)#i', $src)) {
-            $src = UrlBuilderHelper::urlStaticBuilder($src);
+            $src = UrlBuilderHelper::getAssetUrlWithParams($src);
         }
 
         // Trip off all params in static folder for best fix with Css minification config
@@ -105,5 +96,58 @@ class ThemeHelper extends \Goomento\Core\Helper\ThemeHelper
         }
 
         return $src;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function registerScript(
+        string $handle,
+        string $src,
+        array $deps = [],
+        array $args = []
+    ) {
+        return parent::registerScript($handle, self::getDebugResource($src), $deps, $args);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function registerStyle(
+        string $handle,
+        $src,
+        array $deps = [],
+        $ver = false,
+        string $media = 'all'
+    ) {
+        if (DataHelper::isRtl() && preg_match(self::DIRECTION_RESOURCES, $src)) {
+            $src = str_replace('.css', '-rtl.css', $src);
+        }
+        return parent::registerStyle($handle, self::getDebugResource($src), $deps, $ver, $media);
+    }
+
+    /**
+     * Get debug resource
+     *
+     * @param string $handle
+     * @return void
+     */
+    private static function getDebugResource(string $handle) : string
+    {
+        if (!Developer::debug() && preg_match(self::DEBUGGABLE_RESOURCES, $handle)) {
+            $parts = explode('.', $handle);
+            $ext = array_pop($parts);
+            if (in_array($ext, ['js', 'css'])) {
+                $parts[] = 'min';
+                $parts[] = $ext;
+            } else {
+                $parts[] = $ext;
+                $parts[] = 'min';
+            }
+
+            $handle = implode('.', $parts);
+        }
+
+        return $handle;
     }
 }

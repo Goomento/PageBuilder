@@ -135,19 +135,6 @@ class ContentCss extends AbstractCss
     }
 
     /**
-     * Get post data.
-     *
-     * Retrieve raw post data from the database.
-     *
-     *
-     * @return array ContentCss data.
-     */
-    protected function getData()
-    {
-        return $this->model->getElements();
-    }
-
-    /**
      * Render CSS.
      *
      * Parse the CSS for all the elements.
@@ -155,10 +142,10 @@ class ContentCss extends AbstractCss
      */
     protected function renderCss()
     {
-        $data = $this->getData();
+        $elements = $this->getModel()->getElements();
         $elementManager = ObjectManagerHelper::getElementsManager();
-        if (!empty($data)) {
-            foreach ($data as $elementData) {
+        if (!empty($elements)) {
+            foreach ($elements as $elementData) {
                 $element = $elementManager->createElementInstance((array) $elementData);
                 if (!$element) {
                     continue;
@@ -298,7 +285,7 @@ class ContentCss extends AbstractCss
      */
     protected function useExternalFile()
     {
-        $useInline = (!$this->getModel() instanceof RevisionInterface);
-        return $useInline && !DataHelper::useInlineCss();
+        $isRevision = $this->getModel() instanceof RevisionInterface;
+        return !$isRevision && !DataHelper::useInlineCss();
     }
 }

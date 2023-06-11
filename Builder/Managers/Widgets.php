@@ -24,9 +24,9 @@ class Widgets
      */
     private function initWidgets()
     {
-        $this->components = [
+        $this->setComponent([
             Common::NAME => Common::class,
-        ];
+        ]);
 
         HooksHelper::doAction('pagebuilder/widgets/widgets_registered', $this);
     }

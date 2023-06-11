@@ -132,51 +132,6 @@ class DataHelper
     }
 
     /**
-     * @param $datetime
-     * @param false $full
-     * @return string
-     * @deprecated
-     * @throws \Exception
-     */
-    public static function timeElapsedString($datetime, bool $full = false): string
-    {
-        $now = new \DateTime;
-        $ago = new \DateTime($datetime);
-        $diff = $now->diff($ago);
-
-        $diffTime = [
-            'w' => floor($diff->d / 7)
-        ];
-
-        $diffTime['d'] = $diffTime['w'] * 7;
-
-        $string = [
-            'y' => 'year',
-            'm' => 'month',
-            'w' => 'week',
-            'd' => 'day',
-            'h' => 'hour',
-            'i' => 'minute',
-            's' => 'second',
-        ];
-
-        foreach ($string as $k => &$v) {
-            if (isset($diffTime[$k])) {
-                $v = $diffTime[$k] . ' ' . $v . ($diffTime[$k] > 1 ? 's' : '');
-            } else {
-                unset($string[$k]);
-            }
-        }
-
-        if (!$full) {
-            $string = array_slice($string, 0, 1);
-        }
-        $string = $string ? implode(', ', $string) . ' ago' : 'just now';
-        $string .= ' (' . $ago->format('F j, Y, g:i a') . ')';
-        return $string;
-    }
-
-    /**
      * @param $string
      * @return bool
      */
@@ -229,7 +184,7 @@ class DataHelper
      */
     public static function getPlaceholderImageSrc()
     {
-        $placeholderImage = UrlBuilderHelper::urlStaticBuilder('Goomento_PageBuilder::images/placeholder.png');
+        $placeholderImage = UrlBuilderHelper::getAssetUrlWithParams('Goomento_PageBuilder::images/placeholder.png');
 
         /**
          * Get placeholder image source.

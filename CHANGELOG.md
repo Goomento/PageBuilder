@@ -1,5 +1,11 @@
 # Magento 2 Goomento Page Builder
 
+## 0.5.0 Added Dark mode
+- Seperated Editor JS libs with Magento
+- Updated color picker panel
+- Added Dark mode
+- Optimized loading
+
 ## 0.4.5 Fixed minor bugs
 - Fixed minor bugs
 - Added Documents to menu

@@ -32,6 +32,10 @@ class UrlBuilderHelper
      * @var Url
      */
     private static $frontendUrlBuilder;
+    /**
+     * @var Repository
+     */
+    private static $assetUrlBuilder;
 
     /**
      * @return Url
@@ -55,6 +59,18 @@ class UrlBuilderHelper
         }
 
         return self::$urlBuilder;
+    }
+
+    /**
+     * @return Repository
+     */
+    private static function getAssetUrlBuilder()
+    {
+        if (null === self::$assetUrlBuilder) {
+            self::$assetUrlBuilder = ObjectManagerHelper::get(Repository::class);
+        }
+
+        return self::$assetUrlBuilder;
     }
 
     /**
@@ -98,9 +114,9 @@ class UrlBuilderHelper
      * @param int $userId
      * @return string
      */
-    public static function getEditorPreviewUrl(ContentInterface $content, int $userId = 0)
+    public static function getCanvasUrl(ContentInterface $content, int $userId = 0)
     {
-        return self::getFrontendUrl('pagebuilder/content/editorpreview', [
+        return self::getFrontendUrl('pagebuilder/content/canvas', [
             'content_id' => $content->getId(),
             'store_id' => self::getStoreId($content),
             'layout' => $content->getSetting('layout'),
@@ -209,16 +225,14 @@ class UrlBuilderHelper
 
     /**
      * @param $src
-     * @param null $area
+     * @param array|null $params
      * @return string
      */
-    public static function urlStaticBuilder($src, $area = null)
+    public static function getAssetUrlWithParams($src, ?array $params = [])
     {
-        /** @var Repository $assetRepo */
-        $assetRepo = ObjectManagerHelper::get(Repository::class);
-        if (null === $area) {
-            $area = StateHelper::getAreaCode();
+        if (!isset($params['area'])) {
+            $params['area'] = StateHelper::getAreaCode();
         }
-        return $assetRepo->getUrlWithParams($src, ['area' => $area]);
+        return self::getAssetUrlBuilder()->getUrlWithParams($src, $params);
     }
 }

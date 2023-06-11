@@ -23,8 +23,9 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Profiler;
 use Magento\Framework\View\Element\Template;
 use Magento\Widget\Block\BlockInterface;
+use Magento\Framework\DataObject\IdentityInterface;
 
-class Content extends Template implements BlockInterface
+class Content extends Template implements BlockInterface, IdentityInterface
 {
     /**
      * @var ContentInterface[]
@@ -325,5 +326,21 @@ class Content extends Template implements BlockInterface
     public function __toString()
     {
         return $this->toHtml();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getIdentities()
+    {
+        $keys = [];
+        if ($this->currentContentId) {
+            $keys[] = 'pagebuilder_content_' . $this->currentContentId;
+        }
+        if ($this->currentIdentifier) {
+            $keys[] = 'pagebuilder_content_' . $this->currentIdentifier;
+        }
+
+        return $keys;
     }
 }

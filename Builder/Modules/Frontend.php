@@ -23,7 +23,8 @@ use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Helper\UrlBuilderHelper;
 use Goomento\PageBuilder\Helper\ThemeHelper;
 
-// phpcs:ignore Magento2.Functions.StaticFunction.StaticFunction
+// phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
+// phpcs:disable Magento2.Functions.DiscouragedFunction.Discouraged
 class Frontend extends AbstractApp
 {
     const NAME = 'frontend';
@@ -48,12 +49,17 @@ class Frontend extends AbstractApp
     private $registeredFonts = [];
 
     /**
+     *
+     * @var array
+     */
+    private $stylesToEnqueue = ['goomento-frontend'];
+
+    /**
      * Frontend constructor.
      */
     public function __construct()
     {
         HooksHelper::addAction('pagebuilder/frontend/init', [$this, 'init']);
-
         HooksHelper::addFilter('pagebuilder/content/html', [ $this, 'applyBuilderInContent' ], 9);
     }
 
@@ -68,9 +74,7 @@ class Frontend extends AbstractApp
     public function init()
     {
         HooksHelper::addAction('pagebuilder/frontend/register_scripts', [$this, 'registerScripts'], 9);
-
         HooksHelper::addAction('pagebuilder/frontend/register_styles', [$this, 'registerStyles'], 9);
-
         HooksHelper::addAction('pagebuilder/frontend/header', [ $this, 'header' ], 9);
         HooksHelper::addAction('pagebuilder/frontend/footer', [ $this, 'footer' ], 9);
     }
@@ -85,7 +89,6 @@ class Frontend extends AbstractApp
      */
     public function registerScripts()
     {
-        $minSuffix = Developer::debug() ? '' : '.min';
         /**
          * Before frontend register scripts.
          *
@@ -96,7 +99,7 @@ class Frontend extends AbstractApp
 
         ThemeHelper::registerScript(
             'goomento-frontend-modules',
-            'Goomento_PageBuilder/build/frontend-modules' . $minSuffix,
+            'Goomento_PageBuilder/build/frontend-modules',
             [
                 'jquery',
                 'jquery/ui',
@@ -105,7 +108,7 @@ class Frontend extends AbstractApp
 
         ThemeHelper::registerScript(
             'goomento-frontend-engine',
-            'Goomento_PageBuilder/build/frontend' . $minSuffix,
+            'Goomento_PageBuilder/build/frontend',
             [
                 'jquery',
                 'dialogs-manager',
@@ -117,7 +120,9 @@ class Frontend extends AbstractApp
         ThemeHelper::registerScript(
             'goomento-frontend',
             'Goomento_PageBuilder/js/frontend-entry',
-            ['underscore']
+            [
+                'underscore'
+            ]
         );
 
         $this->printConfig();
@@ -141,9 +146,6 @@ class Frontend extends AbstractApp
      */
     public function registerStyles()
     {
-
-        $minSuffix = Developer::debug() ? '' : '.min';
-
         /**
          * Before frontend register styles.
          *
@@ -152,15 +154,9 @@ class Frontend extends AbstractApp
          */
         HooksHelper::doAction('pagebuilder/frontend/before_register_styles');
 
-        $directionSuffix = DataHelper::isRtl() ? '-rtl' : '';
-
-        $frontendFileUrl = 'Goomento_PageBuilder/build/frontend' . $directionSuffix . $minSuffix . '.css';
-
         ThemeHelper::registerStyle(
             'goomento-frontend',
-            $frontendFileUrl,
-            [],
-            Developer::version()
+            'Goomento_PageBuilder/build/frontend.css'
         );
 
         /**
@@ -217,10 +213,10 @@ class Frontend extends AbstractApp
          */
         HooksHelper::doAction('pagebuilder/frontend/before_enqueue_styles');
 
-        ThemeHelper::enqueueStyle('fontawesome');
-        ThemeHelper::enqueueStyle('goomento-animations');
 
-        ThemeHelper::enqueueStyle('goomento-frontend');
+        foreach ($this->stylesToEnqueue as $style) {
+            ThemeHelper::enqueueStyle($style);
+        }
 
         /**
          * After frontend styles enqueued.
@@ -230,7 +226,7 @@ class Frontend extends AbstractApp
          */
         HooksHelper::doAction('pagebuilder/frontend/after_enqueue_styles');
 
-        if (!StateHelper::isEditorPreviewMode()) {
+        if (!StateHelper::isCanvasMode()) {
             $this->parseGlobalCssCode();
         }
     }
@@ -379,9 +375,9 @@ class Frontend extends AbstractApp
      * Enqueue all the frontend fonts.
      *
      *
-     * @param array $font Fonts to enqueue in the frontend.
+     * @param string $font Fonts to enqueue in the frontend.
      */
-    public function enqueueFont($font)
+    public function enqueueFont(string $font)
     {
         if (in_array($font, $this->registeredFonts)) {
             return;
@@ -415,7 +411,7 @@ class Frontend extends AbstractApp
      */
     public function applyBuilderInContent(BuildableContentInterface $content)
     {
-        if (StateHelper::isEditorPreviewMode()) {
+        if (StateHelper::isCanvasMode()) {
             return '';
         }
 
@@ -464,12 +460,11 @@ class Frontend extends AbstractApp
 
         $cssFile = new ContentCss($buildableContent);
 
-        // phpcs:ignore Magento2.Functions.DiscouragedFunction.Discouraged
         ob_start();
 
         HooksHelper::addAction('pagebuilder/frontend/enqueue_scripts', [$cssFile, 'enqueue']);
 
-        if (!empty($cssFile) && RequestHelper::isAjax()) {
+        if (RequestHelper::isAjax()) {
             $cssFile->printCss();
         }
 
@@ -487,6 +482,14 @@ class Frontend extends AbstractApp
          */
         $html = HooksHelper::applyFilters('pagebuilder/the_content', $html)->getResult();
 
+        if (strpos($html, 'animation') !== false) {
+            $this->stylesToEnqueue['goomento-animations'] = 'goomento-animations';
+        }
+
+        if (strpos($html, 'fa-') !== false) {
+            $this->stylesToEnqueue['fontawesome'] = 'fontawesome';
+        }
+
         $buildableContent->setFlag('is_rendering_content', false);
 
         return $html;
@@ -502,7 +505,7 @@ class Frontend extends AbstractApp
      */
     protected function getInitSettings()
     {
-        $isPreviewMode = StateHelper::isEditorPreviewMode();
+        $isPreviewMode = StateHelper::isCanvasMode();
 
         $settings = [
             'environmentMode' => [
@@ -512,7 +515,7 @@ class Frontend extends AbstractApp
             'breakpoints' => Developer::DEFAULT_BREAKPOINTS,
             'version' => Developer::version(),
             'urls' => [
-                'assets' => UrlBuilderHelper::urlStaticBuilder('Goomento_PageBuilder') . '/',
+                'assets' => UrlBuilderHelper::getAssetUrlWithParams('Goomento_PageBuilder') . '/',
             ],
         ];
 

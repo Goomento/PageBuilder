@@ -15,7 +15,7 @@ use Magento\Framework\Exception\LocalizedException;
  * For Editor Preview purpose, therefore, there is no content should be rendered
  * This page will not be cached
  */
-class EditorPreview extends View
+class Canvas extends View
 {
     /**
      * @inheritdoc
@@ -23,7 +23,7 @@ class EditorPreview extends View
     public function execute()
     {
         try {
-            HooksHelper::doAction('pagebuilder/content/preview', $this->getContent(true));
+            HooksHelper::doAction('pagebuilder/content/canvas', $this->getContent(true));
             return $this->renderPage();
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage(

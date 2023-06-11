@@ -160,6 +160,7 @@ Template,Template
 "CMS Page Content","CMS Page Content"
 "Config Path","Config Path"
 Logo,Logo
+"Page Builder Content","Page Builder Content"
 URLs,URLs
 "Home Page","Home Page"
 Column,Column
@@ -261,6 +262,8 @@ Basic,Basic
 General,General
 Products,Products
 Magento,Magento
+Form,Form
+External,External
 Lightbox,Lightbox
 "Font Awesome - Regular","Font Awesome - Regular"
 "Font Awesome - Solid","Font Awesome - Solid"
@@ -270,9 +273,7 @@ Anonymous,Anonymous
 Url,Url
 WYSIWYG,WYSIWYG
 "Invalid format.","Invalid format."
-"Action not found.","Action not found."
 "Something went wrong. Please try again later.","Something went wrong. Please try again later."
-"Add Media","Add Media"
 Colors,Colors
 "Color Palettes","Color Palettes"
 Primary,Primary
@@ -486,6 +487,8 @@ Faces,Faces
 Time,Time
 "URL ID","URL ID"
 "The URL of the webpage that will be liked.","The URL of the webpage that will be liked."
+"Form Builder","Form Builder"
+"Multistep Form Builder","Multistep Form Builder"
 "Google Maps","Google Maps"
 Zoom,Zoom
 Map,Map
@@ -561,7 +564,7 @@ Price,Price
 "Add to Wishlist","Add to Wishlist"
 "Products Sidebar Template","Products Sidebar Template"
 "SnowDog Menu","SnowDog Menu"
-"This widget requires to install <a target=""_blank"" href=""https://github.com/SnowdogApps/magento2-menu"">Snowdog Menu</a>.","This widget requires to install <a target=""_blank"" href=""https://github.com/SnowdogApps/magento2-menu"">Snowdog Menu</a>."
+"Create new menu at Admin Panel > Content > Elements > Menus","Create new menu at Admin Panel > Content > Elements > Menus"
 "Menu Id","Menu Id"
 Menu,Menu
 Submenu,Submenu
@@ -780,6 +783,7 @@ Actions,Actions
 File,File
 "Accepted: JSON files","Accepted: JSON files"
 Loading,Loading
+"Add Media","Add Media"
 "Drop widget here","Drop widget here"
 "Add New Section","Add New Section"
 "Add new section","Add new section"
@@ -801,8 +805,9 @@ Desktop,Desktop
 Saved,Saved
 "Save Options","Save Options"
 "Save as Template","Save as Template"
+"Dark Mode","Dark Mode"
 "Global Settings","Global Settings"
-"Keyboard shortcuts","Keyboard shortcuts"
+"How To Use?","How To Use?"
 "Back To Magento","Back To Magento"
 "Update changes to page","Update changes to page"
 "%s are disabled","%s are disabled"
@@ -826,7 +831,7 @@ Paste,Paste
 Quit,Quit
 Skip,Skip
 "Drag navigator","Drag navigator"
-"Double click to change","Double click to change"
+"Double Click To Set Name","Double Click To Set Name"
 "Easy Navigation is Here!","Easy Navigation is Here!"
 "Once you fill your page with content, this window will give you an overview display of all the page elements. This way, you can easily move around any section, column, or widget.","Once you fill your page with content, this window will give you an overview display of all the page elements. This way, you can easily move around any section, column, or widget."
 "Saved draft & revisions","Saved draft & revisions"
@@ -857,6 +862,7 @@ or,or
 Find,Find
 Replace,Replace
 "What's new?","What's new?"
+Documents,Documents
 "Latest Release:","Latest Release:"
 Version,Version
 "Release Note","Release Note"
@@ -870,7 +876,6 @@ Version,Version
 "Migrate Now","Migrate Now"
 "Create New","Create New"
 "Edit With Goomento","Edit With Goomento"
-by,by
 Shortcode,Shortcode
 "Select page builder","Select page builder"
 "WYSIWYG Editor","WYSIWYG Editor"
@@ -892,7 +897,8 @@ Shortcode,Shortcode
 "Do you want to also import the document settings of the template?","Do you want to also import the document settings of the template?"
 "Attention: Importing may override previous settings","Attention: Importing may override previous settings"
 "Item #%1","Item #%1"
-"Browser too small for editing experiment. Please open this page on Desktop.","Browser too small for editing experiment. Please open this page on Desktop."
+"Browser size too small for editing experiment. Please open this page on Desktop.","Browser size too small for editing experiment. Please open this page on Desktop."
+"Your browser isn't compatible","Your browser isn't compatible"
 "Inner section","Inner section"
 "Delete all content","Delete all content"
 "Attention: We are going to DELETE ALL CONTENT from this page. Are you sure you want to do that?","Attention: We are going to DELETE ALL CONTENT from this page. Are you sure you want to do that?"
@@ -902,7 +908,6 @@ Cancel,Cancel
 "Unknown Error","Unknown Error"
 Refresh,Refresh
 "Go Back","Go Back"
-"Your browser isn't compatible","Your browser isn't compatible"
 "Your browser isn't compatible with all of Goomento's editing features. We recommend you switch to another browser like Chrome or Firefox.","Your browser isn't compatible with all of Goomento's editing features. We recommend you switch to another browser like Chrome or Firefox."
 "Proceed Anyway","Proceed Anyway"
 "Looks like there was some issue while displaying preview page.","Looks like there was some issue while displaying preview page."
@@ -910,6 +915,7 @@ Refresh,Refresh
 "Go back or Refresh this page if issue is persistent","Go back or Refresh this page if issue is persistent"
 "My Libraries","My Libraries"
 Upload,Upload
+Help,Help
 "Go to","Go to"
 Shortcuts,Shortcuts
 "Open issue","Open issue"
@@ -920,13 +926,13 @@ Shortcuts,Shortcuts
 "Global style","Global style"
 "Default Colors","Default Colors"
 "Before enter revision review","Before enter revision review"
+"Editing started","Editing started"
 Added,Added
 Removed,Removed
 Edited,Edited
 Moved,Moved
 "Style pasted","Style pasted"
 "Style reset","Style reset"
-"Editing started","Editing started"
 "All content","All content"
 "Add New Column","Add New Column"
 "Saving has been disabled until you’re reconnected.","Saving has been disabled until you’re reconnected."
@@ -957,12 +963,8 @@ Publish,Publish
 "Server error: ","Server error: "
 "Something when wrong when saving your content.","Something when wrong when saving your content."
 Elements,Elements
-Help,Help
-"Color value","Color value"
-"Select Color","Select Color"
-"Select default color","Select default color"
-Clear,Clear
-"Clear color","Clear color"
+div,div
+iframe,iframe
 "Page Builder","Page Builder"
 "Pages - Landing Pages","Pages - Landing Pages"
 Sections,Sections
@@ -1011,6 +1013,7 @@ Data,Data
 "Add New Page","Add New Page"
 "Delete Page(s)","Delete Page(s)"
 "Are you sure you wan't to delete selected items?","Are you sure you wan't to delete selected items?"
+"Refresh Style/Cache","Refresh Style/Cache"
 ID,ID
 Created,Created
 Modified,Modified

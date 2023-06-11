@@ -6,7 +6,6 @@
 define([
     'goomento-frontend-engine',
     'jquery',
-    'mage/translate'
 ], function (
     Frontend,
     $

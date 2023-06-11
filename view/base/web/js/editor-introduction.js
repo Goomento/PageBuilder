@@ -3,78 +3,82 @@
  * @link https://github.com/Goomento/PageBuilder
  */
 
-define([
+require([
     'jquery',
     'introjs'
 ], function ($, introJs) {
     'use strict';
 
+    /**
+     * Get steps
+     *
+     * @returns {*}
+     */
     const steps = () => {
         let previewIframe = document.getElementById("gmt-preview-iframe"),
             previewDocument = previewIframe.contentWindow.document;
 
         return [
             {
-                title: $.mage.__('Goomento Page Builder Tour Guide 👋'),
-                intro: $.mage.__('Follow this guide to use create Page, Landing Page or even Magento website')
+                title: 'Goomento Page Builder Tour Guide 👋',
+                intro: 'Follow this guide to use create Page, Landing Page or even Magento website'
             },
             {
-                title: $.mage.__('Bottom Bar'),
+                title: 'Bottom Bar',
                 element: document.getElementById('gmt-controller'),
-                intro: $.mage.__('The bottom bar contains the buttons/actions which control the editor. Let\'s go through some of significant buttons ...'),
+                intro: 'The bottom bar contains the buttons/actions which control the editor. Let\'s go through some of significant buttons ...',
             },
             {
-                title: $.mage.__('Toggle View Button'),
+                title: 'Toggle View Button',
                 element: document.getElementById('gmt-panel-control-editing'),
-                intro: $.mage.__('Click to toggle the view, such as view as Published content ...'),
+                intro: 'Click to toggle the view, such as view as Published content ...',
             },
             {
-                title: $.mage.__('Responsive Control Buttons'),
+                title: 'Responsive Control Buttons',
                 element: document.getElementById('gmt-panel-control-responsive'),
-                intro: $.mage.__('Click to view the content in mobile/tablet or desktop device'),
+                intro: 'Click to view the content in mobile/tablet or desktop device',
                 disableInteraction: false
             },
             {
-                title: $.mage.__('Save Button'),
+                title: 'Save Button',
                 element: document.getElementById('gmt-panel-saver-button-publish'),
-                intro: $.mage.__('Click to save the current view, you might see one of these labels of button' +
+                intro: 'Click to save the current view, you might see one of these labels of button' +
                     '</br><strong>SAVED</strong>: Content saved and ready to use' +
                     '</br><strong>SAVE DRAFT</strong>: Save current view as draft and can be restored later' +
                     '</br><strong>PUBLISH</strong>: Publish current view to storefront'
-                )
             },
             {
-                title: $.mage.__('Exit Button'),
+                title: 'Exit Button',
                 element: document.getElementById('gmt-panel-control-back-to-dashboard'),
-                intro: $.mage.__('Click this button to back to Magento!')
+                intro: 'Click this button to back to Magento!'
             },
             {
-                title: $.mage.__('Widget Panel'),
+                title: 'Widget Panel',
                 element: document.getElementById('gmt-panel'),
-                intro: $.mage.__('Contains widget that can be dragged to the <strong>Drop Area</strong> for building page<br/>' +
+                intro: 'Contains widget that can be dragged to the <strong>Drop Area</strong> for building page<br/>' +
                     '<i>TIP</i> You even can drag <strong>Widget Panel</strong> to somewhere else that work for you, ' +
-                    'drag the "&hellip;" sign at top of panel'),
+                    'drag the "&hellip;" sign at top of panel',
                 disableInteraction: false
             },
             {
-                title: $.mage.__('Drop Area'),
+                title: 'Drop Area',
                 element: previewDocument.getElementById('gmt-add-new-section'),
-                intro: $.mage.__('Let drag element from <strong>Widget Panel</strong> to here to build your page')
+                intro: 'Let drag element from <strong>Widget Panel</strong> to here to build your page'
             },
             {
-                title: $.mage.__('"Let drag/drop it!☝️"'),
-                intro: $.mage.__('We hope you love the new joy of building content on Magento')
+                title: '"Let drag/drop it!☝️"',
+                intro: 'We hope you love the new joy of building content on Magento'
             },
         ]
     }
 
-    const start = () => {
+    $(document).on('click', '#gmt-panel-control-help', () => {
         introJs().setOptions({
             steps: steps(),
             disableInteraction: false,
         }).onbeforechange(async function(targetElement) {
             return new Promise((resolve) => {
-                if ($(targetElement).parents('body.pagebuilder-content-editorpreview').length) {
+                if ($(targetElement).parents('body.pagebuilder-content-canvas').length) {
                     $(targetElement).parents('html, body').animate({
                         scrollTop: $(targetElement).offset().top
                     },  200);
@@ -84,13 +88,5 @@ define([
                 }
             });
         }).start();
-    }
-
-    /**
-     * Return introjs configs
-     */
-    return {
-        steps,
-        start
-    }
+    });
 });

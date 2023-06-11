@@ -15,6 +15,7 @@ use Goomento\PageBuilder\Api\Data\ContentInterface;
 use Goomento\PageBuilder\Api\ContentRegistryInterface;
 use Goomento\PageBuilder\Logger\Logger;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\PageCache\Model\Cache\Type as FullPageCache;
 
 class ContentRegistry implements ContentRegistryInterface
 {
@@ -48,17 +49,23 @@ class ContentRegistry implements ContentRegistryInterface
      * @var ContentRepositoryInterface
      */
     private $contentRepository;
+    /**
+     * @var FullPageCache
+     */
+    private $fullPageCache;
 
     /**
      * ContentRegistry constructor.
      * @param ContentInterfaceFactory $contentFactory
      * @param ContentRepositoryInterface $contentRepository
+     * @param FullPageCache $fullPageCache
      * @param BetterCaching $cache
      * @param Logger $logger
      */
     public function __construct(
         ContentInterfaceFactory $contentFactory,
         ContentRepositoryInterface $contentRepository,
+        FullPageCache $fullPageCache,
         BetterCaching $cache,
         Logger $logger
     ) {
@@ -66,6 +73,7 @@ class ContentRegistry implements ContentRegistryInterface
         $this->contentRepository = $contentRepository;
         $this->logger = $logger;
         $this->cache = $cache;
+        $this->fullPageCache = $fullPageCache;
     }
 
     /**
@@ -219,6 +227,9 @@ class ContentRegistry implements ContentRegistryInterface
 
         // Remove from cache
         $this->cache->remove($this->getContentCacheKey($id));
+
+        // Clean full page cache
+        $this->fullPageCache->clean(\Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG, [$this->getContentCacheKey($id)]);
 
         // Remove identifier
         $this->contentIdentifier(false, $id);

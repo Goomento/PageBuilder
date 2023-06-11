@@ -12,7 +12,6 @@ use Exception;
 use Goomento\PageBuilder\Builder\Managers\Controls;
 use Goomento\PageBuilder\Builder\Managers\Icons;
 use Goomento\PageBuilder\Builder\Managers\Tags;
-use Goomento\PageBuilder\Builder\Modules\Frontend;
 use Goomento\PageBuilder\Builder\Modules\Stylesheet;
 use Goomento\PageBuilder\Developer;
 use Goomento\PageBuilder\Exception\BuilderException;
@@ -206,18 +205,6 @@ abstract class AbstractCss extends AbstractFile
 
         foreach ($this->getFonts() as $defaultFont) {
             $frontend->enqueueFont($defaultFont);
-        }
-
-        if (!empty($meta['icons'])) {
-            $iconsTypes = Icons::getIconManagerTabs();
-            foreach ($meta['icons'] as $iconFont) {
-                if (!isset($iconsTypes[ $iconFont ])) {
-                    continue;
-                }
-                /** @var Frontend $frontend */
-                $frontend = ObjectManagerHelper::get(Frontend::class);
-                $frontend->enqueueFont($iconFont);
-            }
         }
 
         $name = $this->getName();

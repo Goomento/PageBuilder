@@ -11,7 +11,6 @@ namespace Goomento\PageBuilder\Builder\Modules;
 use Exception;
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
 use Goomento\PageBuilder\Builder\Base\AbstractModule;
-use Goomento\PageBuilder\Developer;
 use Goomento\PageBuilder\Exception\BuilderException;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\EscaperHelper;
@@ -137,7 +136,7 @@ class Ajax extends AbstractModule
 
             $this->currentActionId = $actionId;
 
-            if (!isset($this->registeredAjaxActions[ $actionData['action'] ?? '' ])) {
+            if (!isset($actionData['action']) || !isset($this->registeredAjaxActions[  $actionData['action'] ])) {
 
                 continue;
             }
@@ -161,7 +160,7 @@ class Ajax extends AbstractModule
                 }
             } catch (Exception $e) {
                 LoggerHelper::error($e);
-                if (Developer::debug()) {
+                if (DataHelper::isDebugMode()) {
                     $this->addToCurrentResponseData(false, $e->getMessage(), $e->getCode());
                 } else {
                     $this->addToCurrentResponseData(false, __('Something went wrong. Please try again later.'), 502);
@@ -216,9 +215,7 @@ class Ajax extends AbstractModule
     {
         return [
             'url' => UrlBuilderHelper::getUrl('pagebuilder/ajax/json'),
-            'actions' => [
-                'heartbeat' => UrlBuilderHelper::getUrl('pagebuilder/ajax/heartbeat')
-            ],
+            'actions' => [],
         ];
     }
 

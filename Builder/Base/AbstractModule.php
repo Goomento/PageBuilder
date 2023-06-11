@@ -33,7 +33,7 @@ abstract class AbstractModule extends AbstractBase
      */
     public function __clone()
     {
-        throw new \Goomento\PageBuilder\Exception\BuilderException('Something went wrong');
+        throw new \Exception('Something went wrong');
     }
 
     /**

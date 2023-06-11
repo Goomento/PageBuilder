@@ -215,10 +215,10 @@ class Schemes
     {
         HooksHelper::addAction('pagebuilder/ajax/register_actions', [ $this,'registerAjaxActions' ]);
 
-        $this->components = [
+        $this->setComponent([
             Color::NAME => Color::class,
             Typography::NAME => Typography::class,
             ColorPicker::NAME => ColorPicker::class,
-        ];
+        ]);
     }
 }

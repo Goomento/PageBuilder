@@ -9,7 +9,7 @@
  * Licensed under the GPLv2 license.
  *
  */
-require(['jquery', 'mage/translate'], function ($, $t) {
+require(['jquery', 'jquery/ui'], function ($) {
     let undef = undefined;
 
     // Variable for some backgrounds ( grid )
@@ -19,6 +19,7 @@ require(['jquery', 'mage/translate'], function ($, $t) {
         _after = '<div class="wp-picker-holder" />',
         _wrap = '<div class="wp-picker-container" />',
         _button = '<input type="button" class="button button-small" />',
+        _eyeDropperButton = '<button class="button eye-dropper-button" title="Eye Dropper"><i class="fas fa-eye-dropper"></i></button>',
         _wrappingLabel = '<label></label>',
         _wrappingLabelText = '<span class="screen-reader-text"></span>';
 
@@ -67,7 +68,6 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             try {
                 this.element.iris( 'toggle' );
             } catch (e) {
-                console.warn(e);
             }
             this.inputWrapper.addClass( 'hidden' );
             this.wrap.removeClass( 'wp-picker-active' );
@@ -199,7 +199,7 @@ require(['jquery', 'mage/translate'], function ($, $t) {
                 // Insert the default label text.
                 self.wrappingLabelText = $( _wrappingLabelText )
                     .insertBefore( el )
-                    .text( $t('Color value') );
+                    .text( 'Color value' );
             }
 
             /*
@@ -216,29 +216,38 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             self.toggler = $( _before )
                 .insertBefore( self.wrappingLabel );
             // Set the toggle button span element text.
-            self.toggler.find( '.wp-color-result-text' ).text( $t('Select Color') );
+            self.toggler.find( '.wp-color-result-text' ).text( 'Select Color' );
             // Set up the Iris container and insert it after the wrapping label.
             self.pickerContainer = $( _after ).insertAfter( self.wrappingLabel );
             // Store a reference to the Clear/Default button.
             self.button = $( _button );
 
-            // Set up the Clear/Default button.
-            if ( self.options.defaultColor ) {
-                self.button
-                    .addClass( 'wp-picker-default' )
-                    .val( $t('Default') )
-                    .attr( 'aria-label', $t('Select default color') );
-            } else {
-                self.button
-                    .addClass( 'wp-picker-clear' )
-                    .val( $t('Clear') )
-                    .attr( 'aria-label',  $t('Clear color') );
-            }
+            self.eyeDropperButton = $( _eyeDropperButton );
+
+            self.eyeDropperButton.click(function () {
+                if (!window.EyeDropper) {
+                    alert("Your browser does not support the EyeDropper API");
+                    return;
+                }
+
+                const eyeDropper = new EyeDropper();
+                const abortController = new AbortController();
+
+                eyeDropper
+                    .open({ signal: abortController.signal })
+                    .then((result) => {
+                        el.val(result.sRGBHex).trigger('change');
+                    });
+
+                setTimeout(() => {
+                    abortController.abort();
+                }, 10000);
+            });
 
             // Wrap the wrapping label in its wrapper and append the Clear/Default button.
             self.wrappingLabel
                 .wrap( '<span class="wp-picker-input-wrap hidden" />' )
-                .after( self.button );
+                .before( self.eyeDropperButton );
 
             /*
              * The input wrapper now contains the label+input+Clear/Default button.
@@ -320,6 +329,15 @@ require(['jquery', 'mage/translate'], function ($, $t) {
             this.toggler
                 .addClass( 'wp-picker-open' )
                 .attr( 'aria-expanded', 'true' );
+
+            this.wrap.position( {
+                my: `center top-30`,
+                at: `center bottom`,
+                of: this.wrap.parent(),
+            } );
+
+            console.log('this.element.parent()', this.element.parent());
+
             $( 'body' ).on( 'click.wpcolorpicker', this.close );
         },
 

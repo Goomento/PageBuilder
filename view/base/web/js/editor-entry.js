@@ -7,18 +7,26 @@ define([
     'underscore',
     'jquery',
     'goomento-editor-engine',
-    'goomento-editor-introjs-config',
     'Goomento_PageBuilder/js/view/moment-wrapper',
-    'domReady!',
 ], function (
     _,
     $,
-    App,
-    intro
+    App
 ) {
     'use strict';
 
     if (typeof goomento === 'undefined') {
+
+        // Setup ajax request
+        $.ajaxSetup({
+            beforeSend: function(jqXHR, settings) {
+                let url = new URL(settings.url);
+                if (!url.searchParams.get('form_key')) {
+                    url.searchParams.set('form_key', window.FORM_KEY || document.getElementsByName('form_key')[0].value);
+                    settings.url = url.toString();
+                }
+            },
+        });
 
         window.goomento = new App;
 
@@ -38,8 +46,7 @@ define([
                 } else {
                     return moment(datetime).calendar();
                 }
-            },
-            intro
+            }
         }
 
         _.extend(goomento.helpers, helpers);

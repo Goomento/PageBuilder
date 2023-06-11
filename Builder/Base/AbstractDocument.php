@@ -174,7 +174,7 @@ abstract class AbstractDocument extends ControlsStack
             'class' => 'goomento gmt gmt-' . $this->getModel()->getUniqueIdentity(),
         ];
 
-        if (!StateHelper::isEditorPreviewMode()) {
+        if (!StateHelper::isCanvasMode()) {
             $attributes['data-gmt-settings'] = DataHelper::encode($this->getFrontendSettings());
         }
 
@@ -380,7 +380,7 @@ abstract class AbstractDocument extends ControlsStack
 
         if (null === $url) {
 
-            $url = UrlBuilderHelper::getEditorPreviewUrl(
+            $url = UrlBuilderHelper::getCanvasUrl(
                 $this->getModel()->getOriginContent()
             );
 
@@ -637,7 +637,7 @@ abstract class AbstractDocument extends ControlsStack
         $user = $content->getLastEditorUser();
         $displayName = $user ? $user->getName() : __('Automatic');
 
-        return __('Updated %1 by %2', DataHelper::timeElapsedString($content->getUpdateTime()), $displayName)->__toString();
+        return __('Updated by %1', $displayName)->__toString();
     }
 
     /**

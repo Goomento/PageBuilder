@@ -58,11 +58,10 @@ trait TraitHttpContentAction
      * @param $inLastRevision
      * @return string|null
      * @throws LocalizedException
-     * @TODO should check this
      */
     protected function getContentLayout($inLastRevision = false)
     {
-        if ($inLastRevision && $this->getContent(true)->getLastRevision()) {
+        if ($inLastRevision && $this->getContent(true)->getLastRevision(true)) {
             return $this->getContent(true)->getLastRevision()->getSetting('layout');
         } elseif (!$inLastRevision) {
             return $this->getContent(true)->getSetting('layout');

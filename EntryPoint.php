@@ -44,7 +44,6 @@ class EntryPoint extends BuilderRegister
         ObjectManagerHelper::get(Builder\Managers\Revisions::class);
         ObjectManagerHelper::get(Builder\Managers\Documents::class);
         ObjectManagerHelper::get(Builder\Managers\Settings::class);
-        ObjectManagerHelper::get(Builder\Managers\Resolvers::class);
     }
 
     /**
@@ -63,8 +62,8 @@ class EntryPoint extends BuilderRegister
         HooksHelper::addAction('pagebuilder/widgets/widgets_registered', [$this, 'registerWidgets']);
 
         // Register the default resource css, js files
-        HooksHelper::addAction('pagebuilder/register_styles', [$this, 'registerStyles']);
-        HooksHelper::addAction('pagebuilder/register_scripts', [$this, 'registerScripts']);
+        HooksHelper::addAction('pagebuilder/register_styles', [$this, 'registerStyles'], 8);
+        HooksHelper::addAction('pagebuilder/register_scripts', [$this, 'registerScripts'], 8);
     }
 
     /**
@@ -115,27 +114,19 @@ class EntryPoint extends BuilderRegister
 
         ThemeHelper::registerScript(
             'jquery-waypoints',
-            'Goomento_PageBuilder/lib/waypoints/waypoints.min'
+            'Goomento_PageBuilder/lib/waypoints/waypoints.min',
+            ['jquery']
         );
 
         ThemeHelper::registerScript(
             'jquery-tipsy',
-            'Goomento_PageBuilder/js/view/tipsy-wrapper'
+            'Goomento_PageBuilder/js/view/tipsy-wrapper',
+            ['jquery']
         );
 
         ThemeHelper::registerScript(
             'goomento-backend',
             'Goomento_PageBuilder/js/goomento-backend'
-        );
-
-        ThemeHelper::registerScript(
-            'introjs',
-            'Goomento_PageBuilder/js/view/intro-wrapper'
-        );
-
-        ThemeHelper::registerScript(
-            'goomento-editor-introjs-config',
-            'Goomento_PageBuilder/js/action/editor-introjs-config'
         );
 
         ThemeHelper::registerScript(

@@ -30,6 +30,8 @@ use Magento\Framework\Escaper;
  * @see Escaper::escapeCss()
  * @method static escapeJsQuote($data, $quote = '\'')
  * @see Escaper::escapeJsQuote()
+ * @method static escapeUrl($string)
+ * @see Escaper::escapeUrl()
  */
 // phpcs:disable Magento2.Functions.StaticFunction.StaticFunction
 class EscaperHelper

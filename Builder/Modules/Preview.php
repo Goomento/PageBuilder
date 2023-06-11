@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace Goomento\PageBuilder\Builder\Modules;
 
 use Goomento\PageBuilder\Api\Data\BuildableContentInterface;
-use Goomento\PageBuilder\Developer;
 use Goomento\PageBuilder\Helper\HooksHelper;
 use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
@@ -26,7 +25,7 @@ class Preview
     /**
      * Init the preview
      */
-    public function initByContent(BuildableContentInterface  $buildableContent)
+    public function constructByContent(BuildableContentInterface  $buildableContent)
     {
         $this->contentModel = $buildableContent;
 
@@ -79,13 +78,9 @@ class Preview
     {
         ObjectManagerHelper::getWidgetsManager()->enqueueWidgetsStyles();
 
-        $debugSuffix = Developer::debug() ? '' : '.min';
-
-        $directionSuffix = DataHelper::isRtl() ? '-rtl' : '';
-
         ThemeHelper::registerStyle(
             'editor-preview',
-            'Goomento_PageBuilder/build/editor-preview' . $directionSuffix . $debugSuffix . '.css',
+            'Goomento_PageBuilder/build/editor-preview.css',
             [
                 'jquery-select2',
                 'pen'
@@ -93,6 +88,8 @@ class Preview
         );
 
         ThemeHelper::enqueueStyle('editor-preview');
+        ThemeHelper::enqueueStyle('goomento-animations');
+        ThemeHelper::enqueueStyle('fontawesome');
 
         /**
          * Preview enqueue styles.
@@ -133,6 +130,9 @@ class Preview
      */
     public function __construct()
     {
-        HooksHelper::addAction('pagebuilder/content/preview', [ $this, 'initByContent']);
+        /**
+         * Ready to catch the custom trigger by controller
+         */
+        HooksHelper::addAction('pagebuilder/content/canvas', [ $this, 'constructByContent']);
     }
 }
