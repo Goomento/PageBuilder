@@ -56,23 +56,12 @@ class EntryPoint extends BuilderRegister
             return DataHelper::addResourceGlobally() || ThemeHelper::hasContentOnPage();
         });
 
-        HooksHelper::addAction('pagebuilder/register_scripts', [$this, 'beforeRegisterScripts'], 9);
-
         // Register the widget to be used
         HooksHelper::addAction('pagebuilder/widgets/widgets_registered', [$this, 'registerWidgets']);
 
         // Register the default resource css, js files
         HooksHelper::addAction('pagebuilder/register_styles', [$this, 'registerStyles'], 8);
         HooksHelper::addAction('pagebuilder/register_scripts', [$this, 'registerScripts'], 8);
-    }
-
-    /**
-     * Pre-define core script and library for use
-     *
-     * @return void
-     */
-    public function beforeRegisterScripts()
-    {
     }
 
     /**
@@ -119,6 +108,12 @@ class EntryPoint extends BuilderRegister
         );
 
         ThemeHelper::registerScript(
+            'mmenu',
+            'Goomento_PageBuilder/js/view/mmenu-wrapper',
+            ['jquery']
+        );
+
+        ThemeHelper::registerScript(
             'jquery-tipsy',
             'Goomento_PageBuilder/js/view/tipsy-wrapper',
             ['jquery']
@@ -132,11 +127,6 @@ class EntryPoint extends BuilderRegister
         ThemeHelper::registerScript(
             'goomento-widget-banner-slider',
             'Goomento_PageBuilder/js/widgets/banner-slider'
-        );
-
-        ThemeHelper::registerScript(
-            'call-to-action',
-            'Goomento_PageBuilder/js/widgets/call-to-action'
         );
 
         ThemeHelper::registerScript(
@@ -203,6 +193,11 @@ class EntryPoint extends BuilderRegister
         ThemeHelper::registerStyle(
             'fontawesome',
             'Goomento_PageBuilder/lib/font-awesome/css/all.min.css'
+        );
+
+        ThemeHelper::registerScript(
+            'mmenu',
+            'Goomento_PageBuilder/lib/mmenu/mmenu.min.css'
         );
 
         ThemeHelper::registerStyle(
@@ -278,7 +273,6 @@ class EntryPoint extends BuilderRegister
             Builder\Widgets\Testimonial::class,
             Builder\Widgets\Toggle::class,
             Builder\Widgets\AddToCartButton::class,
-            Builder\Widgets\CallToAction::class,
             Builder\Widgets\FacebookLike::class,
             Builder\Widgets\FacebookContent::class,
             Builder\Widgets\Magento\RecentlyViewedProducts::class,
@@ -289,7 +283,7 @@ class EntryPoint extends BuilderRegister
             Builder\Widgets\Magento\OrdersAndReturns::class,
             Builder\Widgets\PricingTable::class,
             Builder\Widgets\Navigation::class,
-            Builder\Widgets\PageBuilderContent::class,
+            Builder\Widgets\PageBuilder::class,
         ];
 
         if (!DataHelper::isModuleOutputEnabled('Goomento_PageBuilderForm')) {

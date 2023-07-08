@@ -10,7 +10,9 @@ namespace Goomento\PageBuilder\Builder\Base;
 
 use Exception;
 use Goomento\PageBuilder\Builder\Controls\Groups\BackgroundGroup;
+use Goomento\PageBuilder\Builder\Controls\Groups\TypographyGroup;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Builder\Schemes\Typography;
 use Goomento\PageBuilder\Helper\DataHelper;
 
 abstract class AbstractDocumentType extends AbstractDocument
@@ -64,14 +66,7 @@ abstract class AbstractDocumentType extends AbstractDocument
         $document->addGroupControl(
             BackgroundGroup::NAME,
             [
-                'name'  => 'background',
-                'fields_options' => [
-                    'image' => [
-                        'dynamic' => [
-                            'active' => false,
-                        ],
-                    ],
-                ],
+                'name'  => 'background'
             ]
         );
 

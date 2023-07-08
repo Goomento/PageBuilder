@@ -12,6 +12,7 @@ use Goomento\PageBuilder\Api\SampleImporterInterface;
 use Goomento\PageBuilder\Controller\Adminhtml\AbstractAction;
 use Goomento\PageBuilder\Helper\RegistryHelper;
 use Goomento\PageBuilder\Logger\Logger;
+use Goomento\PageBuilder\PageBuilder;
 use Goomento\PageBuilder\Traits\TraitHttpPage;
 use Goomento\PageBuilder\Model\LocalSampleCollection;
 use Magento\Backend\App\Action\Context;
@@ -60,6 +61,7 @@ class SampleImporter extends AbstractAction implements HttpGetActionInterface
     public function execute()
     {
         try {
+            PageBuilder::initialize();
             $allSamples = $this->localSampleCollection->getAllSamples();
             RegistryHelper::register('all_import_samples', $allSamples);
             $isImport = (bool) $this->getRequest()->getParam('import');

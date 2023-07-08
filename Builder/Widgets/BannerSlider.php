@@ -83,13 +83,13 @@ class BannerSlider extends AbstractWidget
                 'default' => [
                     [
                         $prefixKey . 'image' => DataHelper::getPlaceholderImageSrc(),
-                        $prefixKey . 'title' => __('Lorem ipsum dolor sit amet.'),
-                        $prefixKey . 'caption' => '',
+                        $prefixKey . 'title' => 'Lorem ipsum dolor sit amet.',
+                        $prefixKey . 'caption' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.',
                     ],
                     [
                         $prefixKey . 'image' => DataHelper::getPlaceholderImageSrc(),
-                        $prefixKey . 'title' => __('Lorem ipsum dolor sit amet.'),
-                        $prefixKey . 'caption' => '',
+                        $prefixKey . 'title' => 'Lorem ipsum dolor sit amet.',
+                        $prefixKey . 'caption' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.',
                     ]
                 ],
                 'title_field' => '{{{ obj["' . $prefixKey . 'title"] }}}',
@@ -146,6 +146,11 @@ class BannerSlider extends AbstractWidget
             ]
         );
 
+        Banner::registerScreenFitStyle($this, self::buildPrefixKey('screen_fit'), [
+            '.gmt-banner-wrapper',
+            '.gmt-banner-img'
+        ]);
+
         ImageCarousel::registerImageStyle($this, '', '.gmt-banner-carousel');
 
         $this->endControlsSection();
@@ -159,6 +164,18 @@ class BannerSlider extends AbstractWidget
         );
 
         Banner::registerTitleStyle($this, self::buildPrefixKey(Banner::NAME, 'title'));
+
+        $this->endControlsSection();
+
+        $this->startControlsSection(
+            'section_button_style',
+            [
+                'label' => __('Button'),
+                'tab'   => Controls::TAB_STYLE,
+            ]
+        );
+
+        Button::registerButtonStyle($this, self::buildPrefixKey());
 
         $this->endControlsSection();
 

@@ -150,7 +150,7 @@ class PageBuilder implements SubSystemInterface
         $scopes = [
             'pagebuilder_content_editor',
             'pagebuilder_ajax_json',
-            'pagebuilder_content_preview',
+            'pagebuilder_content_canvas',
             'pagebuilder_content_view',
         ];
 

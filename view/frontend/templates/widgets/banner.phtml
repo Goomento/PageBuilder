@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 use Goomento\PageBuilder\Block\View\Element\Widget;
 use Goomento\PageBuilder\Builder\Controls\Groups\ImageSizeGroup;
+use Goomento\PageBuilder\Builder\Widgets\Button;
 
 /**
  * @var Widget $block
@@ -18,7 +19,7 @@ $settings = $block->getSettingsForDisplay();
 $title = $settings['banner_title'] ?? '';
 $caption = $settings['banner_caption'] ?? '';
 
-$hasContent = !empty($title) || !empty($caption);
+$hasContent = !empty($title) || !empty($caption) || $settings['banner_button_show'] === 'yes';
 
 if (!empty($settings['banner_image']['url'])):
     if (!empty($settings['banner_link']['url'])) {
@@ -62,6 +63,9 @@ if (!empty($settings['banner_image']['url'])):
                         <?php $widget->printInlineEditingContent('banner_caption'); ?>
                     </div>
                 <?php  endif; ?>
+                <?php if ($settings['banner_button_show'] === 'yes'): ?>
+                    <?= $block->getWidgetHtml(Button::NAME) ?>
+                <?php endif; ?>
             </div>
         <?php endif;  ?>
     </div>

@@ -52,11 +52,13 @@ class TemplateHelper
     public static function getWidgetHtml(WidgetBase $widget, array $params = []): string
     {
         $params = array_merge($params, [
-            'template' => $widget->getTemplate(),
             'builder_widget' => $widget,
             'content' => $widget->getBuildableContent(),
         ]);
-        $renderer = $widget->getRenderer();
-        return self::getHtml(!empty($renderer) ? $renderer : Widget::class, $params);
+        if ($widget->getTemplate()) {
+            $params['template'] = $widget->getTemplate();
+        }
+        $renderer = $widget->getRenderer() && class_exists($widget->getRenderer()) ? $widget->getRenderer() :  Widget::class;
+        return self::getHtml($renderer, $params);
     }
 }

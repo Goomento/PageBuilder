@@ -529,7 +529,7 @@ class Local extends AbstractSource
     {
         $title = $exportData['title'];
         $time  = date('\[Y-m-d_h.iA\]');
-        return sprintf('Goomento-Pagebuilder_%s_%s.json', EscaperHelper::slugify($title, '-'), $time);
+        return sprintf('pagebuilder_%s_%s.json', EscaperHelper::slugify($title, '-'), $time);
     }
 
     /**

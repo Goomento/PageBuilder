@@ -11,7 +11,7 @@ namespace Goomento\PageBuilder\Builder\DynamicTags;
 use Goomento\PageBuilder\Block\Content;
 use Goomento\PageBuilder\Builder\Base\AbstractTag;
 use Goomento\PageBuilder\Builder\Managers\Tags;
-use Goomento\PageBuilder\Builder\Widgets\PageBuilderContent;
+use Goomento\PageBuilder\Builder\Widgets\PageBuilder;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 class PageBuilderContents extends AbstractTag
@@ -55,7 +55,7 @@ class PageBuilderContents extends AbstractTag
      */
     protected function registerControls()
     {
-        PageBuilderContent::registerPageBuilderContentInterface($this, static::NAME . '_');
+        PageBuilder::registerPageBuilderContentInterface($this, static::NAME . '_');
     }
 
     /**

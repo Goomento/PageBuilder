@@ -116,11 +116,6 @@ class Importer extends AbstractAction implements HttpGetActionInterface, HttpPos
      */
     protected function executeGet()
     {
-        $this->messageManager->addNotice(sprintf(
-            'For import Sample templates click %shere%s.',
-            '<a href="' . $this->getUrl('*/*/sampleImporter') . '">',
-            '</a>'
-        ));
         return $this->renderPage();
     }
 

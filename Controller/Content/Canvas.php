@@ -50,13 +50,14 @@ class Canvas extends View
      */
     protected function getPageConfig()
     {
-        $layout = $this->getRequest()->getParam('layout', 'pagebuilder_content_1column');
+        $layout = $this->getRequest()->getParam('layout');
+        if (!$layout) {
+            $layout = $this->getContentLayout() ?: 'pagebuilder_content_1column';
+        }
 
         return [
             'editable_title' => 'Preview: %1',
-            'handler' => $layout ?: (
-                $this->getContentLayout() ?: 'pagebuilder_content_1column'
-            ),
+            'handler' =>$layout
         ];
     }
 }

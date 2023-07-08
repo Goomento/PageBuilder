@@ -336,8 +336,6 @@ require(['jquery', 'jquery/ui'], function ($) {
                 of: this.wrap.parent(),
             } );
 
-            console.log('this.element.parent()', this.element.parent());
-
             $( 'body' ).on( 'click.wpcolorpicker', this.close );
         },
 

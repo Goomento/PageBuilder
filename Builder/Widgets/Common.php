@@ -485,11 +485,11 @@ class Common extends AbstractWidget
                 'options' => [
                     'start' => [
                         'title' => $start,
-                        'icon' => 'fas fa-align-left',
+                        'icon' => 'fas fa-chevron-left',
                     ],
                     'end' => [
                         'title' => $end,
-                        'icon' => 'fas fa-align-right',
+                        'icon' => 'fas fa-chevron-right',
                     ],
                 ],
                 'classes' => 'gmt-control-start-end',

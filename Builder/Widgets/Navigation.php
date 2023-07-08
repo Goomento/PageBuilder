@@ -10,6 +10,7 @@ namespace Goomento\PageBuilder\Builder\Widgets;
 
 use Goomento\PageBuilder\Builder\Base\AbstractWidget;
 use Goomento\PageBuilder\Builder\Managers\Controls;
+use Goomento\PageBuilder\Helper\DataHelper;
 use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 
 // phpcs:disable Magento2.PHP.LiteralNamespaces.LiteralClassUsage
@@ -28,7 +29,7 @@ class Navigation extends AbstractWidget
     /**
      * @inheirtDoc
      */
-    protected $template = 'Goomento_PageBuilder::widgets/navigation.phtml';
+    protected $renderer = \Goomento\PageBuilder\Block\Widgets\Navigation::class;
 
     /**
      * @inheritDoc
@@ -187,7 +188,7 @@ class Navigation extends AbstractWidget
      */
     private function getSnowDogMenuList() : array
     {
-        if (class_exists('\Snowdog\Menu\Model\MenuRepository') && empty($this->menuOptions)) {
+        if (DataHelper::isModuleOutputEnabled('Snowdog_Menu') && empty($this->menuOptions)) {
             /** @var \Snowdog\Menu\Model\MenuRepository $menuRepo */
             $menuRepo = ObjectManagerHelper::get('Snowdog\Menu\Model\MenuRepository');
             /** @var \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder */

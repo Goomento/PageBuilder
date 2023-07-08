@@ -17,19 +17,19 @@ use Goomento\PageBuilder\Helper\ObjectManagerHelper;
 use Goomento\PageBuilder\Helper\StateHelper;
 use Goomento\PageBuilder\Model\Config\Source\PageList;
 
-class PageBuilderContent extends AbstractWidget
+class PageBuilder extends AbstractWidget
 {
     /**
      * @inheritDoc
      */
-    const NAME = 'pagebuilder_content';
+    const NAME = 'gmt_content';
 
     /**
      * @inheritDoc
      */
     public function getTitle()
     {
-        return __('Page Builder Content');
+        return __('Page Builder');
     }
 
     /**
@@ -45,7 +45,7 @@ class PageBuilderContent extends AbstractWidget
      */
     public function getCategories()
     {
-        return [''];
+        return ['general'];
     }
 
     /**

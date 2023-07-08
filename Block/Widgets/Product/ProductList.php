@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Goomento\PageBuilder\Block\Widgets\Product;
 
+use Goomento\PageBuilder\Helper\EncryptorHelper;
 use Goomento\PageBuilder\Traits\TraitWidgetBlock;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
@@ -145,8 +146,10 @@ class ProductList extends ProductsList
     {
         $keys = parent::getCacheKeyInfo();
         if ($this->getWidget()) {
-            // Reference the key via widget Id
-            $keys['builder_widget'] = $this->getWidget()->getId();
+            $settings = $this->getWidget()->getSettings();
+            // Reference the key via widget settings
+            $keys['builder_cache_key'] = EncryptorHelper::uniqueId($settings);
+            $keys['builder_widget_id'] = $this->getWidget()->getId();
         }
 
         return $keys;

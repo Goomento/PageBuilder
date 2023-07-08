@@ -141,7 +141,7 @@ abstract class AbstractWidget extends AbstractElement
      */
     protected function render()
     {
-        if ($this->getTemplate()) {
+        if ($this->getTemplate() || $this->getRenderer()) {
             return TemplateHelper::getWidgetHtml($this);
         }
     }

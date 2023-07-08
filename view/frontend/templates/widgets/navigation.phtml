@@ -2,35 +2,57 @@
 /**
  * @package Goomento_PageBuilder
  * @link https://github.com/Goomento/PageBuilder
+ * @see Snowdog_Menu::menu.phtml
+ * This file is copied from Snowdog_Menu::menu.phtml to add custom code
  */
 
-declare(strict_types=1);
+use Goomento\PageBuilder\Helper\DataHelper;
+use Goomento\PageBuilder\Block\Widgets\Navigation;
 
-use Goomento\PageBuilder\Block\View\Element\Widget;
-use Goomento\PageBuilder\Builder\Widgets\Navigation;
-use Goomento\PageBuilder\Helper\LayoutHelper;
-
-/**
- * @var Widget $block
- * @var Navigation $widget
- */
-$widget = $block->getWidget();
-$settings = $block->getSettingsForDisplay();
-$menuId = (string) $settings['navigation_menu_id'];
-if (class_exists('Snowdog\Menu\Block\Menu') && $menuId) {
-    $type = (string) $settings['navigation_menu_type'];
-    $menuHtml = LayoutHelper::createBlock('Snowdog\Menu\Block\Menu', '', [
-        'data' => [
-            'menu' => $menuId,
-            'menu_type' => $type,
-        ]
-    ])
-        ->setTemplate('Goomento_PageBuilder::extensions/snowdog_menu/menu.phtml')
-        ->toHtml();
-    if (!empty($menuHtml)): ?>
-        <div class="gmt-widget-navigation-<?=  /** @noEscape */ $type ?>">
-            <?= /** @noEscape */ $menuHtml ?>
-        </div>
-        <?php
-    endif;
+?>
+<?php /** @var Navigation $block */ ?>
+<?php
+$type = $block->getMenuType();
+$menuJsWidget = [
+    'menu' => [
+        'responsive' => true,
+        'expanded' => true,
+        'mediaBreakpoint' => '(max-width: 1024px)', // response replied on tablet
+        'position' => [
+            'my' => 'left+10 top-2',
+            'at' => 'left bottom',
+        ],
+    ]
+] ;
+if ($type === 'vertical') {
+    $menuJsWidget['menu']['position'] = [
+        'my' => 'left top',
+        'at' => 'right-5 top',
+    ];
 }
+if ($block->getMenu()): ?>
+    <div class="gmt-widget-navigation-<?=  /** @noEscape */ $type ?>">
+        <?php $menuClass = $block->getMenu()->getCssClass() ?>
+        <nav class="<?= $block->escapeHtmlAttr($menuClass) ?>" data-action="navigation">
+            <ul class="<?= $block->escapeHtmlAttr($menuClass) ?>__list gmt-menu-<?= $block->escapeHtmlAttr($type) ?>"
+                data-mage-init='<?= $block->escapeHtmlAttr(DataHelper::encode($menuJsWidget)) ?>'>
+                <?php foreach ($block->getNodes() as $node): ?>
+                    <?php
+                    $childrenLevel = $node->getLevel() + 1;
+                    $children = $block->getNodes($childrenLevel, $node);
+                    $node->setIsParent((bool) $children);
+                    $parentClass = $children ? ' ' . $menuClass . '__item--parent' : '';
+                    $additionalClasses = $node->getClasses() ? ' ' . $node->getClasses() : '';
+                    $itemClasses = $parentClass . $additionalClasses;
+                    ?>
+                    <li class="<?= $block->escapeHtmlAttr($menuClass) ?>__item <?= $block->escapeHtmlAttr($itemClasses) ?> level-top">
+                        <?= /** @noEscape */ $block->renderMenuNode($node) ?>
+                        <?= /** @noEscape */  $block->renderSubmenu($children, $node, $childrenLevel) ?>
+                    </li>
+                <?php endforeach ?>
+            </ul>
+            <div class="<?= $block->escapeHtmlAttr($menuClass) ?>__mobile-bg"></div>
+            <i style="display: none" class="fas fa-angle-down"></i>
+        </nav>
+    </div>
+<?php endif; ?>

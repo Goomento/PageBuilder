@@ -939,7 +939,7 @@ abstract class AbstractElement extends ControlsStack
      */
     public function getCacheKey() : string
     {
-        $settings = $this->getSettingsForDisplay();
+        $settings = $this->getSettings();
         $key = $settings['_cache_key'] ?? null;
         if (null === $key) {
             $key = EncryptorHelper::uniqueContextId($settings, 12);

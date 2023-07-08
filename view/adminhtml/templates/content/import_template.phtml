@@ -12,6 +12,13 @@ declare(strict_types=1);
 use Magento\Backend\Block\Template;
 
 ?>
+<div class="messages">
+    <div class="message message-notice notice">
+        <div>
+            <a href="<?= $block->escapeUrl($block->getUrl('*/*/sampleImporter')) ?>"><?= $block->escapeHtml(__('Click here to import samples.')) ?></a>
+        </div>
+    </div>
+</div>
 <form action=""
       method="POST"
       enctype="multipart/form-data"
