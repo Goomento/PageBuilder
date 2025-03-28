@@ -1,0 +1,36 @@
+<?php
+/**
+ * @package Goomento_PageBuilder
+ * @link https://github.com/Goomento/PageBuilder
+ */
+
+declare(strict_types=1);
+
+use Goomento\PageBuilder\Block\View\Element\Widget;
+
+/**
+ * @var Widget $block
+ */
+$settings = $block->getSettingsForDisplay();
+$widget = $block->getWidget();
+$widgetId = $widget->getId();
+$triggerId = $settings['calltoaction_trigger_id'];
+$dataMageInit = [
+    'code' => $block->escapeHtml($settings['calltoaction_code']),
+    'trigger' => $settings['calltoaction_trigger'],
+    'action' => $settings['calltoaction_action'],
+    'target_element_id' => "#{$settings['calltoaction_target_id']}",
+    'remember_in_seconds' => (int) $settings['calltoaction_remember_in_seconds'],
+    'trigger_element_id' => "#{$triggerId}",
+    'timout' => $settings['calltoaction_timout'],
+    'element_id' => $widgetId,
+    'element_data_id' => "[data-id=\"{$widgetId}\"",
+];
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+$dataMageInitJson = \Goomento\PageBuilder\Helper\DataHelper::encode($dataMageInit);
+?>
+<?= $secureRenderer->renderTag('script', [], /** @lang JavaScript */ <<<HTML
+    require(['goomento-calltoaction'], function (callToAction) {
+        new callToAction($dataMageInitJson)
+    });
+HTML, false);

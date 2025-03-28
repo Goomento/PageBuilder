@@ -83,10 +83,10 @@ Editor: [https://goomento.com](https://goomento.com/goomento-the-free-magento-pa
 
 ## Version Compatible
 
-| Magento Version         | 2.3.x | 2.4.0 - 2.4.5-p3 | 2.4.6-x | 2.4.7 |
-|:------------------------|:------|:-----------------|:--------|-------|
-| Community Edition (CE)  | ✅     | ✅                | ✅       | ☑️    |
-| Enterprise Edition (EE) | ✅     | ✅                | ✅       | ☑️    |
+| Magento Version         | 2.3.x | 2.4.0 - 2.4.5-p3 | 2.4.6-x | 2.4.7-x | 2.4.8-x |
+|:------------------------|:------|:-----------------|:--------|---------|---------|
+| Community Edition (CE)  | ✅     | ✅                | ✅       | ✅       | ☑️      |
+| Enterprise Edition (EE) | ✅     | ✅                | ✅       | ✅       | ☑️      |
 
 ## Themes Compatible
 

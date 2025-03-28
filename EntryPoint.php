@@ -183,6 +183,11 @@ class EntryPoint extends BuilderRegister
             'goomento-widget-video',
             'Goomento_PageBuilder/js/widgets/video'
         );
+
+        ThemeHelper::registerScript(
+            'goomento-calltoaction',
+            'Goomento_PageBuilder/js/widgets/call-to-action'
+        );
     }
 
     /**
@@ -284,6 +289,7 @@ class EntryPoint extends BuilderRegister
             Builder\Widgets\PricingTable::class,
             Builder\Widgets\Navigation::class,
             Builder\Widgets\PageBuilder::class,
+            Builder\Widgets\CallToAction::class,
         ];
 
         if (!DataHelper::isModuleOutputEnabled('Goomento_PageBuilderForm')) {

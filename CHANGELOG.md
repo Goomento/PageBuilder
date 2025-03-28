@@ -1,9 +1,13 @@
 # Magento 2 Goomento Page Builder
 
+## 0.5.2 Supported 2.4.7-x and 2.4.8
+- Added `Calltoaction` widget
+- Added In-section popup
+
 ## 0.5.1 Fixed bugs
 - Fixed bug with preview
 - Upgraded fontawesome to 5.15.4
-- Updated `Banner`, `Banner Slider`, `Navaigation` widgets
+- Updated `Banner`, `Banner Slider`, `Navigation` widgets
 - Removed `Calltoaction` widget
 - Removed In-section popup
 

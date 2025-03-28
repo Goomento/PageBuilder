@@ -2,7 +2,7 @@
     "name": "goomento/module-page-builder",
     "description": "Goomento - The Free Magento Page Builder Extension, allows you to create unique Magento websites, landing pages using advanced animations, custom CSS, responsive designs, and more, without a line of code.",
     "type": "magento2-module",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "license": [
         "OSL-3.0"
     ],
@@ -47,7 +47,7 @@
         }
     },
     "require": {
-        "goomento/module-core": ">=1.0.12",
+        "goomento/module-core": ">=1.0.13",
         "goomento/module-page-builder-api": ">=1.0.0",
         "goomento/module-page-builder-sample-data": ">=1.0.0",
         "snowdog/module-menu": "^2.20"
