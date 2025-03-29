@@ -1,34 +1,33 @@
 ![Goomento - Free Magento Page Builder Extension](https://i.imgur.com/jVUNmot.gif)
 
-# Goomento Magento page builder extension that allows you to create Magento content in just drag-and-drop to canvas and view your website as you build it.
+# 🚀 Goomento PageBuilder for Magento 2
 
-You can build and customize every part of the Magento website visually at the builder editor by adding text, images, videos, animations, CSS and more, all with just a few clicks without writing a single line of code.
+> A lightweight, blazing-fast Magento 2 Page Builder extension that lets you build fully responsive, professional storefronts with an intuitive drag-and-drop interface.
+Whether you’re a Magento developer, agency, or merchant — Goomento helps you create beautiful pages without touching a line of code.
 
-Magento store owners can view changes in Magento with 100% accuracy, drag and drop to configure, share content between websites and redesign with new creativity
+
+* ✅ **100% visual editor match** — what you see is exactly what shows on the storefront
+* ⚡ Super lightweight & blazing-fast Magento 2 Page Builder
+* 🧱 Drag-and-drop builder for landing pages, banners, and custom blocks
+* 🎨 Full control: custom HTML, CSS, animations & responsive design
+* 🔍 SEO-friendly, mobile-first, and optimized for performance
+* 🧩 Works out of the box with Luma, Porto, Fastest & more Magento 2 themes
+* 💯 Free, open-source, and developer-friendly — no locked features
+
 
 ### Table of contents
 
 [Installation](#install-goomento)
 
-[Why Goomento - Magento Page Builder](https://goomento.com/blog/post/goomento-page-builder-vs-magento-page-builder)
-
-[Version Compatible](#version-compatible)
-
-[Themes Compatible](#themes-compatible)
-
 [Demo](https://goomento.com/goomento-the-free-magento-page-builder-extension)
 
-[Setup](#setup)
-
-[Custom Templates - Frontend Tasks](https://github.com/Goomento/PageBuilder/wiki/Custom-Theme-Frontend-Tasks)
-
-[Change Log](https://github.com/Goomento/PageBuilder/blob/master/CHANGELOG.md)
-
-[List Of Widgets](https://github.com/Goomento/PageBuilder/wiki/Magento-Page-Builder-Widgets)
-
-[User Guide & DevDoc](https://github.com/Goomento/PageBuilder/wiki/)
-
 [Troubleshooting](https://github.com/Goomento/PageBuilder/wiki/Troubleshooting)
+
+[Goomento vs Magento Page Builder](https://goomento.com/blog/post/goomento-page-builder-vs-magento-page-builder)
+
+[Goomento - Magento Form Builder](https://goomento.com/magento-form-builder)
+
+[Wiki](https://github.com/Goomento/PageBuilder/wiki/)
 
 [REST API and GraphQL](https://github.com/Goomento/PageBuilderApi)
 
@@ -53,9 +52,15 @@ Enable these caches in `Production mode` for best performance at `System > Tools
 
 ## Setup
 
-- To create Magento Landing Pages at `Magento Backend > Goomento > Pages & Landing Pages`
+### Create Landing Page (no coding)
 
-- To add Blocks, Pages to layout, using the `your-content-identifier` 
+To create Magento Landing Pages go to `Magento Backend > Goomento > Pages & Landing Pages`
+
+> This will create your landing page, which will be accessible via the storefront. No further action required.
+
+### Embed Landing Page, Blocks, Pages to layout (requires coding)
+
+To add Blocks, Pages to layout, using the `your-content-identifier` 
 identifier at `Magento Backend > Goomento > Sections` to the layout `.xml` file.
 
 ```xml
@@ -75,11 +80,9 @@ or template `.phtml` file
     ->toHtml(); ?>
 ```
 - To export the template, click to `Export` button at each page builder content
-- To import the template, go to `Magento Backend > Goomento > Importor`
+- To import the template, go to `Magento Backend > Goomento > Importer`
 
-## Demo site
-
-Editor: [https://goomento.com](https://goomento.com/goomento-the-free-magento-page-builder-extension)
+See more at [wiki](https://github.com/Goomento/PageBuilder/wiki/) page
 
 ## Version Compatible
 
@@ -90,7 +93,7 @@ Editor: [https://goomento.com](https://goomento.com/goomento-the-free-magento-pa
 
 ## Themes Compatible
 
-> Currently, Goomento doesn't fully cooperate with headless/ PWA solutions such as Venia and Hyvä. 
+> Currently, Goomento doesn't fully support headless/PWA solutions such as Venia and Hyvä. 
 Other themes such as Luma, Porto, Fastest ... are the best fit. We will soon adapt to all kind of themes.
 
 | Theme Name   | Compatible |
