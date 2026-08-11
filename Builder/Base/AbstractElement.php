@@ -113,7 +113,7 @@ abstract class AbstractElement extends ControlsStack
      * @param array      $data Optional. Element data. Default is an empty array.
      * @param array|null $args Optional. Element default arguments. Default is null.
      **/
-    public function __construct(array $data = [], array $args = null)
+    public function __construct(array $data = [], ?array $args = null)
     {
         if ($data) {
             $this->isTypeInstance = false;
@@ -495,7 +495,7 @@ abstract class AbstractElement extends ControlsStack
      * @param string|null $key Optional. Attribute key. Default is null.
      * @param null $values Optional. Attribute value/s. Default is null.
      */
-    public function removeRenderAttribute(string $element, string $key = null, $values = null)
+    public function removeRenderAttribute(string $element, ?string $key = null, $values = null)
     {
         if ($key && ! isset($this->renderAttributes[ $element ][ $key ])) {
             return;

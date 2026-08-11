@@ -49,7 +49,7 @@ class ImageSizeGroup extends AbstractControlGroup
     public static function getAttachmentImageHtml(
         array $settings,
         string $imageKey = 'image',
-        string $sizeKey = null
+        ?string $sizeKey = null
     ) {
         if (null === $sizeKey) {
             $sizeKey = $imageKey;

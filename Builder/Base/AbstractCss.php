@@ -429,7 +429,7 @@ abstract class AbstractCss extends AbstractFile
      * @param array $replacements Replacements.
      * @param array|null $allControls All controls.
      */
-    public function addControlsStackStyleRules(ControlsStack $controlsStack, array $controls, array $values, array $placeholders, array $replacements, array $allControls = null)
+    public function addControlsStackStyleRules(ControlsStack $controlsStack, array $controls, array $values, array $placeholders, array $replacements, ?array $allControls = null)
     {
         if (!$allControls) {
             $allControls = $controlsStack->getControls();

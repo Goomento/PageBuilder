@@ -226,7 +226,7 @@ abstract class ControlsStack extends AbstractBase
      *
      * @return array Active controls.
      */
-    public function getActiveControls(array $controls = null, array $settings = null)
+    public function getActiveControls(?array $controls = null, ?array $settings = null)
     {
         if (!$controls) {
             $controls = $this->getControls();
@@ -652,7 +652,7 @@ abstract class ControlsStack extends AbstractBase
      *
      * @return array Style controls.
      */
-    public function getStyleControls(array $controls = null, array $settings = null)
+    public function getStyleControls(?array $controls = null, ?array $settings = null)
     {
         $controls = $this->getActiveControls($controls, $settings);
 

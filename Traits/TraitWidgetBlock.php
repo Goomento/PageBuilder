@@ -105,9 +105,9 @@ trait TraitWidgetBlock
      */
     public function getWidgetHtml(
         string $widgetName,
-        string $configKey = null,
-        string $linkSettingKey = null,
-        array $settings = null
+        ?string $configKey = null,
+        ?string $linkSettingKey = null,
+        ?array $settings = null
     ) : string {
         /** @var null|ContentDataProcessor $contentDataProcessor */
         $contentDataProcessor = $this->getData('content_data_processor');

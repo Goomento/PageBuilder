@@ -153,7 +153,7 @@ class Stylesheet
      *
      * @return Stylesheet The current stylesheet class instance.
      */
-    public function addRules($selector, $styleRules = null, array $query = null)
+    public function addRules($selector, $styleRules = null, ?array $query = null)
     {
         $queryHash = 'all';
 

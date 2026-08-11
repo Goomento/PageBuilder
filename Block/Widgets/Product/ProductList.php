@@ -68,19 +68,29 @@ class ProductList extends ProductsList
     }
 
     /**
-     * @return Collection|AbstractDb
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
+     * @inheritDoc
      */
     public function createCollection()
     {
+        $collection = $this->getBaseCollection();
+        $collection->setVisibility($this->catalogProductVisibility->getVisibleInCatalogIds());
+
+        return $collection;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBaseCollection():Collection
+    {
         $this->parseWidgetData();
 
-        if (!$this->getCategoryIds() && !$this->getProductSkus()) {
-            return null;
-        }
-
         $collection = $this->productCollectionFactory->create();
+
+        if (!$this->getCategoryIds() && !$this->getProductSkus()) {
+            $collection->addAttributeToFilter('status', ['eq' => -1]);
+            return $collection;
+        }
 
         $collection->setPageSize(
             $this->getProductsPerPage()
@@ -114,7 +124,7 @@ class ProductList extends ProductsList
             'catalog_block_product_list_collection',
             ['collection' => $collection]
         );
-
+        $this->setData('conditions_encoded', '[]');
         return $collection;
     }
 

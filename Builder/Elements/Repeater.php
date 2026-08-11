@@ -35,7 +35,7 @@ class Repeater extends AbstractElement
      * @param array|null $args Optional. Element default arguments. Default is null.
      *
      */
-    public function __construct(array $data = [], array $args = null)
+    public function __construct(array $data = [], ?array $args = null)
     {
         self::$counter++;
 

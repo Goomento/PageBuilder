@@ -57,8 +57,8 @@ class Collection extends ContentCollection implements SearchResultInterface
         $eventPrefix,
         $eventObject,
         $resourceModel,
-        AbstractDb $resource = null,
-        AdapterInterface $connection = null,
+        ?AbstractDb $resource = null,
+        ?AdapterInterface $connection = null,
         string $model = Document::class,
         string $type = ContentInterface::TYPE_PAGE
     ) {
@@ -112,7 +112,7 @@ class Collection extends ContentCollection implements SearchResultInterface
      * @return $this
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function setSearchCriteria(SearchCriteriaInterface $searchCriteria = null)
+    public function setSearchCriteria(?SearchCriteriaInterface $searchCriteria = null)
     {
         return $this;
     }
@@ -146,7 +146,7 @@ class Collection extends ContentCollection implements SearchResultInterface
      * @return $this
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function setItems(array $items = null)
+    public function setItems(?array $items = null)
     {
         return $this;
     }

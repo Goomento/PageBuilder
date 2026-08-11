@@ -51,7 +51,7 @@ class ContentDataProvider extends ModifierPoolDataProvider
         DataPersistorInterface $dataPersistor,
         array $meta = [],
         array $data = [],
-        PoolInterface $pool = null
+        ?PoolInterface $pool = null
     ) {
         $this->collection = $contentCollectionFactory->create();
         $this->dataPersistor = $dataPersistor;

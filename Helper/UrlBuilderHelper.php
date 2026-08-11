@@ -80,7 +80,7 @@ class UrlBuilderHelper
      * @param array|null $routeParams
      * @return  string
      */
-    public static function getUrl(string $routePath = null, array $routeParams = null)
+    public static function getUrl(?string $routePath = null, ?array $routeParams = null)
     {
         return self::getUrlBuilder()->getUrl($routePath, $routeParams);
     }
@@ -92,7 +92,7 @@ class UrlBuilderHelper
      * @param array|null $routeParams
      * @return  string
      */
-    public static function getFrontendUrl(string $routePath = null, array $routeParams = null)
+    public static function getFrontendUrl(?string $routePath = null, ?array $routeParams = null)
     {
         $storeId = 0;
         if (isset($routeParams['store_id'])) {

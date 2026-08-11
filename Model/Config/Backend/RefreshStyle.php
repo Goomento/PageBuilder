@@ -40,8 +40,8 @@ class RefreshStyle extends Value
         ScopeConfigInterface                $config,
         TypeListInterface                   $cacheTypeList,
         BuildableContentManagementInterface $contentManagement,
-        AbstractResource                    $resource = null,
-        AbstractDb                          $resourceCollection = null,
+        ?AbstractResource                   $resource = null,
+        ?AbstractDb                         $resourceCollection = null,
         array                               $data = []
     ) {
         $this->contentManagement = $contentManagement;

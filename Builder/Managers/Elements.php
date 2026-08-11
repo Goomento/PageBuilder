@@ -66,7 +66,7 @@ class Elements
      * @param AbstractElement|null $elementType
      * @return AbstractElement|null
      */
-    public function createElementInstance(array $elementData, array $elementArgs = [], AbstractElement $elementType = null)
+    public function createElementInstance(array $elementData, array $elementArgs = [], ?AbstractElement $elementType = null)
     {
         if (null === $elementType) {
             if ('widget' === $elementData['elType']) {

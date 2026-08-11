@@ -188,7 +188,7 @@ class ContentCss extends AbstractCss
         array         $values,
         array         $placeholders,
         array         $replacements,
-        array         $allControls = null
+        ?array        $allControls = null
     ) {
         parent::addControlsStackStyleRules($controlsStack, $controls, $values, $placeholders, $replacements, $allControls);
 

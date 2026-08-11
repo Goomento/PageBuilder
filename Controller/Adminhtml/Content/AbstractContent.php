@@ -96,9 +96,9 @@ abstract class AbstractContent extends AbstractAction
         AdminUser                           $userHelper,
         PageFactory                         $pageFactory,
         Registry                            $registry,
-        ContentRegistryInterface            $contentRegistry = null,
-        BuildableContentManagementInterface $contentManagement = null,
-        Logger                              $logger = null
+        ?ContentRegistryInterface            $contentRegistry = null,
+        ?BuildableContentManagementInterface $contentManagement = null,
+        ?Logger                              $logger = null
     ) {
         $this->dataProcessor = $dataProcessor;
         $this->dataPersistor = $dataPersistor;
